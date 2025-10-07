@@ -1,0 +1,27 @@
+import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/features/auth/presentation/pages/log_in_page.dart';
+import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
+import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
+import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
+import 'package:go_router/go_router.dart';
+
+class AppRouter {
+  static final GoRouter router = GoRouter(
+    initialLocation: RouteNames.selectedMethodLogin,
+    routes: [
+      GoRoute(
+        path: RouteNames.selectedMethodLogin,
+        builder: (context, state) => const SelectedMethodLogInPage(),
+      ),
+      GoRoute(
+        path: RouteNames.signUp,
+        builder: (context, state) => const SignUpPage(),
+      ),
+      GoRoute(path: RouteNames.logIn, builder: (context, state) => LogInPage()),
+      GoRoute(
+        path: RouteNames.universitySelection,
+        builder: (context, state) => const UniversitySelectionPage(),
+      ),
+    ],
+  );
+}
