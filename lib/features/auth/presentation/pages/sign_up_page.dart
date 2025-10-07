@@ -4,33 +4,14 @@ import 'package:e_learning/core/constant/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/features/auth/presentation/widgets/forgot_password_widget.dart';
-import 'package:e_learning/features/auth/presentation/widgets/form_log_in_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
-import 'package:e_learning/features/auth/presentation/widgets/login_button_widget.dart';
+import 'package:e_learning/features/auth/presentation/widgets/sign_up_form_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class LogInPage extends StatefulWidget {
-  const LogInPage({super.key});
-
-  @override
-  State<LogInPage> createState() => _LogInPageState();
-}
-
-class _LogInPageState extends State<LogInPage> {
-  final TextEditingController nameController = TextEditingController();
-
-  final TextEditingController passwordController = TextEditingController();
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  @override
-  void dispose() {
-    nameController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,39 +28,21 @@ class _LogInPageState extends State<LogInPage> {
           ),
           child: Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 HeaderAuthPagesWidget(),
-                SizedBox(height: 150.h),
+                SizedBox(height: 60.h),
                 Text(
                   AppLocalizations.of(
                         context,
-                      )?.translate("Log_in_to_your_account") ??
-                      "Log In To Your Account",
+                      )?.translate("Lets_make_your_account") ??
+                      "Let’s Make Your Account",
                   style: AppTextStyles.s16w600.copyWith(
                     color: AppColors.textBlack,
                   ),
                 ),
-                SizedBox(height: 20.h),
-                Form(
-                  key: _formKey,
-                  child: FormLogInWidget(
-                    phoneController: nameController,
-                    passwordController: passwordController,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: ForgotPasswordWidget(onTap: () {}),
-                ),
-                SizedBox(height: 20.h),
-                LoginButtonWidget(
-                  borderColor: AppColors.buttonPrimary,
-                  buttonColor: AppColors.buttonPrimary,
-                  textColor: AppColors.titlePrimary,
-                  formKey: _formKey,
-                ),
-                SizedBox(height: 100.h),
+                SizedBox(height: 30.h),
+                SignUpFormWidget(),
+                SizedBox(height: 40.h),
                 InkWell(
                   onTap: () {
                     log("Don’t have an account?");
@@ -87,18 +50,18 @@ class _LogInPageState extends State<LogInPage> {
                   child: Text(
                     AppLocalizations.of(
                           context,
-                        )?.translate("Dont_have_an_account") ??
-                        "Don’t have an account?",
+                        )?.translate("Already_have_an_account") ??
+                        "Already have an account?",
                     style: AppTextStyles.s14w400.copyWith(
                       color: AppColors.textBlack,
                     ),
                   ),
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: 10.h),
                 CustomButton(
                   title:
-                      AppLocalizations.of(context)?.translate("Sign_up") ??
-                      "Sign Up",
+                      AppLocalizations.of(context)?.translate("Log_in") ??
+                      "Log In",
                   titleStyle: AppTextStyles.s16w500.copyWith(
                     fontFamily: AppTextStyles.fontGeist,
                     color: AppColors.titleBlack,
@@ -106,7 +69,7 @@ class _LogInPageState extends State<LogInPage> {
                   buttonColor: AppColors.buttonWhite,
                   borderColor: AppColors.borderPrimary,
                   onTap: () {
-                    context.go(RouteNames.signUp);
+                    context.go(RouteNames.logIn);
                   },
                 ),
               ],

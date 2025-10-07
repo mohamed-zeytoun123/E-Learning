@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 abstract class AppTextStyles {
   static const String _fontFamily = 'Inter';
+  static const String fontGeist = 'Geist';
 
   static TextStyle _baseStyle({
     required double fontSize,
@@ -17,9 +18,34 @@ abstract class AppTextStyles {
     height: height,
   );
   //?------------ Types ---------------------------------
+
+  static TextStyle get s12w400 => _baseStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w400,
+    color: Colors.black,
+  );
+
   static TextStyle get s14w400 => _baseStyle(
     fontSize: 14,
     fontWeight: FontWeight.w400,
+    color: Colors.black,
+  );
+
+   static TextStyle get s14w500 => _baseStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  );
+
+  static TextStyle get s16w500 => _baseStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: Colors.black,
+  );
+
+  static TextStyle get s16w600 => _baseStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
     color: Colors.black,
   );
 
