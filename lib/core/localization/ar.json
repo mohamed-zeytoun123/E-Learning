@@ -25,5 +25,14 @@
     "Done": "تم",
     "Choose_University": "اختر الجامعة",
     "Choose_college": "اختر الكلية",
-    "Choose_study_year": "اختر سنة الدراسة"
+    "Choose_study_year": "اختر سنة الدراسة",
+     "Otp_Verfication": "التحقق من OTP",
+    "We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number": "لقد أرسلنا رمزًا مكونًا من 6 أرقام إلى رقم الهاتف",
+    "Via_SMS": "عبر الرسائل القصيرة",
+    "Please_Enter_The_Code_Down_Below": "الرجاء إدخال الرمز أدناه",
+    "Next": "التالي",
+    "Enter_Your_Phone_Number": "أدخل رقم هاتفك",
+    "Set_A_New_Password": "قم بتعيين كلمة مرور جديدة",
+    "New_Password": "كلمة المرور الجديدة",
+    "Confirm_New_Password": "تأكيد كلمة المرور الجديدة"
 }

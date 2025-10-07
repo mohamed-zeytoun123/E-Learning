@@ -1,5 +1,8 @@
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/features/auth/presentation/pages/forget_password_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/log_in_page.dart';
+import 'package:e_learning/features/auth/presentation/pages/otp_page.dart';
+import 'package:e_learning/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
@@ -21,6 +24,18 @@ class AppRouter {
       GoRoute(
         path: RouteNames.universitySelection,
         builder: (context, state) => const UniversitySelectionPage(),
+      ),
+      GoRoute(
+        path: RouteNames.otpScreen,
+        builder: (context, state) => const OtpPage(),
+      ),
+      GoRoute(
+        path: RouteNames.forgetPassword,
+        builder: (context, state) => const ForgetPasswordPage(),
+      ),
+      GoRoute(
+        path: RouteNames.resetPassword,
+        builder: (context, state) => const ResetPasswordPage(),
       ),
     ],
   );
