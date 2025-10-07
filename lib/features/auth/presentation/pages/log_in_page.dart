@@ -72,7 +72,7 @@ class _LogInPageState extends State<LogInPage> {
                   alignment: Alignment.centerRight,
                   child: ForgotPasswordWidget(
                     onTap: () {
-                      context.go(RouteNames.forgetPassword);
+                      context.push(RouteNames.forgetPassword);
                     },
                   ),
                 ),

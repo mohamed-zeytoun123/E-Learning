@@ -32,7 +32,7 @@ class ForgetPasswordButtonWidget extends StatelessWidget {
       borderColor: borderColor ?? AppColors.borderSecondary,
       onTap: () {
         // TODO: Implement forget password functionality
-        context.go(RouteNames.otpScreen);
+        context.push(RouteNames.otpScreen);
       },
     );
   }

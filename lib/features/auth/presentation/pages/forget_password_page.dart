@@ -56,7 +56,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 ),
                 SizedBox(height: 12.h),
                 ForgetPasswordButtonWidget(
-                  borderColor: AppColors.buttonPrimary,
+                  borderColor: AppColors.borderBrand,
                   buttonColor: AppColors.buttonPrimary,
                   textColor: AppColors.titlePrimary,
                   formKey: _formKey,

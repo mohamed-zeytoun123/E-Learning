@@ -62,7 +62,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 ),
                 SizedBox(height: 12.h),
                 ResetPasswordButtonWidget(
-                  borderColor: AppColors.buttonPrimary,
+                  borderColor: AppColors.borderBrand,
                   buttonColor: AppColors.buttonPrimary,
                   textColor: AppColors.titlePrimary,
                   formKey: _formKey,
