@@ -25,5 +25,14 @@
     "Done": "Done",
     "Choose_University": "Choose University",
     "Choose_college": "Choose College",
-    "Choose_study_year": "Choose Study Year"
+    "Choose_study_year": "Choose Study Year",
+    "Otp_Verfication": "OTP Verfication",
+    "We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number":"We Have Sent A 6-Digit Code To The Phone Number",
+    "Via_SMS": "Via SMS",
+    "Please_Enter_The_Code_Down_Below":"Please Enter The Code Down Below",
+    "Next":"Next",
+    "Enter_Your_Phone_Number":"Enter Your Phone Number",
+    "Set_A_New_Password":"Set A New Password",
+    "New_Password":"New Password",
+    "Confirm_New_Password":"Confirm New Password"
 }
