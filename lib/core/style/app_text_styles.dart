@@ -17,6 +17,7 @@ abstract class AppTextStyles {
     fontFamily: _fontFamily,
     height: height,
   );
+  
   //?------------ Types ---------------------------------
 
   static TextStyle get s12w400 => _baseStyle(

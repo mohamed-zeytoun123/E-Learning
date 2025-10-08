@@ -40,6 +40,16 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   go_router: ^16.2.4
+  hive_flutter: ^1.1.0
+  connectivity_plus: ^7.0.0
+  shared_preferences: ^2.5.3
+  flutter_secure_storage: ^9.2.4
+  get_it: ^8.2.0
+  dio: ^5.9.0
+  pretty_dio_logger: ^1.4.0
+  cached_network_image: ^3.4.1
+  shimmer: ^3.0.0
+  dartz: ^0.10.1
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +61,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
+  build_runner: ^2.9.0
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

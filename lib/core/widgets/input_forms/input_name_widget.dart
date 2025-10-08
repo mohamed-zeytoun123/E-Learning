@@ -1,5 +1,5 @@
-import 'package:e_learning/core/constant/app_colors.dart';
-import 'package:e_learning/core/constant/app_text_styles.dart';
+import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/text_form_field_style.dart';
 import 'package:e_learning/core/utils/validator.dart';

@@ -1,6 +1,6 @@
 import 'dart:developer';
-import 'package:e_learning/core/constant/app_colors.dart';
-import 'package:e_learning/core/constant/app_text_styles.dart';
+import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
@@ -71,8 +71,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             onTap: () {
               if (_formKey.currentState!.validate()) {
                 log("✅ Form is valid");
-                //todo push otp
-                // context.push(RouteNames.logIn);
+                context.push(RouteNames.universitySelection);
               } else {
                 log("⚠️ Please fill all required fields correctly");
               }
