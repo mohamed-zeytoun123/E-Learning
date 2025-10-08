@@ -1,21 +1,37 @@
 import 'package:dio/dio.dart';
 import 'package:e_learning/core/api/api_consumer.dart';
+import 'package:e_learning/core/api/api_interceptor.dart';
+import 'package:e_learning/core/api/end_points.dart';
 import 'package:e_learning/core/error/exceptions.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
 
-  DioConsumer({required this.dio});
+  DioConsumer({required this.dio}) {
+    dio.options.baseUrl = EndPoints.baseUrl;
+    dio.interceptors.add(ApiInterceptor());
+    dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ),
+    );
+  }
   @override
   Future delete(
     String path, {
-    Object? data,
+    dynamic data,
     Map<String, dynamic>? queryParameters,
+    bool isFormData = false,
   }) async {
     try {
       final response = await dio.delete(
         path,
-        data: data,
+        data: isFormData ? FormData.fromMap(data) : data,
         queryParameters: queryParameters,
       );
       return response.data;
@@ -45,20 +61,38 @@ class DioConsumer extends ApiConsumer {
   @override
   Future patch(
     String path, {
-    Object? data,
+    dynamic data,
     Map<String, dynamic>? queryParameters,
-  }) {
-    // TODO: implement patch
-    throw UnimplementedError();
+    bool isFormData = false,
+  }) async {
+    try {
+      final response = await dio.patch(
+        path,
+        data: isFormData ? FormData.fromMap(data) : data,
+        queryParameters: queryParameters,
+      );
+      return response.data;
+    } on DioException catch (e) {
+      handleDioExceptions(e);
+    }
   }
 
   @override
   Future post(
     String path, {
-    Object? data,
+    dynamic data,
     Map<String, dynamic>? queryParameters,
-  }) {
-    // TODO: implement post
-    throw UnimplementedError();
+    bool isFormData = false,
+  }) async {
+    try {
+      final response = await dio.post(
+        path,
+        data: isFormData ? FormData.fromMap(data) : data,
+        queryParameters: queryParameters,
+      );
+      return response.data;
+    } on DioException catch (e) {
+      handleDioExceptions(e);
+    }
   }
 }
