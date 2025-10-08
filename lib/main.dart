@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
         minTextAdapt: true,
-        splitScreenMode: true,w
+        splitScreenMode: true,
         builder: (context, child) {
           return BlocBuilder<AppManagerCubit, AppManagerState>(
             builder: (context, state) {
