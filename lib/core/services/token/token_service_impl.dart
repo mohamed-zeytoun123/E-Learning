@@ -43,21 +43,6 @@ class TokenServiceImpl implements TokenService {
   }
 
   //? -------------------------------------------------------------------
-  //? ---- Token Expiry ----------------
-
-  //* saveTokenExpiryService
-  @override
-  Future<void> saveTokenExpiryService(DateTime expiry) async {
-    await secureStorage.saveTokenExpiryInCach(expiry);
-  }
-
-  //* getTokenExpiryService
-  @override
-  Future<DateTime?> getTokenExpiryService() async {
-    return await secureStorage.getTokenExpiryInCach();
-  }
-
-  //? -------------------------------------------------------------------
   //? ---- General ----------------
 
   //* clearTokenService
@@ -73,28 +58,13 @@ class TokenServiceImpl implements TokenService {
     return token != null && token.isNotEmpty;
   }
 
-  //* isTokenExpiredService
-  @override
-  Future<bool> isTokenExpiredService() async {
-    final expiry = await getTokenExpiryService();
-    if (expiry == null) return true;
-
-    final now = DateTime.now();
-    final bufferTime = Duration(minutes: 5);
-    return now.isAfter(expiry.subtract(bufferTime));
-  }
-
   //* saveAllTokensService
   @override
   Future<void> saveAllTokensService({
     required String accessToken,
     required String refreshToken,
-    required DateTime expiry,
   }) async {
     await saveTokenService(accessToken);
     await saveRefreshTokenService(refreshToken);
-    await saveTokenExpiryService(expiry);
   }
-
-  //? -------------------------------------------------------------------
 }

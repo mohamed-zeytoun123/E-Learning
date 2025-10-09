@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:e_learning/core/constant/cache_keys.dart';
+import 'package:e_learning/core/model/enums/app_role_enum.dart';
 import 'package:e_learning/core/services/storage/shared_preferances/shared_preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,7 +16,7 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
     } catch (_) {}
   }
 
-  //?-------------------- Locale  ------------------------------------------
+  //?-------------------- Locale ------------------------------------------
 
   //* Get
   @override
@@ -52,6 +53,36 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
     try {
       await storagePreferences.remove(CacheKeys.appLanguageKey);
     } catch (_) {}
+  }
+
+  //?-------------------- Role --------------------------------------------
+
+  //* Save Role
+  @override
+  Future<void> saveRoleInCache(AppRoleEnum role) async {
+    try {
+      await storagePreferences.setString(
+        CacheKeys.appRoleKey,
+        role.name.toUpperCase(), // "STUDENT", "TEACHER", "USER"
+      );
+    } catch (_) {}
+  }
+
+  //* Get Role
+  @override
+  Future<AppRoleEnum?> getRoleInCache() async {
+    try {
+      final roleString = storagePreferences.getString(CacheKeys.appRoleKey);
+      if (roleString == null) return null;
+
+      // البحث عن الـ enum اللي اسمه يساوي القيمة المحفوظة (كبيرة أو صغيرة)
+      return AppRoleEnum.values.firstWhere(
+        (r) => r.name.toUpperCase() == roleString.toUpperCase(),
+        // orElse: () => null, // لو ما لاقى، يرجع null
+      );
+    } catch (_) {
+      return null;
+    }
   }
 
   //?-----------------------------------------------------------------------

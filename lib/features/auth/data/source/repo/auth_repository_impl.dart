@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
+import 'package:e_learning/core/model/enums/app_role_enum.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/features/auth/data/source/local/auth_local_data_source.dart';
@@ -25,8 +26,34 @@ class AuthRepositoryImpl implements AuthRepository {
   ) async {
     if (await network.isConnected) {
       final result = await remote.loginRemote(numberPhone, password);
+
       return result.fold((failure) => Left(failure), (userData) async {
-        // await local.cachedUserData(userData);
+        await local.saveAllTokensLocal(
+          accessToken: userData.access,
+          refreshToken: userData.refresh,
+        );
+
+        if (userData.role.isNotEmpty) {
+          final firstChar = userData.role[0].toLowerCase();
+          AppRoleEnum roleEnum;
+
+          switch (firstChar) {
+            case 'S':
+              roleEnum = AppRoleEnum.student;
+              break;
+            case 'T':
+              roleEnum = AppRoleEnum.teacher;
+              break;
+            case 'U':
+              roleEnum = AppRoleEnum.user;
+              break;
+            default:
+              roleEnum = AppRoleEnum.user;
+          }
+
+          await local.saveRoleLocal(roleEnum);
+        }
+
         return Right(userData);
       });
     } else {

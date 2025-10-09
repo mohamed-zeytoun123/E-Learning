@@ -76,31 +76,42 @@ class AppDio {
           final hasToken = await tokenService.hasTokenService();
 
           if (hasToken) {
-            final isExpired = await tokenService.isTokenExpiredService();
-
-            if (isExpired) {
-              final refreshToken = await tokenService.getRefreshTokenService();
-              final newAccessToken = await _refreshAccessToken(refreshToken);
-
-              if (newAccessToken.isEmpty) {
-                await tokenService.clearTokenService();
-                return handler.reject(
-                  DioError(
-                    requestOptions: options,
-                    error: 'Token expired. Please login again.',
-                    type: DioErrorType.unknown,
-                  ),
-                );
-              }
-
-              options.headers["Authorization"] = "Bearer $newAccessToken";
-            } else {
-              final token = await tokenService.getTokenService();
-              options.headers["Authorization"] = "Bearer $token";
-            }
+            final token = await tokenService.getTokenService();
+            options.headers["Authorization"] = "Bearer $token";
           }
 
           return handler.next(options);
+        },
+
+        // في حال رجع السيرفر Unauthorized، نحاول نعمل refresh
+        onError: (DioError err, handler) async {
+          if (err.response?.statusCode == 401) {
+            final refreshToken = await tokenService.getRefreshTokenService();
+            final newAccessToken = await _refreshAccessToken(refreshToken);
+
+            if (newAccessToken.isNotEmpty) {
+              // خزّن التوكن الجديد
+              await tokenService.saveTokenService(newAccessToken);
+
+              // عدّل الهيدر وجرّب الطلب من جديد
+              err.requestOptions.headers["Authorization"] =
+                  "Bearer $newAccessToken";
+              final cloneReq = await _dio.fetch(err.requestOptions);
+              return handler.resolve(cloneReq);
+            } else {
+              // فشل التحديث => نحذف التوكينات
+              await tokenService.clearTokenService();
+              return handler.reject(
+                DioError(
+                  requestOptions: err.requestOptions,
+                  error: 'Session expired. Please login again.',
+                  type: DioErrorType.unknown,
+                ),
+              );
+            }
+          }
+
+          return handler.next(err);
         },
       ),
     );
@@ -119,11 +130,11 @@ class AppDio {
       );
 
       if (response.statusCode == 200) {
-        final newAccessToken = response.data['access_token'] as String;
-        final expiresIn = response.data['expires_in'] as int;
+        // ملاحظة: تأكد من اسم الحقل يلي بيرجعه الباك إند
+        final newAccessToken = response.data['access'] as String;
 
-        final newExpiry = DateTime.now().add(Duration(seconds: expiresIn));
-        await tokenService.saveTokenExpiryService(newExpiry);
+        // خزّن التوكن الجديد
+        await tokenService.saveTokenService(newAccessToken);
 
         return newAccessToken;
       }
@@ -133,4 +144,5 @@ class AppDio {
 
     return '';
   }
+  //?----------------------------------------------------------------------------------------
 }

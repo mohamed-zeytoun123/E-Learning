@@ -98,6 +98,7 @@ Future<void> appInitDependencies() async {
   //* Auth local
   appLocator.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(
+      tokenService: appLocator<TokenService>(),
       secureStorage: appLocator<SecureStorageService>(),
       preferencesStorage: appLocator<SharedPreferencesService>(),
     ),

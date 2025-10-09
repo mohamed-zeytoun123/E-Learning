@@ -10,6 +10,7 @@ class CacheKeys {
   static final String refreshTokenKey = 'REFRESH_TOKEN_KEY';
   static final String tokenExpiryKey = 'TOKEN_EXPIRY_KEY';
   static final String accessTokenKey = 'ACSSESS_YOKEN_KEY';
+  static final String appRoleKey = 'APP_ROLE_KEY  ';
 
   //?------------------------------
 }
