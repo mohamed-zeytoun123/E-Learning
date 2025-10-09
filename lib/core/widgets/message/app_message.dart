@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppMessage {
   static Flushbar? _currentFlushbar;
-
   static void showFlushbar({
     required BuildContext context,
     String? title,
@@ -14,7 +13,7 @@ class AppMessage {
     IconData? iconData,
     Color? iconColor,
     double sizeIcon = 28,
-    required String? mainButtonText,
+    String? mainButtonText,
     VoidCallback? mainButtonOnPressed,
     Duration duration = const Duration(seconds: 3),
     Color? progressColor,

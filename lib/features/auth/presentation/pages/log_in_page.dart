@@ -20,14 +20,14 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   void dispose() {
-    nameController.dispose();
+    phoneController.dispose();
     passwordController.dispose();
     super.dispose();
   }
@@ -64,7 +64,7 @@ class _LogInPageState extends State<LogInPage> {
                 Form(
                   key: _formKey,
                   child: FormLogInWidget(
-                    phoneController: nameController,
+                    phoneController: phoneController,
                     passwordController: passwordController,
                   ),
                 ),
@@ -82,6 +82,8 @@ class _LogInPageState extends State<LogInPage> {
                   buttonColor: AppColors.buttonPrimary,
                   textColor: AppColors.titlePrimary,
                   formKey: _formKey,
+                  phoneController: phoneController,
+                  passwordController: passwordController,
                 ),
                 SizedBox(height: 100.h),
                 InkWell(

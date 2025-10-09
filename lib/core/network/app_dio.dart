@@ -7,6 +7,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 class AppDio {
   final TokenService tokenService;
+
   late Dio _dio;
 
   AppDio({required this.tokenService}) {
@@ -31,6 +32,7 @@ class AppDio {
         "Prefer": "return=representation",
         "apikey": "sb_publishable_f5lbKdodkdNG5sqE1sqkNg_eJESDKa3",
         "Content-Type": "application/json",
+          "Accept-Language": "ar", // ← أضف هذا
       },
     );
   }

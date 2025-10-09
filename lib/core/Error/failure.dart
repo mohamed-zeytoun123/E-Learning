@@ -42,18 +42,30 @@ class Failure {
         if (data is Map<String, dynamic>) {
           int? statusCode = data['code'];
           String? errorMsg;
-          if (statusCode != null && data.isNotEmpty) {
-            final firstValue = data.values.first;
-            if (firstValue is String) {
-              errorMsg = firstValue;
-            } else if (firstValue is List && firstValue.isNotEmpty) {
-              errorMsg = firstValue.first.toString();
+          if (data is Map<String, dynamic> && data.isNotEmpty) {
+            String? errorMsg;
+
+            if (data.containsKey('detail')) {
+              errorMsg = data['detail']?.toString();
+            } else if (data.containsKey('message')) {
+              errorMsg = data['message']?.toString();
             } else {
-              errorMsg = 'Validation error';
+              final firstValue = data.values.first;
+              if (firstValue is String) {
+                errorMsg = firstValue;
+              } else if (firstValue is List && firstValue.isNotEmpty) {
+                errorMsg = firstValue.first.toString();
+              } else {
+                errorMsg = 'Validation error';
+              }
             }
 
-            return Failure(statusCode: status, message: errorMsg);
-          } //* if message server is null :
+            return Failure(
+              statusCode: status,
+              message: errorMsg ?? 'Validation error',
+            );
+          }
+          //* if message server is null :
           else {
             switch (status) {
               case 400:

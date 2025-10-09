@@ -6,7 +6,7 @@ import 'package:e_learning/core/utils/validator/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class InputPasswordWidget extends StatelessWidget {
+class InputPasswordWidget extends StatefulWidget {
   final TextEditingController controller;
   final double? width;
   final String hint;
@@ -21,9 +21,22 @@ class InputPasswordWidget extends StatelessWidget {
   });
 
   @override
+  State<InputPasswordWidget> createState() => _InputPasswordWidgetState();
+}
+
+class _InputPasswordWidgetState extends State<InputPasswordWidget> {
+  bool _obscureText = true;
+
+  void _toggleVisibility() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: (width ?? 375).w,
+      width: (widget.width ?? 375).w,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -31,15 +44,25 @@ class InputPasswordWidget extends StatelessWidget {
             height: 75.h,
             child: TextFormField(
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              controller: controller,
-              obscureText: true,
+              controller: widget.controller,
+              obscureText: _obscureText,
               obscuringCharacter: '*',
               textInputAction: TextInputAction.next,
-              decoration: TextFormFieldStyle.baseForm(
-                AppLocalizations.of(context)?.translate(hintKey) ?? hint,
-                context,
-                AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
-              ),
+              decoration:
+                  TextFormFieldStyle.baseForm(
+                    AppLocalizations.of(context)?.translate(widget.hintKey) ??
+                        widget.hint,
+                    context,
+                    AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
+                  ).copyWith(
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureText ? Icons.visibility_off : Icons.visibility,
+                        color: AppColors.textGrey,
+                      ),
+                      onPressed: _toggleVisibility,
+                    ),
+                  ),
               validator: (value) => Validator.validatePassword(value, context),
             ),
           ),
