@@ -1,27 +1,52 @@
+import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
+import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
+import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/selected_information_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class UniversitySelectionPage extends StatelessWidget {
+class UniversitySelectionPage extends StatefulWidget {
   const UniversitySelectionPage({super.key});
+
+  @override
+  State<UniversitySelectionPage> createState() =>
+      _UniversitySelectionPageState();
+}
+
+class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
+  Future<void> _refreshUniversities() async {
+    await context.read<AuthCubit>().getUniversities();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshUniversities();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: Padding(
-        padding: EdgeInsets.only(
-          top: 120.h,
-          bottom: 50.h,
-          right: 15.w,
-          left: 15.w,
-        ),
-        child: Center(
+      body: RefreshIndicator(
+        color: AppColors.buttonPrimary,
+        backgroundColor: AppColors.background,
+        onRefresh: _refreshUniversities,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: EdgeInsets.only(
+            top: 120.h,
+            bottom: 50.h,
+            right: 15.w,
+            left: 15.w,
+          ),
           child: Column(
             children: [
               HeaderAuthPagesWidget(),
@@ -48,15 +73,38 @@ class UniversitySelectionPage extends StatelessWidget {
               SizedBox(height: 40.h),
               SelectedInformationWidget(),
               SizedBox(height: 20.h),
-              CustomButton(
-                title:
-                    AppLocalizations.of(context)?.translate("next") ?? "Next",
-                titleStyle: AppTextStyles.s16w500.copyWith(
-                  color: AppColors.titleBlack,
-                  fontFamily: AppTextStyles.fontGeist,
-                ),
-                buttonColor: AppColors.buttonGreyF,
-                borderColor: AppColors.buttonGreyF,
+              BlocSelector<AuthCubit, AuthState, SignUpRequestParams?>(
+                selector: (state) => state.signUpRequestParams,
+                builder: (context, signUpParams) {
+                  final isAllFilled =
+                      (signUpParams?.fullName.isNotEmpty ?? false) &&
+                      signUpParams?.universityId != null &&
+                      signUpParams?.collegeId != null &&
+                      signUpParams?.studyYear != null &&
+                      (signUpParams?.phone.isNotEmpty ?? false) &&
+                      (signUpParams?.password.isNotEmpty ?? false);
+
+                  return CustomButton(
+                    title:
+                        AppLocalizations.of(context)?.translate("next") ??
+                        "Next",
+                    titleStyle: AppTextStyles.s16w500.copyWith(
+                      color: isAllFilled
+                          ? AppColors.titlePrimary
+                          : AppColors.titleBlack,
+                      fontFamily: AppTextStyles.fontGeist,
+                    ),
+                    buttonColor: isAllFilled
+                        ? AppColors.buttonPrimary
+                        : AppColors.buttonGreyF,
+                    borderColor: AppColors.borderBrand,
+                    onTap: isAllFilled
+                        ? () {
+                            log("dsfdfsf");
+                          }
+                        : null,
+                  );
+                },
               ),
             ],
           ),

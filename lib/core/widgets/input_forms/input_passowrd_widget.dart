@@ -48,6 +48,9 @@ class _InputPasswordWidgetState extends State<InputPasswordWidget> {
               obscureText: _obscureText,
               obscuringCharacter: '*',
               textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus();
+              },
               decoration:
                   TextFormFieldStyle.baseForm(
                     AppLocalizations.of(context)?.translate(widget.hintKey) ??

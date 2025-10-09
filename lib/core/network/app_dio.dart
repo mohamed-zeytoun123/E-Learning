@@ -32,7 +32,7 @@ class AppDio {
         "Prefer": "return=representation",
         "apikey": "sb_publishable_f5lbKdodkdNG5sqE1sqkNg_eJESDKa3",
         "Content-Type": "application/json",
-          "Accept-Language": "ar", // ← أضف هذا
+        "Accept-Language": "en",
       },
     );
   }
@@ -85,7 +85,6 @@ class AppDio {
           return handler.next(options);
         },
 
-        // في حال رجع السيرفر Unauthorized، نحاول نعمل refresh
         onError: (DioError err, handler) async {
           if (err.response?.statusCode == 401) {
             final refreshToken = await tokenService.getRefreshTokenService();
@@ -95,13 +94,11 @@ class AppDio {
               // خزّن التوكن الجديد
               await tokenService.saveTokenService(newAccessToken);
 
-              // عدّل الهيدر وجرّب الطلب من جديد
               err.requestOptions.headers["Authorization"] =
                   "Bearer $newAccessToken";
               final cloneReq = await _dio.fetch(err.requestOptions);
               return handler.resolve(cloneReq);
             } else {
-              // فشل التحديث => نحذف التوكينات
               await tokenService.clearTokenService();
               return handler.reject(
                 DioError(
@@ -112,7 +109,6 @@ class AppDio {
               );
             }
           }
-
           return handler.next(err);
         },
       ),
@@ -146,5 +142,6 @@ class AppDio {
 
     return '';
   }
+
   //?----------------------------------------------------------------------------------------
 }

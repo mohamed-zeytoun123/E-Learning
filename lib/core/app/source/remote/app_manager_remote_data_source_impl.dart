@@ -36,7 +36,7 @@ class AppManagerRemoteDataSourceImpl implements AppManagerRemoteDataSource {
       return Left(FailureServer());
     } catch (e) {
       log("🔥🔥 Error in logout: $e");
-      return Left(Failure.handleError(e as Exception));
+      return Left(Failure.handleError(e as Exception   )    );
     }
   }
 

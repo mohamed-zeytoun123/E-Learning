@@ -1,7 +1,7 @@
 class AppUrls {
   //?---------------------------------------------------------------
 
-  static const String _ip = "192.168.1.103";
+  static const String _ip = "192.168.1.104";
 
   //?---------------------------------------------------------------
 
@@ -16,6 +16,12 @@ class AppUrls {
 
   //* Refresh Token
   static final String refreashToken = "$_baseURl/auth/refresh";
+
+  //* Get University
+  static final String getUniversities = "$_baseURl/universities/";
+
+  //* Get Colleges
+  static final String getColleges = "$_baseURl/colleges/";
 
   //?---------------------------------------------------------------
 }

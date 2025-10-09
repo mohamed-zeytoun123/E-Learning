@@ -22,7 +22,11 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.signUp,
-        builder: (context, state) => const SignUpPage(),
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              AuthCubit(repository: appLocator<AuthRepository>()),
+          child: SignUpPage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.logIn,

@@ -4,6 +4,8 @@ import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/model/enums/app_role_enum.dart';
 import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
+import 'package:e_learning/features/auth/data/models/university_model.dart';
 import 'package:e_learning/features/auth/data/source/local/auth_local_data_source.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
@@ -40,14 +42,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   //? ------------------------ SignUp ----------------------------
-  Future<void> signUp({
-    required String fullName,
-    required int universityId,
-    required int collegeId,
-    required int studyYear,
-    required String phone,
-    required String password,
-  }) async {
+  Future<void> signUp({required SignUpRequestParams params}) async {
     emit(
       state.copyWith(
         signUpState: ResponseStatusEnum.loading,
@@ -55,14 +50,7 @@ class AuthCubit extends Cubit<AuthState> {
       ),
     );
 
-    final result = await repository.signUpRepo(
-      fullName: fullName,
-      universityId: universityId,
-      collegeId: collegeId,
-      studyYear: studyYear,
-      phone: phone,
-      password: password,
-    );
+    final result = await repository.signUpRepo(params: params);
 
     result.fold(
       (failure) => emit(
@@ -81,4 +69,93 @@ class AuthCubit extends Cubit<AuthState> {
       },
     );
   }
+
+  //? ------------------------ Get Universities ----------------------------
+  Future<void> getUniversities() async {
+    emit(
+      state.copyWith(
+        getUniversitiesState: ResponseStatusEnum.loading,
+        getUniversitiesError: null,
+      ),
+    );
+
+    final Either<Failure, List<UniversityModel>> result = await repository
+        .getUniversitiesRepo();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          getUniversitiesState: ResponseStatusEnum.failure,
+          getUniversitiesError: failure.message,
+        ),
+      ),
+      (universitiesList) => emit(
+        state.copyWith(
+          getUniversitiesState: ResponseStatusEnum.success,
+          universities: universitiesList,
+        ),
+      ),
+    );
+  }
+
+  //? ------------------------  Get Colleges ---------------------------------
+
+  Future<void> getColleges({required int universityId}) async {
+    emit(state.copyWith(getCollegesState: ResponseStatusEnum.loading));
+
+    final result = await repository.getCollegesRepo(universityId: universityId);
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            getCollegesState: ResponseStatusEnum.failure,
+            getCollegesError: failure.message,
+          ),
+        );
+      },
+      (collegesList) {
+        emit(
+          state.copyWith(
+            getCollegesState: ResponseStatusEnum.success,
+            colleges: collegesList,
+          ),
+        );
+      },
+    );
+  }
+
+  //? ------------------------ Update SignUp Params (with emit) ----------------------------
+  void updateSignUpParams({
+    String? fullName,
+    int? universityId,
+    int? collegeId,
+    int? studyYear,
+    String? phone,
+    String? password,
+  }) {
+    final currentParams =
+        state.signUpRequestParams ??
+        SignUpRequestParams(
+          fullName: '',
+          universityId: null,
+          collegeId: null,
+          studyYear: null,
+          phone: '',
+          password: '',
+        );
+
+    final updatedParams = SignUpRequestParams(
+      fullName: fullName ?? currentParams.fullName,
+      universityId: universityId ?? currentParams.universityId,
+      collegeId: collegeId,
+      studyYear: studyYear ?? currentParams.studyYear,
+      phone: phone ?? currentParams.phone,
+      password: password ?? currentParams.password,
+    );
+
+    emit(state.copyWith(signUpRequestParams: updatedParams));
+  }
+
+  //?---------------------------------------------------------------------------------------
 }
