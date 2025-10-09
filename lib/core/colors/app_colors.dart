@@ -27,5 +27,15 @@ class AppColors {
   static const Color borderSecondary = Color(0xffBABABA);
   static const Color borderBrand = Color(0xffEAEAEA);
 
+  //* Loading Colors
+  static const Color loadingPrimary = Color(0xff181818);
+  static const Color loadingBackground = Color(0xffEAEAEA);
+
+  //* Message Colors
+  static const Color messageSuccess = Color(0xff28A745);
+  static const Color messageError = Color(0xffDC3545);
+  static const Color messageWarning = Color(0xffFFC107);
+  static const Color messageInfo = Color(0xff17A2B8);
+
   //?-----------------------------------------------------
 }

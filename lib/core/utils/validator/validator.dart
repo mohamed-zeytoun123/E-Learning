@@ -1,7 +1,7 @@
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:flutter/widgets.dart';
 
-abstract class Validator {
+class Validator {
   static String? phoneValidation(String? phone, BuildContext context) {
     final phoneRegex = RegExp(r'^\+[0-9]{9,15}$');
     if (!phoneRegex.hasMatch(phone!)) {

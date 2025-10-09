@@ -1,4 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:e_learning/core/app/source/remote/app_manager_remote_data_source.dart';
+import 'package:e_learning/core/app/source/remote/app_manager_remote_data_source_impl.dart';
 import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/network/app_dio.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
@@ -9,6 +11,8 @@ import 'package:e_learning/core/services/storage/secure_storage/secure_storage_s
 import 'package:e_learning/core/services/storage/secure_storage/secure_storage_service_impl.dart';
 import 'package:e_learning/core/services/storage/shared_preferances/shared_preferences_service.dart';
 import 'package:e_learning/core/services/storage/shared_preferances/shared_preferences_service_impl.dart';
+import 'package:e_learning/core/services/token/token_service.dart';
+import 'package:e_learning/core/services/token/token_service_impl.dart';
 import 'package:e_learning/core/services/translation/translation_service.dart';
 import 'package:e_learning/core/services/translation/translation_service_impl.dart';
 import 'package:e_learning/features/auth/data/source/local/auth_local_data_source.dart';
@@ -27,7 +31,9 @@ Future<void> appInitDependencies() async {
   //? ----------- Network ------------------------------------------
 
   //! App Dio
-  appLocator.registerLazySingleton<AppDio>(() => AppDio());
+  appLocator.registerLazySingleton<AppDio>(
+    () => AppDio(tokenService: appLocator<TokenService>()),
+  );
 
   //! Api
   appLocator.registerLazySingleton<API>(
@@ -37,6 +43,11 @@ Future<void> appInitDependencies() async {
   //! Network Info
   appLocator.registerLazySingleton<NetworkInfoService>(
     () => NetworkInfoServiceImpl(connectivity),
+  );
+
+  //! Token
+  appLocator.registerLazySingleton<TokenService>(
+    () => TokenServiceImpl(secureStorage: appLocator<SecureStorageService>()),
   );
 
   //? ----------- translation ------------------------------------------------------
@@ -93,6 +104,18 @@ Future<void> appInitDependencies() async {
   );
 
   //? ----------- Remote Data Sources -----------------------------------------------------------
+
+  //! App Manager Remote
+  appLocator.registerLazySingleton<AppManagerRemoteDataSource>(
+    () => AppManagerRemoteDataSourceImpl(
+      tokenService: appLocator<TokenService>(),
+      api: appLocator<API>(),
+
+      // secureStorage: appLocator<SecureStorageService>(),
+      // preferencesStorage: appLocator<SharedPreferencesService>(),
+      // translationService: appLocator<TranslationService>(),
+    ),
+  );
 
   //* Auth Remote
   appLocator.registerLazySingleton<AuthRemoteDataSource>(

@@ -4,19 +4,13 @@ class Failure {
   final int? statusCode;
   final String message;
 
-  Failure({
-    this.statusCode,
-    required this.message,
-  });
+  Failure({this.statusCode, required this.message});
   //?----------------------------------------------------------------------------
 
   //* handele Error
   factory Failure.handleError(Exception exception) {
     if (exception is! DioException) {
-      return Failure(
-        statusCode: -1,
-        message: 'An unexpected error occurred',
-      );
+      return Failure(statusCode: -1, message: 'An unexpected error occurred');
     }
 
     final status = exception.response?.statusCode ?? -1;
@@ -42,19 +36,23 @@ class Failure {
         );
 
       case DioExceptionType.badCertificate:
-        return Failure(
-          statusCode: status,
-          message: 'Bad SSL Certificate',
-        );
+        return Failure(statusCode: status, message: 'Bad SSL Certificate');
 
       case DioExceptionType.badResponse:
         if (data is Map<String, dynamic>) {
-          //!* حاول نقرأ الرسالة من أكثر من مفتاح
           int? statusCode = data['code'];
-          String? errorMsg = data['message'] ?? data['msg'];
+          String? errorMsg;
+          if (statusCode != null && data.isNotEmpty) {
+            final firstValue = data.values.first;
+            if (firstValue is String) {
+              errorMsg = firstValue;
+            } else if (firstValue is List && firstValue.isNotEmpty) {
+              errorMsg = firstValue.first.toString();
+            } else {
+              errorMsg = 'Validation error';
+            }
 
-          if (statusCode != null && errorMsg != null) {
-            return Failure(message: errorMsg, statusCode: statusCode);
+            return Failure(statusCode: status, message: errorMsg);
           } //* if message server is null :
           else {
             switch (status) {
@@ -83,10 +81,7 @@ class Failure {
                 );
 
               case 500:
-                return Failure(
-                  statusCode: status,
-                  message: 'Server Error',
-                );
+                return Failure(statusCode: status, message: 'Server Error');
 
               case 403:
                 return Failure(
@@ -123,10 +118,7 @@ class Failure {
         );
 
       case DioExceptionType.unknown:
-        return Failure(
-          statusCode: status,
-          message: 'Unknown error occurred',
-        );
+        return Failure(statusCode: status, message: 'Unknown error occurred');
     }
   }
 }
@@ -137,42 +129,32 @@ class Failure {
 
 //* Refresh
 class FailureRefresh extends Failure {
-  FailureRefresh({
-    super.message = 'Refresh failed',
-  });
+  FailureRefresh({super.message = 'Refresh failed'});
 }
 
 //?-------------------------------------------------
 
 //* Wrong
 class FailureWrong extends Failure {
-  FailureWrong({
-    super.message = 'An error occurred!',
-  });
+  FailureWrong({super.message = 'An error occurred!'});
 }
 //?-------------------------------------------------
 
 //* Server
 class FailureServer extends Failure {
-  FailureServer({
-    super.message = 'Server error!',
-  });
+  FailureServer({super.message = 'Server error!'});
 }
 //?-------------------------------------------------
 
 //* No Data ( Empty )
 class FailureNoData extends Failure {
-  FailureNoData({
-    super.message = 'No Data',
-  });
+  FailureNoData({super.message = 'No Data'});
 }
 //?-------------------------------------------------
 
 //* No Connection
 class FailureNoConnection extends Failure {
-  FailureNoConnection({
-    super.message = 'No Connection , Pleas Try Agen',
-  });
+  FailureNoConnection({super.message = 'No Connection , Pleas Try Agen'});
 }
 //?-------------------------------------------------
 

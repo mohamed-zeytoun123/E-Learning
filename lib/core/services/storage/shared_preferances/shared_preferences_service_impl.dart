@@ -21,7 +21,7 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
   @override
   Future<String?> getSavedLocaleInCache() async {
     try {
-      return storagePreferences.getString(CacheKeys.appLanguage);
+      return storagePreferences.getString(CacheKeys.appLanguageKey);
     } catch (_) {
       return null;
     }
@@ -31,7 +31,7 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
   @override
   Future<void> saveLocaleInCache(String langCode) async {
     try {
-      await storagePreferences.setString(CacheKeys.appLanguage, langCode);
+      await storagePreferences.setString(CacheKeys.appLanguageKey, langCode);
     } catch (_) {}
   }
 
@@ -40,7 +40,7 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
   Future<void> changeLocaleInCache(Locale newLocale) async {
     try {
       await storagePreferences.setString(
-        CacheKeys.appLanguage,
+        CacheKeys.appLanguageKey,
         newLocale.languageCode,
       );
     } catch (_) {}
@@ -50,7 +50,7 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
   @override
   Future<void> removeLocaleInCache() async {
     try {
-      await storagePreferences.remove(CacheKeys.appLanguage);
+      await storagePreferences.remove(CacheKeys.appLanguageKey);
     } catch (_) {}
   }
 

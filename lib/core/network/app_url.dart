@@ -1,15 +1,15 @@
 class AppUrls {
-  static final String _baseUrl = "http://94.72.98.154/abdulrahim/public/api";
-  static final String login = "$_baseUrl/auth/login";
-  static final String signUp = "$_baseUrl/auth/register";
-  
-  //* home
-  static String getTopSalon = "$_baseUrl/branches?top=1";
-  static String getNearest = "$_baseUrl/branches?nearest=1";
-  static String getNearestFetchSalon = "$_baseUrl/branches?nearest=1&type=2";
-  static String getNearestFetchFreelance =
-      "$_baseUrl/branches?nearest=1&type=1";
-  static String getSliders = "$_baseUrl/sliders";
-  static String getProducts = "$_baseUrl/products";
-  static String getServices = "$_baseUrl/services";
+  static const String _baseURl = 'http://192.168.1.105:8010/api';
+
+  //?---------------------------------------------------------------
+
+  //* Auth
+  static final String login = "$_baseURl/auth/login";
+  static final String signUp = "$_baseURl/auth/register";
+  static final String logOut = "$_baseURl/auth/logout";
+
+  //* Refresh Token
+  static final String refreashToken = "$_baseURl/auth/refresh";
+
+  //?---------------------------------------------------------------
 }

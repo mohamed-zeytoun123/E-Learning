@@ -1,7 +1,15 @@
 class CacheKeys {
-  static final String appLanguage = 'APP_LANGUAGE';
+  static final String appLanguageKey = 'APP_LANGUAGE_KEY';
   // static final String userData = 'USER_DATA';
   // static final String imageProfile = 'IMAGE_PROFILE';
   // static final String myLocation = 'MY_LOCAYION';
   // static final String locationBox = 'LOCATION_BOX ';
+  //?------------------------------
+  //* Token Keys
+  static final String tokenKey = 'TOKEN_KEY';
+  static final String refreshTokenKey = 'REFRESH_TOKEN_KEY';
+  static final String tokenExpiryKey = 'TOKEN_EXPIRY_KEY';
+  static final String accessTokenKey = 'ACSSESS_YOKEN_KEY';
+
+  //?------------------------------
 }
