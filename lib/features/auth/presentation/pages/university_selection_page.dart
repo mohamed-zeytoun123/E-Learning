@@ -6,6 +6,7 @@ import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
+import 'package:e_learning/features/auth/presentation/pages/otp_page.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/selected_information_widget.dart';
 import 'package:flutter/material.dart';
@@ -101,6 +102,15 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                     onTap: isAllFilled
                         ? () {
                             log("dsfdfsf");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BlocProvider.value(
+                                  value: BlocProvider.of<AuthCubit>(context),
+                                  child: OtpPage(),
+                                ),
+                              ),
+                            );
                           }
                         : null,
                   );

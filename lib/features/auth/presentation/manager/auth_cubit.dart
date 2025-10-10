@@ -157,5 +157,35 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(signUpRequestParams: updatedParams));
   }
 
+  //? ------------------------ otp verfication ----------------------------
+  Future<void> otpVerfication(String phone, String code, String purpose) {
+    emit(
+      state.copyWith(
+        otpVerficationState: ResponseStatusEnum.loading,
+        otpVerficationError: null,
+      ),
+    );
+    return repository
+        .otpVerficationRepo(phone: phone, code: code, purpuse: purpose)
+        .then((result) {
+          result.fold(
+            (failure) => emit(
+              state.copyWith(
+                otpVerficationState: ResponseStatusEnum.failure,
+                otpVerficationError: failure.message,
+              ),
+            ),
+            (userData) {
+              emit(
+                state.copyWith(
+                  otpVerficationState: ResponseStatusEnum.success,
+                  otpVerficationError: null,
+                ),
+              );
+            },
+          );
+        });
+  }
+
   //?---------------------------------------------------------------------------------------
 }

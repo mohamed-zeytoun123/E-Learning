@@ -15,7 +15,7 @@ abstract class AuthRemoteDataSource {
 
   //* SignUp
   Future<Either<Failure, AuthResponseModel>> signUpRemote({
-  required SignUpRequestParams params
+    required SignUpRequestParams params,
   });
 
   //* getUniversities
@@ -24,6 +24,13 @@ abstract class AuthRemoteDataSource {
   //* getColleges
   Future<Either<Failure, List<CollegeModel>>> getCollegesRemote({
     required int universityId,
+  });
+
+  //* Otp Verfication
+  Future<Either<Failure, bool>> otpVerficationRemote({
+    required String phone,
+    required String code,
+    required String purpuse, // reset_password || sign_up
   });
 
   //? ------------------------------------------------------------
