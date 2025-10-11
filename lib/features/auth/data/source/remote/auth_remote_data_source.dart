@@ -33,5 +33,8 @@ abstract class AuthRemoteDataSource {
     required String purpuse, // reset_password || sign_up
   });
 
+  //* Forget Password
+  Future<Either<Failure, bool>> forgetPasswordRemote({required String phone});
+
   //? ------------------------------------------------------------
 }

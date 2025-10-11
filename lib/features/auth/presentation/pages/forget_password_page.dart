@@ -60,6 +60,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   buttonColor: AppColors.buttonPrimary,
                   textColor: AppColors.titlePrimary,
                   formKey: _formKey,
+                  phoneController: phoneController,
                 ),
               ],
             ),

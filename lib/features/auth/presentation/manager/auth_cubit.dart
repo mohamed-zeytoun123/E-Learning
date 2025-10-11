@@ -187,5 +187,33 @@ class AuthCubit extends Cubit<AuthState> {
         });
   }
 
+  //? ------------------------ Forgot Password ----------------------------
+  Future<void> forgotPassword(String phone) {
+    emit(
+      state.copyWith(
+        forgotPasswordState: ResponseStatusEnum.loading,
+        forgotPasswordError: null,
+      ),
+    );
+    return repository.forgetPasswordRepo(phone: phone).then((result) {
+      result.fold(
+        (failure) => emit(
+          state.copyWith(
+            forgotPasswordState: ResponseStatusEnum.failure,
+            forgotPasswordError: failure.message,
+          ),
+        ),
+        (userData) {
+          emit(
+            state.copyWith(
+              forgotPasswordState: ResponseStatusEnum.success,
+              forgotPasswordError: null,
+            ),
+          );
+        },
+      );
+    });
+  }
+
   //?---------------------------------------------------------------------------------------
 }

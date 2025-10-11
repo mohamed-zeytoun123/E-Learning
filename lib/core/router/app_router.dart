@@ -50,7 +50,11 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.forgetPassword,
-        builder: (context, state) => const ForgetPasswordPage(),
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              AuthCubit(repository: appLocator<AuthRepository>()),
+          child: ForgetPasswordPage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.resetPassword,

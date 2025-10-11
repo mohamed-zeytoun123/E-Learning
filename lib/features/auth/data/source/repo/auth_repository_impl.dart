@@ -154,5 +154,25 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  //* Forget Password
+  @override
+  Future<Either<Failure, bool>> forgetPasswordRepo({
+    required String phone,
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.forgetPasswordRemote(phone: phone);
+      return result.fold(
+        (error) {
+          return Left(error);
+        },
+        (isSent) async {
+          return Right(isSent);
+        },
+      );
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
   //? -----------------------------------------------------------------
 }
