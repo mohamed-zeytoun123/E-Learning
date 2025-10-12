@@ -1,3 +1,4 @@
+import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'app_manager_state.dart';
@@ -8,6 +9,7 @@ class AppManagerCubit extends Cubit<AppManagerState> {
         const AppManagerState(
           appLocale: Locale('en'),
           themeMode: ThemeMode.light,
+          appState: AppStateEnum.guest,
         ),
       );
 

@@ -11,6 +11,7 @@ import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:e_learning/features/Course/presentation/pages/courses_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -18,7 +19,10 @@ class AppRouter {
     routes: [
       GoRoute(
         path: RouteNames.selectedMethodLogin,
-        builder: (context, state) => const SelectedMethodLogInPage(),
+        //?--------------------------------------------------------------------------
+        // builder: (context, state) => const SelectedMethodLogInPage(), //! base
+        builder: (context, state) => const CoursesPage(),
+        //?--------------------------------------------------------------------------
       ),
       GoRoute(
         path: RouteNames.signUp,

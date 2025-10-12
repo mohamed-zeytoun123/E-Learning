@@ -38,5 +38,8 @@ class AppColors {
   static const Color messageWarning = Color(0xffFFC107);
   static const Color messageInfo = Color(0xff17A2B8);
 
+  //* App Bar Colors
+  static const Color appBarBlack = Color(0xff333333);
+
   //?-----------------------------------------------------
 }
