@@ -36,10 +36,23 @@ class AppRouter {
           child: LogInPage(),
         ),
       ),
+
+      //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.universitySelection,
-        builder: (context, state) => const UniversitySelectionPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final blocProvider = args["blocProvide"] as AuthCubit;
+          return BlocProvider.value(
+            value: blocProvider,
+            child: const UniversitySelectionPage(),
+          );
+        },
+
+        //  const UniversitySelectionPage(),
       ),
+
+      //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.otpScreen,
         builder: (context, state) => BlocProvider(

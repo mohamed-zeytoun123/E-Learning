@@ -69,5 +69,6 @@
     "an_error_occurred": "حدث خطأ!",
     "server_error_generic": "خطأ في الخادم!",
     "no_data": "لا توجد بيانات",
-    "no_connection": "لا يوجد اتصال، يرجى المحاولة مرة أخرى"
+    "no_connection": "لا يوجد اتصال، يرجى المحاولة مرة أخرى",
+    "select_university": "يرجى اختيار الجامعة"
 }

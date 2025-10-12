@@ -77,47 +77,64 @@ class SelectedInformationWidget extends StatelessWidget {
               pre.signUpRequestParams?.collegeId !=
                   cur.signUpRequestParams?.collegeId,
           builder: (context, state) {
-            if (state.getCollegesState == ResponseStatusEnum.loading) {
-              return AppLoading.linear();
-            } else if (state.getCollegesState == ResponseStatusEnum.failure) {
+            if (state.signUpRequestParams?.universityId == null) {
               return Text(
-                state.getCollegesError ??
-                    AppLocalizations.of(
-                      context,
-                    )?.translate("failed_to_load_colleges") ??
-                    "Failed to load colleges",
-                style: TextStyle(color: AppColors.textError),
-              );
-            } else if (state.colleges.isEmpty) {
-              return Text(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("no_colleges_for_university") ??
-                    "No colleges for this university",
+                AppLocalizations.of(context)?.translate("select_university") ??
+                    "Select university",
                 style: TextStyle(color: AppColors.textGrey),
               );
-            } else {
-              return InputSelectWidget(
-                hint: "Choose College",
-                hintKey: "choose_college",
-                options: state.colleges.map((u) => u.name).toList(),
-                value: state.signUpRequestParams?.collegeId != null
-                    ? state.colleges
-                          .firstWhere(
-                            (u) => u.id == state.signUpRequestParams!.collegeId,
-                          )
-                          .name
-                    : null,
-                onChanged: (value) {
-                  final selected = state.colleges.firstWhere(
-                    (u) => u.name == value,
-                  );
+            }
 
-                  context.read<AuthCubit>().updateSignUpParams(
-                    collegeId: selected.id,
+            switch (state.getCollegesState) {
+              case ResponseStatusEnum.loading:
+                return AppLoading.linear();
+
+              case ResponseStatusEnum.failure:
+                return Text(
+                  state.getCollegesError ??
+                      AppLocalizations.of(
+                        context,
+                      )?.translate("failed_to_load_colleges") ??
+                      "Failed to load colleges",
+                  style: TextStyle(color: AppColors.textError),
+                );
+
+              case ResponseStatusEnum.success:
+                if (state.colleges.isEmpty) {
+                  return Text(
+                    AppLocalizations.of(
+                          context,
+                        )?.translate("no_colleges_for_university") ??
+                        "No colleges for this university",
+                    style: TextStyle(color: AppColors.textGrey),
                   );
-                },
-              );
+                }
+
+                return InputSelectWidget(
+                  hint: "Choose College",
+                  hintKey: "choose_college",
+                  options: state.colleges.map((u) => u.name).toList(),
+                  value: state.signUpRequestParams?.collegeId != null
+                      ? state.colleges
+                            .firstWhere(
+                              (u) =>
+                                  u.id == state.signUpRequestParams!.collegeId,
+                            )
+                            .name
+                      : null,
+                  onChanged: (value) {
+                    final selected = state.colleges.firstWhere(
+                      (u) => u.name == value,
+                    );
+
+                    context.read<AuthCubit>().updateSignUpParams(
+                      collegeId: selected.id,
+                    );
+                  },
+                );
+
+              default:
+                return const SizedBox.shrink();
             }
           },
         ),
