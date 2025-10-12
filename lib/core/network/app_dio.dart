@@ -85,7 +85,7 @@ class AppDio {
           return handler.next(options);
         },
 
-        onError: (DioError err, handler) async {
+        onError: (DioException err, handler) async {
           if (err.response?.statusCode == 401) {
             final refreshToken = await tokenService.getRefreshTokenService();
             final newAccessToken = await _refreshAccessToken(refreshToken);
@@ -101,10 +101,10 @@ class AppDio {
             } else {
               await tokenService.clearTokenService();
               return handler.reject(
-                DioError(
+                DioException(
                   requestOptions: err.requestOptions,
                   error: 'Session expired. Please login again.',
-                  type: DioErrorType.unknown,
+                  type: DioExceptionType.unknown,
                 ),
               );
             }

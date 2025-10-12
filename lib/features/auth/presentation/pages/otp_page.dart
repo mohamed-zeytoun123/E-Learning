@@ -19,15 +19,13 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:go_router/go_router.dart';
 
 class OtpPage extends StatelessWidget {
-  // final String mobileNumber;
-  // final String purpose;
-  const OtpPage({
-    super.key /*required this.mobileNumber, required this.purpose*/,
-  });
+  const OtpPage({super.key, required this.phone, required this.purpose});
+  final String phone;
+  final String purpose;
 
   @override
   Widget build(BuildContext context) {
-    String tempMobileNumber = "+966539690614"; // Example mobile number
+    debugPrint('OtpPage rebuilt ===========================>> $phone');
     String? verficationCode;
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -64,7 +62,7 @@ class OtpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 48.h),
                 Text(
-                  "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} : \n $tempMobileNumber ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
+                  "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} : \n $phone ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
                   style: AppTextStyles.s12w400,
                   textAlign: TextAlign.center,
                 ),
@@ -117,9 +115,9 @@ class OtpPage extends StatelessWidget {
                       return;
                     } else {
                       context.read<AuthCubit>().otpVerfication(
-                        tempMobileNumber,
+                        phone,
                         verficationCode!,
-                        "register", // or "reset_password" based on context
+                        purpose, // or "reset_password" based on context
                       );
                       final authState = context.read<AuthCubit>().state;
                       if (authState.otpVerficationState ==

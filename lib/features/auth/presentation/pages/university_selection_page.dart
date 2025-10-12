@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
@@ -12,9 +13,12 @@ import 'package:e_learning/features/auth/presentation/widgets/selected_informati
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class UniversitySelectionPage extends StatefulWidget {
-  const UniversitySelectionPage({super.key});
+  const UniversitySelectionPage({super.key, required this.phone});
+
+  final String phone;
 
   @override
   State<UniversitySelectionPage> createState() =>
@@ -34,6 +38,9 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(
+      'UniversitySelectionPage rebuilt ===========================>> ${widget.phone}',
+    );
     return Scaffold(
       backgroundColor: AppColors.background,
       body: RefreshIndicator(
@@ -102,15 +109,16 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                     onTap: isAllFilled
                         ? () {
                             log("dsfdfsf");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                // TODO: pass the phone number to the OtpPage
-                                builder: (_) => BlocProvider.value(
-                                  value: BlocProvider.of<AuthCubit>(context),
-                                  child: OtpPage(),
+
+                            context.push(
+                              RouteNames.otpScreen,
+                              extra: {
+                                'blocProvide': BlocProvider.of<AuthCubit>(
+                                  context,
                                 ),
-                              ),
+                                'phone': widget.phone,
+                                'purpose': 'register',
+                              },
                             );
                           }
                         : null,

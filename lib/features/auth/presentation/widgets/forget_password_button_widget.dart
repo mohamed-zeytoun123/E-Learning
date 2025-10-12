@@ -84,7 +84,14 @@ class ForgetPasswordButtonWidget extends StatelessWidget {
                 log('Forget Password form is valid');
                 context.read<AuthCubit>().forgotPassword(phoneController.text);
                 // TODO:Add the parameter to the OTP screen
-                context.push(RouteNames.otpScreen);
+                context.push(
+                  RouteNames.otpScreen,
+                  extra: {
+                    'blocProvide': BlocProvider.of<AuthCubit>(context),
+                    'phone': phoneController.text.trim(),
+                    'purpose': 'reset',
+                  },
+                );
               } else {
                 log('Forget Password form is not valid');
               }

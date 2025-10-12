@@ -69,5 +69,6 @@
     "an_error_occurred": "An error occurred!",
     "server_error_generic": "Server error!",
     "no_data": "No Data",
-    "no_connection": "No Connection, Please Try Again"
+    "no_connection": "No Connection, Please Try Again",
+    "select_university": "Pleas Selected University"
 }

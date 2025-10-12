@@ -36,19 +36,34 @@ class AppRouter {
           child: LogInPage(),
         ),
       ),
+
+      //?-------------------------------------------------------------------
       GoRoute(
-        // TODO: pass the phone number as a parameter to pass it to the otp page
         path: RouteNames.universitySelection,
-        builder: (context, state) => const UniversitySelectionPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final blocProvider = args["blocProvide"] as AuthCubit;
+          final phone = args["phone"] as String;
+          return BlocProvider.value(
+            value: blocProvider,
+            child: UniversitySelectionPage(phone: phone),
+          );
+        },
       ),
+
+      //?-------------------------------------------------------------------
       GoRoute(
-        // TODO: pass the mobile number and purpose as parameters
         path: RouteNames.otpScreen,
-        builder: (context, state) => BlocProvider(
-          create: (context) =>
-              AuthCubit(repository: appLocator<AuthRepository>()),
-          child: OtpPage(),
-        ),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final blocProvider = args["blocProvide"] as AuthCubit;
+          final phone = args["phone"] as String;
+          final purpose = args["purpose"] as String;
+          return BlocProvider.value(
+            value: blocProvider,
+            child: OtpPage(phone: phone, purpose: purpose),
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.forgetPassword,
