@@ -105,6 +105,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
+                                // TODO: pass the phone number to the OtpPage
                                 builder: (_) => BlocProvider.value(
                                   value: BlocProvider.of<AuthCubit>(context),
                                   child: OtpPage(),

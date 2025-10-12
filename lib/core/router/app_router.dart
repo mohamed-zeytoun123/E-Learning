@@ -37,10 +37,12 @@ class AppRouter {
         ),
       ),
       GoRoute(
+        // TODO: pass the phone number as a parameter to pass it to the otp page
         path: RouteNames.universitySelection,
         builder: (context, state) => const UniversitySelectionPage(),
       ),
       GoRoute(
+        // TODO: pass the mobile number and purpose as parameters
         path: RouteNames.otpScreen,
         builder: (context, state) => BlocProvider(
           create: (context) =>
@@ -57,6 +59,7 @@ class AppRouter {
         ),
       ),
       GoRoute(
+        //TODO: pass the phoeneNumber and reset token as parameters
         path: RouteNames.resetPassword,
         builder: (context, state) => const ResetPasswordPage(),
       ),

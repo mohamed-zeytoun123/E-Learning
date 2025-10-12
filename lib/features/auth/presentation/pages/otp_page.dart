@@ -19,11 +19,15 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:go_router/go_router.dart';
 
 class OtpPage extends StatelessWidget {
-  const OtpPage({super.key});
+  // final String mobileNumber;
+  // final String purpose;
+  const OtpPage({
+    super.key /*required this.mobileNumber, required this.purpose*/,
+  });
 
   @override
   Widget build(BuildContext context) {
-    String mobileNumber = "+966539690614"; // Example mobile number
+    String tempMobileNumber = "+966539690614"; // Example mobile number
     String? verficationCode;
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -60,7 +64,7 @@ class OtpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 48.h),
                 Text(
-                  "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} : \n $mobileNumber ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
+                  "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} : \n $tempMobileNumber ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
                   style: AppTextStyles.s12w400,
                   textAlign: TextAlign.center,
                 ),
@@ -113,7 +117,7 @@ class OtpPage extends StatelessWidget {
                       return;
                     } else {
                       context.read<AuthCubit>().otpVerfication(
-                        mobileNumber,
+                        tempMobileNumber,
                         verficationCode!,
                         "register", // or "reset_password" based on context
                       );
