@@ -134,7 +134,7 @@ class CourseInfoCardWidget extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Icon(Icons.star, color: AppColors.icontGrey, size: 16.sp),
+                      Icon(Icons.star, color: AppColors.iconGrey, size: 16.sp),
                       Text(
                         rating.toString(),
                         style: AppTextStyles.s14w400.copyWith(
