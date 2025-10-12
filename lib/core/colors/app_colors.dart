@@ -11,12 +11,16 @@ class AppColors {
   static const Color textBlack = Color(0xff282828);
   static const Color textGrey = Color(0xff737373);
   static const Color textError = Colors.red;
+  static const Color textWhite = Color(0xffFFFFFF);
 
   //* Button Colors
   static const Color buttonPrimary = Color(0xff181818);
   static const Color buttonSecondary = Color(0xffBABABA);
   static const Color buttonWhite = Color(0xffFFFFFF);
   static const Color buttonGreyF = Color(0xffEAEAEA);
+  //? Tab Bar
+  static const Color buttonTapSelected = Color(0xffDADADA);
+  static const Color buttonTapNotSelected = Color(0xffF1F1F1);
 
   //* Title Button Colors
   static const Color titlePrimary = Color(0xffFFFFFF);
@@ -40,6 +44,15 @@ class AppColors {
 
   //* App Bar Colors
   static const Color appBarBlack = Color(0xff333333);
+
+  //* Icon Colors
+  static const Color iconWhite = Color(0xffFFFFFF);
+  static const Color icontGrey = Color(0xff737373);
+  static const Color iconBlack = Color(0xff181818);
+  static const Color iconError = Colors.red;
+
+  //*  Form Colors
+  static const Color formWhite = Color(0xffF1F1F1);
 
   //?-----------------------------------------------------
 }

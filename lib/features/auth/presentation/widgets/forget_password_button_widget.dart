@@ -43,7 +43,7 @@ class ForgetPasswordButtonWidget extends StatelessWidget {
             title:
                 AppLocalizations.of(context)?.translate("wrrong") ?? "Wrrong",
             mainButtonOnPressed: () {
-              Navigator.of(context).pop();
+              context.pop();
             },
             mainButtonText:
                 AppLocalizations.of(context)?.translate("ok") ?? "Ok",

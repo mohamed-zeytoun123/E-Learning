@@ -17,7 +17,7 @@ abstract class AppTextStyles {
     fontFamily: _fontFamily,
     height: height,
   );
-  
+
   //?------------ Types ---------------------------------
 
   static TextStyle get s12w400 => _baseStyle(
@@ -32,7 +32,7 @@ abstract class AppTextStyles {
     color: Colors.black,
   );
 
-   static TextStyle get s14w500 => _baseStyle(
+  static TextStyle get s14w500 => _baseStyle(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: Colors.black,
@@ -46,6 +46,12 @@ abstract class AppTextStyles {
 
   static TextStyle get s16w600 => _baseStyle(
     fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
+
+  static TextStyle get s18w600 => _baseStyle(
+    fontSize: 18,
     fontWeight: FontWeight.w600,
     color: Colors.black,
   );
