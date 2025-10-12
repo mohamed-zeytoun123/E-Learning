@@ -128,5 +128,51 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  //* otp Verfication
+  @override
+  Future<Either<Failure, bool>> otpVerficationRepo({
+    required String phone,
+    required String code,
+    required String purpose, // reset_password || sign_up
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.otpVerficationRemote(
+        phone: phone,
+        code: code,
+        purpose: purpose,
+      );
+      return result.fold(
+        (error) {
+          return Left(error);
+        },
+        (isVerified) async {
+          return Right(isVerified);
+        },
+      );
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //* Forget Password
+  @override
+  Future<Either<Failure, bool>> forgetPasswordRepo({
+    required String phone,
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.forgetPasswordRemote(phone: phone);
+      return result.fold(
+        (error) {
+          return Left(error);
+        },
+        (isSent) async {
+          return Right(isSent);
+        },
+      );
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
   //? -----------------------------------------------------------------
 }

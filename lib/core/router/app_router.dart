@@ -43,25 +43,38 @@ class AppRouter {
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
           final blocProvider = args["blocProvide"] as AuthCubit;
+          final phone = args["phone"] as String;
           return BlocProvider.value(
             value: blocProvider,
-            child: const UniversitySelectionPage(),
+            child: UniversitySelectionPage(phone: phone),
           );
         },
-
-        //  const UniversitySelectionPage(),
       ),
 
       //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.otpScreen,
-        builder: (context, state) => const OtpPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final blocProvider = args["blocProvide"] as AuthCubit;
+          final phone = args["phone"] as String;
+          final purpose = args["purpose"] as String;
+          return BlocProvider.value(
+            value: blocProvider,
+            child: OtpPage(phone: phone, purpose: purpose),
+          );
+        },
       ),
       GoRoute(
         path: RouteNames.forgetPassword,
-        builder: (context, state) => const ForgetPasswordPage(),
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              AuthCubit(repository: appLocator<AuthRepository>()),
+          child: ForgetPasswordPage(),
+        ),
       ),
       GoRoute(
+        //TODO: pass the phoeneNumber and reset token as parameters
         path: RouteNames.resetPassword,
         builder: (context, state) => const ResetPasswordPage(),
       ),

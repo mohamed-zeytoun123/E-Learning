@@ -157,5 +157,63 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(signUpRequestParams: updatedParams));
   }
 
+  //? ------------------------ otp verfication ----------------------------
+  Future<void> otpVerfication(String phone, String code, String purpose) {
+    emit(
+      state.copyWith(
+        otpVerficationState: ResponseStatusEnum.loading,
+        otpVerficationError: null,
+      ),
+    );
+    return repository
+        .otpVerficationRepo(phone: phone, code: code, purpose: purpose)
+        .then((result) {
+          result.fold(
+            (failure) => emit(
+              state.copyWith(
+                otpVerficationState: ResponseStatusEnum.failure,
+                otpVerficationError: failure.message,
+              ),
+            ),
+            (userData) {
+              emit(
+                state.copyWith(
+                  otpVerficationState: ResponseStatusEnum.success,
+                  otpVerficationError: null,
+                ),
+              );
+            },
+          );
+        });
+  }
+
+  //? ------------------------ Forgot Password ----------------------------
+  Future<void> forgotPassword(String phone) {
+    emit(
+      state.copyWith(
+        forgotPasswordState: ResponseStatusEnum.loading,
+        forgotPasswordError: null,
+      ),
+    );
+    return repository.forgetPasswordRepo(phone: phone).then((result) {
+      result.fold(
+        (failure) => emit(
+          state.copyWith(
+            forgotPasswordState: ResponseStatusEnum.failure,
+            forgotPasswordError: failure.message,
+          ),
+        ),
+        (userData) {
+          emit(
+            state.copyWith(
+              forgotPasswordState: ResponseStatusEnum.success,
+              forgotPasswordError: null,
+            ),
+          );
+        },
+      );
+    });
+  }
+
   //?---------------------------------------------------------------------------------------
 }

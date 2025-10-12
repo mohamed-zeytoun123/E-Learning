@@ -71,7 +71,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return Left(FailureServer());
     } catch (e) {
       log("🔥🔥 Error in register: $e");
-      return Left(Failure.handleError(e as Exception ));
+      return Left(Failure.handleError(e as Exception));
     }
   }
 
@@ -141,6 +141,49 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (exception) {
       return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  // otp verfication
+  @override
+  Future<Either<Failure, bool>> otpVerficationRemote({
+    required String phone,
+    required String code,
+    required String purpose,
+  }) async {
+    try {
+      final response = await api.post(
+        ApiRequest(
+          url: AppUrls.verifyOtp,
+          body: {"phone": phone, "code": code, "purpose": purpose},
+        ),
+      );
+      if (response.statusCode == 200 && response.body != null) {
+        return Right(true);
+      }
+      return Left(FailureServer());
+    } catch (e) {
+      log("error 🔥🔥🔥🔥🔥 :::$e");
+      return Left(Failure.handleError(e as Exception));
+    }
+  }
+
+  //* Forget Password
+  @override
+  Future<Either<Failure, bool>> forgetPasswordRemote({
+    required String phone,
+  }) async {
+    try {
+      final response = await api.post(
+        ApiRequest(url: AppUrls.forgetPassword, body: {"phone": phone}),
+      );
+      if (response.statusCode == 200 && response.body != null) {
+        return Right(true);
+      }
+      return Left(FailureServer());
+    } catch (e) {
+      log("error 🔥🔥🔥🔥🔥 :::$e");
+      return Left(Failure.handleError(e as Exception));
     }
   }
 

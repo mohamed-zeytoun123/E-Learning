@@ -25,6 +25,14 @@ class AuthState {
   final String? getCollegesError;
   final List<CollegeModel> colleges;
 
+  //* otp verfication
+  final ResponseStatusEnum otpVerficationState;
+  final String? otpVerficationError;
+
+  //* Forgot Password
+  final ResponseStatusEnum forgotPasswordState;
+  final String? forgotPasswordError;
+
   //?--------------------------------------------------------------
 
   AuthState({
@@ -39,6 +47,10 @@ class AuthState {
     this.getCollegesState = ResponseStatusEnum.initial,
     this.getCollegesError,
     this.colleges = const [],
+    this.otpVerficationState = ResponseStatusEnum.initial,
+    this.otpVerficationError,
+    this.forgotPasswordState = ResponseStatusEnum.initial,
+    this.forgotPasswordError,
   });
 
   AuthState copyWith({
@@ -53,6 +65,10 @@ class AuthState {
     ResponseStatusEnum? getCollegesState,
     String? getCollegesError,
     List<CollegeModel>? colleges,
+    ResponseStatusEnum? otpVerficationState,
+    String? otpVerficationError,
+    ResponseStatusEnum? forgotPasswordState,
+    String? forgotPasswordError,
   }) {
     return AuthState(
       loginState: loginState ?? this.loginState,
@@ -66,6 +82,10 @@ class AuthState {
       getCollegesState: getCollegesState ?? this.getCollegesState,
       getCollegesError: getCollegesError,
       colleges: colleges ?? this.colleges,
+      otpVerficationState: otpVerficationState ?? this.otpVerficationState,
+      otpVerficationError: otpVerficationError,
+      forgotPasswordState: forgotPasswordState ?? this.forgotPasswordState,
+      forgotPasswordError: forgotPasswordError,
     );
   }
 }

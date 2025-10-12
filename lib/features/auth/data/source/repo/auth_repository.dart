@@ -27,5 +27,15 @@ abstract class AuthRepository {
     required int universityId,
   });
 
+  //* otp verfication
+  Future<Either<Failure, bool>> otpVerficationRepo({
+    required String phone,
+    required String code,
+    required String purpose, // reset_password || sign_up
+  });
+
+  //* Forget Password
+  Future<Either<Failure, bool>> forgetPasswordRepo({required String phone});
+
   //? -------------------------------------------------------------------
 }

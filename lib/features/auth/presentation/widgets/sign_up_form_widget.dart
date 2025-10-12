@@ -103,8 +103,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                 );
                 context.push(
                   RouteNames.universitySelection,
-                  extra: {'blocProvide': BlocProvider.of<AuthCubit>(context)},
+                  extra: {
+                    'blocProvide': BlocProvider.of<AuthCubit>(context),
+                    'phone': phoneController.text.trim(),
+                  },
                 );
+              } else {
+                log("⚠️ Please fill all required fields correctly");
               }
             },
           ),
