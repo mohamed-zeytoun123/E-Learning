@@ -9,8 +9,8 @@ class AppColors {
   //* Text Colors
   static const Color textprimary = Color(0xff181818);
   static const Color textBlack = Color(0xff282828);
-  static const Color textGrey = Color(0xff737373);
   static const Color textError = Colors.red;
+  static const Color textGrey = Color(0xff737373);
 
   //* Button Colors
   static const Color buttonPrimary = Color(0xff181818);
@@ -38,5 +38,7 @@ class AppColors {
   static const Color messageWarning = Color(0xffFFC107);
   static const Color messageInfo = Color(0xff17A2B8);
 
-  //?-----------------------------------------------------
+  //AppBar Color
+  static const Color appBar = Color(0xff333333);
+  static const Color ligthGray = Color(0xfff1f1f1);
 }

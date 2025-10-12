@@ -4,6 +4,7 @@ import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/initial/hivi_init.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/app_router.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,7 +14,15 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHive();
   await appInitDependencies();
-  runApp(const MyApp());
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+        supportedLocales: [Locale('en', ''), Locale('ar', '')],
+        path:
+            'assets/translations', // <-- change the path of the translation files
+        fallbackLocale: Locale('en', ''),
+        child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,19 +40,17 @@ class MyApp extends StatelessWidget {
           return BlocBuilder<AppManagerCubit, AppManagerState>(
             builder: (context, state) {
               return MaterialApp.router(
+
                 title: 'E-Learning',
                 debugShowCheckedModeBanner: false,
-                locale: state.appLocale,
+      locale: context.locale,
                 themeMode: state.themeMode,
                 theme: ThemeData.light(),
                 darkTheme: ThemeData.dark(),
-                supportedLocales: const [Locale('en'), Locale('ar')],
-                localizationsDelegates: const [
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
+      supportedLocales: context.supportedLocales,
+                 localizationsDelegates: context.localizationDelegates,
+
+                
                 routerConfig: AppRouter.router,
               );
             },

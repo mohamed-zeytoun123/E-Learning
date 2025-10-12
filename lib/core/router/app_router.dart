@@ -9,12 +9,14 @@ import 'package:e_learning/features/auth/presentation/pages/reset_password_page.
 import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
+import 'package:e_learning/features/home/presentation/pages/home_page.dart';
+import 'package:e_learning/features/home/presentation/pages/home_page_body.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: RouteNames.selectedMethodLogin,
+    initialLocation: RouteNames.homePage,
     routes: [
       GoRoute(
         path: RouteNames.selectedMethodLogin,
@@ -51,6 +53,10 @@ class AppRouter {
       GoRoute(
         path: RouteNames.forgetPassword,
         builder: (context, state) => const ForgetPasswordPage(),
+      ),
+      GoRoute(
+        path: RouteNames.homePage,
+        builder: (context, state) => const HomePage(),
       ),
       GoRoute(
         path: RouteNames.resetPassword,
