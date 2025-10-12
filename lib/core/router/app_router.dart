@@ -55,11 +55,7 @@ class AppRouter {
       //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.otpScreen,
-        builder: (context, state) => BlocProvider(
-          create: (context) =>
-              AuthCubit(repository: appLocator<AuthRepository>()),
-          child: OtpPage(),
-        ),
+        builder: (context, state) => const OtpPage(),
       ),
       GoRoute(
         path: RouteNames.forgetPassword,

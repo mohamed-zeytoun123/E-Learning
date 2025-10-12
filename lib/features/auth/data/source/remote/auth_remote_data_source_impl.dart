@@ -71,7 +71,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return Left(FailureServer());
     } catch (e) {
       log("🔥🔥 Error in register: $e");
-      return Left(Failure.handleError(e as Exception));
+      return Left(Failure.handleError(e as Exception ));
     }
   }
 
@@ -141,30 +141,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       }
     } catch (exception) {
       return Left(Failure.handleError(exception as DioException));
-    }
-  }
-
-  // otp verfication
-  @override
-  Future<Either<Failure, bool>> otpVerficationRemote({
-    required String phone,
-    required String code,
-    required String purpuse,
-  }) async {
-    try {
-      final response = await api.post(
-        ApiRequest(
-          url: AppUrls.verifyOtp,
-          body: {"phone": phone, "code": code, "purpuse": purpuse},
-        ),
-      );
-      if (response.statusCode == 200 && response.body != null) {
-        return Right(true);
-      }
-      return Left(FailureServer());
-    } catch (e) {
-      log("error 🔥🔥🔥🔥🔥 :::$e");
-      return Left(Failure.handleError(e as Exception));
     }
   }
 
