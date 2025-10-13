@@ -8,5 +8,6 @@ class RouteNames {
   static const resetPassword = '/reset-password';
   static const courceInf = '/cource-inf';
   static const courses = '/courses';
+  static const profile = '/profile';
   static const homePage = '/';
 }

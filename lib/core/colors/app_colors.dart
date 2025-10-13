@@ -13,6 +13,7 @@ class AppColors {
   static const Color textGrey = Color(0xff737373);
   static const Color textError = Colors.red;
   static const Color textWhite = Color(0xffFFFFFF);
+  static const Color textRed = Color(0xffDE4C3C);
 
   //* Button Colors
   static const Color buttonPrimary = Color(0xff181818);
@@ -48,12 +49,16 @@ class AppColors {
 
   //* Icon Colors
   static const Color iconWhite = Color(0xffFFFFFF);
-  static const Color icontGrey = Color(0xff737373);
+  static const Color iconGrey = Color(0xff737373);
   static const Color iconBlack = Color(0xff181818);
   static const Color iconError = Colors.red;
+  static const Color iconRed = Color(0xffDE4C3C);
 
   //*  Form Colors
   static const Color formWhite = Color(0xffF1F1F1);
+
+  //* Divider Colors
+  static const Color dividerGrey = Color(0xffF1F1F1);
 
   //AppBar Color
   static const Color appBar = Color(0xff333333);

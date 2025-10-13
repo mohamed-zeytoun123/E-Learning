@@ -47,6 +47,12 @@ abstract class AppTextStyles {
     color: Colors.black,
   );
 
+  static TextStyle get s14w600 => _baseStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+    color: Colors.black,
+  );
+
   static TextStyle get s16w400 => _baseStyle(
     fontSize: 16,
     fontWeight: FontWeight.w400,

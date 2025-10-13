@@ -1,0 +1,2 @@
+- [x] Create ProfileGuestHeader widget in lib/features/profile/presentation/widgets/profile_guest_header.dart
+- [x] Update ProfilePage to conditionally render ProfileUserHeader or ProfileGuestHeader based on app state using BlocBuilder
