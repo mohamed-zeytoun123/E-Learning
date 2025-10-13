@@ -7,6 +7,8 @@ class CustomButton extends StatelessWidget {
   final Color buttonColor;
   final Color borderColor;
   final VoidCallback? onTap;
+  final Widget? icon;
+  final double iconSpacing;
 
   const CustomButton({
     super.key,
@@ -15,6 +17,8 @@ class CustomButton extends StatelessWidget {
     required this.buttonColor,
     required this.borderColor,
     this.onTap,
+    this.icon,
+    this.iconSpacing = 8.0,
   });
 
   @override
@@ -30,7 +34,14 @@ class CustomButton extends StatelessWidget {
           border: Border.all(color: borderColor),
         ),
         alignment: Alignment.center,
-        child: Text(title, style: titleStyle),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(title, style: titleStyle),
+            if (icon != null) ...[SizedBox(width: iconSpacing.w), icon!],
+          ],
+        ),
       ),
     );
   }

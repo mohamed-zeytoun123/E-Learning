@@ -6,5 +6,7 @@ class RouteNames {
   static const otpScreen = '/otp-screen';
   static const forgetPassword = '/forget-password';
   static const resetPassword = '/reset-password';
+  static const courceInf = '/cource-inf';
+  static const courses = '/courses';
   static const homePage = '/';
 }

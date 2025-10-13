@@ -1,13 +1,11 @@
 import 'dart:developer';
 
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:e_learning/features/auth/presentation/widgets/custom_otp.dart';
@@ -19,11 +17,12 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:go_router/go_router.dart';
 
 class OtpPage extends StatelessWidget {
-  const OtpPage({super.key});
+  const OtpPage({super.key, required this.phone, required this.purpose});
+  final String phone;
+  final String purpose;
 
   @override
   Widget build(BuildContext context) {
-    String mobileNumber = "+966539690614"; // Example mobile number
     String? verficationCode;
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -60,7 +59,7 @@ class OtpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 48.h),
                 Text(
-                  "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} : \n $mobileNumber ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
+                  "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} : \n $phone ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
                   style: AppTextStyles.s12w400,
                   textAlign: TextAlign.center,
                 ),
@@ -97,8 +96,12 @@ class OtpPage extends StatelessWidget {
                   borderColor: AppColors.borderPrimary,
                   onTap: () {
                     // context.go(RouteNames.resetPassword);
+                    // ignore: unnecessary_null_comparison
                     if (verficationCode == null ||
                         verficationCode!.length < 6) {
+                      debugPrint('Verification Code: $verficationCode');
+                      debugPrint('Purpose: $purpose');
+
                       // Show error if OTP is not entered or incomplete
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
@@ -112,10 +115,13 @@ class OtpPage extends StatelessWidget {
                       );
                       return;
                     } else {
+                      debugPrint('Verification Code: $verficationCode');
+                      debugPrint('Purpose: $purpose');
+
                       context.read<AuthCubit>().otpVerfication(
-                        mobileNumber,
+                        phone,
                         verficationCode!,
-                        "register", // or "reset_password" based on context
+                        purpose, // or "reset_password" based on context
                       );
                       final authState = context.read<AuthCubit>().state;
                       if (authState.otpVerficationState ==

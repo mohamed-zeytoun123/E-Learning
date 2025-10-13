@@ -10,6 +10,7 @@ import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginButtonWidget extends StatelessWidget {
   final Color? buttonColor;
@@ -41,7 +42,7 @@ class LoginButtonWidget extends StatelessWidget {
             title:
                 AppLocalizations.of(context)?.translate("wrrong") ?? "Wrrong",
             mainButtonOnPressed: () {
-              Navigator.of(context).pop();
+              context.pop();
             },
             mainButtonText:
                 AppLocalizations.of(context)?.translate("ok") ?? "Ok",

@@ -30,8 +30,11 @@ abstract class AuthRemoteDataSource {
   Future<Either<Failure, bool>> otpVerficationRemote({
     required String phone,
     required String code,
-    required String purpuse, // reset_password || sign_up
+    required String purpose, // reset_password || sign_up
   });
+
+  //* Forget Password
+  Future<Either<Failure, bool>> forgetPasswordRemote({required String phone});
 
   //? ------------------------------------------------------------
 }
