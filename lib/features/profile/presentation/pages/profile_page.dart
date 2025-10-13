@@ -16,7 +16,6 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: Text(
           'Profile Page',
@@ -63,7 +62,7 @@ class ProfilePage extends StatelessWidget {
               CustomProfileListTile(
                 icon: Icons.light_mode_outlined,
                 title: 'Colors Mode',
-                onTap: () {},
+                onTap: () => context.read<AppManagerCubit>().toggleTheme(),
               ),
               CustomProfileListTile(
                 icon: Icons.shield_outlined,
