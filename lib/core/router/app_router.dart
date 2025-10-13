@@ -1,5 +1,7 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/features/Course/presentation/pages/cource_info_page.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/pages/forget_password_page.dart';
@@ -21,7 +23,7 @@ class AppRouter {
         path: RouteNames.selectedMethodLogin,
         //?--------------------------------------------------------------------------
         // builder: (context, state) => const SelectedMethodLogInPage(), //! base
-        builder: (context, state) => const CoursesPage(),
+        builder: (context, state) => const CourceInfoPage(),
         //?--------------------------------------------------------------------------
       ),
       GoRoute(
@@ -69,6 +71,8 @@ class AppRouter {
           );
         },
       ),
+
+      //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.forgetPassword,
         builder: (context, state) => BlocProvider(
@@ -77,11 +81,27 @@ class AppRouter {
           child: ForgetPasswordPage(),
         ),
       ),
+
+      //?-------------------------------------------------------------------
       GoRoute(
         //TODO: pass the phoeneNumber and reset token as parameters
         path: RouteNames.resetPassword,
         builder: (context, state) => const ResetPasswordPage(),
       ),
+
+      //?-------------------------------------------------------------------
+      GoRoute(
+        path: RouteNames.courses,
+        builder: (context, state) => const CoursesPage(),
+      ),
+
+      //?-------------------------------------------------------------------
+      GoRoute(
+        path: RouteNames.courceInf,
+        builder: (context, state) => const CourceInfoPage(),
+      ),
+
+      //?-------------------------------------------------------------------
       //?-------------------------- Profile Page -------------------------------
       GoRoute(
         path: RouteNames.profile,
