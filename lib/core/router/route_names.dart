@@ -9,4 +9,5 @@ class RouteNames {
   static const courceInf = '/cource-inf';
   static const courses = '/courses';
   static const profile = '/profile';
+  static const enroll = '/enroll';
 }
