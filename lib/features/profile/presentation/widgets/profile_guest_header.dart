@@ -16,9 +16,10 @@ class ProfileGuestHeader extends StatelessWidget {
       height: 198.h,
       width: 362.w,
       child: Card(
-        color: AppColors.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
+          side: BorderSide(color: Theme.of(context).shadowColor),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
@@ -29,7 +30,9 @@ class ProfileGuestHeader extends StatelessWidget {
                       context,
                     )?.translate("Sign_In_To_Gain_Access_To_Your_Courses") ??
                     "Sing In To Gain Access To Your Courses",
-                style: AppTextStyles.s14w600,
+                style: AppTextStyles.s14w600.copyWith(
+                  color: Theme.of(context).primaryColor,
+                ),
                 maxLines: 1,
               ),
               SizedBox(height: 24.h),
@@ -41,8 +44,8 @@ class ProfileGuestHeader extends StatelessWidget {
                   fontFamily: AppTextStyles.fontGeist,
                   color: AppColors.titlePrimary,
                 ),
-                buttonColor: AppColors.buttonPrimary,
-                borderColor: AppColors.borderSecondary,
+                buttonColor: Theme.of(context).cardColor,
+                borderColor: Theme.of(context).hintColor,
                 onTap: () {
                   GoRouter.of(context).go(RouteNames.logIn);
                 },

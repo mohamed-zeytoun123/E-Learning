@@ -19,7 +19,7 @@ import 'package:e_learning/features/Course/presentation/pages/courses_page.dart'
 class AppRouter {
   static final GoRouter router = GoRouter(
     // initialLocation: RouteNames.selectedMethodLogin,
-    initialLocation: RouteNames.enroll,
+    initialLocation: RouteNames.profile,
     routes: [
       GoRoute(
         path: RouteNames.selectedMethodLogin,

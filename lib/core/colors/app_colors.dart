@@ -46,6 +46,7 @@ class AppColors {
 
   //* App Bar Colors
   static const Color appBarBlack = Color(0xff333333);
+  static const Color appBarWhite = Color(0xffF1F1F1);
 
   //* Icon Colors
   static const Color iconWhite = Color(0xffFFFFFF);
