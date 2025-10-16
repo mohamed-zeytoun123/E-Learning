@@ -91,7 +91,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                       (signUpParams?.phone.isNotEmpty ?? false) &&
                       (signUpParams?.password.isNotEmpty ?? false);
 
-                  return CustomButton(
+                  return CustomButtonWidget(
                     title:
                         AppLocalizations.of(context)?.translate("next") ??
                         "Next",

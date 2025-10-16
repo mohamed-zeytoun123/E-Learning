@@ -17,7 +17,10 @@ class CustomBottomContainer extends StatelessWidget {
           topRight: Radius.circular(24.r),
         ),
       ),
-      child: SingleChildScrollView(child: child),
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: child,
+      ),
     );
   }
 }

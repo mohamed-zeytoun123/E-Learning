@@ -11,16 +11,16 @@ class PriceTextWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      spacing: 4.w,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           price,
-          style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+          style: AppTextStyles.s16w400.copyWith(color: AppColors.textPrimary),
         ),
-        SizedBox(width: 4.w),
         Text(
           "S.P",
-          style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+          style: AppTextStyles.s16w400.copyWith(color: AppColors.textPrimary),
         ),
       ],
     );

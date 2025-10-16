@@ -51,7 +51,7 @@ class CourseInfoCardWidget extends StatelessWidget {
                   topLeft: Radius.circular(20.r),
                   topRight: Radius.circular(20.r),
                 ),
-                child: CustomCachedImage(
+                child: CustomCachedImageWidget(
                   appImage: imageUrl,
                   width: double.infinity,
                   height: 180.5,
@@ -110,7 +110,6 @@ class CourseInfoCardWidget extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 6.w),
                   child: RatingWidget(rating: rating),
                 ),
-
                 //* Price
                 PriceTextWidget(price: price),
               ],

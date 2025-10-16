@@ -100,7 +100,7 @@ class _LogInPageState extends State<LogInPage> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-                CustomButton(
+                CustomButtonWidget(
                   title:
                       AppLocalizations.of(context)?.translate("Sign_up") ??
                       "Sign Up",

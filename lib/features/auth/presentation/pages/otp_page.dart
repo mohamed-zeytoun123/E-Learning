@@ -85,7 +85,7 @@ class OtpPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 48.h),
-                CustomButton(
+                CustomButtonWidget(
                   title:
                       AppLocalizations.of(context)?.translate("Next") ?? "Next",
                   titleStyle: AppTextStyles.s16w500.copyWith(

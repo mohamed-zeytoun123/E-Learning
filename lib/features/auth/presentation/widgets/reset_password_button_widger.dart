@@ -19,7 +19,7 @@ class ResetPasswordButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomButton(
+    return CustomButtonWidget(
       title: AppLocalizations.of(context)?.translate("Next") ?? "Next",
       titleStyle: AppTextStyles.s16w500.copyWith(
         fontFamily: AppTextStyles.fontGeist,

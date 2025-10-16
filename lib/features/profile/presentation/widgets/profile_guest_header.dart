@@ -36,7 +36,7 @@ class ProfileGuestHeader extends StatelessWidget {
                 maxLines: 1,
               ),
               SizedBox(height: 24.h),
-              CustomButton(
+              CustomButtonWidget(
                 title:
                     AppLocalizations.of(context)?.translate("Log_in") ??
                     "Log In",
@@ -51,7 +51,7 @@ class ProfileGuestHeader extends StatelessWidget {
                 },
               ),
               SizedBox(height: 12.h),
-              CustomButton(
+              CustomButtonWidget(
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
                   color: context.colors.titleBlack,

@@ -111,7 +111,7 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
                       );
                     }).toList(),
                     SizedBox(height: 10.h),
-                    CustomButton(
+                    CustomButtonWidget(
                       onTap: () {
                         setState(() {
                           selectedValue = tempSelected;

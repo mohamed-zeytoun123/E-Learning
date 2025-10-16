@@ -54,9 +54,12 @@ class AppColors {
   static const Color iconBlack = Color(0xff181818);
   static const Color iconError = Colors.red;
   static const Color iconRed = Color(0xffDE4C3C);
+  static const Color iconCircle = Color(0xffF1F1F1);
+  static const Color iconStars = Colors.amberAccent;
 
   //*  Form Colors
   static const Color formWhite = Color(0xffF1F1F1);
+  static const Color formCircle = Color(0xffDADADA);
 
   //* Divider Colors
   static const Color dividerGrey = Color(0xffF1F1F1);

@@ -58,7 +58,7 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10.h),
-                CustomButton(
+                CustomButtonWidget(
                   title:
                       AppLocalizations.of(context)?.translate("Log_in") ??
                       "Log In",
