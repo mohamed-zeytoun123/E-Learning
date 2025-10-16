@@ -38,7 +38,7 @@ class EnrollInfoCardWidget extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16.r),
-                  child: CustomCachedImage(
+                  child: CustomCachedImageWidget(
                     appImage: imageUrl,
                     width: 80.w,
                     height: 80.h,
