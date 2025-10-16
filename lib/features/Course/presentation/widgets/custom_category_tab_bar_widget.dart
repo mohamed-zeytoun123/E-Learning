@@ -75,7 +75,7 @@ class _CustomCategoryTabBarWidgetState
           ),
         ),
         SizedBox(height: 8.h),
-        Divider(color: Colors.grey[100], thickness: 1, height: 0.h),
+        Divider(color:  AppColors.dividerGrey, thickness: 1, height: 0.h),
 
         Expanded(
           child: Builder(

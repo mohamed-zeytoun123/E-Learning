@@ -67,7 +67,7 @@ class LoginButtonWidget extends StatelessWidget {
         if (state.loginState == ResponseStatusEnum.loading) {
           return AppLoading.circular();
         } else {
-          return CustomButton(
+          return CustomButtonWidget(
             title:
                 AppLocalizations.of(context)?.translate("Log_in") ?? "Log In",
             titleStyle: AppTextStyles.s16w500.copyWith(

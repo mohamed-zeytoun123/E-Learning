@@ -52,6 +52,7 @@ dependencies:
   shimmer: ^3.0.0
   dartz: ^0.10.1
   another_flushbar: ^1.12.32
+  percent_indicator: ^4.2.5
 
 
 dev_dependencies:

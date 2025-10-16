@@ -8,7 +8,7 @@ abstract class AppTextStyles {
   static TextStyle _baseStyle({
     required double fontSize,
     required FontWeight fontWeight,
-    required Color color,
+    Color? color,
     double? height,
   }) => TextStyle(
     fontSize: fontSize.sp,
@@ -38,11 +38,8 @@ abstract class AppTextStyles {
     color: Colors.black,
   );
 
-  static TextStyle get s14w600 => _baseStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: Colors.black,
-  );
+  static TextStyle get s14w600 =>
+      _baseStyle(fontSize: 14, fontWeight: FontWeight.w600);
 
   static TextStyle get s16w400 => _baseStyle(
     fontSize: 16,

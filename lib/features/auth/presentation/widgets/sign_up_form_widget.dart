@@ -65,7 +65,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             hint: 'Confirm Password',
             hintKey: 'Confirm_password',
           ),
-          CustomButton(
+          CustomButtonWidget(
             title: AppLocalizations.of(context)?.translate("next") ?? "Next",
             titleStyle: AppTextStyles.s16w500.copyWith(
               color: AppColors.titlePrimary,
