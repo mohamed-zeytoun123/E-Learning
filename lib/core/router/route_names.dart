@@ -8,6 +8,9 @@ class RouteNames {
   static const resetPassword = '/reset-password';
   static const courceInf = '/cource-inf';
   static const courses = '/courses';
+  // ================= Profile Pages =================
   static const profile = '/profile';
+  static const savedCourses = '/saved-courses';
+  // ================= Enroll Pages =================
   static const enroll = '/enroll';
 }

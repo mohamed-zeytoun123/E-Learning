@@ -1,7 +1,7 @@
-import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +19,7 @@ class ProfileGuestHeader extends StatelessWidget {
         color: Theme.of(context).scaffoldBackgroundColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
-          side: BorderSide(color: Theme.of(context).shadowColor),
+          side: BorderSide(color: context.colors.borderBrand),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
@@ -31,7 +31,7 @@ class ProfileGuestHeader extends StatelessWidget {
                     )?.translate("Sign_In_To_Gain_Access_To_Your_Courses") ??
                     "Sing In To Gain Access To Your Courses",
                 style: AppTextStyles.s14w600.copyWith(
-                  color: Theme.of(context).primaryColor,
+                  color: context.colors.textPrimary,
                 ),
                 maxLines: 1,
               ),
@@ -42,10 +42,10 @@ class ProfileGuestHeader extends StatelessWidget {
                     "Log In",
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.titlePrimary,
+                  color: context.colors.titlePrimary,
                 ),
-                buttonColor: Theme.of(context).cardColor,
-                borderColor: Theme.of(context).hintColor,
+                buttonColor: context.colors.buttonPrimary,
+                borderColor: context.colors.borderBrand,
                 onTap: () {
                   GoRouter.of(context).go(RouteNames.logIn);
                 },
@@ -54,14 +54,14 @@ class ProfileGuestHeader extends StatelessWidget {
               CustomButton(
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.titleBlack,
+                  color: context.colors.titleBlack,
                 ),
                 title:
                     AppLocalizations.of(context)?.translate("Sign_up") ??
                     "Sign Up",
 
-                buttonColor: AppColors.buttonWhite,
-                borderColor: AppColors.borderBrand,
+                buttonColor: context.colors.buttonWhite,
+                borderColor: context.colors.borderBrand,
                 onTap: () {
                   GoRouter.of(context).go(RouteNames.signUp);
                 },
