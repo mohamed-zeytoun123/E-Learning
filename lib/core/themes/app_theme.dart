@@ -7,15 +7,15 @@ class AppTheme {
   static ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     colorScheme: ColorScheme.light(
-      primary: AppColors.buttonPrimary,
-      secondary: AppColors.buttonSecondary,
+      primary: AppColors.primary,
+      secondary: AppColors.secondary,
       surface: AppColors.background,
       onSurface: AppColors.textBlack,
       error: AppColors.textError,
     ),
     scaffoldBackgroundColor: AppColors.background,
     appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.appBarBlack,
+      backgroundColor: AppColors.primary,
       titleTextStyle: AppTextStyles.s18w600.copyWith(
         color: AppColors.textWhite,
       ),

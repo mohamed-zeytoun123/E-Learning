@@ -75,9 +75,9 @@ class CourseInfoCardWidget extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: AppColors.borderSecondary),
                     ),
-                    child: const Icon(
+                    child: Icon(
                       Icons.bookmark_border,
-                      color: AppColors.iconBlack,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 ),

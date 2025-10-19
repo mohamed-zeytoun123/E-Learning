@@ -23,11 +23,11 @@ class RatingWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           if (showIcon)
-            Icon(Icons.star, color: AppColors.iconGrey, size: 16.sp),
+            Icon(Icons.star, color: AppColors.ratingStar, size: 16.sp),
           if (showIcon) SizedBox(width: 3.w),
           Text(
             rating.toString(),
-            style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
+            style: AppTextStyles.s14w400.copyWith(color: AppColors.ratingStar),
           ),
         ],
       ),

@@ -11,6 +11,7 @@ class RouteNames {
   // ================= Profile Pages =================
   static const profile = '/profile';
   static const savedCourses = '/saved-courses';
+  static const downloads = '/downloads';
   // ================= Enroll Pages =================
   static const enroll = '/enroll';
 }

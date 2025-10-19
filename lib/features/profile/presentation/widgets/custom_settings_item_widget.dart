@@ -4,13 +4,13 @@ import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomProfileListTile extends StatelessWidget {
+class CustomSettingsItemWidget extends StatelessWidget {
   final IconData icon;
   final Color? iconColor;
   final String title;
   final Color? titleColor;
   final VoidCallback onTap;
-  const CustomProfileListTile({
+  const CustomSettingsItemWidget({
     super.key,
     required this.icon,
     this.iconColor,
