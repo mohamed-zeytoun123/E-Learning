@@ -13,11 +13,11 @@ class RatingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 25.h,
+
       decoration: BoxDecoration(
         color: const Color(0xFFF1F1F1),
         borderRadius: BorderRadius.circular(12.r),
       ),
-      padding: EdgeInsets.symmetric(horizontal: 5.w),
       alignment: Alignment.center,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

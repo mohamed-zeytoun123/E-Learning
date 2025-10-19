@@ -25,11 +25,6 @@ class VideoProgressWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        Text(
-          "Your Progress",
-          style: AppTextStyles.s16w400.copyWith(color: AppColors.textBlack),
-        ),
-
         ClipRRect(
           borderRadius: BorderRadius.circular(999.r),
           child: LinearPercentIndicator(
