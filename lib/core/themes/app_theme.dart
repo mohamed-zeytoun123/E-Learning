@@ -9,11 +9,11 @@ class AppTheme {
     colorScheme: ColorScheme.light(
       primary: AppColors.primary,
       secondary: AppColors.secondary,
-      surface: AppColors.background,
+      surface: AppColors.backgroundPage,
       onSurface: AppColors.textBlack,
       error: AppColors.textError,
     ),
-    scaffoldBackgroundColor: AppColors.background,
+    scaffoldBackgroundColor: AppColors.backgroundPage,
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.primary,
       titleTextStyle: AppTextStyles.s18w600.copyWith(
@@ -24,8 +24,8 @@ class AppTheme {
     extensions: [
       AppColorsExtension(
         //* Primary Colors
-        background: AppColors.background,
-        backgroundDark: AppColors.backgroundDark,
+        background: AppColors.backgroundPage,
+        backgroundDark: AppColors.backgroundDarkPage,
 
         //* Text Colors
         textPrimary: AppColors.textPrimary,
@@ -72,7 +72,7 @@ class AppTheme {
         //* Icon Colors
         iconWhite: AppColors.iconWhite,
         iconGrey: AppColors.iconGrey,
-        iconBlack: AppColors.iconBlack,
+        iconBlack: AppColors.iconBlue,
         iconError: AppColors.iconError,
         iconRed: AppColors.iconRed,
 
@@ -90,11 +90,11 @@ class AppTheme {
     colorScheme: ColorScheme.dark(
       primary: AppColors.buttonSecondary,
       secondary: AppColors.buttonPrimary,
-      surface: AppColors.backgroundDark,
+      surface: AppColors.backgroundDarkPage,
       onSurface: AppColors.textWhite,
       error: AppColors.textError,
     ),
-    scaffoldBackgroundColor: AppColors.backgroundDark,
+    scaffoldBackgroundColor: AppColors.backgroundDarkPage,
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.appBarWhite,
       titleTextStyle: AppTextStyles.s18w600.copyWith(
@@ -106,8 +106,8 @@ class AppTheme {
     extensions: [
       AppColorsExtension(
         //* Primary Colors
-        background: AppColors.backgroundDark,
-        backgroundDark: AppColors.backgroundDark,
+        background: AppColors.backgroundDarkPage,
+        backgroundDark: AppColors.backgroundDarkPage,
 
         //* Text Colors
         textPrimary: AppColors.textWhite,

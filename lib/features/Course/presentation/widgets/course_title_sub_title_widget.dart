@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 
-class CourseTitleSubtitle extends StatelessWidget {
+class CourseTitleSubTitleWidget extends StatelessWidget {
   final String title;
   final String subtitle;
   final TextStyle? titleStyle;
 
-  const CourseTitleSubtitle({
+  const CourseTitleSubTitleWidget({
     super.key,
     required this.title,
     required this.subtitle,

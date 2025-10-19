@@ -7,11 +7,15 @@ import 'package:percent_indicator/percent_indicator.dart';
 class VideoProgressWidget extends StatelessWidget {
   final int completedVideos;
   final int totalVideos;
+  final bool showDetiels;
+  final double hieghtProgress;
 
   const VideoProgressWidget({
     super.key,
     required this.completedVideos,
     required this.totalVideos,
+    this.hieghtProgress = 12,
+    this.showDetiels = true,
   });
 
   @override
@@ -25,40 +29,38 @@ class VideoProgressWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        Text(
-          "Your Progress",
-          style: AppTextStyles.s16w400.copyWith(color: AppColors.textBlack),
-        ),
-
         ClipRRect(
           borderRadius: BorderRadius.circular(999.r),
           child: LinearPercentIndicator(
-            lineHeight: 12.h,
+            lineHeight: hieghtProgress.h,
             percent: percent,
-            backgroundColor: const Color(0xFFF1F1F1),
-            progressColor: const Color(0xFF181818),
+            backgroundColor: AppColors.formWhite,
+            progressColor: AppColors.formProgress,
             barRadius: Radius.circular(999.r),
             animation: true,
             animationDuration: 700,
           ),
         ),
-
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '$completedVideos Of $totalVideos Videos',
-              style: AppTextStyles.s14w400.copyWith(
-                color: AppColors.textGrey,
-                fontSize: 14.sp,
-              ),
-            ),
-            Text(
-              '$percentValue% Completed',
-              style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
-            ),
-          ],
-        ),
+        showDetiels
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '$completedVideos Of $totalVideos Videos',
+                    style: AppTextStyles.s14w400.copyWith(
+                      color: AppColors.textGrey,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                  Text(
+                    '$percentValue% Completed',
+                    style: AppTextStyles.s14w400.copyWith(
+                      color: AppColors.textGrey,
+                    ),
+                  ),
+                ],
+              )
+            : SizedBox(),
       ],
     );
   }

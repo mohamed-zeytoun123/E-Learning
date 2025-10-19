@@ -1,8 +1,8 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/cource_review_card_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/review_bottom_sheet_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/cource_review_card_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/review_bottom_sheet_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -66,7 +66,7 @@ class BodyTabReviewsWidget extends StatelessWidget {
                   topLeft: Radius.circular(24.r),
                   topRight: Radius.circular(24.r),
                 ),
-                color: AppColors.background,
+                color: AppColors.backgroundPage,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,

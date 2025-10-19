@@ -29,7 +29,7 @@ class VideoHoursWidget extends StatelessWidget {
             children: [
               Icon(
                 Icons.videocam_outlined,
-                color: AppColors.iconBlack,
+                color: AppColors.iconBlue,
                 size: 20.sp,
               ),
               SizedBox(width: 8.w),
@@ -58,7 +58,7 @@ class VideoHoursWidget extends StatelessWidget {
 
           Row(
             children: [
-              Icon(Icons.access_time, color: AppColors.iconBlack, size: 20.sp),
+              Icon(Icons.access_time, color: AppColors.iconBlue, size: 20.sp),
               SizedBox(width: 8.w),
               Text(
                 '$hoursCount',
