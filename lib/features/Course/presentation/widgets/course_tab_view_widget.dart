@@ -17,9 +17,9 @@ class CourseTabViewWidget extends StatelessWidget {
         children: [
           TabBar(
             indicatorSize: TabBarIndicatorSize.tab,
-            indicatorColor: AppColors.textprimary,
+            indicatorColor: AppColors.textPrimary,
             indicatorWeight: 2.h,
-            labelColor: AppColors.textprimary,
+            labelColor: AppColors.textPrimary,
             unselectedLabelColor: AppColors.textGrey,
             labelStyle: AppTextStyles.s14w600,
             tabs: [

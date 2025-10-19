@@ -5,9 +5,10 @@ class AppColors {
 
   //* Primary Colors
   static const Color background = Color(0xffFFFFFF);
+  static const Color backgroundDark = Color(0xff000000);
 
   //* Text Colors
-  static const Color textprimary = Color(0xff181818);
+  static const Color textPrimary = Color(0xff181818);
   static const Color textBlack = Color(0xff282828);
   static const Color textGrey = Color(0xff737373);
   static const Color textError = Colors.red;
@@ -45,6 +46,7 @@ class AppColors {
 
   //* App Bar Colors
   static const Color appBarBlack = Color(0xff333333);
+  static const Color appBarWhite = Color(0xffF1F1F1);
 
   //* Icon Colors
   static const Color iconWhite = Color(0xffFFFFFF);

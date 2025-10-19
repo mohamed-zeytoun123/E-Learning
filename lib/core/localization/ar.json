@@ -71,5 +71,6 @@
     "no_data": "لا توجد بيانات",
    "no_connection": "لا يوجد اتصال، يرجى المحاولة مرة أخرى",
     "select_university": "يرجى اختيار الجامعة",
-    "Sign_In_To_Gain_Access_To_Your_Courses": "سجّل الدخول للوصول إلى دوراتك"
+    "Sign_In_To_Gain_Access_To_Your_Courses": "سجّل الدخول للوصول إلى دوراتك",
+    "Your_Enrolls":"تسجيلاتك"
 }

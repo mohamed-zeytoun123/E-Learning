@@ -11,7 +11,9 @@ import 'package:e_learning/features/auth/presentation/pages/otp_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
+import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
+import 'package:e_learning/features/profile/presentation/pages/saved_courses_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_learning/features/course/presentation/pages/courses_page.dart';
@@ -102,11 +104,19 @@ class AppRouter {
         builder: (context, state) => const CourceInfoPage(),
       ),
 
-      //?-------------------------------------------------------------------
-      //?-------------------------- Profile Page -------------------------------
+      //? --------------------------- Profile Pages --------------------------
       GoRoute(
         path: RouteNames.profile,
         builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
+        path: RouteNames.savedCourses,
+        builder: (context, state) => const SavedCoursesPage(),
+      ),
+      //?-------------------------------------------------------------------
+      GoRoute(
+        path: RouteNames.enroll,
+        builder: (context, state) => const EnrollPage(),
       ),
     ],
   );

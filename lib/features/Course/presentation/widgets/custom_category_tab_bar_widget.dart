@@ -64,7 +64,7 @@ class _CustomCategoryTabBarWidgetState
                       Text(
                         tabs[index],
                         style: AppTextStyles.s14w400.copyWith(
-                          color: AppColors.textprimary,
+                          color: AppColors.textPrimary,
                         ),
                       ),
                     ],

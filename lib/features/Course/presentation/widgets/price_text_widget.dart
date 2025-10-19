@@ -16,11 +16,11 @@ class PriceTextWidget extends StatelessWidget {
       children: [
         Text(
           price,
-          style: AppTextStyles.s16w400.copyWith(color: AppColors.textprimary),
+          style: AppTextStyles.s16w400.copyWith(color: AppColors.textPrimary),
         ),
         Text(
           "S.P",
-          style: AppTextStyles.s16w400.copyWith(color: AppColors.textprimary),
+          style: AppTextStyles.s16w400.copyWith(color: AppColors.textPrimary),
         ),
       ],
     );

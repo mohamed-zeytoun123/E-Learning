@@ -1,5 +1,4 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_title_subtitle_widget.dart';

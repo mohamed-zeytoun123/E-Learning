@@ -1,14 +1,16 @@
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/model/enums/app_state_enum.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/widgets/app_bar/custom_app_bar.dart';
 import 'package:e_learning/features/profile/presentation/widgets/custom_profile_list_tile.dart';
 import 'package:e_learning/features/profile/presentation/widgets/profile_guest_header.dart';
 import 'package:e_learning/features/profile/presentation/widgets/profile_user_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -16,20 +18,13 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Text(
-          'Profile Page',
-          style: AppTextStyles.s18w600.copyWith(color: AppColors.titlePrimary),
-        ),
-        backgroundColor: AppColors.appBarBlack,
-      ),
+      appBar: CustomAppBar(title: 'Profile Page', showBack: true),
       body: Padding(
         padding: EdgeInsets.only(
           top: 42.h,
           bottom: 32.h,
-          right: 24.w,
-          left: 24.w,
+          right: 16.w,
+          left: 16.w,
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -47,39 +42,53 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 32.h),
               CustomProfileListTile(
                 icon: Icons.bookmark_outline,
+                iconColor: context.colors.iconBlack,
                 title: 'Saved Courses',
-                onTap: () {},
+                onTap: () {
+                  context.push(RouteNames.savedCourses);
+                },
               ),
               CustomProfileListTile(
                 icon: Icons.download_outlined,
+                iconColor: context.colors.iconBlack,
                 title: 'DownLoads',
                 onTap: () {},
               ),
               CustomProfileListTile(
                 icon: Icons.language_outlined,
+                iconColor: context.colors.iconBlack,
                 title: 'Languages',
                 onTap: () {},
               ),
               CustomProfileListTile(
                 icon: Icons.light_mode_outlined,
+                iconColor: context.colors.iconBlack,
                 title: 'Colors Mode',
-                onTap: () {},
+                onTap: () => context.read<AppManagerCubit>().toggleTheme(),
               ),
               CustomProfileListTile(
                 icon: Icons.shield_outlined,
+                iconColor: context.colors.iconBlack,
                 title: 'Privacy Policy',
                 onTap: () {},
               ),
               CustomProfileListTile(
+                icon: Icons.newspaper_outlined,
+                iconColor: context.colors.iconBlack,
+                title: 'Terms & Conditions',
+                onTap: () {},
+              ),
+              CustomProfileListTile(
                 icon: Icons.article_outlined,
+                iconColor: context.colors.iconBlack,
                 title: 'About Us',
                 onTap: () {},
               ),
               CustomProfileListTile(
                 icon: Icons.logout_outlined,
-                iconColor: AppColors.iconRed,
+                iconColor: context.colors.iconRed,
                 title: 'Log Out',
-                titleColor: AppColors.textRed,
+                titleColor: context.colors.textRed,
                 onTap: () {},
               ),
             ],

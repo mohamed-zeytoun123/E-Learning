@@ -50,7 +50,7 @@ class ChapterRowWidget extends StatelessWidget {
                     child: Text(
                       chapterText,
                       style: AppTextStyles.s16w600.copyWith(
-                        color: AppColors.textprimary,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ),
@@ -105,7 +105,6 @@ class ChapterRowWidget extends StatelessWidget {
             ),
           ),
         ),
-
       ],
     );
   }
