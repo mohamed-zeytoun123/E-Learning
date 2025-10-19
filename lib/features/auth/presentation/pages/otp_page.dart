@@ -25,7 +25,7 @@ class OtpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     String? verficationCode;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundPage,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(

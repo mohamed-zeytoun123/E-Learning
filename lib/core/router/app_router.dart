@@ -85,23 +85,27 @@ class AppRouter {
         ),
       ),
 
-      //?-------------------------------------------------------------------
       GoRoute(
         //TODO: pass the phoeneNumber and reset token as parameters
         path: RouteNames.resetPassword,
         builder: (context, state) => const ResetPasswordPage(),
       ),
 
-      //?-------------------------------------------------------------------
+      //?------ Course Featchers -------------------------------------------------------------
       GoRoute(
         path: RouteNames.courses,
         builder: (context, state) => const CoursesPage(),
       ),
 
-      //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.courceInf,
         builder: (context, state) => const CourceInfoPage(),
+      ),
+      //?-------------------------------------------------------------------
+
+      GoRoute(
+        path: RouteNames.chapterPage,
+        builder: (context, state) => const ChaptersPage(),
       ),
 
       //? --------------------------- Profile Pages --------------------------

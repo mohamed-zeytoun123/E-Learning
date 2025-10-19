@@ -13,7 +13,7 @@ class ProfileUserHeader extends StatelessWidget {
       height: 198.h,
       width: 362.w,
       child: Card(
-        color: AppColors.background,
+        color: AppColors.backgroundPage,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
         ),

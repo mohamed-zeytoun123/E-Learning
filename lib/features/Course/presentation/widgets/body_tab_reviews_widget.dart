@@ -66,7 +66,7 @@ class BodyTabReviewsWidget extends StatelessWidget {
                   topLeft: Radius.circular(24.r),
                   topRight: Radius.circular(24.r),
                 ),
-                color: AppColors.background,
+                color: AppColors.backgroundPage,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,

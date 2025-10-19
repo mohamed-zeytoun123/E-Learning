@@ -1,7 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_title_subtitle_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
 import 'package:flutter/material.dart';
@@ -77,7 +77,7 @@ class CourseInfoCardWidget extends StatelessWidget {
                     ),
                     child: const Icon(
                       Icons.bookmark_border,
-                      color: AppColors.iconBlack,
+                      color: AppColors.iconBlue,
                     ),
                   ),
                 ),
@@ -87,7 +87,7 @@ class CourseInfoCardWidget extends StatelessWidget {
 
           SizedBox(height: 8.h),
 
-          CourseTitleSubtitle(
+          CourseTitleSubTitleWidget(
             title: 'Flutter Development',
             subtitle: 'Learn to build apps with Flutter',
           ),

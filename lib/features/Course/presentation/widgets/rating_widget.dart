@@ -11,26 +11,28 @@ class RatingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 25.h,
-
-      decoration: BoxDecoration(
-        color: const Color(0xFFF1F1F1),
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      alignment: Alignment.center,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (showIcon)
-            Icon(Icons.star, color: AppColors.iconGrey, size: 16.sp),
-          if (showIcon) SizedBox(width: 3.w),
-          Text(
-            rating.toString(),
-            style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
-          ),
-        ],
-      ),
+    final content = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(Icons.star, color: AppColors.iconOrange, size: 16.sp),
+        Text(
+          rating.toString(),
+          style: AppTextStyles.s14w400.copyWith(color: AppColors.textOrange),
+        ),
+      ],
     );
+
+    return showIcon
+        ? Container(
+            height: 25.h,
+            width: 43.w,
+            decoration: BoxDecoration(
+              color: AppColors.backgroundLittelOrange,
+              borderRadius: BorderRadius.circular(12.r),
+            ),
+            alignment: Alignment.center,
+            child: content,
+          )
+        : content;
   }
 }

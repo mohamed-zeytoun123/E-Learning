@@ -1,16 +1,29 @@
 class RouteNames {
   static const selectedMethodLogin = '/selected-method-login';
+  //?--------------------------------------------------------------------------
+
+  //* ================= Auth Featchers =================
+
   static const signUp = '/sign-up';
   static const logIn = '/log-in';
   static const universitySelection = '/university-selection';
   static const otpScreen = '/otp-screen';
   static const forgetPassword = '/forget-password';
   static const resetPassword = '/reset-password';
+
+  //* ================= Course Featchers =================
   static const courceInf = '/cource-inf';
   static const courses = '/courses';
-  // ================= Profile Pages =================
+
+  //* ================= Chapter Featchers =================
+  static const chapterPage = '/chapter-page';
+
+  //* ================= Profile Featchers =================
   static const profile = '/profile';
   static const savedCourses = '/saved-courses';
-  // ================= Enroll Pages =================
+
+  //* ================= Enroll Featchers =================
   static const enroll = '/enroll';
+
+  //?--------------------------------------------------------------------------
 }

@@ -14,7 +14,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundPage,
       body: Padding(
         padding: EdgeInsets.only(top: 430.h, bottom: 50.h),
         child: Center(

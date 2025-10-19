@@ -1,31 +1,22 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ChapterRowWidget extends StatelessWidget {
-  final int chapterNumber;
+class FileRowWidget extends StatelessWidget {
   final String chapterTitle;
-  final int videoCount;
-  final int durationMinutes;
+  final int sizeFile;
   final VoidCallback? onTap;
 
-  const ChapterRowWidget({
+  const FileRowWidget({
     super.key,
-    required this.chapterNumber,
     required this.chapterTitle,
-    required this.videoCount,
-    required this.durationMinutes,
+    required this.sizeFile,
     this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final chapterText = chapterNumber < 10
-        ? '0$chapterNumber'
-        : '$chapterNumber';
-
     return Column(
       children: [
         Material(
@@ -48,15 +39,13 @@ class ChapterRowWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     alignment: Alignment.center,
-                    child: Text(
-                      chapterText,
-                      style: AppTextStyles.s16w600.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
+                    child: Icon(
+                      Icons.insert_drive_file_outlined,
+                      color: AppColors.iconBlue,
+                      size: 25.sp,
                     ),
                   ),
                   SizedBox(width: 12.w),
-
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -70,28 +59,15 @@ class ChapterRowWidget extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                         SizedBox(height: 4.h),
-                        Row(
-                          spacing: 5.w,
-                          children: [
-                            Text(
-                              '$videoCount Videos',
-                              style: AppTextStyles.s14w400.copyWith(
-                                color: AppColors.textGrey,
-                              ),
-                            ),
-                            IconCircleWidget(),
-                            Text(
-                              '$durationMinutes Mins',
-                              style: AppTextStyles.s14w400.copyWith(
-                                color: AppColors.textGrey,
-                              ),
-                            ),
-                          ],
+                        Text(
+                          '$sizeFile MB',
+                          style: AppTextStyles.s14w400.copyWith(
+                            color: AppColors.textGrey,
+                          ),
                         ),
                       ],
                     ),
                   ),
-
                   Icon(
                     Icons.arrow_forward_ios,
                     size: 20.sp,
