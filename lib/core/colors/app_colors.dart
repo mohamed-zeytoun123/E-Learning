@@ -62,7 +62,8 @@ class AppColors {
   static const Color iconStars = Color(0xffD45F2E);
 
   //*  Form Colors
-  static const Color formWhite = Color(0xffF1F1F1);
+  static const Color formWhite = Color(0xffFFFFFF);
+  static const Color formSomeWhite = Color(0xffF1F1F1);
   static const Color formCircle = Color(0xffEDF7FF);
   static const Color formProgress = Color(0xff0071C7);
 

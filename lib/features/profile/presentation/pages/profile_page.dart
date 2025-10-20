@@ -3,7 +3,7 @@ import 'package:e_learning/core/app/manager/app_manager_state.dart';
 import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/app_bar/custom_app_bar.dart';
+import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/features/profile/presentation/widgets/custom_profile_list_tile.dart';
 import 'package:e_learning/features/profile/presentation/widgets/profile_guest_header.dart';
 import 'package:e_learning/features/profile/presentation/widgets/profile_user_header.dart';
@@ -18,7 +18,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Profile Page', showBack: true),
+      appBar: CustomAppBarWidget(title: 'Profile Page', showBack: true),
       body: Padding(
         padding: EdgeInsets.only(
           top: 42.h,

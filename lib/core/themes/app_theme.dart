@@ -77,7 +77,7 @@ class AppTheme {
         iconRed: AppColors.iconRed,
 
         //*  Form Colors
-        formWhite: AppColors.formWhite,
+        formWhite: AppColors.formSomeWhite,
 
         //* Divider Colors
         dividerGrey: AppColors.dividerGrey,
@@ -158,7 +158,7 @@ class AppTheme {
         iconRed: AppColors.iconRed,
 
         //*  Form Colors
-        formWhite: AppColors.formWhite,
+        formWhite: AppColors.formSomeWhite,
 
         //* Divider Colors
         dividerGrey: AppColors.dividerGrey,

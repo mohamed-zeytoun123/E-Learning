@@ -19,7 +19,7 @@ class VideoHoursWidget extends StatelessWidget {
       height: 41.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
-        color: AppColors.formWhite,
+        color: AppColors.formSomeWhite,
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(

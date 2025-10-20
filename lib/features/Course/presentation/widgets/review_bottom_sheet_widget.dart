@@ -32,7 +32,7 @@ class ReviewBottomSheetWidget extends StatelessWidget {
               width: 80.w,
               height: 8.h,
               decoration: BoxDecoration(
-                color: AppColors.formWhite,
+                color: AppColors.formSomeWhite,
                 borderRadius: BorderRadius.circular(4.r),
               ),
             ),
