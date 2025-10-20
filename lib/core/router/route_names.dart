@@ -22,6 +22,7 @@ class RouteNames {
   static const profile = '/profile';
   static const savedCourses = '/saved-courses';
 
+  static const downloads = '/downloads';
   //* ================= Enroll Featchers =================
   static const enroll = '/enroll';
 

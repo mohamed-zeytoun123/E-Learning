@@ -4,6 +4,8 @@ class AppColors {
   //?-----------------------------------------------------
 
   //* backGround Colors
+  static const Color primary = Color(0xff0071C7);
+  static const Color secondary = Color(0xffEDF7FF);
   static const Color backgroundPage = Color(0xffFFFFFF);
   static const Color backgroundWhiteWidget = Color(0xffFFFFFF);
   static const Color backgroundDarkPage = Color(0xff000000);
@@ -69,6 +71,9 @@ class AppColors {
 
   //* Divider Colors
   static const Color dividerGrey = Color(0xffF1F1F1);
+
+  //* Rating Color
+  static const Color ratingStar = Color(0xffD45F2E);
 
   //?-----------------------------------------------------
 }

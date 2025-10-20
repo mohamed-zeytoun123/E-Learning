@@ -12,6 +12,7 @@ import 'package:e_learning/features/auth/presentation/pages/reset_password_page.
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
 import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
+import 'package:e_learning/features/profile/presentation/pages/downloads_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/saved_courses_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,8 +102,8 @@ class AppRouter {
         path: RouteNames.courceInf,
         builder: (context, state) => const CourceInfoPage(),
       ),
-      //?-------------------------------------------------------------------
 
+      //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.chapterPage,
         builder: (context, state) => const ChaptersPage(),
@@ -116,6 +117,10 @@ class AppRouter {
       GoRoute(
         path: RouteNames.savedCourses,
         builder: (context, state) => const SavedCoursesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.downloads,
+        builder: (context, state) => const DownloadsPage(),
       ),
       //?-------------------------------------------------------------------
       GoRoute(

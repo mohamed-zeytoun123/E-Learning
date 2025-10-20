@@ -44,7 +44,7 @@ class ProfileGuestHeader extends StatelessWidget {
                   fontFamily: AppTextStyles.fontGeist,
                   color: context.colors.titlePrimary,
                 ),
-                buttonColor: context.colors.buttonPrimary,
+                buttonColor: Theme.of(context).colorScheme.primary,
                 borderColor: context.colors.borderBrand,
                 onTap: () {
                   GoRouter.of(context).go(RouteNames.logIn);
@@ -54,14 +54,14 @@ class ProfileGuestHeader extends StatelessWidget {
               CustomButtonWidget(
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: context.colors.titleBlack,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 title:
                     AppLocalizations.of(context)?.translate("Sign_up") ??
                     "Sign Up",
 
                 buttonColor: context.colors.buttonWhite,
-                borderColor: context.colors.borderBrand,
+                borderColor: Theme.of(context).colorScheme.primary,
                 onTap: () {
                   GoRouter.of(context).go(RouteNames.signUp);
                 },

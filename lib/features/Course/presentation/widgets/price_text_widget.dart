@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,11 +15,17 @@ class PriceTextWidget extends StatelessWidget {
       children: [
         Text(
           price,
-          style: AppTextStyles.s16w400.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.s16w400.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         Text(
           "S.P",
-          style: AppTextStyles.s16w400.copyWith(color: AppColors.textPrimary),
+          style: AppTextStyles.s16w400.copyWith(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );
