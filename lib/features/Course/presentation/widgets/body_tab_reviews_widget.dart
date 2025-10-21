@@ -21,7 +21,10 @@ class BodyTabReviewsWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 15.w,
+                    vertical: 10.h,
+                  ),
                   child: Text(
                     "Ratings & Reviews",
                     style: AppTextStyles.s16w600.copyWith(

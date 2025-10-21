@@ -1,13 +1,15 @@
 import 'dart:developer';
-
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/quiz_info_card_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/quiz_question_widget.dart';
+import 'package:e_learning/features/chapter/presentation/widgets/quiz_result_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class QuizPage extends StatelessWidget {
   const QuizPage({super.key});
@@ -61,6 +63,25 @@ class QuizPage extends StatelessWidget {
               ),
               buttonColor: AppColors.buttonPrimary,
               borderColor: AppColors.borderPrimary,
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: false,
+                  backgroundColor: Colors.transparent,
+
+                  isDismissible: false,
+                  enableDrag: false,
+
+                  builder: (ctx) => QuizResultBottomSheet(
+                    score: 6,
+                    total: 10,
+                    onDone: () {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.pushReplacement(RouteNames.chapterPage);
+                    },
+                  ),
+                );
+              },
             ),
           ],
         ),

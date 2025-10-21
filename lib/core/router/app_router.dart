@@ -27,7 +27,7 @@ class AppRouter {
         path: RouteNames.selectedMethodLogin,
         //?--------------------------------------------------------------------------
         // builder: (context, state) => const SelectedMethodLogInPage(), //! base
-        builder: (context, state) => const QuizPage(),
+        builder: (context, state) => const CourceInfoPage(),
         //?--------------------------------------------------------------------------
       ),
       GoRoute(
@@ -103,10 +103,15 @@ class AppRouter {
         builder: (context, state) => const CourceInfoPage(),
       ),
 
-      //?-------------------------------------------------------------------
+      //?----- Chapter Featchers  --------------------------------------------------------------
       GoRoute(
         path: RouteNames.chapterPage,
         builder: (context, state) => const ChaptersPage(),
+      ),
+
+      GoRoute(
+        path: RouteNames.quizPage,
+        builder: (context, state) => const QuizPage(),
       ),
 
       //? --------------------------- Profile Pages --------------------------

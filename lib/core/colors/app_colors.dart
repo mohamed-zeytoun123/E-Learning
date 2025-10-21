@@ -71,6 +71,7 @@ class AppColors {
 
   //* Divider Colors
   static const Color dividerGrey = Color(0xffF1F1F1);
+  static const Color dividerWhite = Color(0xffF5F5F5);
 
   //* Rating Color
   static const Color ratingStar = Color(0xffD45F2E);

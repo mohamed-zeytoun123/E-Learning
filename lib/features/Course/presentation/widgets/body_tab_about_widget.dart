@@ -36,7 +36,7 @@ class BodyTabAboutWidget extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               "Description About Course’s Content And Subjects, Description About Course’s Content And Subjects, Description About Course’s Content And Subjects, Description About Course’s Content And Subjects.",
-              style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+              style: AppTextStyles.s16w400.copyWith(color: AppColors.textBlack),
             ),
             SizedBox(height: 16.h),
 
@@ -52,7 +52,14 @@ class BodyTabAboutWidget extends StatelessWidget {
                 PriceTextWidget(price: "199999"),
               ],
             ),
-            Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h),
+              child: Divider(
+                color: AppColors.dividerGrey,
+                thickness: 1,
+                height: 0.h,
+              ),
+            ),
             Text(
               "Content",
               style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
