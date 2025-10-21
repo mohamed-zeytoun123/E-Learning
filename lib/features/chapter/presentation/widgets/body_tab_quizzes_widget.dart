@@ -1,5 +1,4 @@
 import 'package:e_learning/features/chapter/presentation/widgets/quiz_locked_widget.dart';
-import 'package:e_learning/features/chapter/presentation/widgets/quiz_ready_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

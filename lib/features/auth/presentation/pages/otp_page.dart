@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
@@ -13,7 +12,6 @@ import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:go_router/go_router.dart';
 
 class OtpPage extends StatelessWidget {

@@ -3,8 +3,6 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/body_tab_files_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/body_tab_quizzes_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/body_tab_vedio_widget.dart';
-import 'package:e_learning/features/chapter/presentation/widgets/quiz_locked_widget.dart';
-import 'package:e_learning/features/chapter/presentation/widgets/quiz_ready_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -32,7 +32,7 @@ class ProfilePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // TODO: Pass user data to ProfileUserHeader and UserInfoRow
+              //TODO: Pass user data to ProfileUserHeader and UserInfoRow
               BlocBuilder<AppManagerCubit, AppManagerState>(
                 builder: (context, state) {
                   if (state.appState == AppStateEnum.user) {
