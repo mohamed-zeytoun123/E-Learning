@@ -35,7 +35,7 @@ class VideoProgressWidget extends StatelessWidget {
             lineHeight: hieghtProgress.h,
             percent: percent,
             backgroundColor: AppColors.formWhite,
-            progressColor: AppColors.formProgress,
+            progressColor: Theme.of(context).colorScheme.primary,
             barRadius: Radius.circular(999.r),
             animation: true,
             animationDuration: 700,

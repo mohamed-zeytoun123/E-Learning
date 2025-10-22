@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/input_forms/input_review_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/rating_stars_widget.dart';
@@ -10,8 +11,9 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:go_router/go_router.dart';
 
 class ReviewBottomSheetWidget extends StatelessWidget {
-  ReviewBottomSheetWidget({super.key});
-  final TextEditingController reviewController = TextEditingController();
+  final TextEditingController reviewController;
+  const ReviewBottomSheetWidget({super.key, required this.reviewController});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,7 +43,8 @@ class ReviewBottomSheetWidget extends StatelessWidget {
 
           Center(
             child: Text(
-              "Rate Your Experience!",
+              AppLocalizations.of(context)?.translate("Rate_Your_Experience") ??
+                  "Rate Your Experience!",
               style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
             ),
           ),
@@ -57,14 +60,17 @@ class ReviewBottomSheetWidget extends StatelessWidget {
           SizedBox(height: 10.h),
 
           Text(
-            "Write Your Review",
+            AppLocalizations.of(context)?.translate("Write_Your_Review") ??
+                "Write Your Review",
             style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
           ),
           SizedBox(height: 10.h),
 
           InputReviewWidget(
             controller: reviewController,
-            hint: "Your Opinion",
+            hint:
+                AppLocalizations.of(context)?.translate("yourOpinion") ??
+                "Your Opinion",
             hintKey: "yourOpinion",
           ),
 
@@ -75,7 +81,9 @@ class ReviewBottomSheetWidget extends StatelessWidget {
               onTap: () {
                 context.pop(context);
               },
-              title: "Send Review",
+              title:
+                  AppLocalizations.of(context)?.translate("Send_Review") ??
+                  "Send Review",
               titleStyle: AppTextStyles.s16w500.copyWith(
                 color: AppColors.titlePrimary,
               ),

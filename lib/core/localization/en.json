@@ -92,5 +92,18 @@
     "Themes":"Themes",
     "System_Default":"System Default",
     "Light":"Light",
-    "Dark":"Dark"
+    "Dark":"Dark",
+    "active":"active",
+    "completed":"completed",
+    "suspended":"suspended",
+    "Rate": "Rate",
+    "View_Ratings": "View Ratings",
+    "Your_Review": "Your Review",
+    "Rate_Your_Experience": "Rate Your Experience!",
+    "Write_Your_Review": "Write Your Review",
+    "Your_Opinion": "Your Opinion",
+    "Send_Review": "Send Review",
+    "Contact_Us_To_Activate_Your_Course": "Contact Us To Activate Your Course",
+    "Contact_Us": "Contact Us",
+    "Course_Has_Been_Suspended!": "Course Has Been Suspended!"
 }

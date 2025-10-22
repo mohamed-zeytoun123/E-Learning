@@ -92,5 +92,18 @@
     "Themes":"السمات",
     "System_Default":"النظام الافتراضي",
     "Light":"الوضع الافتراضي",
-    "Dark":"الوضع الداكن"
+    "Dark":"الوضع الداكن",
+    "active":"نشط",
+    "completed":"مكتمل",    
+    "suspended":"معلق",
+    "Rate": "قيم",
+    "View_Ratings": "عرض التقييمات",
+    "Your_Review": "مراجعتك",
+    "Rate_Your_Experience": "قيم تجربتك!",
+    "Write_Your_Review": "اكتب مراجعتك",
+    "Your_Opinion": "رأيك",
+    "Send_Review": "إرسال المراجعة",
+    "Contact_Us_To_Activate_Your_Course": "اتصل بنا لتفعيل دورتك",
+    "Contact_Us": "اتصل بنا",
+    "Course_Has_Been_Suspended!": "تم تعليق الدورة!"
 }

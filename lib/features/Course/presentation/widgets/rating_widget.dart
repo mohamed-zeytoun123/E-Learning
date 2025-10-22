@@ -6,18 +6,26 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 class RatingWidget extends StatelessWidget {
   final double rating;
   final bool showIcon;
+  final Color iconColor;
+  final Color textColor;
 
-  const RatingWidget({super.key, required this.rating, this.showIcon = true});
+  const RatingWidget({
+    super.key,
+    required this.rating,
+    this.showIcon = true,
+    this.iconColor = AppColors.iconOrange,
+    this.textColor = AppColors.textOrange,
+  });
 
   @override
   Widget build(BuildContext context) {
     final content = Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Icon(Icons.star, color: AppColors.iconOrange, size: 16.sp),
+        Icon(Icons.star, color: iconColor, size: 16.sp),
         Text(
           rating.toString(),
-          style: AppTextStyles.s14w400.copyWith(color: AppColors.textOrange),
+          style: AppTextStyles.s14w400.copyWith(color: textColor),
         ),
       ],
     );

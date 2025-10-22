@@ -27,7 +27,7 @@ class AppRouter {
         path: RouteNames.selectedMethodLogin,
         //?--------------------------------------------------------------------------
         // builder: (context, state) => const SelectedMethodLogInPage(), //! base
-        builder: (context, state) => const ChaptersPage(),
+        builder: (context, state) => const EnrollPage(),
         //?--------------------------------------------------------------------------
       ),
       GoRoute(

@@ -19,6 +19,7 @@ class AppColors {
   static const Color textWhite = Color(0xffFFFFFF);
   static const Color textRed = Color(0xffDE4C3C);
   static const Color textOrange = Color(0xffD45F2E);
+  static const Color textGreen = Color(0xff018532);
 
   //* Button Colors
   static const Color buttonPrimary = Color(0xff0071C7);
@@ -67,6 +68,8 @@ class AppColors {
   static const Color formWhite = Color(0xffF1F1F1);
   static const Color formCircle = Color(0xffEDF7FF);
   static const Color formProgress = Color(0xff0071C7);
+  static const Color formCompleted = Color(0xff018532);
+  static const Color formSuspended = Color(0xffFDF4F1);
 
   //* Divider Colors
   static const Color dividerGrey = Color(0xffF1F1F1);

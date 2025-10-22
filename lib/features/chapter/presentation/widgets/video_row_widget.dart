@@ -45,13 +45,13 @@ class VideoRowWidget extends StatelessWidget {
                         width: 48.w,
                         height: 48.h,
                         decoration: BoxDecoration(
-                          color: AppColors.formCircle,
+                          color: Theme.of(context).colorScheme.secondary,
                           borderRadius: BorderRadius.circular(999.r),
                         ),
                         alignment: Alignment.center,
                         child: Icon(
                           Icons.play_arrow,
-                          color: AppColors.iconBlue,
+                          color: Theme.of(context).colorScheme.primary,
                           size: 25.sp,
                         ),
                       ),
@@ -81,7 +81,7 @@ class VideoRowWidget extends StatelessWidget {
                       Icon(
                         Icons.arrow_forward_ios,
                         size: 20.sp,
-                        color: AppColors.iconBlue,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ],
                   ),
