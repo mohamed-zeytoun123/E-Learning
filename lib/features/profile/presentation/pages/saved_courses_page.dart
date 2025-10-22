@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +17,7 @@ class SavedCoursesPage extends StatelessWidget {
           physics: const BouncingScrollPhysics(),
           itemCount: 3,
           itemBuilder: (context, index) => CourseInfoCardWidget(
+            onTap: () {},
             imageUrl: "https://picsum.photos/361/180",
             title: "Flutter Masterclass",
             subtitle: "Build beautiful apps",

@@ -26,8 +26,8 @@ class AppColors {
   static const Color buttonWhite = Color(0xffFFFFFF);
   static const Color buttonGreyF = Color(0xffEAEAEA);
   //? Tab Bar
-  static const Color buttonTapSelected = Color(0xffDADADA);
-  static const Color buttonTapNotSelected = Color(0xffF1F1F1);
+  static const Color buttonTapSelected = Color(0xff0071C7);
+  static const Color buttonTapNotSelected = Color(0xffEDF7FF);
 
   //* Title Button Colors
   static const Color titlePrimary = Color(0xffFFFFFF);
@@ -38,6 +38,7 @@ class AppColors {
   static const Color borderPrimary = Color(0xff0071C7);
   static const Color borderSecondary = Color(0xffBABABA);
   static const Color borderBrand = Color(0xffEAEAEA);
+  static const Color borderOrange = Color(0xffD45F2E);
 
   //* Loading Colors
   static const Color loadingPrimary = Color(0xff0071C7);

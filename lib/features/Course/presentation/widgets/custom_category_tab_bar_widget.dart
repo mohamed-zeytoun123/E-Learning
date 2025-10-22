@@ -1,10 +1,11 @@
 import 'dart:developer';
-
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_info_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomCategoryTabBarWidget extends StatefulWidget {
   const CustomCategoryTabBarWidget({super.key});
@@ -16,7 +17,7 @@ class CustomCategoryTabBarWidget extends StatefulWidget {
 
 class _CustomCategoryTabBarWidgetState
     extends State<CustomCategoryTabBarWidget> {
-  final List<String> tabs = ["Filter", "Category", "Category", "Category"];
+  final List<String> tabs = ["", "Programming", "Design", "Marketing"];
   int selectedIndex = 0;
 
   @override
@@ -58,15 +59,24 @@ class _CustomCategoryTabBarWidgetState
                           child: Icon(
                             Icons.tune,
                             size: 20.sp,
-                            color: Colors.black,
+                            color: isSelected
+                                ? AppColors.iconWhite
+                                : AppColors.iconBlue,
                           ),
                         ),
-                      Text(
-                        tabs[index],
-                        style: AppTextStyles.s14w400.copyWith(
-                          color: AppColors.textPrimary,
+                      if (tabs[index].isNotEmpty)
+                        Text(
+                          tabs[index],
+                          style: AppTextStyles.s14w400.copyWith(
+                            color: isSelected
+                                ? AppColors
+                                      .textWhite // ✅ لون النص وقت التحديد
+                                : AppColors.textPrimary, // 🔹 العادي
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.w400,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -75,7 +85,7 @@ class _CustomCategoryTabBarWidgetState
           ),
         ),
         SizedBox(height: 8.h),
-        Divider(color:  AppColors.dividerGrey, thickness: 1, height: 0.h),
+        Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
 
         Expanded(
           child: Builder(
@@ -116,6 +126,9 @@ class FilterWidget extends StatelessWidget {
           subtitle: "Build beautiful apps",
           rating: 4.3,
           price: "25",
+          onTap: () {
+            context.push(RouteNames.courceInf);
+          },
           onSave: () {
             log("Course saved!");
           },

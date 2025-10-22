@@ -8,7 +8,7 @@ class AppManagerCubit extends Cubit<AppManagerState> {
     : super(
         const AppManagerState(
           appLocale: Locale('en'),
-          themeMode: ThemeMode.light, // Later change to system
+          themeMode: ThemeMode.light,
           appState: AppStateEnum.guest,
         ),
       );
