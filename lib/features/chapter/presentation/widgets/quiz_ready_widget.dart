@@ -1,10 +1,12 @@
 import 'package:e_learning/core/asset/app_icons.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class QuizReadyWidget extends StatelessWidget {
   final int questionCount;
@@ -66,7 +68,6 @@ class QuizReadyWidget extends StatelessWidget {
 
         SizedBox(height: 25.h),
 
-        // الزر
         CustomButtonWidget(
           title: "Start Quiz",
           titleStyle: AppTextStyles.s16w500.copyWith(
@@ -75,6 +76,9 @@ class QuizReadyWidget extends StatelessWidget {
           buttonColor: AppColors.buttonPrimary,
           borderColor: AppColors.borderPrimary,
           icon: Icon(Icons.arrow_outward_sharp, color: AppColors.iconWhite),
+          onTap: () {
+            context.push(RouteNames.quizPage);
+          },
         ),
       ],
     );

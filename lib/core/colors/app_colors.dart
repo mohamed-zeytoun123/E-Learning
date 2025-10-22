@@ -27,8 +27,8 @@ class AppColors {
   static const Color buttonWhite = Color(0xffFFFFFF);
   static const Color buttonGreyF = Color(0xffEAEAEA);
   //? Tab Bar
-  static const Color buttonTapSelected = Color(0xffDADADA);
-  static const Color buttonTapNotSelected = Color(0xffF1F1F1);
+  static const Color buttonTapSelected = Color(0xff0071C7);
+  static const Color buttonTapNotSelected = Color(0xffEDF7FF);
 
   //* Title Button Colors
   static const Color titlePrimary = Color(0xffFFFFFF);
@@ -39,6 +39,7 @@ class AppColors {
   static const Color borderPrimary = Color(0xff0071C7);
   static const Color borderSecondary = Color(0xffBABABA);
   static const Color borderBrand = Color(0xffEAEAEA);
+  static const Color borderOrange = Color(0xffD45F2E);
 
   //* Loading Colors
   static const Color loadingPrimary = Color(0xff0071C7);
@@ -65,14 +66,16 @@ class AppColors {
   static const Color iconStars = Color(0xffD45F2E);
 
   //*  Form Colors
-  static const Color formWhite = Color(0xffF1F1F1);
-  static const Color formCircle = Color(0xffEDF7FF);
+  static const Color formWhite = Color(0xffFFFFFF);
+  static const Color formSomeWhite = Color(0xffF1F1F1);
+  static const Color formSecondary = Color(0xffEDF7FF);
   static const Color formProgress = Color(0xff0071C7);
   static const Color formCompleted = Color(0xff018532);
   static const Color formSuspended = Color(0xffFDF4F1);
 
   //* Divider Colors
   static const Color dividerGrey = Color(0xffF1F1F1);
+  static const Color dividerWhite = Color(0xffF5F5F5);
 
   //* Rating Color
   static const Color ratingStar = Color(0xffD45F2E);

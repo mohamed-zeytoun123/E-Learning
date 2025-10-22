@@ -4,7 +4,7 @@ import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/app_bar/custom_app_bar.dart';
+import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/features/profile/presentation/widgets/custom_settings_item_widget.dart';
 import 'package:e_learning/features/profile/presentation/widgets/language_bottom_sheet_widget.dart';
 import 'package:e_learning/features/profile/presentation/widgets/profile_guest_header.dart';
@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(title: 'Profile Page', showBack: true),
+      appBar: CustomAppBarWidget(title: 'Profile Page', showBack: true),
       body: Padding(
         padding: EdgeInsets.only(
           top: 42.h,
@@ -32,7 +32,7 @@ class ProfilePage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // TODO: Pass user data to ProfileUserHeader and UserInfoRow
+              //TODO: Pass user data to ProfileUserHeader and UserInfoRow
               BlocBuilder<AppManagerCubit, AppManagerState>(
                 builder: (context, state) {
                   if (state.appState == AppStateEnum.user) {

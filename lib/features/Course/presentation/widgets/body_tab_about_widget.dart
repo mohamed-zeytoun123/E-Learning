@@ -1,13 +1,19 @@
+import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
+import 'package:e_learning/core/app/manager/app_manager_state.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_count_text_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/teacher_row_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyTabAboutWidget extends StatelessWidget {
-  const BodyTabAboutWidget({super.key});
+  const BodyTabAboutWidget({super.key, required this.isActive});
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +42,7 @@ class BodyTabAboutWidget extends StatelessWidget {
             SizedBox(height: 8.h),
             Text(
               "Description About Course’s Content And Subjects, Description About Course’s Content And Subjects, Description About Course’s Content And Subjects, Description About Course’s Content And Subjects.",
-              style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+              style: AppTextStyles.s16w400.copyWith(color: AppColors.textBlack),
             ),
             SizedBox(height: 16.h),
 
@@ -52,7 +58,14 @@ class BodyTabAboutWidget extends StatelessWidget {
                 PriceTextWidget(price: "199999"),
               ],
             ),
-            Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 10.h),
+              child: Divider(
+                color: AppColors.dividerGrey,
+                thickness: 1,
+                height: 0.h,
+              ),
+            ),
             Text(
               "Content",
               style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
@@ -91,6 +104,24 @@ class BodyTabAboutWidget extends StatelessWidget {
                   ],
                 ),
               ],
+            ),
+
+            BlocSelector<AppManagerCubit, AppManagerState, AppStateEnum>(
+              selector: (state) {
+                return state.appState;
+              },
+              builder: (context, state) {
+                if (!isActive && state == AppStateEnum.user) {
+                  return Column(
+                    children: [
+                      SizedBox(height: 20.h),
+                      CourseEnrollWidget(),
+                    ],
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              },
             ),
           ],
         ),

@@ -1,0 +1,2 @@
+enum ChapterStateEnum { open, locked }
+

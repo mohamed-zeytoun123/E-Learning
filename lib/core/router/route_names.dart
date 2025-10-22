@@ -17,6 +17,7 @@ class RouteNames {
 
   //* ================= Chapter Featchers =================
   static const chapterPage = '/chapter-page';
+  static const quizPage = '/quiz-Page';
 
   //* ================= Profile Featchers =================
   static const profile = '/profile';

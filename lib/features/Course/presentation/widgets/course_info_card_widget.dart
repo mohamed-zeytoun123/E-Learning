@@ -14,6 +14,7 @@ class CourseInfoCardWidget extends StatelessWidget {
   final double rating;
   final String price;
   final VoidCallback? onSave;
+  final VoidCallback? onTap;
 
   const CourseInfoCardWidget({
     super.key,
@@ -22,100 +23,104 @@ class CourseInfoCardWidget extends StatelessWidget {
     required this.subtitle,
     required this.rating,
     required this.price,
+    required this.onTap,
     this.onSave,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 361.w,
-      height: 297.5.h,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 4.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.r),
-                  topRight: Radius.circular(20.r),
-                ),
-                child: CustomCachedImageWidget(
-                  appImage: imageUrl,
-                  width: double.infinity,
-                  height: 180.5,
-                  fit: BoxFit.cover,
-                  placeholder: Container(
-                    color: Colors.grey.shade300,
-                    child: Center(child: AppLoading.circular()),
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 8.h,
-                right: 8.w,
-                child: GestureDetector(
-                  onTap: onSave,
-                  child: Container(
-                    width: 44.w,
-                    height: 44.h,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: AppColors.borderSecondary),
-                    ),
-                    child: Icon(
-                      Icons.bookmark_border,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          SizedBox(height: 8.h),
-
-          CourseTitleSubTitleWidget(
-            title: 'Flutter Development',
-            subtitle: 'Learn to build apps with Flutter',
-          ),
-
-          const Spacer(),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 361.w,
+        height: 297.5.h,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 4.r,
+              offset: Offset(0, 2.h),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
               children: [
-                //* Rating Container
-                Container(
-                  width: 55.w,
-                  height: 25.h,
-                  decoration: BoxDecoration(
-                    color: AppColors.formWhite,
-                    borderRadius: BorderRadius.circular(12.r),
+                ClipRRect(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20.r),
+                    topRight: Radius.circular(20.r),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 6.w),
-                  child: RatingWidget(rating: rating),
+                  child: CustomCachedImageWidget(
+                    appImage: imageUrl,
+                    width: double.infinity,
+                    height: 180.5,
+                    fit: BoxFit.cover,
+                    placeholder: Container(
+                      color: Colors.grey.shade300,
+                      child: Center(child: AppLoading.circular()),
+                    ),
+                  ),
                 ),
-                //* Price
-                PriceTextWidget(price: price),
+                Positioned(
+                  top: 8.h,
+                  right: 8.w,
+                  child: GestureDetector(
+                    onTap: onSave,
+                    child: Container(
+                      width: 44.w,
+                      height: 44.h,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.borderSecondary),
+                      ),
+                      child: Icon(
+                        Icons.bookmark_border,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
+
+            SizedBox(height: 8.h),
+
+            CourseTitleSubTitleWidget(
+              title: 'Flutter Development',
+              subtitle: 'Learn to build apps with Flutter',
+            ),
+
+            const Spacer(),
+
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  //* Rating Container
+                  Container(
+                    width: 55.w,
+                    height: 25.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.formSomeWhite,
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 6.w),
+                    child: RatingWidget(rating: rating),
+                  ),
+                  //* Price
+                  PriceTextWidget(price: price),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,16 +1,14 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/file_row_widget.dart';
-import 'package:e_learning/features/chapter/presentation/widgets/video_row_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/chapter_row_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class BodyTabFilesWidget extends StatelessWidget {
-  const BodyTabFilesWidget({super.key});
+  final bool isActive;
+  final void Function(int index)? onFileTap;
+
+  const BodyTabFilesWidget({super.key, this.isActive = true, this.onFileTap});
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +18,21 @@ class BodyTabFilesWidget extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         itemCount: 10,
         itemBuilder: (context, index) => InkWell(
-          onTap: () {
-            // context.push(RouteNames.c )
-          },
+          onTap: isActive
+              ? () {
+                  if (onFileTap != null) onFileTap!(index);
+                  log("File $index pressed");
+                }
+              : null,
           child: FileRowWidget(
             chapterTitle: "PDF Filename",
             sizeFile: 126,
-            onTap: () {
-              log("Chapter 4 pressed");
-              //todo go to chapters
-            },
+            onTap: isActive
+                ? () {
+                    if (onFileTap != null) onFileTap!(index);
+                    log("File $index pressed");
+                  }
+                : null,
           ),
         ),
         separatorBuilder: (BuildContext context, int index) =>

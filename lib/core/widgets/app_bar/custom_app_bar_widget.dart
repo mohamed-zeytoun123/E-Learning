@@ -1,12 +1,19 @@
+import 'dart:developer';
+
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBarWidget extends StatelessWidget
+    implements PreferredSizeWidget {
   final String title;
   final bool showBack;
-  const CustomAppBar({super.key, required this.title, required this.showBack});
+  const CustomAppBarWidget({
+    super.key,
+    required this.title,
+    required this.showBack,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +26,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       leading: showBack
           ? IconButton(
               icon: const Icon(Icons.arrow_back_ios_new_rounded),
-              onPressed: () => context.pop(),
+              onPressed: () {
+                context.pop();
+                // log(message)
+              },
             )
           : null,
 

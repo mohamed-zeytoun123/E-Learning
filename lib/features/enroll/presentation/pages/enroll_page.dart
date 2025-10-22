@@ -1,5 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/widgets/app_bar/custom_app_bar.dart';
+import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
 import 'package:e_learning/features/enroll/data/models/enums/course_state_enum.dart';
 import 'package:e_learning/features/enroll/data/source/static/dummy_courses.dart';
@@ -34,7 +34,7 @@ class _EnrollPageState extends State<EnrollPage> {
         .toList();
 
     return Scaffold(
-      appBar: CustomAppBar(title: 'Enroll', showBack: true),
+      appBar: CustomAppBarWidget(title: 'Enroll', showBack: true),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 8.w),
         child: SingleChildScrollView(

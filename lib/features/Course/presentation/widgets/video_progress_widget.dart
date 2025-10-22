@@ -34,8 +34,8 @@ class VideoProgressWidget extends StatelessWidget {
           child: LinearPercentIndicator(
             lineHeight: hieghtProgress.h,
             percent: percent,
-            backgroundColor: AppColors.formWhite,
-            progressColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: AppColors.formSomeWhite,
+            progressColor: AppColors.formProgress,
             barRadius: Radius.circular(999.r),
             animation: true,
             animationDuration: 700,

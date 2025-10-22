@@ -35,7 +35,7 @@ class FileRowWidget extends StatelessWidget {
                     width: 48.w,
                     height: 48.h,
                     decoration: BoxDecoration(
-                      color: AppColors.formCircle,
+                      color: AppColors.formSecondary,
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     alignment: Alignment.center,

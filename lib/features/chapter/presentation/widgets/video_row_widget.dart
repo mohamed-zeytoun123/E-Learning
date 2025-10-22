@@ -10,6 +10,7 @@ class VideoRowWidget extends StatelessWidget {
   final VoidCallback? onTap;
   final int? completedVideos;
   final int? totalVideos;
+  final bool isLocked;
 
   const VideoRowWidget({
     super.key,
@@ -18,6 +19,7 @@ class VideoRowWidget extends StatelessWidget {
     required this.chapterTitle,
     required this.durationMinutes,
     this.onTap,
+    this.isLocked = true,
   });
 
   @override
@@ -27,33 +29,41 @@ class VideoRowWidget extends StatelessWidget {
         Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: onTap,
-            splashColor: Colors.grey.withOpacity(0.2),
-            highlightColor: Colors.grey.withOpacity(0.1),
+            onTap: isLocked ? null : onTap,
+            splashColor: isLocked
+                ? Colors.transparent
+                : Colors.grey.withOpacity(0.2),
+            highlightColor: isLocked
+                ? Colors.transparent
+                : Colors.grey.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8.r),
             child: SizedBox(
               height: 88.h,
               child: Column(
-                spacing: 10.h,
-                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Container(
-                        width: 48.w,
-                        height: 48.h,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary,
-                          borderRadius: BorderRadius.circular(999.r),
-                        ),
+                      Stack(
                         alignment: Alignment.center,
-                        child: Icon(
-                          Icons.play_arrow,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: 25.sp,
-                        ),
+                        children: [
+                          Container(
+                            width: 48.w,
+                            height: 48.h,
+                            decoration: BoxDecoration(
+                              color: AppColors.formSecondary,
+                              borderRadius: BorderRadius.circular(999.r),
+                            ),
+                            alignment: Alignment.center,
+                            child: Icon(
+                              Icons.play_arrow,
+                              color: AppColors.iconBlue,
+                              size: 25.sp,
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
@@ -79,20 +89,26 @@ class VideoRowWidget extends StatelessWidget {
                         ),
                       ),
                       Icon(
-                        Icons.arrow_forward_ios,
+                        isLocked ? Icons.lock : Icons.arrow_forward_ios,
                         size: 20.sp,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: isLocked
+                            ? AppColors.iconOrange
+                            : AppColors.iconBlue,
                       ),
                     ],
                   ),
-                  (totalVideos != null && completedVideos != null)
-                      ? VideoProgressWidget(
-                          completedVideos: completedVideos!,
-                          totalVideos: totalVideos!,
-                          hieghtProgress: 4,
-                          showDetiels: false,
-                        )
-                      : SizedBox(),
+                  if (totalVideos != null &&
+                      completedVideos != null &&
+                      !isLocked)
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.h),
+                      child: VideoProgressWidget(
+                        completedVideos: completedVideos!,
+                        totalVideos: totalVideos!,
+                        hieghtProgress: 4,
+                        showDetiels: false,
+                      ),
+                    ),
                 ],
               ),
             ),
