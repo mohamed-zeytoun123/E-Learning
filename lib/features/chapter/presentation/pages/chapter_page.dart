@@ -6,8 +6,10 @@ import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_c
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ChaptersPage extends StatelessWidget {
-  const ChaptersPage({super.key});
+class ChapterPage extends StatelessWidget {
+  const ChapterPage({super.key, required this.isActive});
+
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ class ChaptersPage extends StatelessWidget {
           SliverAppBar(
             expandedHeight: 262.h,
             pinned: true,
+            automaticallyImplyLeading: false,
             backgroundColor: AppColors.backgroundPage,
             flexibleSpace: FlexibleSpaceBar(
               background: CustomCachedImageWidget(
@@ -43,7 +46,7 @@ class ChaptersPage extends StatelessWidget {
               ],
             ),
           ),
-          SliverFillRemaining(child: ChaptersTabViewWidget()),
+          SliverFillRemaining(child: ChaptersTabViewWidget(isActive: isActive)),
         ],
       ),
     );

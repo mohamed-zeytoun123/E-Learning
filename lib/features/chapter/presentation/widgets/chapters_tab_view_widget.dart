@@ -7,67 +7,127 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ChaptersTabViewWidget extends StatelessWidget {
-  const ChaptersTabViewWidget({super.key});
+  final bool isActive;
+  final int unlockedVideos;
+
+  const ChaptersTabViewWidget({
+    super.key,
+    required this.isActive,
+    this.unlockedVideos = 3,
+  });
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 3,
-      child: Column(
-        children: [
-          TabBar(
-            dividerColor: AppColors.dividerGrey,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicatorColor: AppColors.textPrimary,
-            indicatorWeight: 2.h,
-            labelColor: AppColors.textPrimary,
-            unselectedLabelColor: AppColors.textGrey,
-            labelStyle: AppTextStyles.s14w600,
-            tabs: [
-              Tab(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.play_circle_outline, size: 20.sp),
-                    SizedBox(width: 4.w),
-                    Text("Chapters"),
-                  ],
-                ),
+      child: Builder(
+        builder: (context) {
+          final tabController = DefaultTabController.of(context);
+
+          return Column(
+            children: [
+              TabBar(
+                
+                controller: tabController,
+                dividerColor: AppColors.dividerGrey,
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorColor: AppColors.textPrimary,
+                indicatorWeight: 2.h,
+                labelColor: AppColors.textPrimary,
+                unselectedLabelColor: AppColors.textGrey,
+                labelStyle: AppTextStyles.s14w600,
+                onTap: (index) {
+                  if (!isActive && index != 0) {
+                    tabController.index = 0;
+                  }
+                },
+                tabs: [
+                  Tab(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.play_arrow, size: 20.sp),
+                        SizedBox(width: 4.w),
+                        Text("Videos"),
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.insert_drive_file_outlined, size: 20.sp),
+                        SizedBox(width: 4.w),
+                        Row(
+                          children: [
+                            Text("Files"),
+                            if (!isActive)
+                              Padding(
+                                padding: EdgeInsets.only(left: 4.w),
+                                child: Icon(
+                                  Icons.lock,
+                                  size: 16.sp,
+                                  color: AppColors.textGrey,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Tab(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.edit_note, size: 20.sp),
+                        SizedBox(width: 4.w),
+                        Row(
+                          children: [
+                            Text("Quizzes"),
+                            if (!isActive)
+                              Padding(
+                                padding: EdgeInsets.only(left: 4.w),
+                                child: Icon(
+                                  Icons.lock,
+                                  size: 16.sp,
+                                  color: AppColors.textGrey,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              Tab(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+              Expanded(
+                child: TabBarView(
+                  physics: isActive
+                      ? null
+                      : const NeverScrollableScrollPhysics(),
                   children: [
-                    Icon(Icons.insert_drive_file_outlined, size: 20.sp),
-                    SizedBox(width: 4.w),
-                    Text("Files"),
-                  ],
-                ),
-              ),
-              Tab(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.edit_note, size: 20.r),
-                    SizedBox(width: 4.w),
-                    Text("Quizzes"),
+                    BodyTabVedioWidget(
+                      isActive: isActive,
+                      onVideoTap: (index) {
+                        if (isActive || index < unlockedVideos) {
+                          // context.push("/chapter/video/$index");
+                        }
+                      },
+                    ),
+                    BodyTabFilesWidget(
+                      onFileTap: (index) {
+                        if (isActive) {
+                          // context.push("/chapter/file/$index");
+                        }
+                      },
+                    ),
+                    BodyTabQuizzesWidget(),
                   ],
                 ),
               ),
             ],
-          ),
-
-          Expanded(
-            child: TabBarView(
-              children: [
-                BodyTabVedioWidget(),
-                BodyTabFilesWidget(),
-                BodyTabQuizzesWidget(),
-               
-              ],
-            ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

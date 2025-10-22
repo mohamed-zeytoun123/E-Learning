@@ -1,5 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/model/enums/enum_chapter_state.dart';
+import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,7 @@ class ChapterRowWidget extends StatelessWidget {
                     width: 48.w,
                     height: 48.h,
                     decoration: BoxDecoration(
-                      color: AppColors.formCircle,
+                      color: AppColors.formSecondary,
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     alignment: Alignment.center,

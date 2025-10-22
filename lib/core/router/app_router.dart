@@ -1,6 +1,6 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/features/chapter/presentation/pages/chapters_page.dart';
+import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
 import 'package:e_learning/features/course/presentation/pages/cource_info_page.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
@@ -100,13 +100,17 @@ class AppRouter {
 
       GoRoute(
         path: RouteNames.courceInf,
-        builder: (context, state) => const CourceInfoPage(),
+        builder: (context, state) =>  CourceInfoPage(),
       ),
 
       //?----- Chapter Featchers  --------------------------------------------------------------
       GoRoute(
         path: RouteNames.chapterPage,
-        builder: (context, state) => const ChaptersPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final isActive = args["isActive"] as bool;
+          return ChapterPage(isActive: isActive);
+        },
       ),
 
       GoRoute(

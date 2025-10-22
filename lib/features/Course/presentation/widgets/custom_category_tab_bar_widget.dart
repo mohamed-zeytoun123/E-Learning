@@ -69,9 +69,8 @@ class _CustomCategoryTabBarWidgetState
                           tabs[index],
                           style: AppTextStyles.s14w400.copyWith(
                             color: isSelected
-                                ? AppColors
-                                      .textWhite // ✅ لون النص وقت التحديد
-                                : AppColors.textPrimary, // 🔹 العادي
+                                ? AppColors.textWhite
+                                : AppColors.textPrimary,
                             fontWeight: isSelected
                                 ? FontWeight.w600
                                 : FontWeight.w400,
@@ -128,6 +127,7 @@ class FilterWidget extends StatelessWidget {
           price: "25",
           onTap: () {
             context.push(RouteNames.courceInf);
+            //todo Active
           },
           onSave: () {
             log("Course saved!");

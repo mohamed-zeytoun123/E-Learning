@@ -9,7 +9,7 @@ class AppManagerCubit extends Cubit<AppManagerState> {
         const AppManagerState(
           appLocale: Locale('en'),
           themeMode: ThemeMode.light,
-          appState: AppStateEnum.guest,
+          appState: AppStateEnum.user,
         ),
       );
 

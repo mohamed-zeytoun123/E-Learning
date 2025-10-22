@@ -7,62 +7,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyTabReviewsWidget extends StatelessWidget {
-  const BodyTabReviewsWidget({super.key});
-
+  const BodyTabReviewsWidget({super.key, required this.isActive});
+  final bool isActive;
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 15.h),
-      child: Stack(
+      child: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(bottom: 130.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 15.w,
-                    vertical: 10.h,
-                  ),
-                  child: Text(
-                    "Ratings & Reviews",
-                    style: AppTextStyles.s16w600.copyWith(
-                      color: AppColors.textBlack,
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ListView.separated(
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) => Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15.w),
-                      child: CourceReviewCardWidget(
-                        teacherImageUrl: "https://picsum.photos/361/180",
-                        username: "John Doe",
-                        reviewText:
-                            "The Written Review From The User, About The Course And The Instructor",
-                        rating: 4.5,
-                        timeAgo: "2 Weeks Ago",
-                      ),
-                    ),
-                    separatorBuilder: (context, index) => Divider(
-                      color: AppColors.dividerGrey,
-                      thickness: 1,
-                      height: 16.h,
-                    ),
-                    itemCount: 10,
-                  ),
-                ),
-              ],
+          Expanded(
+            child: ListView.separated(
+              physics: const BouncingScrollPhysics(),
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              itemBuilder: (context, index) => CourceReviewCardWidget(
+                teacherImageUrl: "https://picsum.photos/361/180",
+                username: "John Doe",
+                reviewText:
+                    "The Written Review From The User, About The Course And The Instructor",
+                rating: 4.5,
+                timeAgo: "2 Weeks Ago",
+              ),
+              separatorBuilder: (context, index) => Divider(
+                color: AppColors.dividerGrey,
+                thickness: 1,
+                height: 16.h,
+              ),
+              itemCount: 10,
             ),
           ),
-
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
+          if (isActive)
+            Container(
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 10.w),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -79,7 +53,6 @@ class BodyTabReviewsWidget extends StatelessWidget {
                 ],
               ),
               child: Column(
-                spacing: 7.h,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -88,12 +61,14 @@ class BodyTabReviewsWidget extends StatelessWidget {
                       color: AppColors.textBlack,
                     ),
                   ),
+                  SizedBox(height: 5.h),
                   Text(
                     "Write a Review And Let Us Know How Are You Feeling About This Course !",
                     style: AppTextStyles.s14w400.copyWith(
                       color: AppColors.textGrey,
                     ),
                   ),
+                  SizedBox(height: 10.h),
                   CustomButtonWidget(
                     title: "Write Review",
                     titleStyle: AppTextStyles.s16w500.copyWith(
@@ -128,7 +103,6 @@ class BodyTabReviewsWidget extends StatelessWidget {
                 ],
               ),
             ),
-          ),
         ],
       ),
     );

@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyTabFilesWidget extends StatelessWidget {
-  const BodyTabFilesWidget({super.key});
+  final bool isActive;
+  final void Function(int index)? onFileTap;
+
+  const BodyTabFilesWidget({super.key, this.isActive = true, this.onFileTap});
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +18,21 @@ class BodyTabFilesWidget extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         itemCount: 10,
         itemBuilder: (context, index) => InkWell(
-          onTap: () {
-            // context.push(RouteNames.c )
-          },
+          onTap: isActive
+              ? () {
+                  if (onFileTap != null) onFileTap!(index);
+                  log("File $index pressed");
+                }
+              : null,
           child: FileRowWidget(
             chapterTitle: "PDF Filename",
             sizeFile: 126,
-            onTap: () {
-              log("Chapter 4 pressed");
-              //todo go to chapters
-            },
+            onTap: isActive
+                ? () {
+                    if (onFileTap != null) onFileTap!(index);
+                    log("File $index pressed");
+                  }
+                : null,
           ),
         ),
         separatorBuilder: (BuildContext context, int index) =>

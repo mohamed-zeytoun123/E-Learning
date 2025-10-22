@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CourseTabViewWidget extends StatelessWidget {
-  const CourseTabViewWidget({super.key});
+  const CourseTabViewWidget({super.key, required this.isActive});
+  final bool isActive;
 
   @override
   Widget build(BuildContext context) {
@@ -59,9 +60,9 @@ class CourseTabViewWidget extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                BodyTabChapterWidget(),
-                BodyTabAboutWidget(),
-                BodyTabReviewsWidget(),
+                BodyTabChapterWidget(isActive: isActive),
+                BodyTabAboutWidget(isActive: isActive),
+                BodyTabReviewsWidget(isActive: isActive),
               ],
             ),
           ),

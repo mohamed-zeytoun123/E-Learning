@@ -3,10 +3,11 @@ import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/model/enums/app_state_enum.dart';
-import 'package:e_learning/core/model/enums/enum_chapter_state.dart';
+import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/course/presentation/widgets/chapter_row_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_suspended_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,8 +15,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class BodyTabChapterWidget extends StatelessWidget {
-  const BodyTabChapterWidget({super.key});
-
+  const BodyTabChapterWidget({super.key, required this.isActive});
+  final bool isActive;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -40,12 +41,10 @@ class BodyTabChapterWidget extends StatelessWidget {
                     if (appState == AppStateEnum.guest) {
                       isChapterEnabled = false;
                     } else if (appState == AppStateEnum.user) {
-                      final hasPaid =
-                          false; //todo ← بدك تقراها من الكيوبت لاحقًا
-                      if (hasPaid) {
+                      if (isActive) {
                         isChapterEnabled = true;
                       } else {
-                        isChapterEnabled = index < 3;
+                        isChapterEnabled = index < 1;
                       }
                     }
 
@@ -60,7 +59,10 @@ class BodyTabChapterWidget extends StatelessWidget {
                       onTap: isChapterEnabled
                           ? () {
                               log("Chapter $index pressed");
-                              context.push(RouteNames.chapterPage);
+                              context.push(
+                                RouteNames.chapterPage,
+                                extra: {"isActive": isActive},
+                              );
                             }
                           : null,
                       index: index,
@@ -81,6 +83,8 @@ class BodyTabChapterWidget extends StatelessWidget {
                   padding: EdgeInsets.only(top: 10.h),
                   child: const CourseSuspendedWidget(),
                 );
+              } else if (appState == AppStateEnum.user && !isActive) {
+                return CourseEnrollWidget();
               }
               return const SizedBox.shrink();
             },

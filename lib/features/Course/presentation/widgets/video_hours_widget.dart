@@ -19,7 +19,7 @@ class VideoHoursWidget extends StatelessWidget {
       height: 41.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
-        color: AppColors.formSomeWhite,
+        color: AppColors.formSecondary,
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Row(
@@ -37,7 +37,7 @@ class VideoHoursWidget extends StatelessWidget {
                 '$videoCount',
                 style: AppTextStyles.s14w500.copyWith(
                   fontSize: 14.sp,
-                  color: AppColors.textBlack,
+                  color: AppColors.textPrimary,
                 ),
               ),
               SizedBox(width: 4.w),
@@ -45,7 +45,7 @@ class VideoHoursWidget extends StatelessWidget {
                 'Videos',
                 style: AppTextStyles.s14w500.copyWith(
                   fontSize: 14.sp,
-                  color: AppColors.textBlack,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
@@ -53,7 +53,7 @@ class VideoHoursWidget extends StatelessWidget {
 
           Text(
             '|',
-            style: TextStyle(fontSize: 14.sp, color: AppColors.textBlack),
+            style: TextStyle(fontSize: 14.sp, color: AppColors.textPrimary),
           ),
 
           Row(
@@ -64,7 +64,7 @@ class VideoHoursWidget extends StatelessWidget {
                 '$hoursCount',
                 style: AppTextStyles.s14w500.copyWith(
                   fontSize: 14.sp,
-                  color: AppColors.textBlack,
+                  color: AppColors.textPrimary,
                 ),
               ),
               SizedBox(width: 4.w),
@@ -72,7 +72,7 @@ class VideoHoursWidget extends StatelessWidget {
                 'Hours',
                 style: AppTextStyles.s14w500.copyWith(
                   fontSize: 14.sp,
-                  color: AppColors.textBlack,
+                  color: AppColors.textPrimary,
                 ),
               ),
             ],
