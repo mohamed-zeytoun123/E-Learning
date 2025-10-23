@@ -1,12 +1,10 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/model/enums/app_role_enum.dart';
-import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
+import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
 import 'package:e_learning/features/auth/data/models/university_model.dart';
-import 'package:e_learning/features/auth/data/source/local/auth_local_data_source.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 
@@ -175,11 +173,12 @@ class AuthCubit extends Cubit<AuthState> {
                 otpVerficationError: failure.message,
               ),
             ),
-            (userData) {
+            (otpResponse) {
               emit(
                 state.copyWith(
                   otpVerficationState: ResponseStatusEnum.success,
                   otpVerficationError: null,
+                  resetToken: otpResponse.resetToken, // Store the reset token
                 ),
               );
             },
@@ -208,6 +207,34 @@ class AuthCubit extends Cubit<AuthState> {
             state.copyWith(
               forgotPasswordState: ResponseStatusEnum.success,
               forgotPasswordError: null,
+            ),
+          );
+        },
+      );
+    });
+  }
+
+  //? ------------------------ Reset Password ----------------------------
+  Future<void> resetPassword(ResetPasswordRequestParams params) {
+    emit(
+      state.copyWith(
+        resetPasswordState: ResponseStatusEnum.loading,
+        resetPasswordError: null,
+      ),
+    );
+    return repository.resetPasswordRepo(params: params).then((result) {
+      result.fold(
+        (failure) => emit(
+          state.copyWith(
+            resetPasswordState: ResponseStatusEnum.failure,
+            resetPasswordError: failure.message,
+          ),
+        ),
+        (isReset) {
+          emit(
+            state.copyWith(
+              resetPasswordState: ResponseStatusEnum.success,
+              resetPasswordError: null,
             ),
           );
         },

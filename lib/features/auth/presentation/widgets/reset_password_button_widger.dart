@@ -9,27 +9,33 @@ class ResetPasswordButtonWidget extends StatelessWidget {
   final Color? textColor;
   final Color? borderColor;
   final GlobalKey<FormState> formKey;
+  final bool isLoading;
+  final VoidCallback onResetPassword;
+
   const ResetPasswordButtonWidget({
     super.key,
     this.buttonColor,
     this.textColor,
     this.borderColor,
     required this.formKey,
+    this.isLoading = false,
+    required this.onResetPassword,
   });
 
   @override
   Widget build(BuildContext context) {
     return CustomButtonWidget(
-      title: AppLocalizations.of(context)?.translate("Next") ?? "Next",
+      title: isLoading
+          ? (AppLocalizations.of(context)?.translate("Loading") ?? "Loading...")
+          : (AppLocalizations.of(context)?.translate("Reset_Password") ??
+                "Reset Password"),
       titleStyle: AppTextStyles.s16w500.copyWith(
         fontFamily: AppTextStyles.fontGeist,
         color: textColor ?? AppColors.titleBlack,
       ),
       buttonColor: buttonColor ?? AppColors.buttonSecondary,
       borderColor: borderColor ?? AppColors.borderSecondary,
-      onTap: () {
-        // TODO: Implement forget password functionality
-      },
+      onTap: isLoading ? null : onResetPassword,
     );
   }
 }
