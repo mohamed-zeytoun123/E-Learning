@@ -7,15 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyTabReviewsWidget extends StatefulWidget {
-  const BodyTabReviewsWidget({super.key});
+  const BodyTabReviewsWidget({super.key, required this.isActive});
 
+  final bool isActive;
   @override
   State<BodyTabReviewsWidget> createState() => _BodyTabReviewsWidgetState();
 }
 
 class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
   final TextEditingController reviewController = TextEditingController();
-
   @override
   void dispose() {
     reviewController.dispose();
@@ -48,7 +48,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
               itemCount: 10,
             ),
           ),
-          if (isActive)
+          if (widget.isActive)
             Container(
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 10.w),
               decoration: BoxDecoration(

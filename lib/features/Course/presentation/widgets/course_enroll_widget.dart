@@ -1,11 +1,9 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_enroll_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
 class CourseEnrollWidget extends StatelessWidget {
   const CourseEnrollWidget({super.key});
