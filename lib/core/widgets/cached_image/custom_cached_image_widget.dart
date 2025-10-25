@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomCachedImage extends StatelessWidget {
+class CustomCachedImageWidget extends StatelessWidget {
   final String appImage;
   final double height;
   final double width;
@@ -12,7 +12,7 @@ class CustomCachedImage extends StatelessWidget {
   final Widget? placeholder;
   final Widget? errorWidget;
 
-  const CustomCachedImage({
+  const CustomCachedImageWidget({
     super.key,
     required this.appImage,
     required this.height,

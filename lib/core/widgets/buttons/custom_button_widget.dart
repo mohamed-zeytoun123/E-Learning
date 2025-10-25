@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomButton extends StatelessWidget {
+class CustomButtonWidget extends StatelessWidget {
   final String title;
   final TextStyle titleStyle;
   final Color buttonColor;
@@ -10,7 +10,7 @@ class CustomButton extends StatelessWidget {
   final Widget? icon;
   final double iconSpacing;
 
-  const CustomButton({
+  const CustomButtonWidget({
     super.key,
     required this.title,
     required this.titleStyle,

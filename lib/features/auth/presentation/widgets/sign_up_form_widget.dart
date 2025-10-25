@@ -9,7 +9,6 @@ import 'package:e_learning/core/widgets/input_forms/input_passowrd_widget.dart';
 import 'package:e_learning/core/widgets/input_forms/input_phone_widget.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
-import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -65,7 +64,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             hint: 'Confirm Password',
             hintKey: 'Confirm_password',
           ),
-          CustomButton(
+          CustomButtonWidget(
             title: AppLocalizations.of(context)?.translate("next") ?? "Next",
             titleStyle: AppTextStyles.s16w500.copyWith(
               color: AppColors.titlePrimary,

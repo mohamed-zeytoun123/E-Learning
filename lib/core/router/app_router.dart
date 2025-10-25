@@ -1,7 +1,9 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/features/Course/presentation/pages/cource_info_page.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
+import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
+import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
+import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
+import 'package:e_learning/features/course/presentation/pages/cource_info_page.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/pages/forget_password_page.dart';
@@ -10,25 +12,23 @@ import 'package:e_learning/features/auth/presentation/pages/otp_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
-import 'package:e_learning/features/home/presentation/pages/main_home_page.dart';
-import 'package:e_learning/features/home/presentation/pages/news_articles_page.dart';
+import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
+import 'package:e_learning/features/profile/presentation/pages/downloads_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
-import 'package:e_learning/features/home/presentation/pages/home_page.dart';
-import 'package:e_learning/features/home/presentation/pages/home_page_body.dart';
+import 'package:e_learning/features/profile/presentation/pages/saved_courses_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:e_learning/features/Course/presentation/pages/courses_page.dart';
+import 'package:e_learning/features/course/presentation/pages/courses_page.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    // initialLocation: RouteNames.selectedMethodLogin,
-    initialLocation: RouteNames.homePage,
+    initialLocation: RouteNames.selectedMethodLogin,
     routes: [
       GoRoute(
         path: RouteNames.selectedMethodLogin,
         //?--------------------------------------------------------------------------
         // builder: (context, state) => const SelectedMethodLogInPage(), //! base
-        builder: (context, state) => const CourceInfoPage(),
+        builder: (context, state) => const SelectedMethodLogInPage(),
         //?--------------------------------------------------------------------------
       ),
       GoRoute(
@@ -87,41 +87,64 @@ class AppRouter {
         ),
       ),
 
-      //?-------------------------------------------------------------------
-      GoRoute(
-        path: RouteNames.forgetPassword,
-        builder: (context, state) => const ForgetPasswordPage(),
-      ),
-      GoRoute(
-        path: RouteNames.homePage,
-        builder: (context, state) => const MainHomePage(),
-      ),
       GoRoute(
         path: RouteNames.resetPassword,
-        builder: (context, state) => const ResetPasswordPage(),
-      ),
-      GoRoute(
-        path: RouteNames.articlesAndNews,
-        builder: (context, state) => const NewsArticlesPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final phone = args["phone"] as String;
+          final resetToken = args["resetToken"] as String;
+
+          return BlocProvider<AuthCubit>(
+            create: (context) =>
+                AuthCubit(repository: appLocator<AuthRepository>()),
+            child: ResetPasswordPage(phone: phone, resetToken: resetToken),
+          );
+        },
       ),
 
-      //?-------------------------------------------------------------------
+      //?------ Course Featchers -------------------------------------------------------------
       GoRoute(
         path: RouteNames.courses,
         builder: (context, state) => const CoursesPage(),
       ),
 
-      //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.courceInf,
-        builder: (context, state) => const CourceInfoPage(),
+        builder: (context, state) => CourceInfoPage(),
       ),
 
-      //?-------------------------------------------------------------------
-      //?-------------------------- Profile Page -------------------------------
+      //?----- Chapter Featchers  --------------------------------------------------------------
+      GoRoute(
+        path: RouteNames.chapterPage,
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final isActive = args["isActive"] as bool;
+          return ChapterPage(isActive: isActive);
+        },
+      ),
+
+      GoRoute(
+        path: RouteNames.quizPage,
+        builder: (context, state) => const QuizPage(),
+      ),
+
+      //? --------------------------- Profile Pages --------------------------
       GoRoute(
         path: RouteNames.profile,
         builder: (context, state) => const ProfilePage(),
+      ),
+      GoRoute(
+        path: RouteNames.savedCourses,
+        builder: (context, state) => const SavedCoursesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.downloads,
+        builder: (context, state) => const DownloadsPage(),
+      ),
+      //?-------------------------------------------------------------------
+      GoRoute(
+        path: RouteNames.enroll,
+        builder: (context, state) => const EnrollPage(),
       ),
     ],
   );

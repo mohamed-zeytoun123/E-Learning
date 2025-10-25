@@ -4,7 +4,7 @@ import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/initial/hivi_init.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/app_router.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:e_learning/core/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,12 +45,15 @@ class MyApp extends StatelessWidget {
                 debugShowCheckedModeBanner: false,
       locale: context.locale,
                 themeMode: state.themeMode,
-                theme: ThemeData.light(),
-                darkTheme: ThemeData.dark(),
-      supportedLocales: context.supportedLocales,
-                 localizationsDelegates: context.localizationDelegates,
-
-                
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                supportedLocales: const [Locale('en'), Locale('ar')],
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
                 routerConfig: AppRouter.router,
               );
             },

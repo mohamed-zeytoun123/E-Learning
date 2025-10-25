@@ -14,7 +14,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundPage,
       body: Padding(
         padding: EdgeInsets.only(top: 430.h, bottom: 50.h),
         child: Center(
@@ -34,7 +34,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                 ),
               ),
               Spacer(),
-              CustomButton(
+              CustomButtonWidget(
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
                   color: AppColors.titlePrimary,
@@ -49,7 +49,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                   GoRouter.of(context).go(RouteNames.signUp);
                 },
               ),
-              CustomButton(
+              CustomButtonWidget(
                 title:
                     AppLocalizations.of(context)?.translate("Log_in") ??
                     "Log In",
@@ -63,7 +63,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                   GoRouter.of(context).go(RouteNames.logIn);
                 },
               ),
-              CustomButton(
+              CustomButtonWidget(
                 title:
                     AppLocalizations.of(
                       context,

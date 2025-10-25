@@ -71,7 +71,7 @@ class ForgetPasswordButtonWidget extends StatelessWidget {
         if (state.forgotPasswordState == ResponseStatusEnum.loading) {
           return AppLoading.circular();
         } else {
-          return CustomButton(
+          return CustomButtonWidget(
             title: AppLocalizations.of(context)?.translate("Next") ?? "Next",
             titleStyle: AppTextStyles.s16w500.copyWith(
               fontFamily: AppTextStyles.fontGeist,
