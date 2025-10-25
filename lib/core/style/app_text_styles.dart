@@ -10,14 +10,6 @@ abstract class AppTextStyles {
     required FontWeight fontWeight,
     required Color color,
     double? height,
-  }) => TextStyle(
-    fontSize: fontSize.sp,
-    fontWeight: fontWeight,
-    color: color,
-    fontFamily: _fontFamily,
-    height: height,
-  );
-
   }) =>
       TextStyle(
         fontSize: fontSize.sp,
@@ -42,25 +34,14 @@ abstract class AppTextStyles {
       );
 
   static TextStyle get s14w500 => _baseStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w500,
-    color: Colors.black,
-  );
-
-  static TextStyle get s14w600 => _baseStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-    color: Colors.black,
-  );
-
-  static TextStyle get s16w400 => _baseStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w400,
-    color: Colors.black,
-  );
-  static TextStyle get s14w500 => _baseStyle(
         fontSize: 14,
         fontWeight: FontWeight.w500,
+        color: Colors.black,
+      );
+
+  static TextStyle get s16w400 => _baseStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.w400,
         color: Colors.black,
       );
 
@@ -71,20 +52,11 @@ abstract class AppTextStyles {
       );
 
   static TextStyle get s16w600 => _baseStyle(
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-    color: Colors.black,
-  );
-
-  static TextStyle get s18w600 => _baseStyle(
-    fontSize: 18,
-    fontWeight: FontWeight.w600,
-    color: Colors.black,
-  );
         fontSize: 16,
         fontWeight: FontWeight.w600,
         color: Colors.black,
       );
+
   static TextStyle get s18w600 => _baseStyle(
         fontSize: 18,
         fontWeight: FontWeight.w600,

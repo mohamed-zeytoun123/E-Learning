@@ -10,6 +10,8 @@ import 'package:e_learning/features/auth/presentation/pages/otp_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
+import 'package:e_learning/features/home/presentation/pages/main_home_page.dart';
+import 'package:e_learning/features/home/presentation/pages/news_articles_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
 import 'package:e_learning/features/home/presentation/pages/home_page.dart';
 import 'package:e_learning/features/home/presentation/pages/home_page_body.dart';
@@ -20,7 +22,6 @@ import 'package:e_learning/features/Course/presentation/pages/courses_page.dart'
 class AppRouter {
   static final GoRouter router = GoRouter(
     // initialLocation: RouteNames.selectedMethodLogin,
-    initialLocation: RouteNames.profile,
     initialLocation: RouteNames.homePage,
     routes: [
       GoRoute(
@@ -93,11 +94,15 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.homePage,
-        builder: (context, state) => const HomePage(),
+        builder: (context, state) => const MainHomePage(),
       ),
       GoRoute(
         path: RouteNames.resetPassword,
         builder: (context, state) => const ResetPasswordPage(),
+      ),
+      GoRoute(
+        path: RouteNames.articlesAndNews,
+        builder: (context, state) => const NewsArticlesPage(),
       ),
 
       //?-------------------------------------------------------------------

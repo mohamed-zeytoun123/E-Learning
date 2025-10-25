@@ -29,13 +29,12 @@ class ProfileGuestHeader extends StatelessWidget {
                       context,
                     )?.translate("Sign_In_To_Gain_Access_To_Your_Courses") ??
                     "Sing In To Gain Access To Your Courses",
-                style: AppTextStyles.s14w600,
+                style: AppTextStyles.s14w400,
                 maxLines: 1,
               ),
               SizedBox(height: 24.h),
               CustomButton(
-                title:
-                    AppLocalizations.of(context)?.translate("Log_in") ??
+                title: AppLocalizations.of(context)?.translate("Log_in") ??
                     "Log In",
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
@@ -53,10 +52,8 @@ class ProfileGuestHeader extends StatelessWidget {
                   fontFamily: AppTextStyles.fontGeist,
                   color: AppColors.titleBlack,
                 ),
-                title:
-                    AppLocalizations.of(context)?.translate("Sign_up") ??
+                title: AppLocalizations.of(context)?.translate("Sign_up") ??
                     "Sign Up",
-
                 buttonColor: AppColors.buttonWhite,
                 borderColor: AppColors.borderBrand,
                 onTap: () {

@@ -1,3 +1,4 @@
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_padding.dart';
 import 'package:e_learning/core/widgets/chips_bar.dart';
 import 'package:e_learning/features/home/presentation/widgets/articles_section.dart';
@@ -9,6 +10,7 @@ import 'package:e_learning/features/home/presentation/widgets/teatchers_slider.d
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePageBody extends StatelessWidget {
   const HomePageBody({super.key});
@@ -85,7 +87,9 @@ class HomePageBody extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: SeeAllSeperator(
-              onTap: () {},
+              onTap: () {
+                context.push(RouteNames.articlesAndNews);
+              },
               title: 'news_and_articles'.tr(),
             ),
           ),
