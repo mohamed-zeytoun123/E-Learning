@@ -9,7 +9,9 @@ import 'package:e_learning/core/network/app_url.dart';
 import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
+import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
 import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/response/otp_verification_response.dart';
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -146,29 +148,51 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   // otp verfication
   @override
-  Future<Either<Failure, bool>> otpVerficationRemote({
+  Future<Either<Failure, OtpVerificationResponse>> otpVerficationRemote({
     required String phone,
     required String code,
     required String purpose,
   }) async {
     try {
-      final response = await api.post(
-        ApiRequest(
-          url: AppUrls.verifyOtp,
-          body: {"phone": phone, "code": code, "purpose": purpose},
-        ),
-      );
+      // Use different endpoints based on purpose
+      String url;
+      Map<String, dynamic> body;
+
+      if (purpose == 'reset') {
+        // For password reset:
+        url = AppUrls.verifyForgotPasswordOtp;
+        body = {"phone": phone, "code": code, "purpose": purpose};
+      } else {
+        // For registration:
+        url = AppUrls.verifyOtp;
+        body = {"phone": phone, "code": code, "purpose": purpose};
+      }
+
+      log("🔍 OTP Verification URL: $url");
+      log("🔍 OTP Verification Body: $body");
+
+      final response = await api.post(ApiRequest(url: url, body: body));
+
       if (response.statusCode == 200 && response.body != null) {
-        return Right(true);
+        log("🔍 OTP Verification Response: ${response.body}");
+
+        // Parse the response based on purpose
+        if (purpose == 'reset') {
+          // For reset purpose, extract the reset_token
+          final otpResponse = OtpVerificationResponse.fromJson(response.body);
+          return Right(otpResponse);
+        } else {
+          // For registration purpose, return empty response
+          return Right(OtpVerificationResponse());
+        }
       }
       return Left(FailureServer());
     } catch (e) {
-      log("error 🔥🔥🔥🔥🔥 :::$e");
+      log("error 🔥🔥🔥🔥🔥 OTP Verification:::$e");
       return Left(Failure.handleError(e as Exception));
     }
-  }
+  } //* Forget Password
 
-  //* Forget Password
   @override
   Future<Either<Failure, bool>> forgetPasswordRemote({
     required String phone,
@@ -183,6 +207,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return Left(FailureServer());
     } catch (e) {
       log("error 🔥🔥🔥🔥🔥 :::$e");
+      return Left(Failure.handleError(e as Exception));
+    }
+  }
+
+  //* Reset Password
+  @override
+  Future<Either<Failure, bool>> resetPasswordRemote({
+    required ResetPasswordRequestParams params,
+  }) async {
+    try {
+      final response = await api.post(
+        ApiRequest(url: AppUrls.resetPassword, body: params.toMap()),
+      );
+      if (response.statusCode == 200 && response.body != null) {
+        return Right(true);
+      }
+      return Left(FailureServer());
+    } catch (e) {
+      log("error 🔥🔥🔥🔥🔥 Reset Password:::$e");
       return Left(Failure.handleError(e as Exception));
     }
   }

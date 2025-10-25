@@ -3,7 +3,9 @@ import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
+import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
 import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/response/otp_verification_response.dart';
 
 abstract class AuthRemoteDataSource {
   //? ------------------------------------------------------------
@@ -27,7 +29,7 @@ abstract class AuthRemoteDataSource {
   });
 
   //* Otp Verfication
-  Future<Either<Failure, bool>> otpVerficationRemote({
+  Future<Either<Failure, OtpVerificationResponse>> otpVerficationRemote({
     required String phone,
     required String code,
     required String purpose, // reset_password || sign_up
@@ -35,6 +37,11 @@ abstract class AuthRemoteDataSource {
 
   //* Forget Password
   Future<Either<Failure, bool>> forgetPasswordRemote({required String phone});
+
+  //* Reset Password
+  Future<Either<Failure, bool>> resetPasswordRemote({
+    required ResetPasswordRequestParams params,
+  });
 
   //? ------------------------------------------------------------
 }
