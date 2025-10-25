@@ -1,3 +1,4 @@
+import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_padding.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -25,12 +26,14 @@ class SeeAllSeperator extends StatelessWidget {
               children: [
                 Text(
                   'see_all'.tr(),
-                  style: AppTextStyles.s14w400,
+                  style: AppTextStyles.s14w400
+                      .copyWith(color: AppColors.primaryTextColor),
                 ),
                 const SizedBox(width: 4),
-                const Icon(
+                const Icon( 
                   Icons.arrow_forward_ios,
                   size: 12,
+                  color: AppColors.primaryTextColor,
                 )
               ],
             ),

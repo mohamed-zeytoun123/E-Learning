@@ -5,13 +5,15 @@ class AppColors {
 
   //* Primary Colors
   static const Color background = Color(0xffFFFFFF);
+  static const Color primaryColor = Color(0xff015DA3);
+  static const Color primaryTextColor = Color(0xff0071C7);
+  static const Color stars = Color(0xffD45F2E);
 
   //* Text Colors
   static const Color textprimary = Color(0xff181818);
   static const Color textBlack = Color(0xff282828);
   static const Color textError = Colors.red;
   static const Color textGrey = Color(0xff737373);
-  static const Color textError = Colors.red;
   static const Color textWhite = Color(0xffFFFFFF);
   static const Color textRed = Color(0xffDE4C3C);
 

@@ -15,7 +15,7 @@ class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           bottom: Radius.circular(16.r), // You can adjust this value
         ),
       ),
-      backgroundColor: AppColors.appBar,
+      backgroundColor: AppColors.primaryColor,
       toolbarHeight: 100.h,
       title: Text.rich(
         TextSpan(

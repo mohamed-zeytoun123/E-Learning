@@ -32,7 +32,7 @@ class _StepsDotsIndecatorState extends State<StepsDotsIndecator> {
           width: widget.selectedIndex == index ? 20.w : 8.w,
           decoration: BoxDecoration(
             color: widget.selectedIndex == index
-                ? AppColors.borderPrimary
+                ? AppColors.primaryColor
                 : AppColors.textGrey,
             borderRadius: BorderRadius.circular(25.r),
           ),

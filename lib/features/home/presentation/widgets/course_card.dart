@@ -82,21 +82,23 @@ class CourseCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.star_outlined,
-                              color: AppColors.textGrey,
+                              color: AppColors.stars,
                               size: 14.h,
                             ),
                             SizedBox(width: 2.w),
                             Text(
                               '4',
-                              style: AppTextStyles.s14w400
-                                  .copyWith(color: AppColors.textGrey),
+                              style: AppTextStyles.s14w400.copyWith(
+                                color: AppColors.stars,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       Text(
                         '180000 S.P',
-                        style: AppTextStyles.s18w600,
+                        style: AppTextStyles.s18w600
+                            .copyWith(color: AppColors.primaryTextColor),
                       ),
                     ],
                   ),

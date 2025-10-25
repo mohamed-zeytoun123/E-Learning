@@ -30,7 +30,7 @@ class _ChipsBarState extends State<ChipsBar> {
               side: const BorderSide(color: Colors.transparent),
               showCheckmark: false,
               backgroundColor: AppColors.ligthGray,
-              selectedColor: Colors.black,
+              selectedColor: AppColors.primaryColor,
               label: Text(
                 widget.labels[index],
                 style: AppTextStyles.s14w500.copyWith(
@@ -53,6 +53,6 @@ class _ChipsBarState extends State<ChipsBar> {
   }
 
   Color getChipTextColor(int index, int? selectedIndex) {
-    return selectedIndex == index ? Colors.white : AppColors.textBlack;
+    return selectedIndex == index ? Colors.white : AppColors.primaryTextColor;
   }
 }

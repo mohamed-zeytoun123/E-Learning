@@ -9,34 +9,31 @@ class TopHomeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Card(
-              elevation: 6,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.r),
-              ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  vertical: 24.h,
-                  horizontal: 16.w,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'start_learning'.tr(),
-                      style: AppTextStyles.s14w500
-                          .copyWith(color: AppColors.textGrey),
-                    ),
-                    SizedBox(height: 16.h),
-                    Text(
-                      'browse_courses'.tr(),
-                      style: AppTextStyles.s18w600,
-                    ),
-                  ],
-                ),
-              ),
-            );
+    return Card(
+      elevation: 6,
+      color: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.r),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 24.h,
+          horizontal: 16.w,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('start_learning'.tr(), style: AppTextStyles.s14w500),
+            SizedBox(height: 16.h),
+            Text(
+              'browse_courses'.tr(),
+              style: AppTextStyles.s18w600
+                  .copyWith(color: AppColors.primaryTextColor),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
