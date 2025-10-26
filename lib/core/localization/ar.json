@@ -105,5 +105,9 @@
     "Send_Review": "إرسال المراجعة",
     "Contact_Us_To_Activate_Your_Course": "اتصل بنا لتفعيل دورتك",
     "Contact_Us": "اتصل بنا",
-    "Course_Has_Been_Suspended!": "تم تعليق الدورة!"
+    "Course_Has_Been_Suspended!": "تم تعليق الدورة!",
+    "Didnt_receive_the_code": "لم تستلم الرمز؟",
+    "Resned": "إعادة الإرسال",
+    "Loading...": "جار التحميل...",
+    "Reset_Password": "إعادة تعيين كلمة المرور"
 }

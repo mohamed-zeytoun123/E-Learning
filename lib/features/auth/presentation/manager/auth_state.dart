@@ -30,6 +30,11 @@ class AuthState {
   final String? otpVerficationError;
   final String? resetToken; // Store the reset token from OTP verification
 
+  //* OTP Timer and Resend
+  final int otpTimerSeconds;
+  final bool canResendOtp;
+  final String? currentOtpCode;
+
   //* Forgot Password
   final ResponseStatusEnum forgotPasswordState;
   final String? forgotPasswordError;
@@ -55,6 +60,9 @@ class AuthState {
     this.otpVerficationState = ResponseStatusEnum.initial,
     this.otpVerficationError,
     this.resetToken,
+    this.otpTimerSeconds = 60,
+    this.canResendOtp = false,
+    this.currentOtpCode,
     this.forgotPasswordState = ResponseStatusEnum.initial,
     this.forgotPasswordError,
     this.resetPasswordState = ResponseStatusEnum.initial,
@@ -76,6 +84,9 @@ class AuthState {
     ResponseStatusEnum? otpVerficationState,
     String? otpVerficationError,
     String? resetToken,
+    int? otpTimerSeconds,
+    bool? canResendOtp,
+    String? currentOtpCode,
     ResponseStatusEnum? forgotPasswordState,
     String? forgotPasswordError,
     ResponseStatusEnum? resetPasswordState,
@@ -96,6 +107,9 @@ class AuthState {
       otpVerficationState: otpVerficationState ?? this.otpVerficationState,
       otpVerficationError: otpVerficationError,
       resetToken: resetToken ?? this.resetToken,
+      otpTimerSeconds: otpTimerSeconds ?? this.otpTimerSeconds,
+      canResendOtp: canResendOtp ?? this.canResendOtp,
+      currentOtpCode: currentOtpCode ?? this.currentOtpCode,
       forgotPasswordState: forgotPasswordState ?? this.forgotPasswordState,
       forgotPasswordError: forgotPasswordError,
       resetPasswordState: resetPasswordState ?? this.resetPasswordState,

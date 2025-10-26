@@ -41,7 +41,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.dispose();
   }
 
-  /// Handles the reset password process
   void _handleResetPassword() {
     final isFormValid = _formKey.currentState?.validate() ?? false;
 
@@ -66,7 +65,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     }
   }
 
-  /// Shows error message using SnackBar
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -77,22 +75,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
-  /// Shows success message using SnackBar
-  void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     // Debug: Print the received parameters
-    print('Reset Password Page - Phone: ${widget.phone}');
-    print('Reset Password Page - Reset Token: ${widget.resetToken}');
+    debugPrint('Reset Password Page - Phone: ${widget.phone}');
+    debugPrint('Reset Password Page - Reset Token: ${widget.resetToken}');
 
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
@@ -100,33 +87,26 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         listenWhen: (previous, current) =>
             previous.resetPasswordState != current.resetPasswordState,
         listener: (context, state) {
-          print(
+          debugPrint(
             'BlocListener - Reset Password State: ${state.resetPasswordState}',
           );
           switch (state.resetPasswordState) {
             case ResponseStatusEnum.success:
-              _showSuccessMessage(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("Password_reset_successfully") ??
-                    "Password reset successfully",
-              );
-              // Navigate to login page after successful reset using Future.microtask
-              // to avoid state emission conflicts
-              Future.microtask(() {
-                if (context.mounted) {
-                  context.go(RouteNames.logIn);
-                }
-              });
+              // Navigate immediately without showing SnackBar to avoid widget lifecycle issues
+              if (mounted) {
+                context.go(RouteNames.logIn);
+              }
               break;
             case ResponseStatusEnum.failure:
-              _showErrorMessage(
-                state.resetPasswordError ??
-                    (AppLocalizations.of(
-                          context,
-                        )?.translate("Failed_to_reset_password") ??
-                        "Failed to reset password"),
-              );
+              if (mounted) {
+                _showErrorMessage(
+                  state.resetPasswordError ??
+                      (AppLocalizations.of(
+                            context,
+                          )?.translate("Failed_to_reset_password") ??
+                          "Failed to reset password"),
+                );
+              }
               break;
             case ResponseStatusEnum.loading:
             case ResponseStatusEnum.initial:
