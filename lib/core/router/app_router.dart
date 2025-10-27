@@ -10,9 +10,13 @@ import 'package:e_learning/features/auth/presentation/pages/otp_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/reset_password_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
+import 'package:e_learning/features/home/presentation/manager/tabs_cubit/tabs_cubit.dart';
+import 'package:e_learning/features/home/presentation/pages/article_details.dart';
 import 'package:e_learning/features/home/presentation/pages/main_home_page.dart';
+import 'package:e_learning/features/home/presentation/pages/search_page.dart';
+import 'package:e_learning/features/home/presentation/pages/teatcher_page.dart';
+import 'package:e_learning/features/home/presentation/pages/view_all_articles.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
-import 'package:e_learning/features/home/presentation/pages/home_page.dart';
 import 'package:e_learning/features/home/presentation/pages/home_page_body.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +24,7 @@ import 'package:e_learning/features/Course/presentation/pages/courses_page.dart'
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: RouteNames.mainHomePage,
+    initialLocation: RouteNames.searchPage,
     routes: [
       GoRoute(
         path: RouteNames.selectedMethodLogin,
@@ -87,22 +91,38 @@ class AppRouter {
 
       //?-------------------------------------------------------------------
       GoRoute(
+        path: RouteNames.searchPage,
+        builder: (context, state) => const SearchPage(),
+      ),
+      GoRoute(
         path: RouteNames.forgetPassword,
         builder: (context, state) => const ForgetPasswordPage(),
       ),
       GoRoute(
+        path: RouteNames.teatcherPage,
+        builder: (context, state) => const TeatcherPage(),
+      ),
+      GoRoute(
         path: RouteNames.mainHomePage,
-        builder: (context, state) => const MainHomePage(),
+        builder: (context, state) => BlocProvider(create: (context) => HomeCubit(), child: const MainHomePage()),
       ),
       GoRoute(
         path: RouteNames.resetPassword,
         builder: (context, state) => const ResetPasswordPage(),
+      ),
+      GoRoute(
+        path: RouteNames.aticleDetails,
+        builder: (context, state) => const ArticleDetailsPage(),
       ),
 
       //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.courses,
         builder: (context, state) => const CoursesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.viewAllArticles,
+        builder: (context, state) => const ViewAllArticles(),
       ),
 
       //?-------------------------------------------------------------------

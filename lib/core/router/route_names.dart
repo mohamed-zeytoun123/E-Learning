@@ -10,5 +10,9 @@ class RouteNames {
   static const courses = '/courses';
   static const profile = '/profile';
   static const homePage = '/home-page';
-  static const mainHomePage = '/';
+  static const viewAllArticles = '/view-all-articles';
+  static const aticleDetails = '/article-details';
+  static const mainHomePage = '/rt';
+  static const teatcherPage = '/teatcher-page';
+  static const searchPage = '/';
 }

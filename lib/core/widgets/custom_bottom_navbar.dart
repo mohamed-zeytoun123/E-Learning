@@ -168,7 +168,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     ];
 
     return BottomNavigationBar(
-      type: BottomNavigationBarType.shifting,
+      type: BottomNavigationBarType.fixed,
       backgroundColor: AppColors.background,
       elevation: 0,
       currentIndex: currentIndex,

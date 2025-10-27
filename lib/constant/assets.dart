@@ -18,6 +18,8 @@ class Assets {
 
   static const String resourceImagesVectorsSearch1 = "assets/images/vectors/search1.svg";
 
+  static const String resourceImagesVectorsSearchAd = "assets/images/vectors/search_ad.svg";
+
   static const String resourceImagesVectorsUserRound = "assets/images/vectors/user_round.svg";
 
   static const String resourceTranslationsAr = "assets/translations/ar.json";

@@ -20,6 +20,7 @@ class CourseCard extends StatelessWidget {
     return Stack(
       children: [
         Card(
+          color: Colors.white,
           elevation: 1, // 👈 adds soft shadow
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.r),

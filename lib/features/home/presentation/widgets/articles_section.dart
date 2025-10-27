@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ArticlesSection extends StatelessWidget {
-  const ArticlesSection({super.key});
-
+  const ArticlesSection({super.key, this.itemsForShow});
+  final int? itemsForShow;
   @override
   Widget build(BuildContext context) {
     return SliverList.separated(
       separatorBuilder: (context, index) => SizedBox(height: 12.h),
-      itemCount: 5,
+      itemCount: itemsForShow ?? 20,
       itemBuilder: (context, index) {
         return ListTile(
           titleAlignment: ListTileTitleAlignment.top,
