@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -20,6 +21,7 @@ class VideoProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     final int safeTotal = totalVideos <= 0 ? 1 : totalVideos;
     final double percent = (completedVideos / safeTotal).clamp(0.0, 1.0);
     final int percentValue = (percent * 100).round();
@@ -35,7 +37,7 @@ class VideoProgressWidget extends StatelessWidget {
             lineHeight: hieghtProgress.h,
             percent: percent,
             backgroundColor: AppColors.formSomeWhite,
-            progressColor: AppColors.formProgress,
+            progressColor: colors.textBlue,
             barRadius: Radius.circular(999.r),
             animation: true,
             animationDuration: 700,
@@ -48,14 +50,14 @@ class VideoProgressWidget extends StatelessWidget {
                   Text(
                     '$completedVideos Of $totalVideos Videos',
                     style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textGrey,
+                      color:colors.textGrey ,
                       fontSize: 14.sp,
                     ),
                   ),
                   Text(
                     '$percentValue% Completed',
                     style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textGrey,
+                      color: colors.textGrey,
                     ),
                   ),
                 ],

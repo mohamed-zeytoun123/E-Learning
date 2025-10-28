@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/input_forms/input_review_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/rating_stars_widget.dart';
@@ -16,11 +17,12 @@ class ReviewBottomSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Container(
       height: 346.h,
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhiteWidget,
+        color: colors.buttonTapNotSelected,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.r),
           topRight: Radius.circular(24.r),
@@ -45,7 +47,7 @@ class ReviewBottomSheetWidget extends StatelessWidget {
             child: Text(
               AppLocalizations.of(context)?.translate("Rate_Your_Experience") ??
                   "Rate Your Experience!",
-              style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+              style: AppTextStyles.s16w600.copyWith(color: colors.textPrimary),
             ),
           ),
           SizedBox(height: 5.h),
@@ -62,7 +64,7 @@ class ReviewBottomSheetWidget extends StatelessWidget {
           Text(
             AppLocalizations.of(context)?.translate("Write_Your_Review") ??
                 "Write Your Review",
-            style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+            style: AppTextStyles.s16w600.copyWith(color: colors.textPrimary),
           ),
           SizedBox(height: 10.h),
 

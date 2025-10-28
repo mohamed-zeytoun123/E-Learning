@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/filter_group_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/study_year_group_widget.dart';
@@ -40,11 +41,12 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Container(
       height: 565.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: AppColors.textWhite,
+        color: colors.background,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(32),
           topRight: Radius.circular(32),
@@ -65,7 +67,7 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
 
           Text(
             "Filters",
-            style: AppTextStyles.s18w600.copyWith(color: AppColors.textPrimary),
+            style: AppTextStyles.s18w600.copyWith(color: colors.textBlue),
           ),
           SizedBox(height: 16.h),
 
@@ -107,10 +109,10 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                   child: CustomButtonWidget(
                     title: "Cancel",
                     titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: AppColors.textPrimary,
+                      color: colors.formWhite,
                     ),
-                    buttonColor: AppColors.buttonWhite,
-                    borderColor: AppColors.borderPrimary,
+                    buttonColor: colors.buttonTapNotSelected,
+                    borderColor:Colors.transparent,
                     onTap: () {
                       Navigator.of(context).pop();
                     },
@@ -121,10 +123,10 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                   child: CustomButtonWidget(
                     title: "Apply",
                     titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: AppColors.textWhite,
+                      color: colors.background,
                     ),
-                    buttonColor: AppColors.buttonPrimary,
-                    borderColor: AppColors.borderPrimary,
+                    buttonColor: colors.textBlue,
+                    borderColor:colors.textBlue,
                     onTap: () {
                       // إغلاق مع تمرير الفلاتر المختارة للصفحة الأم
                       // Navigator.of(context).pop(selectedFilters);

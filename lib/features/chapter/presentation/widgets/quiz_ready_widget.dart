@@ -2,6 +2,7 @@ import 'package:e_learning/core/asset/app_icons.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class QuizReadyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -45,7 +47,7 @@ class QuizReadyWidget extends StatelessWidget {
         Text(
           'Your Quiz Is Ready !',
           textAlign: TextAlign.center,
-          style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
+          style: AppTextStyles.s18w600.copyWith(color: colors.textPrimary),
         ),
 
         SizedBox(height: 6.h),
@@ -56,12 +58,12 @@ class QuizReadyWidget extends StatelessWidget {
           children: [
             Text(
               '$questionCount Questions',
-              style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
+              style: AppTextStyles.s14w400.copyWith(color: colors.textGrey),
             ),
             IconCircleWidget(),
             Text(
               '$pointsCount Points',
-              style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
+              style: AppTextStyles.s14w400.copyWith(color: colors.textGrey),
             ),
           ],
         ),
@@ -73,8 +75,8 @@ class QuizReadyWidget extends StatelessWidget {
           titleStyle: AppTextStyles.s16w500.copyWith(
             color: AppColors.titlePrimary,
           ),
-          buttonColor: AppColors.buttonPrimary,
-          borderColor: AppColors.borderPrimary,
+          buttonColor: colors.textBlue,
+          borderColor: colors.textBlue,
           icon: Icon(Icons.arrow_outward_sharp, color: AppColors.iconWhite),
           onTap: () {
             context.push(RouteNames.quizPage);

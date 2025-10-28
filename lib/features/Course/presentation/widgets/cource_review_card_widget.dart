@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/show_image_teacher_widget.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class CourceReviewCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return SizedBox(
       height: 112.h,
       child: Column(
@@ -43,13 +45,13 @@ class CourceReviewCardWidget extends StatelessWidget {
                       Text(
                         username,
                         style: AppTextStyles.s16w600.copyWith(
-                          color: AppColors.textBlack,
+                          color: colors.textPrimary,
                         ),
                       ),
                       Text(
                         reviewText,
                         style: AppTextStyles.s14w400.copyWith(
-                          color: AppColors.textBlack,
+                          color: colors.textPrimary,
                         ),
                       ),
                       Row(
@@ -59,7 +61,7 @@ class CourceReviewCardWidget extends StatelessWidget {
                           Text(
                             timeAgo,
                             style: AppTextStyles.s12w400.copyWith(
-                              color: AppColors.textGrey,
+                              color: colors.textGrey,
                             ),
                           ),
                         ],

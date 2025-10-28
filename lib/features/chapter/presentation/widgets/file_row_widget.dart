@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,6 +18,7 @@ class FileRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Column(
       children: [
         Material(
@@ -35,7 +37,7 @@ class FileRowWidget extends StatelessWidget {
                     width: 48.w,
                     height: 48.h,
                     decoration: BoxDecoration(
-                      color: AppColors.formSecondary,
+                      color: colors.buttonTapNotSelected,
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     alignment: Alignment.center,
@@ -54,7 +56,7 @@ class FileRowWidget extends StatelessWidget {
                         Text(
                           chapterTitle,
                           style: AppTextStyles.s16w600.copyWith(
-                            color: AppColors.textBlack,
+                            color: colors.textPrimary,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -62,7 +64,7 @@ class FileRowWidget extends StatelessWidget {
                         Text(
                           '$sizeFile MB',
                           style: AppTextStyles.s14w400.copyWith(
-                            color: AppColors.textGrey,
+                            color: colors.textGrey,
                           ),
                         ),
                       ],

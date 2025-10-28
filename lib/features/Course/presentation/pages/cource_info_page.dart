@@ -1,3 +1,4 @@
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_access_content_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_course_widget.dart';
@@ -28,9 +29,10 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
-      appBar: CustomAppBarCourseWidget(title: "Course’s Title", showBack: true),
-      backgroundColor: AppColors.backgroundPage,
+      appBar: CustomAppBarWidget(title: "Course’s Title", showBack: true),
+      backgroundColor: colors.background,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -40,17 +42,18 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
             automaticallyImplyLeading: false,
             flexibleSpace: FlexibleSpaceBar(
               background: CustomCachedImageWidget(
-                appImage: 'https://picsum.photos/361/180',
+                appImage: 'https://picsum.photos/seed/picsum/200/300',
                 width: double.infinity,
                 fit: BoxFit.cover,
-                height: 262,
+                height: 300,
               ),
             ),
           ),
           SliverToBoxAdapter(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: colors.background,
+                border: Border(bottom: BorderSide(color: colors.borderCard)),
                 borderRadius: BorderRadius.circular(24.r),
                 boxShadow: [
                   BoxShadow(
@@ -72,7 +75,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                       children: [
                         CourseTitleSubTitleWidget(
                           titleStyle: AppTextStyles.s18w600.copyWith(
-                            color: AppColors.textBlack,
+                            color: colors.textPrimary,
                           ),
                           title: 'Flutter Development',
                           subtitle: 'Learn to build apps with Flutter',

@@ -8,8 +8,9 @@ class AppColors {
   static const Color secondary = Color(0xffEDF7FF);
   static const Color backgroundPage = Color(0xffFFFFFF);
   static const Color backgroundWhiteWidget = Color(0xffFFFFFF);
-  static const Color backgroundDarkPage = Color(0xff000000);
+  static const Color backgroundDarkPage = Color(0xff12171D);
   static const Color backgroundLittelOrange = Color(0xffFDF4F1);
+  static const Color backgroundDarkSecondary = Color(0xff5EB5F7);
 
   //* Text Colors
   static const Color textPrimary = Color(0xff0071C7);
@@ -20,12 +21,15 @@ class AppColors {
   static const Color textRed = Color(0xffDE4C3C);
   static const Color textOrange = Color(0xffD45F2E);
   static const Color textGreen = Color(0xff018532);
+  static const Color textSilver = Color(0xff737373);
 
   //* Button Colors
   static const Color buttonPrimary = Color(0xff0071C7);
   static const Color buttonSecondary = Color(0xffBABABA);
   static const Color buttonWhite = Color(0xffFFFFFF);
   static const Color buttonGreyF = Color(0xffEAEAEA);
+  static const Color buttontapped = Color(0xff202934);
+
   //? Tab Bar
   static const Color buttonTapSelected = Color(0xff0071C7);
   static const Color buttonTapNotSelected = Color(0xffEDF7FF);
@@ -40,8 +44,9 @@ class AppColors {
   static const Color borderSecondary = Color(0xffBABABA);
   static const Color borderBrand = Color(0xffEAEAEA);
   static const Color borderOrange = Color(0xffD45F2E);
-
-  //* Loading Colors
+  static const Color borderPrimaryDark = Color(0xff2F3945);
+ static const Color linerProccessDark = Color(0xff303F4B); 
+  //* Loading Color
   static const Color loadingPrimary = Color(0xff0071C7);
   static const Color loadingBackground = Color(0xffEAEAEA);
 
@@ -54,7 +59,10 @@ class AppColors {
   //* App Bar Colors
   static const Color appBarBlack = Color(0xff0071C7);
   static const Color appBarWhite = Color(0xffF1F1F1);
-
+  static const Color appBarlightTop = Color(0xff024B82);
+  static const Color appBarlightbottom = Color(0xff0071C7);
+  static const Color appBarbarktop = Color(0xff284C69);
+   static const Color appBarbarkbottom = Color(0xff547792);
   //* Icon Colors
   static const Color iconWhite = Color(0xffFFFFFF);
   static const Color iconGrey = Color(0xff737373);
@@ -79,6 +87,7 @@ class AppColors {
 
   //* Rating Color
   static const Color ratingStar = Color(0xffD45F2E);
-
+  static const Color retingback = Color(0xff51443F);
+static const Color lightGrey = Color(0xffbababa);
   //?-----------------------------------------------------
 }

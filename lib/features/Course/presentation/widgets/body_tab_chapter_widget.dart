@@ -6,6 +6,7 @@ import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/course/presentation/widgets/chapter_row_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_suspended_widget.dart';
@@ -19,6 +20,7 @@ class BodyTabChapterWidget extends StatelessWidget {
   final bool isActive;
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
       child: Column(
@@ -26,7 +28,7 @@ class BodyTabChapterWidget extends StatelessWidget {
         children: [
           Text(
             "Chapter",
-            style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
+            style: AppTextStyles.s18w600.copyWith(color: colors.textPrimary),
           ),
           Expanded(
             child: BlocSelector<AppManagerCubit, AppManagerState, AppStateEnum>(
@@ -69,7 +71,7 @@ class BodyTabChapterWidget extends StatelessWidget {
                     );
                   },
                   separatorBuilder: (BuildContext context, int index) =>
-                      Divider(height: 1.h, color: AppColors.dividerGrey),
+                      Divider(height: 1.h, color:colors.dividerGrey ),
                 );
               },
             ),

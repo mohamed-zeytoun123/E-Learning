@@ -1,3 +1,4 @@
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/auth/data/models/study_year_enum.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -25,7 +26,7 @@ class StudyYearGroupWidget extends StatelessWidget {
         children: [
           Text(
             "Study Year",
-            style: AppTextStyles.s16w600.copyWith(color: AppColors.textPrimary),
+            style: AppTextStyles.s16w600.copyWith(color: context.colors.textBlue),
           ),
           SizedBox(height: 10.h),
           Wrap(
@@ -46,8 +47,8 @@ class StudyYearGroupWidget extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: selected
-                        ? AppColors.buttonTapSelected
-                        : AppColors.buttonTapNotSelected,
+                        ? context.colors.textBlue
+                        : context.colors.buttonTapNotSelected,
                     borderRadius: BorderRadius.circular(20.r),
                     boxShadow: selected
                         ? [
@@ -77,7 +78,7 @@ class StudyYearGroupWidget extends StatelessWidget {
                         style: AppTextStyles.s14w500.copyWith(
                           color: selected
                               ? AppColors.textWhite
-                              : AppColors.textPrimary,
+                              : context.colors.textBlue,
                         ),
                       ),
                     ],

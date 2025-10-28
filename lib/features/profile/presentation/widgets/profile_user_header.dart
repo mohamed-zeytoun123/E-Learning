@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/profile/presentation/widgets/user_info_row.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,12 +11,13 @@ class ProfileUserHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return SizedBox(
       height: 198.h,
       width: 362.w,
       child: Card(
-        color: AppColors.backgroundPage,
-        shape: RoundedRectangleBorder(
+        color: colors.background,
+        shape: RoundedRectangleBorder(side: BorderSide(color: colors.borderCard),
           borderRadius: BorderRadius.circular(16.r),
         ),
         child: Padding(
@@ -26,12 +28,12 @@ class ProfileUserHeader extends StatelessWidget {
                 AppLocalizations.of(context)?.translate("User_Name") ??
                     "University",
                 style: AppTextStyles.s16w600.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: colors.textPrimary,
                 ),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.h),
-                child: Divider(color: AppColors.dividerGrey),
+                child: Divider(color: colors.dividerGrey),
               ),
               Column(
                 children: [

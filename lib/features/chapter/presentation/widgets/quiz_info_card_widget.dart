@@ -1,3 +1,4 @@
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,12 +19,14 @@ class QuizInfoCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Container(
       height: 111.h,
       width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.formWhite,
+        color: colors.background,
         borderRadius: BorderRadius.circular(24.r),
+        
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -32,7 +35,7 @@ class QuizInfoCardWidget extends StatelessWidget {
             offset: Offset(0, 3),
           ),
         ],
-        border: Border.all(color: Colors.black.withOpacity(0.05), width: 1),
+        border: Border.all(color:colors.borderCard, width: 1),
       ),
       margin: EdgeInsets.symmetric(horizontal: 10.w),
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
@@ -42,7 +45,7 @@ class QuizInfoCardWidget extends StatelessWidget {
         children: [
           Text(
             "$title - Quiz",
-            style: AppTextStyles.s18w600.copyWith(color: AppColors.textPrimary),
+            style: AppTextStyles.s18w600.copyWith(color: colors.textBlue),
           ),
           SizedBox(height: 8.h),
 
@@ -52,14 +55,14 @@ class QuizInfoCardWidget extends StatelessWidget {
               Text(
                 "$questionCount Questions",
                 style: AppTextStyles.s14w400.copyWith(
-                  color: AppColors.textGrey,
+                  color:colors.textGrey,
                 ),
               ),
               IconCircleWidget(),
               Text(
                 "$points Points",
                 style: AppTextStyles.s14w400.copyWith(
-                  color: AppColors.textGrey,
+                  color: colors.textGrey,
                 ),
               ),
             ],

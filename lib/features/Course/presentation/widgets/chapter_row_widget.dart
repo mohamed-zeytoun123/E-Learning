@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,6 +28,7 @@ class ChapterRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     final chapterText = chapterNumber < 10
         ? '0$chapterNumber'
         : '$chapterNumber';
@@ -51,14 +53,14 @@ class ChapterRowWidget extends StatelessWidget {
                     width: 48.w,
                     height: 48.h,
                     decoration: BoxDecoration(
-                      color: AppColors.formSecondary,
+                      color: context.colors.buttonTapNotSelected,
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       chapterText,
                       style: AppTextStyles.s16w600.copyWith(
-                        color: AppColors.textPrimary,
+                        color: context.colors.textBlue,
                       ),
                     ),
                   ),
@@ -71,7 +73,7 @@ class ChapterRowWidget extends StatelessWidget {
                         Text(
                           chapterTitle,
                           style: AppTextStyles.s16w600.copyWith(
-                            color: AppColors.textBlack,
+                            color: colors.textPrimary,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -82,14 +84,14 @@ class ChapterRowWidget extends StatelessWidget {
                             Text(
                               '$videoCount Videos',
                               style: AppTextStyles.s14w400.copyWith(
-                                color: AppColors.textGrey,
+                                color: colors.textGrey,
                               ),
                             ),
                             IconCircleWidget(),
                             Text(
                               '$durationMinutes Mins',
                               style: AppTextStyles.s14w400.copyWith(
-                                color: AppColors.textGrey,
+                                color: colors.textGrey,
                               ),
                             ),
                           ],
@@ -101,7 +103,7 @@ class ChapterRowWidget extends StatelessWidget {
                     isUnlocked ? Icons.arrow_forward_ios : Icons.lock_outline,
                     size: 20.sp,
                     color: isUnlocked
-                        ? AppColors.iconBlue
+                        ? colors.textBlue
                         : AppColors.iconOrange,
                   ),
                 ],

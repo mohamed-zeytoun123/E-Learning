@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -79,7 +80,7 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
                         child: Text(
                           title,
                           style: AppTextStyles.s16w500.copyWith(
-                            color: AppColors.textBlack,
+                            color:context.colors.textPrimary ,///////////////////g//////////////////////////////
                           ),
                         ),
                       ),
@@ -89,7 +90,7 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
                         title: Text(
                           option,
                           style: AppTextStyles.s14w400.copyWith(
-                            color: AppColors.textBlack,
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         value: option,

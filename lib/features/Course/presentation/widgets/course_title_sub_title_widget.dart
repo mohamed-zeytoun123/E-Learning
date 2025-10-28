@@ -1,4 +1,5 @@
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
@@ -26,7 +27,7 @@ class CourseTitleSubTitleWidget extends StatelessWidget {
             title,
             style:
                 titleStyle ??
-                AppTextStyles.s16w500.copyWith(color: AppColors.textBlack),
+                AppTextStyles.s16w500.copyWith(color: context.colors.textPrimary),//textBlack
           ),
           SizedBox(height: 4.h),
           Text(

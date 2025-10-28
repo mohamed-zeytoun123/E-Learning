@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_info_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,6 +23,7 @@ class _CustomCategoryTabBarWidgetState
 
   @override
   Widget build(BuildContext context) {
+    final colors= context.colors;
     return Column(
       children: [
         SingleChildScrollView(
@@ -38,7 +40,7 @@ class _CustomCategoryTabBarWidgetState
                   });
                 },
                 child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
+                  duration: const Duration(milliseconds: 400),
                   curve: Curves.easeInOut,
                   margin: EdgeInsets.symmetric(horizontal: 8.w),
                   padding: EdgeInsets.symmetric(
@@ -47,8 +49,8 @@ class _CustomCategoryTabBarWidgetState
                   ),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? AppColors.buttonTapSelected
-                        : AppColors.buttonTapNotSelected,
+                        ? colors.textBlue
+                        : colors.buttonTapNotSelected,
                     borderRadius: BorderRadius.circular(20.r),
                   ),
                   child: Row(
@@ -60,8 +62,8 @@ class _CustomCategoryTabBarWidgetState
                             Icons.tune,
                             size: 20.sp,
                             color: isSelected
-                                ? AppColors.iconWhite
-                                : AppColors.iconBlue,
+                                ? colors.background
+                                : colors.iconBlack,
                           ),
                         ),
                       if (tabs[index].isNotEmpty)
@@ -69,8 +71,8 @@ class _CustomCategoryTabBarWidgetState
                           tabs[index],
                           style: AppTextStyles.s14w400.copyWith(
                             color: isSelected
-                                ? AppColors.textWhite
-                                : AppColors.textPrimary,
+                                ? colors.background
+                                : colors.iconBlack,
                             fontWeight: isSelected
                                 ? FontWeight.w600
                                 : FontWeight.w400,
@@ -84,7 +86,7 @@ class _CustomCategoryTabBarWidgetState
           ),
         ),
         SizedBox(height: 8.h),
-        Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+        Divider(color: context.colors.dividerGrey, thickness: 1, height: 0.h),
 
         Expanded(
           child: Builder(

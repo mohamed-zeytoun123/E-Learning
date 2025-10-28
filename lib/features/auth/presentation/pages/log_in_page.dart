@@ -3,6 +3,7 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/forgot_password_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/form_log_in_widget.dart';
@@ -20,6 +21,7 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
+  
   final TextEditingController phoneController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
@@ -34,6 +36,7 @@ class _LogInPageState extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -56,7 +59,7 @@ class _LogInPageState extends State<LogInPage> {
                       )?.translate("Log_in_to_your_account") ??
                       "Log In To Your Account",
                   style: AppTextStyles.s16w600.copyWith(
-                    color: AppColors.textBlack,
+                    color: colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 20.h),
@@ -88,6 +91,7 @@ class _LogInPageState extends State<LogInPage> {
                 InkWell(
                   onTap: () {
                     log("Don’t have an account?");
+                    
                   },
                   child: Text(
                     AppLocalizations.of(
@@ -95,7 +99,7 @@ class _LogInPageState extends State<LogInPage> {
                         )?.translate("Dont_have_an_account") ??
                         "Don’t have an account?",
                     style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textBlack,
+                      color: colors.textPrimary,
                     ),
                   ),
                 ),
@@ -106,12 +110,13 @@ class _LogInPageState extends State<LogInPage> {
                       "Sign Up",
                   titleStyle: AppTextStyles.s16w500.copyWith(
                     fontFamily: AppTextStyles.fontGeist,
-                    color: AppColors.titleBlack,
+                    color: colors.textPrimary
                   ),
-                  buttonColor: AppColors.buttonWhite,
+                  buttonColor: Colors.transparent,
                   borderColor: AppColors.borderPrimary,
                   onTap: () {
-                    context.go(RouteNames.signUp);
+                  context.go(RouteNames.signUp);
+                      // context.go(RouteNames.profile);
                   },
                 ),
               ],
@@ -122,3 +127,5 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 }
+
+

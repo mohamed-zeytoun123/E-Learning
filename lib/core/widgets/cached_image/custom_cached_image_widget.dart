@@ -42,7 +42,7 @@ class CustomCachedImageWidget extends StatelessWidget {
           Container(
             height: height == double.infinity ? double.infinity : height.h,
             width: width == double.infinity ? double.infinity : width.w,
-            color: Colors.grey.shade300,
+            color: const Color.fromARGB(69, 215, 212, 212),
             child: Icon(
               Icons.broken_image,
               size: 20.sp,

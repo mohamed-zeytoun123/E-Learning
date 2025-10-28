@@ -1,4 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
@@ -29,19 +30,20 @@ class CourseInfoCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 361.w,
         height: 297.5.h,
-        decoration: BoxDecoration(
-          color: Colors.white,
+        decoration: BoxDecoration(border: Border.all(color: colors.borderCard),
+          color: colors.background,
           borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 4.r,
-              offset: Offset(0, 2.h),
+              offset: Offset(1.w, 2.h),
             ),
           ],
         ),
@@ -72,16 +74,16 @@ class CourseInfoCardWidget extends StatelessWidget {
                   child: GestureDetector(
                     onTap: onSave,
                     child: Container(
-                      width: 44.w,
-                      height: 44.h,
+                      width: 42.w,
+                      height: 42.h,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: colors.background,
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.borderSecondary),
+                        // border: Border.all(color: AppColors.borderSecondary),
                       ),
                       child: Icon(
                         Icons.bookmark_border,
-                        color: Theme.of(context).colorScheme.primary,
+                        color: colors.textSilver,
                       ),
                     ),
                   ),
@@ -108,11 +110,11 @@ class CourseInfoCardWidget extends StatelessWidget {
                     width: 55.w,
                     height: 25.h,
                     decoration: BoxDecoration(
-                      color: AppColors.formSomeWhite,
+                      color: colors.backgroundOrange,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 6.w),
-                    child: RatingWidget(rating: rating),
+                    child: RatingWidget(rating: rating,),
                   ),
                   //* Price
                   PriceTextWidget(price: price),

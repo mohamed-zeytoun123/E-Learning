@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_course_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/custom_category_tab_bar_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/filters_bottom_sheet_widget.dart';
@@ -10,9 +11,10 @@ class CoursesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final color=context.colors;
     return Scaffold(
-      backgroundColor: AppColors.backgroundPage,
-      appBar: CustomAppBarCourseWidget(
+      backgroundColor:color.background ,
+      appBar: CustomAppBarWidget(
         title: "Course’s Title",
         showBack: true,
         onSearch: () {

@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/cource_review_card_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/review_bottom_sheet_widget.dart';
@@ -24,8 +25,9 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
 
   @override
   Widget build(BuildContext context) {
+  final colors =context.colors;
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 15.h),
+      padding: EdgeInsets.only(top: 15.h),
       child: Column(
         children: [
           Expanded(
@@ -41,7 +43,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                 timeAgo: "2 Weeks Ago",
               ),
               separatorBuilder: (context, index) => Divider(
-                color: AppColors.dividerGrey,
+                color: colors.dividerGrey,
                 thickness: 1,
                 height: 16.h,
               ),
@@ -52,11 +54,12 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 10.w),
               decoration: BoxDecoration(
+                border: Border.all(color: colors.borderCard),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24.r),
                   topRight: Radius.circular(24.r),
                 ),
-                color: AppColors.backgroundPage,
+                color: colors.buttonTapNotSelected,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
@@ -71,14 +74,14 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                   Text(
                     "What About Your Opinion ?",
                     style: AppTextStyles.s16w600.copyWith(
-                      color: AppColors.textBlack,
+                      color: colors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 5.h),
                   Text(
                     "Write a Review And Let Us Know How Are You Feeling About This Course !",
                     style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textGrey,
+                      color:colors.textGrey,
                     ),
                   ),
                   SizedBox(height: 10.h),
@@ -87,8 +90,8 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                     titleStyle: AppTextStyles.s16w500.copyWith(
                       color: AppColors.textWhite,
                     ),
-                    buttonColor: AppColors.buttonPrimary,
-                    borderColor: AppColors.borderPrimary,
+                    buttonColor: colors.textBlue,
+                    borderColor: colors.textBlue,
                     icon: Icon(
                       Icons.arrow_outward_outlined,
                       color: AppColors.iconWhite,

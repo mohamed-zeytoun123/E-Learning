@@ -20,7 +20,8 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final colors =context.colors;
+    return Scaffold(backgroundColor: colors.background,
       appBar: CustomAppBarWidget(title: 'Profile Page', showBack: true),
       body: Padding(
         padding: EdgeInsets.only(
@@ -72,7 +73,7 @@ class ProfilePage extends StatelessWidget {
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
-                    backgroundColor: Colors.transparent,
+                    backgroundColor:Colors.black,
                     isScrollControlled: true,
                     builder: (context) => SingleChildScrollView(
                       padding: EdgeInsets.only(
@@ -92,7 +93,7 @@ class ProfilePage extends StatelessWidget {
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: colors.background,
                     isScrollControlled: true,
                     builder: (context) => SingleChildScrollView(
                       padding: EdgeInsets.only(

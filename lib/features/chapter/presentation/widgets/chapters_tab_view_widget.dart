@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/body_tab_files_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/body_tab_quizzes_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/body_tab_vedio_widget.dart';
@@ -18,6 +19,7 @@ class ChaptersTabViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return DefaultTabController(
       length: 3,
       child: Builder(
@@ -31,10 +33,10 @@ class ChaptersTabViewWidget extends StatelessWidget {
                 controller: tabController,
                 dividerColor: AppColors.dividerGrey,
                 indicatorSize: TabBarIndicatorSize.tab,
-                indicatorColor: AppColors.textPrimary,
+                indicatorColor:colors.textBlue ,
                 indicatorWeight: 2.h,
-                labelColor: AppColors.textPrimary,
-                unselectedLabelColor: AppColors.textGrey,
+                labelColor: colors.textBlue ,
+                unselectedLabelColor: colors.textGrey,
                 labelStyle: AppTextStyles.s14w600,
                 onTap: (index) {
                   if (!isActive && index != 0) {
@@ -46,7 +48,7 @@ class ChaptersTabViewWidget extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.play_arrow, size: 20.sp),
+                        Icon(Icons.play_arrow, size: 20.sp,),
                         SizedBox(width: 4.w),
                         Text("Videos"),
                       ],

@@ -3,6 +3,7 @@ import 'package:e_learning/core/app/manager/app_manager_state.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_count_text_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
@@ -17,6 +18,7 @@ class BodyTabAboutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -27,22 +29,22 @@ class BodyTabAboutWidget extends StatelessWidget {
           children: [
             Text(
               "Instructor",
-              style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+              style: AppTextStyles.s16w600.copyWith(color:colors.textPrimary ),
             ),
             TeacherRowWidget(
               teacherName: "John Doe",
               teacherImageUrl: "https://picsum.photos/361/180",
             ),
-            Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+            Divider(color: colors.dividerGrey, thickness: 1, height: 0.h),
 
             Text(
               "About The Course",
-              style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
+              style: AppTextStyles.s18w600.copyWith(color: colors.textPrimary),
             ),
             SizedBox(height: 8.h),
             Text(
               "Description About Course’s Content And Subjects, Description About Course’s Content And Subjects, Description About Course’s Content And Subjects, Description About Course’s Content And Subjects.",
-              style: AppTextStyles.s16w400.copyWith(color: AppColors.textBlack),
+              style: AppTextStyles.s16w400.copyWith(color: colors.textPrimary),
             ),
             SizedBox(height: 16.h),
 
@@ -52,7 +54,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                 Text(
                   "Paid Price",
                   style: AppTextStyles.s16w600.copyWith(
-                    color: AppColors.textBlack,
+                    color: colors.textPrimary,
                   ),
                 ),
                 PriceTextWidget(price: "199999"),
@@ -68,7 +70,7 @@ class BodyTabAboutWidget extends StatelessWidget {
             ),
             Text(
               "Content",
-              style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
+              style: AppTextStyles.s18w600.copyWith(color: colors.textPrimary),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

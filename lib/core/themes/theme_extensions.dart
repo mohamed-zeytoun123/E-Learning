@@ -1,3 +1,4 @@
+import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/themes/app_colors_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -40,5 +41,10 @@ extension ThemeExtensions on BuildContext {
         iconRed: const Color(0xffDE4C3C),
         formWhite: const Color(0xffF1F1F1),
         dividerGrey: const Color(0xffF1F1F1),
+        borderCard: const Color(0xff2F3945),
+        textSilver: Color(0xff737373),
+        textBlue: AppColors.borderPrimary,
+         backgroundOrange :AppColors.retingback,
+
       );
 }

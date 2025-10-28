@@ -1,4 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/chapter_title_sub_title_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/chapters_tab_view_widget.dart';
@@ -13,8 +14,9 @@ class ChapterPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Scaffold(
-      backgroundColor: AppColors.backgroundPage,
+      backgroundColor: colors.background,
       appBar: CustomAppBarCourseWidget(title: "Course’s Title", showBack: true),
       body: CustomScrollView(
         slivers: [
@@ -22,7 +24,7 @@ class ChapterPage extends StatelessWidget {
             expandedHeight: 262.h,
             pinned: true,
             automaticallyImplyLeading: false,
-            backgroundColor: AppColors.backgroundPage,
+            backgroundColor: colors.background,
             flexibleSpace: FlexibleSpaceBar(
               background: CustomCachedImageWidget(
                 appImage: 'https://picsum.photos/361/180',

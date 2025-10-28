@@ -1,3 +1,4 @@
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,15 +14,16 @@ class CustomAppBarWidget extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return AppBar(
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      backgroundColor:colors.background,
       centerTitle: false,
       titleSpacing: showBack ? 0 : NavigationToolbar.kMiddleSpacing,
-      title: Text(title, style: Theme.of(context).appBarTheme.titleTextStyle),
+      title: Text(title, style: Theme.of(context).appBarTheme.titleTextStyle?.copyWith(color: colors.textPrimary)),
       foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
       leading: showBack
           ? IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new_rounded),
+              icon:  Icon(Icons.arrow_back_ios_new_rounded,color: colors.textPrimary,),
               onPressed: () {
                 context.pop();
                 // log(message)

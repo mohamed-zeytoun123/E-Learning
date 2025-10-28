@@ -1,3 +1,4 @@
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
@@ -28,6 +29,7 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,14 +40,14 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
               child: Text(
                 "${widget.questionNumber.toString().padLeft(2, '0')} - ${widget.questionTitle}",
                 style: AppTextStyles.s16w500.copyWith(
-                  color: AppColors.textBlack,
+                  color:colors.textPrimary ,
                 ),
               ),
             ),
             Text(
               "${widget.points} Points",
               style: AppTextStyles.s14w400.copyWith(
-                color: AppColors.textPrimary,
+                color: colors.textBlue,
               ),
             ),
           ],
@@ -73,12 +75,12 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isSelected
-                            ? AppColors.textPrimary
-                            : AppColors.backgroundWhiteWidget,
-                        border: Border.all(
-                          color: AppColors.borderBrand,
-                          width: 1.5,
-                        ),
+                            ? colors.textBlue
+                            : colors.buttonTapNotSelected,
+                        // border: Border.all(
+                        //   color: AppColors.borderBrand,
+                        //   // width: 0.2,
+                        // ),
                       ),
                     ),
                     SizedBox(width: 12.w),
@@ -88,8 +90,8 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
                         option,
                         style: AppTextStyles.s14w400.copyWith(
                           color: isSelected
-                              ? AppColors.textPrimary
-                              : AppColors.textBlack,
+                              ?  colors.textBlue
+                              :colors.textGrey
                         ),
                       ),
                     ),

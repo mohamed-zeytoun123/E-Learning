@@ -21,6 +21,7 @@ class CustomSettingsItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Column(
       children: [
         GestureDetector(
@@ -47,7 +48,7 @@ class CustomSettingsItemWidget extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.h),
-          child: Divider(color: AppColors.dividerGrey),
+          child: Divider(color:colors.dividerGrey),
         ),
       ],
     );

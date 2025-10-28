@@ -3,6 +3,7 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
@@ -37,11 +38,12 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     debugPrint(
       'UniversitySelectionPage rebuilt ===========================>> ${widget.phone}',
     );
     return Scaffold(
-      backgroundColor: AppColors.backgroundPage,
+      backgroundColor:colors.background ,
       body: RefreshIndicator(
         color: AppColors.buttonPrimary,
         backgroundColor: AppColors.backgroundPage,
@@ -64,7 +66,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                     )?.translate("Lets_make_your_account") ??
                     "Let’s Make Your Account !",
                 style: AppTextStyles.s14w400.copyWith(
-                  color: AppColors.textGrey,
+                  color: colors.textGrey,
                 ),
               ),
               SizedBox(height: 40.h),
@@ -74,7 +76,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                     )?.translate("We_are_one_step_away") ??
                     "We Are One Step Away !",
                 style: AppTextStyles.s16w600.copyWith(
-                  color: AppColors.textBlack,
+                  color: colors.textPrimary,
                 ),
               ),
               SizedBox(height: 40.h),

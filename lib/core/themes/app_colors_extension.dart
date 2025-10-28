@@ -37,6 +37,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.iconRed,
     required this.formWhite,
     required this.dividerGrey,
+    required this.borderCard,
+    required this.textSilver,
+    required this.textBlue,
+    required this.backgroundOrange
   });
 
   final Color background;
@@ -44,6 +48,7 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color textPrimary;
   final Color textBlack;
   final Color textGrey;
+  final Color textSilver;
   final Color textError;
   final Color textWhite;
   final Color textRed;
@@ -74,6 +79,9 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color iconRed;
   final Color formWhite;
   final Color dividerGrey;
+  final Color borderCard;
+  final Color textBlue;
+  final Color backgroundOrange;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -112,6 +120,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? iconRed,
     Color? formWhite,
     Color? dividerGrey,
+    Color? borderCard,
+    Color? textSilver,
+    Color? textBlue,
+    Color? backgroundOrange,
   }) {
     return AppColorsExtension(
       background: background ?? this.background,
@@ -149,6 +161,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       iconRed: iconRed ?? this.iconRed,
       formWhite: formWhite ?? this.formWhite,
       dividerGrey: dividerGrey ?? this.dividerGrey,
+      borderCard: borderCard ?? this.borderCard,
+      textSilver: textSilver ?? this.textSilver,
+      textBlue: textBlue ?? this.textBlue,
+       backgroundOrange : backgroundOrange ?? this.backgroundOrange
     );
   }
 
@@ -206,6 +222,10 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       iconRed: Color.lerp(iconRed, other.iconRed, t)!,
       formWhite: Color.lerp(formWhite, other.formWhite, t)!,
       dividerGrey: Color.lerp(dividerGrey, other.dividerGrey, t)!,
+      borderCard: Color.lerp(borderCard, other.borderCard, t)!,
+      textSilver: Color.lerp(textSilver, other.textSilver, t)!,
+      textBlue: Color.lerp(textBlue, other.textBlue, t)!,
+      backgroundOrange : Color.lerp(backgroundOrange, other.backgroundOrange, t)!
     );
   }
 }
