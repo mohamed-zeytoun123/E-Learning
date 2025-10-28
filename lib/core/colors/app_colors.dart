@@ -13,8 +13,10 @@ class AppColors {
 
   //* Text Colors
   static const Color textPrimary = Color(0xff0071C7);
+  static const Color textSecondary = Color(0xffEDF7FF);
   static const Color textBlack = Color(0xff282828);
   static const Color textGrey = Color(0xff737373);
+  static const Color textGreyPro = Color(0xffBABABA);
   static const Color textError = Colors.red;
   static const Color textWhite = Color(0xffFFFFFF);
   static const Color textRed = Color(0xffDE4C3C);
@@ -23,7 +25,7 @@ class AppColors {
 
   //* Button Colors
   static const Color buttonPrimary = Color(0xff0071C7);
-  static const Color buttonSecondary = Color(0xffBABABA);
+  static const Color buttonSecondary = Color(0xffEDF7FF);
   static const Color buttonWhite = Color(0xffFFFFFF);
   static const Color buttonGreyF = Color(0xffEAEAEA);
   //? Tab Bar
@@ -32,12 +34,13 @@ class AppColors {
 
   //* Title Button Colors
   static const Color titlePrimary = Color(0xffFFFFFF);
+  static const Color titleblue = Color(0xff0071C7);
   static const Color titleBlack = Color(0xff282828);
   static const Color titleGrey = Color(0xff737373);
 
   //* Border Colors
   static const Color borderPrimary = Color(0xff0071C7);
-  static const Color borderSecondary = Color(0xffBABABA);
+  static const Color borderSecondary = Color(0xffEDF7FF);
   static const Color borderBrand = Color(0xffEAEAEA);
   static const Color borderOrange = Color(0xffD45F2E);
 

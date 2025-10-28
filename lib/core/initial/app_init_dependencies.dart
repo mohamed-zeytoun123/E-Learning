@@ -21,6 +21,12 @@ import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_sou
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source_impl.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository_impl.dart';
+import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
+import 'package:e_learning/features/course/data/source/local/courcese_local_data_source_impl.dart';
+import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source_impl.dart';
+import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/course/data/source/repo/courcese_repository_impl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -104,6 +110,11 @@ Future<void> appInitDependencies() async {
     ),
   );
 
+  //* Course local
+  appLocator.registerLazySingleton<CourceseLocalDataSource>(
+    () => CourceseLocalDataSourceImpl(hive: appLocator<HiveService>()),
+  );
+
   //? ----------- Remote Data Sources -----------------------------------------------------------
 
   //! App Manager Remote
@@ -123,6 +134,11 @@ Future<void> appInitDependencies() async {
     () => AuthRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
+  //* Course Remote
+  appLocator.registerLazySingleton<CourceseRemoteDataSource>(
+    () => CourceseRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
   //? ----------- Repositories ------------------------------------------------------------------
 
   //* Auth Repository
@@ -130,6 +146,15 @@ Future<void> appInitDependencies() async {
     () => AuthRepositoryImpl(
       remote: appLocator<AuthRemoteDataSource>(),
       local: appLocator<AuthLocalDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //* Course Repository
+  appLocator.registerLazySingleton<CourceseRepository>(
+    () => CourceseRepositoryImpl(
+      remote: appLocator<CourceseRemoteDataSource>(),
+      local: appLocator<CourceseLocalDataSource>(),
       network: appLocator<NetworkInfoService>(),
     ),
   );

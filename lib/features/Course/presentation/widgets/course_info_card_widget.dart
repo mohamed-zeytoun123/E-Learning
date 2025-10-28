@@ -8,22 +8,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CourseInfoCardWidget extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
   final String title;
   final String subtitle;
   final double rating;
   final String price;
+  final bool isLoading;
   final VoidCallback? onSave;
   final VoidCallback? onTap;
 
   const CourseInfoCardWidget({
     super.key,
-    required this.imageUrl,
+    this.imageUrl,
     required this.title,
     required this.subtitle,
     required this.rating,
     required this.price,
-    required this.onTap,
+    this.isLoading = false,
+    this.onTap,
     this.onSave,
   });
 
@@ -48,6 +50,7 @@ class CourseInfoCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //? Image Section
             Stack(
               children: [
                 ClipRRect(
@@ -55,20 +58,22 @@ class CourseInfoCardWidget extends StatelessWidget {
                     topLeft: Radius.circular(20.r),
                     topRight: Radius.circular(20.r),
                   ),
-                  child: CustomCachedImageWidget(
-                    appImage: imageUrl,
-                    width: double.infinity,
-                    height: 180.5,
-                    fit: BoxFit.cover,
-                    placeholder: Container(
-                      color: Colors.grey.shade300,
-                      child: Center(child: AppLoading.circular()),
-                    ),
-                  ),
+                  child: isLoading || imageUrl == null
+                      ? AppLoading.skeleton(height: 180.5)
+                      : CustomCachedImageWidget(
+                          appImage: imageUrl!,
+                          width: double.infinity,
+                          height: 180.5,
+                          fit: BoxFit.cover,
+                          placeholder: Container(
+                            color: Colors.grey.shade300,
+                            child: Center(child: AppLoading.circular()),
+                          ),
+                        ),
                 ),
                 Positioned(
                   top: 8.h,
-                  right: 8.w,
+                  right:14.w,
                   child: GestureDetector(
                     onTap: onSave,
                     child: Container(
@@ -91,31 +96,34 @@ class CourseInfoCardWidget extends StatelessWidget {
 
             SizedBox(height: 8.h),
 
-            CourseTitleSubTitleWidget(
-              title: 'Flutter Development',
-              subtitle: 'Learn to build apps with Flutter',
-            ),
+            //? Title & Subtitle
+            isLoading
+                ? AppLoading.skeleton(height: 40)
+                : CourseTitleSubTitleWidget(title: title, subtitle: subtitle),
 
             const Spacer(),
 
+            //? Rating & Price
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  //* Rating Container
-                  Container(
-                    width: 55.w,
-                    height: 25.h,
-                    decoration: BoxDecoration(
-                      color: AppColors.formSomeWhite,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 6.w),
-                    child: RatingWidget(rating: rating),
-                  ),
-                  //* Price
-                  PriceTextWidget(price: price),
+                  isLoading
+                      ? AppLoading.skeleton(width: 55, height: 25)
+                      : Container(
+                          width: 55.w,
+                          height: 25.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.formSomeWhite,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          child: RatingWidget(rating: rating),
+                        ),
+                  isLoading
+                      ? AppLoading.skeleton(width: 60, height: 25)
+                      : PriceTextWidget(price: price),
                 ],
               ),
             ),

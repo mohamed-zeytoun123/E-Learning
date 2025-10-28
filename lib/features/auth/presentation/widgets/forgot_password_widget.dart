@@ -22,9 +22,9 @@ class ForgotPasswordWidget extends StatelessWidget {
             AppLocalizations.of(context)?.translate("Forgot_Password") ??
                 "Forgot Password",
             style: AppTextStyles.s14w500.copyWith(
-              color: AppColors.textBlack,
+              color: AppColors.textPrimary,
               decoration: TextDecoration.underline,
-              decorationColor: AppColors.textBlack,
+              decorationColor: AppColors.textPrimary,
               decorationThickness: 1.5,
             ),
           ),

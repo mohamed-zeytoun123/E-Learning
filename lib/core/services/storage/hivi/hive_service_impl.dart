@@ -1,45 +1,83 @@
+import 'package:e_learning/core/constant/cache_keys.dart';
+import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
+import 'package:hive/hive.dart';
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
+import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
 
 class HiveServiceImpl implements HiveService {
-  //?-------  Open Box   ---------------------------------------------------------------
+  //?---------------- Category Box -------------------------
 
-  //* location Box
-  // final Box<LocationModel> locationBox =
-  //     Hive.box<LocationModel>(CacheKeys.locationBox);
+  late final Box<CategorieModel> _categoryBox;
+  late final Box<CourseModel> _courseBox;
+  late final Box<CollegeModel> _collegeBox;
 
-  //?-----   Location  --------------------------------------------------------------------------------
+  HiveServiceImpl() {
+    _categoryBox = Hive.box<CategorieModel>(CacheKeys.categoryBox);
+    _courseBox = Hive.box<CourseModel>(CacheKeys.courseBox);
+    _collegeBox = Hive.box<CollegeModel>(CacheKeys.collegeBox);
+  }
+  //?---------------- Category Box -------------------------
 
-  // //* حفظ موقع جديد    إضافة موقع واحد فقط للصندوق بدون ما يمسح الموجود.
-  // @override
-  // Future<void> saveLocationInListHestoryInCache(LocationModel location) async {
-  //   await locationBox.add(location); // يضيف موقع جديد
-  // }
+  //* Claer
+  @override
+  Future<void> clearAllCategoriesHive() async {
+    await _categoryBox.clear();
+  }
 
-  // //* حفظ قائمة كاملة     : يبدّل كل المحتويات بمواقع جديدة.
-  // @override
-  // Future<void> saveLocationsInCache(List<LocationModel> locations) async {
-  //  await  Future.wait([
-  //     locationBox.clear(),
-  //     locationBox.addAll(locations),
-  //   ]);
-  // }
+  //* Save
+  @override
+  Future<void> saveCategoriesHive(List<CategorieModel> categories) async {
+    await _categoryBox.clear();
+    await _categoryBox.addAll(categories);
+  }
 
-  // //* جلب كل المواقع
-  // @override
-  // List<LocationModel> getLocationsInCache() {
-  //   return locationBox.values.toList();
-  // }
+  //* Get
+  @override
+  List<CategorieModel> getAllCategoriesHive() {
+    return _categoryBox.values.toList();
+  }
 
-  // //* حذف موقع معين
-  // @override
-  // Future<void> removeLocationInCache(int index) async {
-  //   await locationBox.deleteAt(index);
-  // }
+  //?---------------- Course Box -------------------------
 
-  // //* حذف كل المواقع
-  // @override
-  // Future<void> clearAllInCache() async {
-  //   await locationBox.clear();
-  // }
-  //?-------------------------------------------------------------------------------------
+  //* Clear
+  @override
+  Future<void> clearAllCoursesHive() async {
+    await _courseBox.clear();
+  }
+
+  //* Save
+  @override
+  Future<void> saveCoursesHive(List<CourseModel> courses) async {
+    await _courseBox.clear();
+    await _courseBox.addAll(courses);
+  }
+
+  //* Get
+  @override
+  List<CourseModel> getAllCoursesHive() {
+    return _courseBox.values.toList();
+  }
+  //?---------------- College Box -------------------------
+
+  //* Clear all colleges
+  @override
+  Future<void> clearAllCollegesHive() async {
+    await _collegeBox.clear();
+  }
+
+  //* Save colleges
+  @override
+  Future<void> saveCollegesHive(List<CollegeModel> colleges) async {
+    await _collegeBox.clear();
+    await _collegeBox.addAll(colleges);
+  }
+
+  //* Get all colleges
+  @override
+  List<CollegeModel> getAllCollegesHive() {
+    return _collegeBox.values.toList();
+  }
+
+  //?--------------------------------------------------------
 }

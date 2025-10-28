@@ -1,11 +1,24 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class CollegeModel {
+import 'package:hive/hive.dart';
+part 'college_model.g.dart';
+
+
+@HiveType(typeId: 3)
+class CollegeModel extends HiveObject {
+  @HiveField(0)
   final int id;
+
+  @HiveField(1)
   final String name;
+
+  @HiveField(2)
   final String slug;
+
+  @HiveField(3)
   final int university;
+
+  @HiveField(4)
   final String universityName;
 
   CollegeModel({
@@ -22,23 +35,14 @@ class CollegeModel {
     String? slug,
     int? university,
     String? universityName,
-  }) => CollegeModel(
-    id: id ?? this.id,
-    name: name ?? this.name,
-    slug: slug ?? this.slug,
-    university: university ?? this.university,
-    universityName: universityName ?? this.universityName,
-  );
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'slug': slug,
-      'university': university,
-      'university_name': universityName,
-    };
-  }
+  }) =>
+      CollegeModel(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        slug: slug ?? this.slug,
+        university: university ?? this.university,
+        universityName: universityName ?? this.universityName,
+      );
 
   factory CollegeModel.fromMap(Map<String, dynamic> map) {
     return CollegeModel(
@@ -50,8 +54,18 @@ class CollegeModel {
     );
   }
 
-  String toJson() => json.encode(toMap());
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'slug': slug,
+      'university': university,
+      'university_name': universityName,
+    };
+  }
 
   factory CollegeModel.fromJson(String source) =>
-      CollegeModel.fromMap(json.decode(source) as Map<String, dynamic>);
+      CollegeModel.fromMap(json.decode(source));
+
+  String toJson() => json.encode(toMap());
 }

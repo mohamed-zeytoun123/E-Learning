@@ -64,7 +64,7 @@ class SignUpPage extends StatelessWidget {
                       "Log In",
                   titleStyle: AppTextStyles.s16w500.copyWith(
                     fontFamily: AppTextStyles.fontGeist,
-                    color: AppColors.titleBlack,
+                    color: AppColors.titleblue,
                   ),
                   buttonColor: AppColors.buttonWhite,
                   borderColor: AppColors.borderPrimary,

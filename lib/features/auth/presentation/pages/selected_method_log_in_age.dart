@@ -55,7 +55,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                     "Log In",
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.titleBlack,
+                  color: AppColors.textPrimary,
                 ),
                 buttonColor: AppColors.buttonSecondary,
                 borderColor: AppColors.borderSecondary,
@@ -71,7 +71,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                     "Continue As A Guest",
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.titleBlack,
+                  color: AppColors.textPrimary,
                 ),
                 buttonColor: AppColors.buttonWhite,
                 borderColor: AppColors.borderPrimary,
