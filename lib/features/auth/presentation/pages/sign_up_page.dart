@@ -20,14 +20,14 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     return Scaffold(
-      // appBar: AppBar(backgroundColor:colors.background ,
-      //   leading: IconButton(
-      //     onPressed: () {
-      //       BlocProvider.of<AppManagerCubit>(context).toggleTheme();
-      //     },
-      //     icon: Icon(Icons.dark_mode,color:  colors.iconBlack,),
-      //   ),
-      // ),
+      appBar: AppBar(backgroundColor:colors.background ,
+        leading: IconButton(
+          onPressed: () {
+            BlocProvider.of<AppManagerCubit>(context).toggleTheme();
+          },
+          icon: Icon(Icons.dark_mode,color:  colors.iconBlack,),
+        ),
+      ),
       backgroundColor: colors.background,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -82,7 +82,7 @@ class SignUpPage extends StatelessWidget {
                   buttonColor:  Colors.transparent,
                   borderColor: colors.textBlue,
                   onTap: () {
-                    context.go(RouteNames.logIn);
+                    context.go(RouteNames.aboutUs);
                   },
                 ),
               ],

@@ -13,6 +13,7 @@ import 'package:e_learning/features/auth/presentation/pages/reset_password_page.
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
 import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
+import 'package:e_learning/features/profile/presentation/pages/about_us.dart';
 import 'package:e_learning/features/profile/presentation/pages/downloads_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/saved_courses_page.dart';
@@ -145,6 +146,11 @@ class AppRouter {
       GoRoute(
         path: RouteNames.enroll,
         builder: (context, state) => const EnrollPage(),
+      ),
+      //?------------------------------------------------------------------
+        GoRoute(
+        path: RouteNames.aboutUs,
+        builder: (context, state) => const AboutUsPage(),
       ),
     ],
   );
