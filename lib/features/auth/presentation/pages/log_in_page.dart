@@ -56,7 +56,7 @@ class _LogInPageState extends State<LogInPage> {
                       )?.translate("Log_in_to_your_account") ??
                       "Log In To Your Account",
                   style: AppTextStyles.s16w600.copyWith(
-                    color: AppColors.textBlack,
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 20.h),

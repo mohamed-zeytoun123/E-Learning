@@ -11,6 +11,9 @@ class RouteNames {
   static const forgetPassword = '/forget-password';
   static const resetPassword = '/reset-password';
 
+  //* ================= Video Featchers =================
+  static const viedioPage = '/video';
+
   //* ================= Course Featchers =================
   static const courceInf = '/cource-inf';
   static const courses = '/courses';
@@ -26,6 +29,9 @@ class RouteNames {
   static const downloads = '/downloads';
   //* ================= Enroll Featchers =================
   static const enroll = '/enroll';
+
+  //* ================= No Internet =================
+  static const noInternet = '/no-internet';
 
   //?--------------------------------------------------------------------------
 }

@@ -1,10 +1,20 @@
+import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
 
 abstract class HiveService {
-  //?----  Location Box --------------------------------------------
-  // Future<void> clearAllInCache();
-  // Future<void> removeLocationInCache(int index);
-  // List<LocationModel> getLocationsInCache();
-  // Future<void> saveLocationInListHestoryInCache(LocationModel location);
-  // Future<void> saveLocationsInCache(List<LocationModel> locations);
-  //?------------------------------------------------------------------
+  //?---------------- Category Box -------------------------
+  Future<void> clearAllCategoriesHive();
+  Future<void> saveCategoriesHive(List<CategorieModel> categories);
+  List<CategorieModel> getAllCategoriesHive();
+
+  //?---------------- Course Box ---------------------------
+  Future<void> clearAllCoursesHive();
+  Future<void> saveCoursesHive(List<CourseModel> courses);
+  List<CourseModel> getAllCoursesHive();
+
+  //?---------------- College Box ---------------------------
+  Future<void> clearAllCollegesHive();
+  Future<void> saveCollegesHive(List<CollegeModel> colleges);
+  List<CollegeModel> getAllCollegesHive();
 }

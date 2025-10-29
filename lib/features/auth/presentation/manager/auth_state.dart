@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/features/auth/data/models/college_model.dart';
+import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/university_model.dart';
 

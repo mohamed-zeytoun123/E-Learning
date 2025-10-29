@@ -1,8 +1,11 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/widgets/no_internet_screen/no_internet_page.dart';
+import 'package:e_learning/features/Video/presentation/pages/video_playing_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/course/presentation/pages/cource_info_page.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
@@ -28,7 +31,7 @@ class AppRouter {
         path: RouteNames.selectedMethodLogin,
         //?--------------------------------------------------------------------------
         // builder: (context, state) => const SelectedMethodLogInPage(), //! base
-        builder: (context, state) => const SelectedMethodLogInPage(),
+        builder: (context, state) => CoursesPage(),
         //?--------------------------------------------------------------------------
       ),
       GoRoute(
@@ -46,6 +49,12 @@ class AppRouter {
               AuthCubit(repository: appLocator<AuthRepository>()),
           child: LogInPage(),
         ),
+      ),
+
+      //?-----  Viedeo Featchers   --------------------------------------------------------------
+      GoRoute(
+        path: RouteNames.viedioPage,
+        builder: (context, state) => const VideoPlayingPage(),
       ),
 
       //?-------------------------------------------------------------------
@@ -110,7 +119,17 @@ class AppRouter {
 
       GoRoute(
         path: RouteNames.courceInf,
-        builder: (context, state) => CourceInfoPage(),
+        name: RouteNames.courceInf,
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final courseSlug = args["courseSlug"] as String;
+          final courseCubit = args["courseCubit"] as CourseCubit;
+
+          return BlocProvider.value(
+            value: courseCubit,
+            child: CourceInfoPage(courseSlug: courseSlug),
+          );
+        },
       ),
 
       //?----- Chapter Featchers  --------------------------------------------------------------
@@ -141,6 +160,12 @@ class AppRouter {
         path: RouteNames.downloads,
         builder: (context, state) => const DownloadsPage(),
       ),
+      //?------- No Internet ----------------------------------------------
+      GoRoute(
+        path: RouteNames.noInternet,
+        builder: (context, state) => const NoInternetPage(),
+      ),
+
       //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.enroll,
