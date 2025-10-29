@@ -1,7 +1,7 @@
 class AppUrls {
   //?---------------------------------------------------------------
 
-  static const String _ip = "192.168.100.23";
+  static const String _ip = "192.168.1.23";
 
   //?---------------------------------------------------------------
 
@@ -14,6 +14,7 @@ class AppUrls {
   static final String signUp = "$_baseURl/auth/register";
   static final String logOut = "$_baseURl/auth/logout";
   static final String verifyOtp = "$_baseURl/auth/verify-otp";
+  static final String verifyForgotPasswordOtp = "$_baseURl/auth/forgot/verify";
   static final String forgetPassword = "$_baseURl/auth/forgot/start";
   static final String resetPassword = "$_baseURl/auth/forgot/reset";
 
@@ -25,6 +26,20 @@ class AppUrls {
 
   //* Get Colleges
   static final String getColleges = "$_baseURl/colleges/";
+
+  //* Get Categories
+  static final String getCategories = "$_baseURl/categories/";
+
+  //* Get Courses
+  static final String getCourses =
+      "$_baseURl/courses/?college=&study_year=&category=&teacher=&search=&ordering=-created_at";
+
+  //* Get Course Details by Slug
+  static String courseDetails(String courseSlug) =>
+      "$_baseURl/courses/$courseSlug/";
+
+  //* Get Chapters by Course ID
+  static String getChapters(int courseId) => '/courses/$courseId/chapters/';
 
   //?---------------------------------------------------------------
 }

@@ -16,7 +16,7 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundPage,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -58,13 +58,13 @@ class SignUpPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 10.h),
-                CustomButton(
+                CustomButtonWidget(
                   title:
                       AppLocalizations.of(context)?.translate("Log_in") ??
                       "Log In",
                   titleStyle: AppTextStyles.s16w500.copyWith(
                     fontFamily: AppTextStyles.fontGeist,
-                    color: AppColors.titleBlack,
+                    color: AppColors.titleblue,
                   ),
                   buttonColor: AppColors.buttonWhite,
                   borderColor: AppColors.borderPrimary,

@@ -1,0 +1,1 @@
+enum CourseStatusEnum { active, notActive }

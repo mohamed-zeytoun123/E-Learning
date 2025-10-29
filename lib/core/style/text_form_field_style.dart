@@ -26,7 +26,7 @@ class TextFormFieldStyle {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: AppColors.textprimary, width: 2.w),
+        borderSide: BorderSide(color: AppColors.textPrimary, width: 2.w),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),

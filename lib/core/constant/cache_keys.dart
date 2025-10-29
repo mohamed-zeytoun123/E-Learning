@@ -10,7 +10,12 @@ class CacheKeys {
   static final String refreshTokenKey = 'REFRESH_TOKEN_KEY';
   static final String tokenExpiryKey = 'TOKEN_EXPIRY_KEY';
   static final String accessTokenKey = 'ACSSESS_YOKEN_KEY';
-  static final String appRoleKey = 'APP_ROLE_KEY  ';
+  static final String appRoleKey = 'APP_ROLE_KEY';
 
+  //?------------------------------
+  //* Hive Boxes Keys
+  static final String categoryBox = 'CATEGORY_BOX';
+  static final String courseBox = 'COURSE_BOX';
+  static final String collegeBox = 'COLLEGE_BOX';
   //?------------------------------
 }

@@ -12,13 +12,9 @@ class Assets {
 
   static const String resourceImagesVectorsClipboardList = "assets/images/vectors/clipboard_list.svg";
 
-  static const String resourceImagesVectorsHome3 = "assets/images/vectors/home3.svg";
-
-  static const String resourceImagesVectorsPerson = "assets/images/vectors/person.svg";
+  static const String resourceImagesVectorsHome = "assets/images/vectors/home.svg";
 
   static const String resourceImagesVectorsSearch1 = "assets/images/vectors/search1.svg";
-
-  static const String resourceImagesVectorsSearchAd = "assets/images/vectors/search_ad.svg";
 
   static const String resourceImagesVectorsUserRound = "assets/images/vectors/user_round.svg";
 

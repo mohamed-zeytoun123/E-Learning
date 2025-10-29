@@ -27,7 +27,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundPage,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -57,7 +57,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 SizedBox(height: 12.h),
                 ForgetPasswordButtonWidget(
                   borderColor: AppColors.borderBrand,
-                  buttonColor: AppColors.buttonPrimary,
+                  buttonColor: Theme.of(context).colorScheme.primary,
                   textColor: AppColors.titlePrimary,
                   formKey: _formKey,
                   phoneController: phoneController,

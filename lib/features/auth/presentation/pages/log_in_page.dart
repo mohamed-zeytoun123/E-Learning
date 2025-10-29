@@ -35,7 +35,6 @@ class _LogInPageState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -57,7 +56,7 @@ class _LogInPageState extends State<LogInPage> {
                       )?.translate("Log_in_to_your_account") ??
                       "Log In To Your Account",
                   style: AppTextStyles.s16w600.copyWith(
-                    color: AppColors.textBlack,
+                    color: AppColors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 20.h),
@@ -101,7 +100,7 @@ class _LogInPageState extends State<LogInPage> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-                CustomButton(
+                CustomButtonWidget(
                   title:
                       AppLocalizations.of(context)?.translate("Sign_up") ??
                       "Sign Up",

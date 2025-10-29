@@ -14,7 +14,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundPage,
       body: Padding(
         padding: EdgeInsets.only(top: 430.h, bottom: 50.h),
         child: Center(
@@ -34,7 +34,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                 ),
               ),
               Spacer(),
-              CustomButton(
+              CustomButtonWidget(
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
                   color: AppColors.titlePrimary,
@@ -49,13 +49,13 @@ class SelectedMethodLogInPage extends StatelessWidget {
                   GoRouter.of(context).go(RouteNames.signUp);
                 },
               ),
-              CustomButton(
+              CustomButtonWidget(
                 title:
                     AppLocalizations.of(context)?.translate("Log_in") ??
                     "Log In",
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.titleBlack,
+                  color: AppColors.textPrimary,
                 ),
                 buttonColor: AppColors.buttonSecondary,
                 borderColor: AppColors.borderSecondary,
@@ -63,7 +63,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                   GoRouter.of(context).go(RouteNames.logIn);
                 },
               ),
-              CustomButton(
+              CustomButtonWidget(
                 title:
                     AppLocalizations.of(
                       context,
@@ -71,7 +71,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                     "Continue As A Guest",
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.titleBlack,
+                  color: AppColors.textPrimary,
                 ),
                 buttonColor: AppColors.buttonWhite,
                 borderColor: AppColors.borderPrimary,

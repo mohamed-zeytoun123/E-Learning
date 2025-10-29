@@ -41,10 +41,10 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
       'UniversitySelectionPage rebuilt ===========================>> ${widget.phone}',
     );
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundPage,
       body: RefreshIndicator(
         color: AppColors.buttonPrimary,
-        backgroundColor: AppColors.background,
+        backgroundColor: AppColors.backgroundPage,
         onRefresh: _refreshUniversities,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -91,7 +91,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                       (signUpParams?.phone.isNotEmpty ?? false) &&
                       (signUpParams?.password.isNotEmpty ?? false);
 
-                  return CustomButton(
+                  return CustomButtonWidget(
                     title:
                         AppLocalizations.of(context)?.translate("next") ??
                         "Next",
