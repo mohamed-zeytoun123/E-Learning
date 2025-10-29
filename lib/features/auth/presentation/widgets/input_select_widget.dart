@@ -158,8 +158,8 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected
-                ? AppColors.borderPrimary
-                : AppColors.borderSecondary,
+                ? context.colors.textBlue
+                : context.colors.dividerGrey,
             width: 1.5,
           ),
         ),
@@ -167,7 +167,7 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
         child: Text(
           selectedValue ?? widget.hint,
           style: AppTextStyles.s14w400.copyWith(
-            color: isSelected ? AppColors.textBlack : AppColors.textGrey,
+            color: isSelected ? context.colors.textPrimary : AppColors.textGrey,
           ),
         ),
       ),

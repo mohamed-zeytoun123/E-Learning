@@ -82,7 +82,7 @@ class SignUpPage extends StatelessWidget {
                   buttonColor:  Colors.transparent,
                   borderColor: colors.textBlue,
                   onTap: () {
-                    context.go(RouteNames.aboutUs);
+                    context.go(RouteNames.logIn);
                   },
                 ),
               ],

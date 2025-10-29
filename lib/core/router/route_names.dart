@@ -25,6 +25,7 @@ class RouteNames {
   static const downloads = '/downloads';
   static const aboutUs = '/about-us';
   static const privacy = '/privacy-policy';
+  static const term = '/term';
   //* ================= Enroll Featchers =================
   static const enroll = '/enroll';
 

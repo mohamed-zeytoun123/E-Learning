@@ -95,17 +95,20 @@ class CustomAppBarWidget extends StatelessWidget
             onPressed: onSearch,
           ),
       ],
-      elevation: 0,
+      // elevation: 0,
 
       /// هنا بنضيف التدرّج العمودي
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
+        decoration:  BoxDecoration(border: Border(bottom: BorderSide(color: colors.appBarWhite,style: BorderStyle.none)),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xff284C69), // لون غامق بالأعلى
-              Color(0xff547792), // أفتح شوي بالأسفل
+              // Color(0xff284C69), // لون غامق بالأعلى
+              // Color(0xff547792), 
+              context.colors.appBarBlack,
+              context.colors.appBarWhite
+              // أفتح شوي بالأسفل
             ],
           ),
         ),

@@ -110,7 +110,9 @@ class ProfilePage extends StatelessWidget {
                 title:
                     AppLocalizations.of(context)?.translate("Privacy_Policy") ??
                     "Privacy Policy",
-                onTap: () {},
+                onTap: () {
+                  context.push(RouteNames.privacy);
+                },
               ),
               CustomSettingsItemWidget(
                 icon: Icons.newspaper_outlined,
@@ -120,7 +122,9 @@ class ProfilePage extends StatelessWidget {
                       context,
                     )?.translate("Terms_&_Conditions") ??
                     "Terms & Conditions",
-                onTap: () {},
+                onTap: () {
+                  context.push(RouteNames.term);
+                },
               ),
               CustomSettingsItemWidget(
                 icon: Icons.article_outlined,
@@ -128,7 +132,9 @@ class ProfilePage extends StatelessWidget {
                 title:
                     AppLocalizations.of(context)?.translate("About_Us") ??
                     "About Us",
-                onTap: () {},
+                onTap: () {
+                  context.push(RouteNames.aboutUs);
+                },
               ),
               CustomSettingsItemWidget(
                 icon: Icons.logout_outlined,

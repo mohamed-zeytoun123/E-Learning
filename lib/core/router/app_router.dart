@@ -15,8 +15,10 @@ import 'package:e_learning/features/auth/presentation/pages/university_selection
 import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/about_us.dart';
 import 'package:e_learning/features/profile/presentation/pages/downloads_page.dart';
+import 'package:e_learning/features/profile/presentation/pages/privacy_policy.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/saved_courses_page.dart';
+import 'package:e_learning/features/profile/presentation/pages/term_and_condition_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_learning/features/course/presentation/pages/courses_page.dart';
@@ -151,6 +153,15 @@ class AppRouter {
         GoRoute(
         path: RouteNames.aboutUs,
         builder: (context, state) => const AboutUsPage(),
+      ),
+       //?------------------------------------------------------------------
+        GoRoute(
+        path: RouteNames.privacy,
+        builder: (context, state) => const PrivacyPolicy(),
+      ),
+        GoRoute(
+        path: RouteNames.term,
+        builder: (context, state) => const TermsAndConditionsPage(),
       ),
     ],
   );

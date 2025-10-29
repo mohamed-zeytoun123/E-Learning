@@ -80,8 +80,8 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 SizedBox(height: 20.h),
                 LoginButtonWidget(
-                  borderColor: AppColors.buttonPrimary,
-                  buttonColor: AppColors.buttonPrimary,
+                  borderColor: colors.textBlue,
+                  buttonColor: colors.textBlue,
                   textColor: AppColors.titlePrimary,
                   formKey: _formKey,
                   phoneController: phoneController,
@@ -113,7 +113,7 @@ class _LogInPageState extends State<LogInPage> {
                     color: colors.textPrimary
                   ),
                   buttonColor: Colors.transparent,
-                  borderColor: AppColors.borderPrimary,
+                  borderColor: colors.textBlue,
                   onTap: () {
                   context.go(RouteNames.signUp);
                       // context.go(RouteNames.profile);
