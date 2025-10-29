@@ -21,6 +21,10 @@ import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_sou
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source_impl.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository_impl.dart';
+import 'package:e_learning/features/enroll/data/source/remote/enroll_remote_data_source.dart';
+import 'package:e_learning/features/enroll/data/source/remote/enroll_remote_data_source_impl.dart';
+import 'package:e_learning/features/enroll/data/source/repo/enroll_repository.dart';
+import 'package:e_learning/features/enroll/data/source/repo/enroll_repository_impl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -123,6 +127,11 @@ Future<void> appInitDependencies() async {
     () => AuthRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
+  //* Enroll Remote
+  appLocator.registerLazySingleton<EnrollRemoteDataSource>(
+    () => EnrollRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
   //? ----------- Repositories ------------------------------------------------------------------
 
   //* Auth Repository
@@ -131,6 +140,14 @@ Future<void> appInitDependencies() async {
       remote: appLocator<AuthRemoteDataSource>(),
       local: appLocator<AuthLocalDataSource>(),
       network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //* Enroll Repository
+  appLocator.registerLazySingleton<EnrollRepository>(
+    () => EnrollRepositoryImpl(
+      remoteDataSource: appLocator<EnrollRemoteDataSource>(),
+      networkInfo: appLocator<NetworkInfoService>(),
     ),
   );
 

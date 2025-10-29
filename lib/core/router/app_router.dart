@@ -13,6 +13,8 @@ import 'package:e_learning/features/auth/presentation/pages/reset_password_page.
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
 import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
+import 'package:e_learning/features/enroll/data/source/repo/enroll_repository.dart';
+import 'package:e_learning/features/enroll/presentation/manager/enroll_cubit.dart';
 import 'package:e_learning/features/profile/presentation/pages/downloads_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/saved_courses_page.dart';
@@ -77,7 +79,7 @@ class AppRouter {
         },
       ),
 
-      //?-------------------------------------------------------------------
+      //?------------------------- Forget & Reset Password ---------------------------
       GoRoute(
         path: RouteNames.forgetPassword,
         builder: (context, state) => BlocProvider(
@@ -128,7 +130,7 @@ class AppRouter {
         builder: (context, state) => const QuizPage(),
       ),
 
-      //? --------------------------- Profile Pages --------------------------
+      //? --------------------------- Profile Features --------------------------
       GoRoute(
         path: RouteNames.profile,
         builder: (context, state) => const ProfilePage(),
@@ -141,10 +143,16 @@ class AppRouter {
         path: RouteNames.downloads,
         builder: (context, state) => const DownloadsPage(),
       ),
-      //?-------------------------------------------------------------------
+      //? ------------------------- Enroll Features ---------------------------
       GoRoute(
         path: RouteNames.enroll,
-        builder: (context, state) => const EnrollPage(),
+        name: 'enroll', // Add name for goNamed navigation
+        builder: (context, state) => BlocProvider(
+          create: (context) =>
+              EnrollCubit(repository: appLocator<EnrollRepository>())
+                ..getMyCourses(),
+          child: const EnrollPage(),
+        ),
       ),
     ],
   );

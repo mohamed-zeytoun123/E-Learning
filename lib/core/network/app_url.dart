@@ -27,5 +27,8 @@ class AppUrls {
   //* Get Colleges
   static final String getColleges = "$_baseURl/colleges/";
 
+  //* Enrollments
+  static final String myCourses = "$_baseURl/enrollments/my-courses/";
+
   //?---------------------------------------------------------------
 }

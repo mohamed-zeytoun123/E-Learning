@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
@@ -60,6 +61,8 @@ class LoginButtonWidget extends StatelessWidget {
                 AppLocalizations.of(context)?.translate("Login_successful") ??
                 "Login successful",
           );
+          // Temp for testing
+          context.go(RouteNames.enroll);
         }
       },
       buildWhen: (pre, cur) => pre.loginState != cur.loginState,
