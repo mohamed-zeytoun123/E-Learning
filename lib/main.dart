@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,10 +41,9 @@ class MyApp extends StatelessWidget {
           return BlocBuilder<AppManagerCubit, AppManagerState>(
             builder: (context, state) {
               return MaterialApp.router(
-
                 title: 'E-Learning',
                 debugShowCheckedModeBanner: false,
-      locale: context.locale,
+                locale: state.appLocale,
                 themeMode: state.themeMode,
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,

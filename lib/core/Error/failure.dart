@@ -42,7 +42,7 @@ class Failure {
         if (data is Map<String, dynamic>) {
           int? statusCode = data['code'];
           String? errorMsg;
-          if (data is Map<String, dynamic> && data.isNotEmpty) {
+          if (data.isNotEmpty) {
             String? errorMsg;
 
             if (data.containsKey('detail')) {

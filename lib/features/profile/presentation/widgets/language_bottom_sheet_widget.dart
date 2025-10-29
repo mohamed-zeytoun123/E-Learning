@@ -30,49 +30,50 @@ class LanguageBottomSheetWidget extends StatelessWidget {
           ValueListenableBuilder<AppLanguageEnum>(
             valueListenable: selectedLanguageNotifier,
             builder: (context, selectedLanguage, child) {
-              return RadioGroup(
-                groupValue: selectedLanguage,
-                onChanged: (AppLanguageEnum? value) {
-                  if (value != null) {
-                    selectedLanguageNotifier.value = value;
-                  }
-                },
-                child: Column(
-                  children: [
-                    CustomRadioWidget<AppLanguageEnum>(
-                      title:
-                          AppLocalizations.of(context)?.translate("English") ??
-                          "English",
-                      value: AppLanguageEnum.english,
+              return Column(
+                children: [
+                  CustomRadioWidget<AppLanguageEnum>(
+                    title: AppLocalizations.of(context)?.translate("English") ??
+                        "English",
+                    value: AppLanguageEnum.english,
+                    groupValue: selectedLanguage,
+                    onChanged: (AppLanguageEnum? value) {
+                      if (value != null) {
+                        selectedLanguageNotifier.value = value;
+                      }
+                    },
+                  ),
+                  CustomRadioWidget<AppLanguageEnum>(
+                    title: AppLocalizations.of(context)?.translate("Arabic") ??
+                        "Arabic",
+                    value: AppLanguageEnum.arabic,
+                    groupValue: selectedLanguage,
+                    onChanged: (AppLanguageEnum? value) {
+                      if (value != null) {
+                        selectedLanguageNotifier.value = value;
+                      }
+                    },
+                  ),
+                  SizedBox(height: 24.h),
+                  CustomButtonWidget(
+                    title: AppLocalizations.of(context)?.translate("Apply") ??
+                        "Apply",
+                    titleStyle: AppTextStyles.s16w500.copyWith(
+                      color: AppColors.textWhite,
                     ),
-                    CustomRadioWidget<AppLanguageEnum>(
-                      title:
-                          AppLocalizations.of(context)?.translate("Arabic") ??
-                          "Arabic",
-                      value: AppLanguageEnum.arabic,
-                    ),
-                    SizedBox(height: 24.h),
-                    CustomButtonWidget(
-                      title:
-                          AppLocalizations.of(context)?.translate("Apply") ??
-                          "Apply",
-                      titleStyle: AppTextStyles.s16w500.copyWith(
-                        color: AppColors.textWhite,
-                      ),
-                      buttonColor: Theme.of(context).colorScheme.primary,
-                      borderColor: Theme.of(context).colorScheme.primary,
-                      onTap: () {
-                        if (selectedLanguageNotifier.value ==
-                            AppLanguageEnum.arabic) {
-                          context.read<AppManagerCubit>().toArabic();
-                        } else {
-                          context.read<AppManagerCubit>().toEnglish();
-                        }
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
+                    buttonColor: Theme.of(context).colorScheme.primary,
+                    borderColor: Theme.of(context).colorScheme.primary,
+                    onTap: () {
+                      if (selectedLanguageNotifier.value ==
+                          AppLanguageEnum.arabic) {
+                        context.read<AppManagerCubit>().toArabic();
+                      } else {
+                        context.read<AppManagerCubit>().toEnglish();
+                      }
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               );
             },
           ),

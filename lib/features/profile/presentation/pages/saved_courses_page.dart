@@ -12,7 +12,7 @@ class SavedCoursesPage extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBarWidget(title: 'Saved Courses', showBack: true),
       body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 16.w, vertical: 32.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 32.h),
         child: ListView.separated(
           physics: const BouncingScrollPhysics(),
           itemCount: 3,

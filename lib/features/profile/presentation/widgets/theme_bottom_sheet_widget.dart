@@ -32,55 +32,63 @@ class ThemeBottomSheetWidget extends StatelessWidget {
           ValueListenableBuilder<ThemeMode>(
             valueListenable: selectedThemeNotifier,
             builder: (context, selectedTheme, child) {
-              return RadioGroup(
-                groupValue: selectedTheme,
-                onChanged: (ThemeMode? value) {
-                  if (value != null) {
-                    selectedThemeNotifier.value = value;
-                    log('Selected Theme: ${value.toString()}');
-                  }
-                },
-                child: Column(
-                  children: [
-                    CustomRadioWidget<ThemeMode>(
-                      title:
-                          AppLocalizations.of(
-                            context,
-                          )?.translate("System_Default") ??
-                          "System Default",
-                      value: ThemeMode.system,
+              return Column(
+                children: [
+                  CustomRadioWidget<ThemeMode>(
+                    title: AppLocalizations.of(
+                          context,
+                        )?.translate("System_Default") ??
+                        "System Default",
+                    value: ThemeMode.system,
+                    groupValue: selectedTheme,
+                    onChanged: (ThemeMode? value) {
+                      if (value != null) {
+                        selectedThemeNotifier.value = value;
+                        log('Selected Theme: ${value.toString()}');
+                      }
+                    },
+                  ),
+                  CustomRadioWidget<ThemeMode>(
+                    title: AppLocalizations.of(context)?.translate("Light") ??
+                        "Light",
+                    value: ThemeMode.light,
+                    groupValue: selectedTheme,
+                    onChanged: (ThemeMode? value) {
+                      if (value != null) {
+                        selectedThemeNotifier.value = value;
+                        log('Selected Theme: ${value.toString()}');
+                      }
+                    },
+                  ),
+                  CustomRadioWidget<ThemeMode>(
+                    title: AppLocalizations.of(context)?.translate("Dark") ??
+                        "Dark",
+                    value: ThemeMode.dark,
+                    groupValue: selectedTheme,
+                    onChanged: (ThemeMode? value) {
+                      if (value != null) {
+                        selectedThemeNotifier.value = value;
+                        log('Selected Theme: ${value.toString()}');
+                      }
+                    },
+                  ),
+                  SizedBox(height: 24.h),
+                  CustomButtonWidget(
+                    title: AppLocalizations.of(context)?.translate("Apply") ??
+                        "Apply",
+                    titleStyle: AppTextStyles.s16w500.copyWith(
+                      color: AppColors.textWhite,
                     ),
-                    CustomRadioWidget<ThemeMode>(
-                      title:
-                          AppLocalizations.of(context)?.translate("Light") ??
-                          "Light",
-                      value: ThemeMode.light,
-                    ),
-                    CustomRadioWidget<ThemeMode>(
-                      title:
-                          AppLocalizations.of(context)?.translate("Dark") ??
-                          "Dark",
-                      value: ThemeMode.dark,
-                    ),
-                    SizedBox(height: 24.h),
-                    CustomButtonWidget(
-                      title:
-                          AppLocalizations.of(context)?.translate("Apply") ??
-                          "Apply",
-                      titleStyle: AppTextStyles.s16w500.copyWith(
-                        color: AppColors.textWhite,
-                      ),
-                      buttonColor: Theme.of(context).colorScheme.primary,
-                      borderColor: Theme.of(context).colorScheme.primary,
-                      onTap: () {
-                        context.read<AppManagerCubit>().setThemeMode(
-                          selectedThemeNotifier.value,
-                        );
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
+                    buttonColor: Theme.of(context).colorScheme.primary,
+                    borderColor: Theme.of(context).colorScheme.primary,
+                    onTap: () {
+                      context.read<AppManagerCubit>().setThemeMode(
+                            selectedThemeNotifier.value,
+                          );
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               );
             },
           ),

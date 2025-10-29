@@ -1,4 +1,3 @@
-import 'package:e_learning/features/home/presentation/widgets/course_card.dart';
 import 'package:e_learning/features/home/presentation/widgets/teatcher_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

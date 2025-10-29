@@ -14,7 +14,7 @@ class DownloadsPage extends StatelessWidget {
     return Scaffold(
       appBar: CustomAppBarWidget(title: 'Downloads', showBack: true),
       body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 16.w, vertical: 32.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 32.h),
         child: ListView.separated(
           physics: const BouncingScrollPhysics(),
           itemCount: 10,

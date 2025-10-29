@@ -1,5 +1,4 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
@@ -62,7 +61,6 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                     color: AppColors.iconOrange,
                   ),
                   SizedBox(height: 30.h),
-
                   Text(
                     "No Internet Connection",
                     textAlign: TextAlign.center,
@@ -71,7 +69,6 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                     ),
                   ),
                   SizedBox(height: 10.h),
-
                   Text(
                     "Please check your internet settings and try again.",
                     textAlign: TextAlign.center,
@@ -80,7 +77,6 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                     ),
                   ),
                   SizedBox(height: 30.h),
-
                   CustomButtonWidget(
                     title: "Retry",
                     titleStyle: AppTextStyles.s18w600.copyWith(
@@ -90,8 +86,8 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                     borderColor: AppColors.borderPrimary,
                     onTap: () {
                       context.read<CourseCubit>().getCourseDetails(
-                        slug: widget.courseSlug,
-                      );
+                            slug: widget.courseSlug,
+                          );
                     },
                   ),
                 ],

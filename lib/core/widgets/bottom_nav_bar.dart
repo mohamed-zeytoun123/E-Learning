@@ -74,7 +74,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     return BottomNavigationBar(
       type: BottomNavigationBarType.shifting,
       unselectedItemColor: AppColors.titleGrey,
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.backgroundPage,
       showUnselectedLabels: true,
       elevation: 0,
       currentIndex: currentIndex,

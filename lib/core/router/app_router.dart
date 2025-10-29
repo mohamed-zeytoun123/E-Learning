@@ -2,7 +2,6 @@ import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/widgets/no_internet_screen/no_internet_page.dart';
 import 'package:e_learning/features/Video/presentation/pages/video_playing_page.dart';
-import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';

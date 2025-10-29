@@ -88,7 +88,7 @@ class HomePageBody extends StatelessWidget {
           SliverToBoxAdapter(
             child: SeeAllSeperator(
               onTap: () {
-                context.push(RouteNames.articlesAndNews);
+                context.push(RouteNames.chapterPage);
               },
               title: 'news_and_articles'.tr(),
             ),
