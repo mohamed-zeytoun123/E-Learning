@@ -1,12 +1,16 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
+import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
 import 'package:e_learning/features/enroll/data/models/enums/course_state_enum.dart';
 import 'package:e_learning/features/enroll/presentation/manager/enroll_cubit.dart';
 import 'package:e_learning/features/enroll/presentation/manager/enroll_state.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/completed_section_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/custom_state_tab_bar_widget.dart';
+import 'package:e_learning/features/enroll/presentation/widgets/enroll_error_state_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/enroll_info_card_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/suspended_section_widget.dart';
 import 'package:flutter/material.dart';
@@ -46,46 +50,14 @@ class _EnrollPageState extends State<EnrollPage> {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
-                child: BlocConsumer<EnrollCubit, EnrollState>(
-                  listener: (context, state) {
-                    if (state.getMyCoursesState == ResponseStatusEnum.failure) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            state.getMyCoursesError ?? 'Failed to load courses',
-                          ),
-                          backgroundColor: Colors.red,
-                          behavior: SnackBarBehavior.floating,
-                        ),
-                      );
-                    }
-                  },
+                child: BlocBuilder<EnrollCubit, EnrollState>(
                   builder: (context, state) {
                     if (state.getMyCoursesState == ResponseStatusEnum.loading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return AppLoading.circular();
                     }
 
                     if (state.getMyCoursesState == ResponseStatusEnum.failure) {
-                      return Center(
-                        child: Column(
-                          children: [
-                            Text(
-                              'Failed to load courses',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                color: Colors.red,
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.read<EnrollCubit>().getMyCourses();
-                              },
-                              child: const Text('Retry'),
-                            ),
-                          ],
-                        ),
-                      );
+                      return EnrollErrorStateWidget();
                     }
 
                     // Filter courses based on selected state
@@ -103,7 +75,9 @@ class _EnrollPageState extends State<EnrollPage> {
                       return Center(
                         child: Text(
                           'No ${selectedCourseState.name} courses found',
-                          style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                          style: AppTextStyles.s16w400.copyWith(
+                            color: AppColors.textGrey,
+                          ),
                         ),
                       );
                     }

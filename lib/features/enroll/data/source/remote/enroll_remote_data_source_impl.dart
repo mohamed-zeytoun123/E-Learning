@@ -19,7 +19,10 @@ class EnrollRemoteDataSourceImpl implements EnrollRemoteDataSource {
       final response = await api.get(ApiRequest(url: AppUrls.myCourses));
 
       if (response.statusCode == 200 && response.body != null) {
-        final List<dynamic> coursesList = response.body as List<dynamic>;
+        final Map<String, dynamic> responseData =
+            response.body as Map<String, dynamic>;
+        final List<dynamic> coursesList =
+            responseData['results'] as List<dynamic>;
         final List<EnrollmentModel> enrollments = coursesList
             .map(
               (courseJson) =>

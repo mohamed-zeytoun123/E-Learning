@@ -109,5 +109,6 @@
     "Didnt_receive_the_code": "Didn't receive the code?",
     "Resned": "Resend",
     "Loading...": "Loading...",
-    "Reset_Password": "Reset Password"
+    "Reset_Password": "Reset Password",
+    "Failed to load courses": "Failed to load courses"
 }

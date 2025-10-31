@@ -109,5 +109,6 @@
     "Didnt_receive_the_code": "لم تستلم الرمز؟",
     "Resned": "إعادة الإرسال",
     "Loading...": "جار التحميل...",
-    "Reset_Password": "إعادة تعيين كلمة المرور"
+    "Reset_Password": "إعادة تعيين كلمة المرور",
+    "Failed to load courses": "فشل تحميل الدورات"
 }
