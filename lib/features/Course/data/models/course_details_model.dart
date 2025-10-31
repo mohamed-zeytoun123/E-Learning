@@ -7,7 +7,7 @@ class CourseDetailsModel {
   final String title;
   final String slug;
   final String description;
-  final dynamic image;
+  final String? image;
   final int teacher;
   final String teacherName;
   final int category;
@@ -25,7 +25,7 @@ class CourseDetailsModel {
     required this.title,
     required this.slug,
     required this.description,
-    required this.image,
+    this.image,
     required this.teacher,
     required this.teacherName,
     required this.category,
@@ -39,43 +39,6 @@ class CourseDetailsModel {
     required this.updatedAt,
   });
 
-  //* CopyWith
-  CourseDetailsModel copyWith({
-    int? id,
-    String? title,
-    String? slug,
-    String? description,
-    dynamic image,
-    int? teacher,
-    String? teacherName,
-    int? category,
-    CategorieModel? categoryDetail,
-    int? college,
-    CollegeDetailModel? collegeDetail,
-    int? studyYear,
-    String? price,
-    String? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) => CourseDetailsModel(
-    id: id ?? this.id,
-    title: title ?? this.title,
-    slug: slug ?? this.slug,
-    description: description ?? this.description,
-    image: image ?? this.image,
-    teacher: teacher ?? this.teacher,
-    teacherName: teacherName ?? this.teacherName,
-    category: category ?? this.category,
-    categoryDetail: categoryDetail ?? this.categoryDetail,
-    college: college ?? this.college,
-    collegeDetail: collegeDetail ?? this.collegeDetail,
-    studyYear: studyYear ?? this.studyYear,
-    price: price ?? this.price,
-    status: status ?? this.status,
-    createdAt: createdAt ?? this.createdAt,
-    updatedAt: updatedAt ?? this.updatedAt,
-  );
-
   //* From Map
   factory CourseDetailsModel.fromMap(Map<String, dynamic> map) {
     return CourseDetailsModel(
@@ -83,7 +46,7 @@ class CourseDetailsModel {
       title: map['title'] ?? '',
       slug: map['slug'] ?? '',
       description: map['description'] ?? '',
-      image: map['image'],
+      image: map['image']?.toString(),
       teacher: map['teacher'] ?? 0,
       teacherName: map['teacher_name'] ?? '',
       category: map['category'] ?? 0,
@@ -99,7 +62,7 @@ class CourseDetailsModel {
               university: UniversityDetailModel(id: 0, name: ''),
             ),
       studyYear: map['study_year'] ?? 0,
-      price: map['price'] ?? '',
+      price: map['price']?.toString() ?? '0',
       status: map['status'] ?? '',
       createdAt: map['created_at'] != null
           ? DateTime.parse(map['created_at'])

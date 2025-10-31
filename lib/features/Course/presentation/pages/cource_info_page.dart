@@ -1,8 +1,10 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/widgets/error/error_state_widget.dart';
+import 'package:e_learning/core/widgets/error/no_internet_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/features/Course/data/models/course_details_model.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_access_content_widget.dart';
@@ -34,15 +36,13 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
 
     Future.microtask(() {
       context.read<CourseCubit>().getCourseDetails(slug: widget.courseSlug);
+      context.read<CourseCubit>().getChapters(courseSlug: widget.courseSlug);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CourseCubit, CourseState>(
-      listenWhen: (previous, current) =>
-          previous.courseDetailsStatus != current.courseDetailsStatus,
-      listener: (context, state) {},
+    return BlocBuilder<CourseCubit, CourseState>(
       buildWhen: (previous, current) =>
           previous.courseDetailsStatus != current.courseDetailsStatus,
       builder: (context, state) {
@@ -50,53 +50,25 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
           return Scaffold(body: Center(child: AppLoading.circular()));
         } else if (state.courseDetailsStatus == ResponseStatusEnum.failure &&
             state.courseDetailsError == "No Connection , Pleas Try Agen") {
-          return Scaffold(
-            body: Container(
-              color: AppColors.backgroundPage,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.wifi_off,
-                    size: 100.r,
-                    color: AppColors.iconOrange,
-                  ),
-                  SizedBox(height: 30.h),
-
-                  Text(
-                    "No Internet Connection",
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.s20w600.copyWith(
-                      color: AppColors.textBlack,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-
-                  Text(
-                    "Please check your internet settings and try again.",
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.s16w400.copyWith(
-                      color: AppColors.textGrey,
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-
-                  CustomButtonWidget(
-                    title: "Retry",
-                    titleStyle: AppTextStyles.s18w600.copyWith(
-                      color: AppColors.titlePrimary,
-                    ),
-                    buttonColor: AppColors.buttonPrimary,
-                    borderColor: AppColors.borderPrimary,
-                    onTap: () {
-                      context.read<CourseCubit>().getCourseDetails(
-                        slug: widget.courseSlug,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
+          return NoInternetWidget(
+            onRetry: () {
+              context.read<CourseCubit>().getCourseDetails(
+                slug: widget.courseSlug,
+              );
+            },
+          );
+        }
+        if (state.courseDetailsStatus == ResponseStatusEnum.failure) {
+          return ErrorStateWidget(
+            title: "Error",
+            message:
+                state.courseDetailsError ??
+                "Something went wrong. Please try again.",
+            onRetry: () {
+              context.read<CourseCubit>().getCourseDetails(
+                slug: widget.courseSlug,
+              );
+            },
           );
         } else if (state.courseDetailsStatus == ResponseStatusEnum.success &&
             state.courseDetails != null) {
@@ -118,7 +90,9 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   automaticallyImplyLeading: false,
                   flexibleSpace: FlexibleSpaceBar(
                     background: CustomCachedImageWidget(
-                      appImage: course.image ?? 'https://picsum.photos/361/180',
+                      appImage:
+                          course.image ??
+                          'https://picsum.photos/361/180', //todo remove image dynamic
                       width: double.infinity,
                       fit: BoxFit.cover,
                       height: 262,
@@ -128,7 +102,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 SliverToBoxAdapter(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.formWhite,
                       borderRadius: BorderRadius.circular(24.r),
                       boxShadow: [
                         BoxShadow(
@@ -153,7 +127,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                                   color: AppColors.textBlack,
                                 ),
                                 title: course.title,
-                                subtitle: course.description,
+                                subtitle: course.categoryDetail.name,
                               ),
                               RatingWidget(rating: 4.5, showIcon: false),
                             ],
@@ -173,14 +147,29 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   ),
                 ),
                 SliverFillRemaining(
-                  child: CourseTabViewWidget(isActive: isActive),
+                  child: CourseTabViewWidget(
+                    chapterId: course.id,
+                    isActive: isActive,
+                    courseSlug: widget.courseSlug,
+                    courseTitle: course.categoryDetail.name,
+                    courseImage: course.image,
+                  ),
                 ),
               ],
             ),
           );
         }
 
-        return const Scaffold(body: SizedBox.shrink());
+        return ErrorStateWidget(
+          title: "Server Error",
+          message:
+              "Something went wrong on the server. Please try again later.",
+          onRetry: () {
+            context.read<CourseCubit>().getCourseDetails(
+              slug: widget.courseSlug,
+            );
+          },
+        );
       },
     );
   }

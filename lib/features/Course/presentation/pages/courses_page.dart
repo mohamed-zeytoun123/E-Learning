@@ -18,22 +18,33 @@ class CoursesPage extends StatelessWidget {
       create: (context) => CourseCubit(repo: appLocator<CourceseRepository>())
         ..getColleges()
         ..getCourses(),
-      child: Scaffold(
-        backgroundColor: AppColors.backgroundPage,
-        appBar: CustomAppBarCourseWidget(
-          title: "Course’s Title",
-          showBack: true,
-          onSearch: () {
-            log("app search");
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              backgroundColor: Colors.transparent,
-              builder: (_) => const FiltersBottomSheetWidget(),
-            );
-          },
-        ),
-        body: CustomCategoryTabBarWidget(),
+      child: Builder(
+        builder: (context) {
+          final cubit = context.read<CourseCubit>();
+
+          return Scaffold(
+            backgroundColor: AppColors.backgroundPage,
+            appBar: CustomAppBarCourseWidget(
+              title: "Course’s Title",
+              showBack: true,
+              onSearch: () {
+                log("app search");
+
+                cubit.getColleges();
+                cubit.getUniversities();
+
+                showModalBottomSheet(
+                  context: context,
+                  builder: (_) => BlocProvider.value(
+                    value: cubit,
+                    child: const FiltersBottomSheetWidget(),
+                  ),
+                );
+              },
+            ),
+            body: CustomCategoryTabBarWidget(),
+          );
+        },
       ),
     );
   }

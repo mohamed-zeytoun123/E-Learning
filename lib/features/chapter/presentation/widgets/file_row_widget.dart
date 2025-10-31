@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FileRowWidget extends StatelessWidget {
   final String chapterTitle;
-  final int sizeFile;
+  final double sizeFile;
   final VoidCallback? onTap;
 
   const FileRowWidget({

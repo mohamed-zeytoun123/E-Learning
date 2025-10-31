@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/input_forms/input_review_widget.dart';
@@ -10,9 +9,23 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:go_router/go_router.dart';
 
-class ReviewBottomSheetWidget extends StatelessWidget {
+class ReviewBottomSheetWidget extends StatefulWidget {
   final TextEditingController reviewController;
-  const ReviewBottomSheetWidget({super.key, required this.reviewController});
+  final void Function(int rating)? onRatingChanged;
+
+  const ReviewBottomSheetWidget({
+    super.key,
+    required this.reviewController,
+    this.onRatingChanged,
+  });
+
+  @override
+  State<ReviewBottomSheetWidget> createState() =>
+      _ReviewBottomSheetWidgetState();
+}
+
+class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
+  int selectedRating = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +42,7 @@ class ReviewBottomSheetWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // الشريط العلوي الصغير
           Center(
             child: Container(
               width: 80.w,
@@ -41,6 +55,7 @@ class ReviewBottomSheetWidget extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
 
+          // العنوان
           Center(
             child: Text(
               AppLocalizations.of(context)?.translate("Rate_Your_Experience") ??
@@ -50,15 +65,19 @@ class ReviewBottomSheetWidget extends StatelessWidget {
           ),
           SizedBox(height: 5.h),
 
+          // النجوم
           RatingStarsWidget(
-            initialRating: 3.5,
+            initialRating: selectedRating,
             onRatingSelected: (value) {
               log('User selected rating: $value');
+              setState(() => selectedRating = value);
+              widget.onRatingChanged?.call(value);
             },
           ),
 
           SizedBox(height: 10.h),
 
+          // عنوان النص
           Text(
             AppLocalizations.of(context)?.translate("Write_Your_Review") ??
                 "Write Your Review",
@@ -66,23 +85,24 @@ class ReviewBottomSheetWidget extends StatelessWidget {
           ),
           SizedBox(height: 10.h),
 
+          // حقل الكتابة
           InputReviewWidget(
-            controller: reviewController,
-            hint:
-                AppLocalizations.of(context)?.translate("yourOpinion") ??
+            controller: widget.reviewController,
+            hint: AppLocalizations.of(context)?.translate("yourOpinion") ??
                 "Your Opinion",
             hintKey: "yourOpinion",
           ),
 
           SizedBox(height: 20.h),
 
+          // زر الإرسال
           Center(
             child: CustomButtonWidget(
               onTap: () {
-                context.pop(context);
+                log('Final rating: $selectedRating');
+                context.pop(); // تغلق البوتوم شيت
               },
-              title:
-                  AppLocalizations.of(context)?.translate("Send_Review") ??
+              title: AppLocalizations.of(context)?.translate("Send_Review") ??
                   "Send Review",
               titleStyle: AppTextStyles.s16w500.copyWith(
                 color: AppColors.titlePrimary,

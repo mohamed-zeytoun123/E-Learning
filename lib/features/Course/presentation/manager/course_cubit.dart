@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
 import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/course/presentation/manager/course_state.dart';
@@ -70,10 +73,24 @@ class CourseCubit extends Cubit<CourseState> {
   //?-----------------------------------------------------------------------------
 
   //* Get Courses
-  Future<void> getCourses() async {
+  Future<void> getCourses({
+    int? collegeId,
+    int? studyYear,
+    int? categoryId,
+    int? teacherId,
+    String? search,
+    String? ordering,
+  }) async {
     emit(state.copyWith(coursesStatus: ResponseStatusEnum.loading));
-
-    final result = await repo.getCoursesRepo();
+    log('Applying filters Cubit : college=$categoryId, studyYear=$studyYear');
+    final result = await repo.getCoursesRepo(
+      collegeId: collegeId,
+      studyYear: studyYear,
+      categoryId: categoryId,
+      teacherId: teacherId,
+      search: search,
+      ordering: ordering,
+    );
 
     result.fold(
       (failure) {
@@ -89,6 +106,7 @@ class CourseCubit extends Cubit<CourseState> {
           state.copyWith(
             coursesStatus: ResponseStatusEnum.success,
             courses: courses,
+            coursesError: null,
           ),
         );
       },
@@ -121,6 +139,27 @@ class CourseCubit extends Cubit<CourseState> {
         );
       },
     );
+  }
+
+  //?-------------------------------------------------
+
+  Future<void> applyFilters(CourseFiltersModel filters) async {
+    try {
+      // تحديث الفلاتر في الـ state
+      emit(state.copyWith(coursefilters: filters));
+
+      // حفظ الفلاتر بالكاش (لو عندك طريقة للكاش)
+      // await local.saveCourseFilters(filters);
+
+      // استدعاء getCourses مع تحويل الفلاتر للباراميترات المناسبة
+      await getCourses(
+        collegeId: filters.collegeId,
+
+        studyYear: filters.studyYear,
+      );
+    } catch (e) {
+      log('Error in applyFilters: $e');
+    }
   }
 
   //?-------------------------------------------------
@@ -166,10 +205,10 @@ class CourseCubit extends Cubit<CourseState> {
   //?-------------------------------------------------
 
   //* Get Chapters by Course
-  Future<void> getChapters({required int courseId}) async {
+  Future<void> getChapters({required String courseSlug}) async {
     emit(state.copyWith(chaptersStatus: ResponseStatusEnum.loading));
 
-    final result = await repo.getChaptersRepo(courseId: courseId);
+    final result = await repo.getChaptersRepo(courseSlug: courseSlug);
 
     result.fold(
       (failure) {
@@ -191,5 +230,34 @@ class CourseCubit extends Cubit<CourseState> {
     );
   }
 
-  //?-------------------------------------------------}
+  //?--------------------------------------------------------
+
+  //* Get Universities
+  Future<void> getUniversities() async {
+    emit(
+      state.copyWith(
+        universitiesState: ResponseStatusEnum.loading,
+        universitiesError: null,
+      ),
+    );
+
+    final result = await repo.getUniversitiesRepo();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          universitiesState: ResponseStatusEnum.failure,
+          universitiesError: failure.message,
+        ),
+      ),
+      (universities) => emit(
+        state.copyWith(
+          universitiesState: ResponseStatusEnum.success,
+          universities: universities,
+        ),
+      ),
+    );
+  }
+
+  //?-------------------------------------------------
 }

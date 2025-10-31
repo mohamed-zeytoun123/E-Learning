@@ -2,7 +2,7 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 
 class AuthState {
   //?--------------------------------------------------------------

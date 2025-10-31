@@ -1,5 +1,6 @@
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
 import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
@@ -79,7 +80,36 @@ class CourceseLocalDataSourceImpl implements CourceseLocalDataSource {
     } catch (_) {}
   }
 
-  //?-------------------------------------------------------------
+  //?--- Universities -------------------------------------------------
+
+  //* Get Universities From Cache
+  @override
+  List<UniversityModel> getUniversitiesInCache() {
+    try {
+      final universities = hive.getAllUniversitiesHive();
+      return universities;
+    } catch (e) {
+      return [];
+    }
+  }
+
+  //* Save Universities To Cache
+  @override
+  Future<void> saveUniversitiesInCache(
+    List<UniversityModel> universities,
+  ) async {
+    try {
+      await hive.saveUniversitiesHive(universities);
+    } catch (_) {}
+  }
+
+  //* Clear Universities Cache
+  @override
+  Future<void> clearUniversitiesCache() async {
+    try {
+      await hive.clearAllUniversitiesHive();
+    } catch (_) {}
+  }
 
   //?----------------------------------------------------
 }

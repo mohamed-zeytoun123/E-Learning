@@ -68,6 +68,7 @@ class FilterWidget extends StatelessWidget {
                         RouteNames.courceInf,
                         extra: {
                           "courseSlug": course.slug,
+                          
                           "courseCubit": courseCubit,
                         },
                       );

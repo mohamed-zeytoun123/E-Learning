@@ -6,7 +6,9 @@ import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/api_response.dart';
 import 'package:e_learning/core/network/app_url.dart';
+import 'package:e_learning/features/Course/data/models/rating_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
 import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/course/data/models/course_details_model.dart';
@@ -66,6 +68,9 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
     String? ordering,
   }) async {
     try {
+      log(
+        'Applying filters Remote : college=$categoryId, studyYear=$studyYear',
+      );
       //* تجهيز query parameters حسب القيم المرسلة
       final Map<String, dynamic> queryParameters = {
         if (collegeId != null) 'college': collegeId.toString(),
@@ -179,13 +184,16 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   }
 
   //?----------------------------------------------------
-  
+
   //* Get Chapters by Course
+  @override
   Future<Either<Failure, List<ChapterModel>>> getChaptersRemote({
-    required int courseId,
+    required String courseSlug,
   }) async {
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.getChapters(courseId));
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getChapters(courseSlug),
+      );
 
       final ApiResponse response = await api.get(request);
       final List<ChapterModel> chapters = [];
@@ -195,7 +203,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
         if (data is List) {
           for (var item in data) {
-            chapters.add(ChapterModel.fromJson(item));
+            chapters.add(ChapterModel.fromMap(item));
           }
         }
 
@@ -213,4 +221,78 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       return Left(Failure.handleError(exception as DioException));
     }
   }
+
+  //?----------------------------------------------------
+
+  //* Get Ratings by Slug
+  @override
+  Future<Either<Failure, List<RatingModel>>> getRatingsRemote({
+    required String courseSlug,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getRatings(courseSlug),
+      );
+
+      final ApiResponse response = await api.get(request);
+      final List<RatingModel> ratings = [];
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is List) {
+          for (var item in data) {
+            ratings.add(RatingModel.fromJson(item));
+          }
+        }
+
+        return Right(ratings);
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?------------------------------------------------------------------------
+  //* getUniversities
+  @override
+  Future<Either<Failure, List<UniversityModel>>> getUniversitiesRemote() async {
+    try {
+      final ApiRequest request = ApiRequest(url: AppUrls.getUniversities);
+      final ApiResponse response = await api.get(request);
+
+      final List<UniversityModel> universities = [];
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is List) {
+          for (var item in data) {
+            universities.add(UniversityModel.fromMap(item));
+          }
+        }
+
+        return Right(universities);
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------
 }

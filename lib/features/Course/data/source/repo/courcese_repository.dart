@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
+import 'package:e_learning/features/Course/data/models/rating_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
 import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/course/data/models/course_details_model.dart';
@@ -12,7 +14,14 @@ abstract class CourceseRepository {
   Future<Either<Failure, List<CategorieModel>>> getFilterCategoriesRepo();
 
   //* Get Courses
-  Future<Either<Failure, List<CourseModel>>> getCoursesRepo();
+  Future<Either<Failure, List<CourseModel>>> getCoursesRepo({
+    int? collegeId,
+    int? studyYear,
+    int? categoryId,
+    int? teacherId,
+    String? search,
+    String? ordering,
+  });
 
   //* Get Colleges
   Future<Either<Failure, List<CollegeModel>>> getCollegesRepo();
@@ -24,7 +33,15 @@ abstract class CourceseRepository {
 
   //* Get Chapters by Course
   Future<Either<Failure, List<ChapterModel>>> getChaptersRepo({
-    required int courseId,
+    required String courseSlug,
   });
+
+  //* Get Ratings by Course
+  Future<Either<Failure, List<RatingModel>>> getRatingsRepo({
+    required String courseSlug,
+  });
+
+  //* Get Universities
+  Future<Either<Failure, List<UniversityModel>>> getUniversitiesRepo();
   //?-------------------------------------------------
 }

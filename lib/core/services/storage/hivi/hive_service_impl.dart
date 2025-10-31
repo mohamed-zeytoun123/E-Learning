@@ -1,5 +1,6 @@
 import 'package:e_learning/core/constant/cache_keys.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
 import 'package:hive/hive.dart';
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
@@ -11,11 +12,13 @@ class HiveServiceImpl implements HiveService {
   late final Box<CategorieModel> _categoryBox;
   late final Box<CourseModel> _courseBox;
   late final Box<CollegeModel> _collegeBox;
+  late final Box<UniversityModel> _universityBox;
 
   HiveServiceImpl() {
     _categoryBox = Hive.box<CategorieModel>(CacheKeys.categoryBox);
     _courseBox = Hive.box<CourseModel>(CacheKeys.courseBox);
     _collegeBox = Hive.box<CollegeModel>(CacheKeys.collegeBox);
+      _universityBox = Hive.box<UniversityModel>(CacheKeys.universityBox);
   }
   //?---------------- Category Box -------------------------
 
@@ -77,6 +80,27 @@ class HiveServiceImpl implements HiveService {
   @override
   List<CollegeModel> getAllCollegesHive() {
     return _collegeBox.values.toList();
+  }
+
+  //?---------------- University Box -------------------------
+
+  //* Clear all universities
+  @override
+  Future<void> clearAllUniversitiesHive() async {
+    await _universityBox.clear();
+  }
+
+  //* Save universities
+  @override
+  Future<void> saveUniversitiesHive(List<UniversityModel> universities) async {
+    await _universityBox.clear();
+    await _universityBox.addAll(universities);
+  }
+
+  //* Get all universities
+  @override
+  List<UniversityModel> getAllUniversitiesHive() {
+    return _universityBox.values.toList();
   }
 
   //?--------------------------------------------------------

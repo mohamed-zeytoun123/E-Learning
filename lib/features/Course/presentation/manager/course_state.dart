@@ -1,5 +1,7 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
 import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/course/data/models/course_details_model.dart';
@@ -10,12 +12,12 @@ class CourseState {
   //* Toggle Between Tabs
   final int selectedIndex;
 
-  //* Filter Category
+  //* Get Category
   final List<CategorieModel>? categories;
   final ResponseStatusEnum categoriesStatus;
   final String? categoriesError;
 
-  //* Filter Colleges
+  //* Get Colleges
   final List<CollegeModel>? colleges;
   final ResponseStatusEnum collegesStatus;
   final String? collegesError;
@@ -25,15 +27,24 @@ class CourseState {
   final ResponseStatusEnum coursesStatus;
   final String? coursesError;
 
-  //* Get Course Details by Slug
+  //* Get Course Details by Slug Course ( About Tab )
   final CourseDetailsModel? courseDetails;
   final ResponseStatusEnum courseDetailsStatus;
   final String? courseDetailsError;
 
-  //* Get Chapters by Course
+  //* Get Chapters by  Slug Course ( Chapters Tap )
   final List<ChapterModel>? chapters;
   final ResponseStatusEnum chaptersStatus;
   final String? chaptersError;
+
+  //* Get Universities
+  final List<UniversityModel>? universities;
+  final ResponseStatusEnum universitiesState;
+  final String? universitiesError;
+
+  //* Course Filters
+  final CourseFiltersModel? coursefilters;
+
   //?----------------------------------------------------------------
   CourseState({
     //* Get Chapters by Course
@@ -49,6 +60,9 @@ class CourseState {
     //* Toggle Between Tabs
     this.selectedIndex = 0,
 
+    //* Course Filters
+    this.coursefilters,
+
     //* Get Category
     this.categories,
     this.categoriesStatus = ResponseStatusEnum.initial,
@@ -63,6 +77,11 @@ class CourseState {
     this.colleges,
     this.collegesStatus = ResponseStatusEnum.initial,
     this.collegesError,
+
+    //* Get Universities
+    this.universities,
+    this.universitiesState = ResponseStatusEnum.initial,
+    this.universitiesError,
   });
   //?------------------------------------------------------------------
 
@@ -80,6 +99,9 @@ class CourseState {
     //* Toggle Between Tabs
     int? selectedIndex,
 
+    //* Course Filters
+    CourseFiltersModel? coursefilters,
+
     //* Get Category
     List<CategorieModel>? categories,
     ResponseStatusEnum? categoriesStatus,
@@ -94,6 +116,11 @@ class CourseState {
     List<CollegeModel>? colleges,
     ResponseStatusEnum? collegesStatus,
     String? collegesError,
+
+    //* Get Universities
+    List<UniversityModel>? universities,
+    ResponseStatusEnum? universitiesState,
+    String? universitiesError,
   }) {
     return CourseState(
       //* Get Chapters by Course
@@ -109,6 +136,9 @@ class CourseState {
       //* Toggle Between Tabs
       selectedIndex: selectedIndex ?? this.selectedIndex,
 
+      //* Course Filters
+      coursefilters: coursefilters ?? this.coursefilters,
+
       //* Get Category
       categories: categories ?? this.categories,
       categoriesStatus: categoriesStatus ?? this.categoriesStatus,
@@ -123,6 +153,11 @@ class CourseState {
       colleges: colleges ?? this.colleges,
       collegesStatus: collegesStatus ?? this.collegesStatus,
       collegesError: collegesError ?? this.collegesError,
+
+      //* Get Universities
+      universities: universities ?? this.universities,
+      universitiesState: universitiesState ?? this.universitiesState,
+      universitiesError: universitiesError,
     );
   }
 

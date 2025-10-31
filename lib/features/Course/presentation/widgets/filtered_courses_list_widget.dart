@@ -61,7 +61,11 @@ class FilteredCoursesListWidget extends StatelessWidget {
             final courseCubit = context.read<CourseCubit>();
             context.pushNamed(
               RouteNames.courceInf,
-              extra: {"courseSlug": course.slug, "courseCubit": courseCubit},
+              extra: {
+                "courseSlug": course.slug,
+                "courseCubit": courseCubit,
+                
+              },
             );
           },
 

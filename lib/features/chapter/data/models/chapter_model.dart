@@ -1,9 +1,13 @@
+import 'attachment_model.dart';
+import 'quiz_model.dart';
+
 class ChapterModel {
   final int id;
   final int course;
   final String title;
   final String description;
-  final int attachmentsCount;
+  final List<AttachmentModel> attachments;
+  final List<QuizModel> quizzes;
   final DateTime createdAt;
 
   ChapterModel({
@@ -11,45 +15,64 @@ class ChapterModel {
     required this.course,
     required this.title,
     required this.description,
-    required this.attachmentsCount,
+    required this.attachments,
+    required this.quizzes,
     required this.createdAt,
   });
+
+  factory ChapterModel.fromMap(Map<String, dynamic> map) {
+    return ChapterModel(
+      id: map['id'] ?? 0,
+      course: map['course'] ?? 0,
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      attachments: map['attachments'] != null
+          ? List<AttachmentModel>.from(
+              (map['attachments'] as List).map(
+                (x) => AttachmentModel.fromJson(x),
+              ),
+            )
+          : [],
+      quizzes: map['quiz'] != null
+          ? List<QuizModel>.from(
+              (map['quiz'] as List).map((x) => QuizModel.fromJson(x)),
+            )
+          : [],
+      createdAt: map['created_at'] != null
+          ? DateTime.parse(map['created_at'])
+          : DateTime.now(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'course': course,
+      'title': title,
+      'description': description,
+      'attachments': attachments.map((x) => x.toJson()).toList(),
+      'quiz': quizzes.map((x) => x.toJson()).toList(),
+      'created_at': createdAt.toIso8601String(),
+    };
+  }
 
   ChapterModel copyWith({
     int? id,
     int? course,
     String? title,
     String? description,
-    int? attachmentsCount,
+    List<AttachmentModel>? attachments,
+    List<QuizModel>? quizzes,
     DateTime? createdAt,
-  }) => ChapterModel(
-    id: id ?? this.id,
-    course: course ?? this.course,
-    title: title ?? this.title,
-    description: description ?? this.description,
-    attachmentsCount: attachmentsCount ?? this.attachmentsCount,
-    createdAt: createdAt ?? this.createdAt,
-  );
-
-  factory ChapterModel.fromJson(Map<String, dynamic> json) {
+  }) {
     return ChapterModel(
-      id: json['id'] as int,
-      course: json['course'] as int,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      attachmentsCount: json['attachments_count'] as int,
-      createdAt: DateTime.parse(json['created_at'] as String),
+      id: id ?? this.id,
+      course: course ?? this.course,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      attachments: attachments ?? this.attachments,
+      quizzes: quizzes ?? this.quizzes,
+      createdAt: createdAt ?? this.createdAt,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'course': course,
-      'title': title,
-      'description': description,
-      'attachments_count': attachmentsCount,
-      'created_at': createdAt.toIso8601String(),
-    };
   }
 }

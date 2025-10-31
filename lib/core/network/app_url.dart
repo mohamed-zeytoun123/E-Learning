@@ -1,7 +1,7 @@
 class AppUrls {
   //?---------------------------------------------------------------
 
-  static const String _ip = "192.168.1.23";
+  static const String _ip = "192.168.1.101";
 
   //?---------------------------------------------------------------
 
@@ -18,9 +18,12 @@ class AppUrls {
   static final String forgetPassword = "$_baseURl/auth/forgot/start";
   static final String resetPassword = "$_baseURl/auth/forgot/reset";
 
+  //?------------------- Refresh Token -------------------
+
   //* Refresh Token
   static final String refreashToken = "$_baseURl/auth/refresh";
 
+  //?------------------- Universities & Colleges -------------------
   //* Get University
   static final String getUniversities = "$_baseURl/universities/";
 
@@ -29,6 +32,8 @@ class AppUrls {
 
   //* Get Categories
   static final String getCategories = "$_baseURl/categories/";
+
+  //?------------------- Courses -------------------
 
   //* Get Courses
   static final String getCourses =
@@ -39,7 +44,16 @@ class AppUrls {
       "$_baseURl/courses/$courseSlug/";
 
   //* Get Chapters by Course ID
-  static String getChapters(int courseId) => '/courses/$courseId/chapters/';
+  static String getChapters(String courseSlug) =>
+      '$_baseURl/courses/$courseSlug/chapters/';
+
+  //* Get Ratings
+  static String getRatings(String courseSlug) =>
+      '$_baseURl/courses/$courseSlug/ratings/?ordering=-created_at';
+
+  //* Get Chapter by ID
+  static String getChapterById(String courseSlug, int chapterId) =>
+      "$_baseURl/courses/$courseSlug/chapters/$chapterId/";
 
   //?---------------------------------------------------------------
 }
