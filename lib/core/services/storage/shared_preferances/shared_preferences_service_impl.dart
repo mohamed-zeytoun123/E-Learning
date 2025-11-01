@@ -86,4 +86,62 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
   }
 
   //?-----------------------------------------------------------------------
+
+  //? ------------------- Enrollment Data Cache Methods --------------------
+
+  //* Save Enrollments
+  @override
+  Future<void> saveEnrollmentsInCache(String enrollmentsJson) async {
+    try {
+      await storagePreferences.setString(CacheKeys.enrollmentsKey, enrollmentsJson);
+    } catch (_) {}
+  }
+
+  //* Get Enrollments
+  @override
+  Future<String?> getEnrollmentsInCache() async {
+    try {
+      return storagePreferences.getString(CacheKeys.enrollmentsKey);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  //* Remove Enrollments
+  @override
+  Future<void> removeEnrollmentsInCache() async {
+    try {
+      await storagePreferences.remove(CacheKeys.enrollmentsKey);
+    } catch (_) {}
+  }
+
+  //? ------------------- Course Ratings Cache Methods ---------------------
+
+  //* Save Course Ratings
+  @override
+  Future<void> saveCourseRatingsInCache(String courseSlug, String ratingsJson) async {
+    try {
+      await storagePreferences.setString('${CacheKeys.courseRatingsKey}$courseSlug', ratingsJson);
+    } catch (_) {}
+  }
+
+  //* Get Course Ratings
+  @override
+  Future<String?> getCourseRatingsInCache(String courseSlug) async {
+    try {
+      return storagePreferences.getString('${CacheKeys.courseRatingsKey}$courseSlug');
+    } catch (_) {
+      return null;
+    }
+  }
+
+  //* Remove Course Ratings
+  @override
+  Future<void> removeCourseRatingsInCache(String courseSlug) async {
+    try {
+      await storagePreferences.remove('${CacheKeys.courseRatingsKey}$courseSlug');
+    } catch (_) {}
+  }
+
+  //?-----------------------------------------------------------------------
 }

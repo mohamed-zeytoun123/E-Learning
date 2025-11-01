@@ -2,6 +2,7 @@ class EnrollmentModel {
   final int id;
   final int course;
   final String courseTitle;
+  final String courseSlug;
   final String? courseImage;
   final String teacherName;
   final String enrolledAt;
@@ -12,11 +13,13 @@ class EnrollmentModel {
   final bool isPaid;
   final double progressPercentage;
   final bool isCompleted;
+  final bool isFavorite;
 
   const EnrollmentModel({
     required this.id,
     required this.course,
     required this.courseTitle,
+    required this.courseSlug,
     this.courseImage,
     required this.teacherName,
     required this.enrolledAt,
@@ -27,6 +30,7 @@ class EnrollmentModel {
     required this.isPaid,
     required this.progressPercentage,
     required this.isCompleted,
+    required this.isFavorite,
   });
 
   factory EnrollmentModel.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,7 @@ class EnrollmentModel {
       id: json['id'] as int,
       course: json['course'] as int,
       courseTitle: json['course_title'] as String,
+      courseSlug: json['course_slug'] as String,
       courseImage: json['course_image'] as String?,
       teacherName: json['teacher_name'] as String,
       enrolledAt: json['enrolled_at'] as String,
@@ -44,6 +49,7 @@ class EnrollmentModel {
       isPaid: json['is_paid'] as bool,
       progressPercentage: (json['progress_percentage'] as num).toDouble(),
       isCompleted: json['is_completed'] as bool,
+      isFavorite: json['is_favorite'] as bool,
     );
   }
 
@@ -52,6 +58,7 @@ class EnrollmentModel {
       'id': id,
       'course': course,
       'course_title': courseTitle,
+      'course_slug': courseSlug,
       'course_image': courseImage,
       'teacher_name': teacherName,
       'enrolled_at': enrolledAt,
@@ -62,6 +69,7 @@ class EnrollmentModel {
       'is_paid': isPaid,
       'progress_percentage': progressPercentage,
       'is_completed': isCompleted,
+      'is_favorite': isFavorite,
     };
   }
 
@@ -69,6 +77,7 @@ class EnrollmentModel {
     int? id,
     int? course,
     String? courseTitle,
+    String? courseSlug,
     String? courseImage,
     String? teacherName,
     String? enrolledAt,
@@ -79,11 +88,13 @@ class EnrollmentModel {
     bool? isPaid,
     double? progressPercentage,
     bool? isCompleted,
+    bool? isFavorite,
   }) {
     return EnrollmentModel(
       id: id ?? this.id,
       course: course ?? this.course,
       courseTitle: courseTitle ?? this.courseTitle,
+      courseSlug: courseSlug ?? this.courseSlug,
       courseImage: courseImage ?? this.courseImage,
       teacherName: teacherName ?? this.teacherName,
       enrolledAt: enrolledAt ?? this.enrolledAt,
@@ -94,6 +105,7 @@ class EnrollmentModel {
       isPaid: isPaid ?? this.isPaid,
       progressPercentage: progressPercentage ?? this.progressPercentage,
       isCompleted: isCompleted ?? this.isCompleted,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

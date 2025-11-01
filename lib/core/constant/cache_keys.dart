@@ -13,4 +13,8 @@ class CacheKeys {
   static final String appRoleKey = 'APP_ROLE_KEY  ';
 
   //?------------------------------
+  //* Enroll Cache Keys
+  static final String enrollmentsKey = 'ENROLLMENTS_CACHE';
+  static final String courseRatingsKey = 'COURSE_RATINGS_CACHE';
+  //?------------------------------
 }

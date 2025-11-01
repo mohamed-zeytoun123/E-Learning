@@ -20,4 +20,14 @@ abstract class SharedPreferencesService {
   Future<AppRoleEnum?> getRoleInCache();
 
   //? -------------------------------------------------------------------
+  //* Enrollment Data
+  Future<void> saveEnrollmentsInCache(String enrollmentsJson);
+  Future<String?> getEnrollmentsInCache();
+  Future<void> removeEnrollmentsInCache();
+
+  //* Course Ratings Data
+  Future<void> saveCourseRatingsInCache(String courseSlug, String ratingsJson);
+  Future<String?> getCourseRatingsInCache(String courseSlug);
+  Future<void> removeCourseRatingsInCache(String courseSlug);
+  //? -------------------------------------------------------------------
 }
