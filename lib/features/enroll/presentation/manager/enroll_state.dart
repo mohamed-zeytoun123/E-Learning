@@ -12,7 +12,8 @@ class EnrollState {
   //* Get Course Ratings
   final ResponseStatusEnum getCourseRatingsState;
   final String? getCourseRatingsError;
-  final CourseRatingResponse? courseRatingsResponse;
+  final Map<String, CourseRatingResponse>
+  courseRatingsMap; // Changed to Map per course slug
 
   //* Create Rating
   final ResponseStatusEnum createRatingState;
@@ -25,7 +26,7 @@ class EnrollState {
     this.enrollments = const [],
     this.getCourseRatingsState = ResponseStatusEnum.initial,
     this.getCourseRatingsError,
-    this.courseRatingsResponse,
+    this.courseRatingsMap = const {}, // Changed to empty Map
     this.createRatingState = ResponseStatusEnum.initial,
     this.createRatingError,
     this.createdRating,
@@ -37,7 +38,7 @@ class EnrollState {
     List<EnrollmentModel>? enrollments,
     ResponseStatusEnum? getCourseRatingsState,
     String? getCourseRatingsError,
-    CourseRatingResponse? courseRatingsResponse,
+    Map<String, CourseRatingResponse>? courseRatingsMap, // Changed parameter
     ResponseStatusEnum? createRatingState,
     String? createRatingError,
     CourseRatingModel? createdRating,
@@ -46,9 +47,11 @@ class EnrollState {
       getMyCoursesState: getMyCoursesState ?? this.getMyCoursesState,
       getMyCoursesError: getMyCoursesError,
       enrollments: enrollments ?? this.enrollments,
-      getCourseRatingsState: getCourseRatingsState ?? this.getCourseRatingsState,
+      getCourseRatingsState:
+          getCourseRatingsState ?? this.getCourseRatingsState,
       getCourseRatingsError: getCourseRatingsError,
-      courseRatingsResponse: courseRatingsResponse ?? this.courseRatingsResponse,
+      courseRatingsMap:
+          courseRatingsMap ?? this.courseRatingsMap, // Changed implementation
       createRatingState: createRatingState ?? this.createRatingState,
       createRatingError: createRatingError,
       createdRating: createdRating ?? this.createdRating,

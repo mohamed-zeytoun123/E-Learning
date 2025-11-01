@@ -50,6 +50,12 @@ class _EnrollPageState extends State<EnrollPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
                 child: BlocBuilder<EnrollCubit, EnrollState>(
+                  buildWhen: (previous, current) {
+                    return previous.getMyCoursesState !=
+                            current.getMyCoursesState ||
+                        previous.enrollments != current.enrollments ||
+                        previous.getMyCoursesError != current.getMyCoursesError;
+                  },
                   builder: (context, state) {
                     if (state.getMyCoursesState == ResponseStatusEnum.loading) {
                       return AppLoading.circular();
@@ -69,7 +75,7 @@ class _EnrollPageState extends State<EnrollPage> {
                       );
                       return courseState == selectedCourseState;
                     }).toList();
-
+                    // Show message if no courses found
                     if (filteredCourses.isEmpty) {
                       return Center(
                         child: Text(

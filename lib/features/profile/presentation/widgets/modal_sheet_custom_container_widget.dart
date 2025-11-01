@@ -13,7 +13,7 @@ class ModalSheetCustomContainerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height.h,
+      height: height.h ?? null,
       width: double.infinity,
       padding: EdgeInsets.only(
         left: 24.w,

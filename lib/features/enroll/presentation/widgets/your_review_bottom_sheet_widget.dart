@@ -11,7 +11,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class YourReviewBottomSheetWidget extends StatelessWidget {
   final String? reviewText;
-  const YourReviewBottomSheetWidget({super.key, required this.reviewText});
+  final int rating;
+  final String timeAgo;
+
+  const YourReviewBottomSheetWidget({
+    super.key,
+    required this.reviewText,
+    this.rating = 1,
+    this.timeAgo = "Unknown",
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +35,11 @@ class YourReviewBottomSheetWidget extends StatelessWidget {
           ),
           Padding(
             padding: EdgeInsets.only(left: 16.w, top: 20.h, bottom: 20.h),
-            child: ReviewBoxWidget(reviewText: reviewText ?? "No Reviews Yet"),
+            child: ReviewBoxWidget(
+              reviewText: reviewText ?? "No Reviews Yet",
+              rating: rating,
+              timeAgo: timeAgo,
+            ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),

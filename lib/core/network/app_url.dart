@@ -31,7 +31,8 @@ class AppUrls {
   static final String myCourses = "$_baseURl/enrollments/my-courses/";
 
   //* Course Ratings
-  static String courseRating(String courseSlug) => "$_baseURl/courses/$courseSlug/ratings/";
+  static String courseRating(String courseSlug) =>
+      "$_baseURl/courses/$courseSlug/ratings/";
 
   //?---------------------------------------------------------------
 }

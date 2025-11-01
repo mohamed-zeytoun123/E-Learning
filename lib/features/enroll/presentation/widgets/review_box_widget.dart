@@ -6,13 +6,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ReviewBoxWidget extends StatelessWidget {
   final String reviewText;
-  const ReviewBoxWidget({super.key, required this.reviewText});
+  final int rating;
+  final String timeAgo;
+
+  const ReviewBoxWidget({
+    super.key,
+    required this.reviewText,
+    this.rating = 1,
+    this.timeAgo = "Unknown",
+  });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: 311.w,
-      // height: 105.h,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
@@ -24,7 +31,7 @@ class ReviewBoxWidget extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                /*reviewText */ 'The Written Review From The User, About The Course And The Instructor',
+                reviewText,
                 style: AppTextStyles.s14w400.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -44,17 +51,15 @@ class ReviewBoxWidget extends StatelessWidget {
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 6.w),
-                    // TODO: Pass real review value here
                     child: RatingWidget(
                       showIcon: false,
-                      rating: 3,
+                      rating: rating.toDouble(),
                       iconColor: AppColors.iconWhite,
                       textColor: AppColors.textWhite,
                     ),
                   ),
-                  // TODO: Pass real elapsed time here
                   Text(
-                    '2 Weeks Ago',
+                    timeAgo,
                     style: AppTextStyles.s12w400.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                     ),

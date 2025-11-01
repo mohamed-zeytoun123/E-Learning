@@ -13,7 +13,7 @@ class GetCourseRatingsParams {
 
   Map<String, dynamic> toQueryParams() {
     final Map<String, dynamic> params = {};
-    
+
     if (ordering != null) {
       params['ordering'] = ordering;
     }
@@ -23,7 +23,11 @@ class GetCourseRatingsParams {
     if (pageSize != null) {
       params['page_size'] = pageSize.toString();
     }
-    
+
+    // Debug logging
+    print('🔧 [GetCourseRatingsParams] courseSlug: $courseSlug');
+    print('🔧 [GetCourseRatingsParams] toQueryParams: $params');
+
     return params;
   }
 

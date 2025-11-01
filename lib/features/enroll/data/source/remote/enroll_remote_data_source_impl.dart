@@ -49,7 +49,9 @@ class EnrollRemoteDataSourceImpl implements EnrollRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, CourseRatingResponse>> getCourseRatingsRemote(GetCourseRatingsParams params) async {
+  Future<Either<Failure, CourseRatingResponse>> getCourseRatingsRemote(
+    GetCourseRatingsParams params,
+  ) async {
     try {
       final response = await api.get(
         ApiRequest(
@@ -61,7 +63,8 @@ class EnrollRemoteDataSourceImpl implements EnrollRemoteDataSource {
       if (response.statusCode == 200 && response.body != null) {
         final Map<String, dynamic> responseData =
             response.body as Map<String, dynamic>;
-        final CourseRatingResponse ratingsResponse = CourseRatingResponse.fromJson(responseData);
+        final CourseRatingResponse ratingsResponse =
+            CourseRatingResponse.fromJson(responseData);
 
         return Right(ratingsResponse);
       } else {
@@ -79,7 +82,9 @@ class EnrollRemoteDataSourceImpl implements EnrollRemoteDataSource {
   }
 
   @override
-  Future<Either<Failure, CourseRatingModel>> createRatingRemote(CreateRatingParams params) async {
+  Future<Either<Failure, CourseRatingModel>> createRatingRemote(
+    CreateRatingParams params,
+  ) async {
     try {
       final response = await api.post(
         ApiRequest(
@@ -91,7 +96,9 @@ class EnrollRemoteDataSourceImpl implements EnrollRemoteDataSource {
       if (response.statusCode == 201 && response.body != null) {
         final Map<String, dynamic> responseData =
             response.body as Map<String, dynamic>;
-        final CourseRatingModel rating = CourseRatingModel.fromJson(responseData);
+        final CourseRatingModel rating = CourseRatingModel.fromJson(
+          responseData,
+        );
 
         return Right(rating);
       } else {

@@ -7,9 +7,7 @@ import 'package:e_learning/features/enroll/data/source/local/enroll_local_data_s
 class EnrollLocalDataSourceImpl implements EnrollLocalDataSource {
   final SharedPreferencesService sharedPreferences;
 
-  EnrollLocalDataSourceImpl({
-    required this.sharedPreferences,
-  });
+  EnrollLocalDataSourceImpl({required this.sharedPreferences});
 
   //? ====================== Enrollment Management =========================
 
@@ -46,7 +44,10 @@ class EnrollLocalDataSourceImpl implements EnrollLocalDataSource {
   //? ====================== Course Ratings Cache ==========================
 
   @override
-  Future<void> saveCourseRatingsLocal(String courseSlug, CourseRatingResponse ratingsResponse) async {
+  Future<void> saveCourseRatingsLocal(
+    String courseSlug,
+    CourseRatingResponse ratingsResponse,
+  ) async {
     try {
       final jsonString = jsonEncode(ratingsResponse.toJson());
       await sharedPreferences.saveCourseRatingsInCache(courseSlug, jsonString);
@@ -56,7 +57,9 @@ class EnrollLocalDataSourceImpl implements EnrollLocalDataSource {
   @override
   Future<CourseRatingResponse?> getCourseRatingsLocal(String courseSlug) async {
     try {
-      final jsonString = await sharedPreferences.getCourseRatingsInCache(courseSlug);
+      final jsonString = await sharedPreferences.getCourseRatingsInCache(
+        courseSlug,
+      );
       if (jsonString == null || jsonString.isEmpty) {
         return null;
       }

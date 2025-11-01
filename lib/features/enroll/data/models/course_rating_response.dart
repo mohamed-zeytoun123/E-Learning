@@ -26,7 +26,9 @@ class CourseRatingResponse {
       currentPage: json['current_page'] as int,
       pageSize: json['page_size'] as int,
       results: (json['results'] as List<dynamic>)
-          .map((item) => CourseRatingItem.fromJson(item as Map<String, dynamic>))
+          .map(
+            (item) => CourseRatingItem.fromJson(item as Map<String, dynamic>),
+          )
           .toList(),
     );
   }

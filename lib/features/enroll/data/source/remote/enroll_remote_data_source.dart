@@ -11,8 +11,12 @@ abstract class EnrollRemoteDataSource {
   Future<Either<Failure, List<EnrollmentModel>>> getMyCoursesRemote();
 
   /// Get course ratings with pagination
-  Future<Either<Failure, CourseRatingResponse>> getCourseRatingsRemote(GetCourseRatingsParams params);
+  Future<Either<Failure, CourseRatingResponse>> getCourseRatingsRemote(
+    GetCourseRatingsParams params,
+  );
 
   /// Create a rating for a course
-  Future<Either<Failure, CourseRatingModel>> createRatingRemote(CreateRatingParams params);
+  Future<Either<Failure, CourseRatingModel>> createRatingRemote(
+    CreateRatingParams params,
+  );
 }

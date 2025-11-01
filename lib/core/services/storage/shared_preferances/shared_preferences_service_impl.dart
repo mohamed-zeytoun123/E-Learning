@@ -93,7 +93,10 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
   @override
   Future<void> saveEnrollmentsInCache(String enrollmentsJson) async {
     try {
-      await storagePreferences.setString(CacheKeys.enrollmentsKey, enrollmentsJson);
+      await storagePreferences.setString(
+        CacheKeys.enrollmentsKey,
+        enrollmentsJson,
+      );
     } catch (_) {}
   }
 
@@ -119,9 +122,15 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
 
   //* Save Course Ratings
   @override
-  Future<void> saveCourseRatingsInCache(String courseSlug, String ratingsJson) async {
+  Future<void> saveCourseRatingsInCache(
+    String courseSlug,
+    String ratingsJson,
+  ) async {
     try {
-      await storagePreferences.setString('${CacheKeys.courseRatingsKey}$courseSlug', ratingsJson);
+      await storagePreferences.setString(
+        '${CacheKeys.courseRatingsKey}$courseSlug',
+        ratingsJson,
+      );
     } catch (_) {}
   }
 
@@ -129,7 +138,9 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
   @override
   Future<String?> getCourseRatingsInCache(String courseSlug) async {
     try {
-      return storagePreferences.getString('${CacheKeys.courseRatingsKey}$courseSlug');
+      return storagePreferences.getString(
+        '${CacheKeys.courseRatingsKey}$courseSlug',
+      );
     } catch (_) {
       return null;
     }
@@ -139,7 +150,9 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
   @override
   Future<void> removeCourseRatingsInCache(String courseSlug) async {
     try {
-      await storagePreferences.remove('${CacheKeys.courseRatingsKey}$courseSlug');
+      await storagePreferences.remove(
+        '${CacheKeys.courseRatingsKey}$courseSlug',
+      );
     } catch (_) {}
   }
 

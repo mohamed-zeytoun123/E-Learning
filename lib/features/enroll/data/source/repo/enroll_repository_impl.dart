@@ -25,15 +25,12 @@ class EnrollRepositoryImpl implements EnrollRepository {
   Future<Either<Failure, List<EnrollmentModel>>> getMyCoursesRepo() async {
     if (await networkInfo.isConnected) {
       final result = await remoteDataSource.getMyCoursesRemote();
-      
-      return result.fold(
-        (failure) => Left(failure),
-        (enrollments) async {
-          // Save to local cache
-          await localDataSource.saveEnrollmentsLocal(enrollments);
-          return Right(enrollments);
-        },
-      );
+
+      return result.fold((failure) => Left(failure), (enrollments) async {
+        // Save to local cache
+        await localDataSource.saveEnrollmentsLocal(enrollments);
+        return Right(enrollments);
+      });
     } else {
       // Try to get from local cache when offline
       try {
@@ -50,22 +47,26 @@ class EnrollRepositoryImpl implements EnrollRepository {
   }
 
   @override
-  Future<Either<Failure, CourseRatingResponse>> getCourseRatingsRepo(GetCourseRatingsParams params) async {
+  Future<Either<Failure, CourseRatingResponse>> getCourseRatingsRepo(
+    GetCourseRatingsParams params,
+  ) async {
     if (await networkInfo.isConnected) {
       final result = await remoteDataSource.getCourseRatingsRemote(params);
-      
-      return result.fold(
-        (failure) => Left(failure),
-        (ratingResponse) async {
-          // Save ratings to local cache
-          await localDataSource.saveCourseRatingsLocal(params.courseSlug, ratingResponse);
-          return Right(ratingResponse);
-        },
-      );
+
+      return result.fold((failure) => Left(failure), (ratingResponse) async {
+        // Save ratings to local cache
+        await localDataSource.saveCourseRatingsLocal(
+          params.courseSlug,
+          ratingResponse,
+        );
+        return Right(ratingResponse);
+      });
     } else {
       // Try to get from local cache when offline
       try {
-        final cachedResponse = await localDataSource.getCourseRatingsLocal(params.courseSlug);
+        final cachedResponse = await localDataSource.getCourseRatingsLocal(
+          params.courseSlug,
+        );
         if (cachedResponse != null) {
           return Right(cachedResponse);
         } else {
@@ -78,18 +79,17 @@ class EnrollRepositoryImpl implements EnrollRepository {
   }
 
   @override
-  Future<Either<Failure, CourseRatingModel>> createRatingRepo(CreateRatingParams params) async {
+  Future<Either<Failure, CourseRatingModel>> createRatingRepo(
+    CreateRatingParams params,
+  ) async {
     if (await networkInfo.isConnected) {
       final result = await remoteDataSource.createRatingRemote(params);
-      
-      return result.fold(
-        (failure) => Left(failure),
-        (rating) async {
-          // For now, just return the rating without local storage for individual ratings
-          // The rating will be cached when we fetch the course ratings next time
-          return Right(rating);
-        },
-      );
+
+      return result.fold((failure) => Left(failure), (rating) async {
+        // For now, just return the rating without local storage for individual ratings
+        // The rating will be cached when we fetch the course ratings next time
+        return Right(rating);
+      });
     } else {
       return Left(FailureNoConnection());
     }

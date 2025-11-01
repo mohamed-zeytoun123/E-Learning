@@ -20,24 +20,12 @@ class CompletedSectionWidget extends StatefulWidget {
 }
 
 class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
-  final TextEditingController reviewController = TextEditingController();
-  bool isLoading = false;
-  bool isRated = false;
-  
+  late TextEditingController reviewController;
+
   @override
   void initState() {
     super.initState();
-    _checkRatingStatus();
-  }
-
-  void _checkRatingStatus() {
-    setState(() {
-      isLoading = true;
-    });
-    
-    context.read<EnrollCubit>().getCourseRatings(
-      GetCourseRatingsParams(courseSlug: widget.courseSlug),
-    );
+    reviewController = TextEditingController();
   }
 
   @override
@@ -48,50 +36,97 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<EnrollCubit, EnrollState>(
-      listener: (context, state) {
-        if (state.getCourseRatingsState == ResponseStatusEnum.success) {
-          setState(() {
-            isLoading = false;
-            isRated = (state.courseRatingsResponse?.count ?? 0) > 0;
-          });
-        } else if (state.getCourseRatingsState == ResponseStatusEnum.failure) {
-          setState(() {
-            isLoading = false;
-            isRated = false; // Default to not rated on error
-          });
-        }
+    // Check rating status on first build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print(
+        '🚀 [CompletedSectionWidget] Triggering getCourseRatings for courseSlug: ${widget.courseSlug}',
+      );
+      context.read<EnrollCubit>().getCourseRatings(
+        GetCourseRatingsParams(courseSlug: widget.courseSlug),
+      );
+    });
+    return BlocBuilder<EnrollCubit, EnrollState>(
+      buildWhen: (previous, current) {
+        return previous.getCourseRatingsState !=
+                current.getCourseRatingsState ||
+            previous.courseRatingsMap[widget.courseSlug] !=
+                current.courseRatingsMap[widget.courseSlug];
       },
-      child: Column(
-        children: [
-          CustomButtonWidget(
-            title: isLoading 
-                ? AppLocalizations.of(context)?.translate("Loading") ?? "Loading..."
-                : isRated
-                    ? AppLocalizations.of(context)?.translate("View_Ratings") ?? "View Rating"
-                    : AppLocalizations.of(context)?.translate("Rate") ?? "Rate",
-            titleStyle: AppTextStyles.s16w500.copyWith(
-              color: AppColors.textWhite,
+      builder: (context, state) {
+        final isLoading =
+            state.getCourseRatingsState == ResponseStatusEnum.loading;
+
+        // Get rating response specific to this course
+        final courseRatingResponse = state.courseRatingsMap[widget.courseSlug];
+        final isRated =
+            state.getCourseRatingsState == ResponseStatusEnum.success &&
+            courseRatingResponse != null &&
+            (courseRatingResponse.count > 0);
+
+        // Debug logging
+        print(
+          '🔍 [CompletedSectionWidget Debug] courseSlug: ${widget.courseSlug}',
+        );
+        print(
+          '🔍 [CompletedSectionWidget Debug] getCourseRatingsState: ${state.getCourseRatingsState}',
+        );
+        print(
+          '🔍 [CompletedSectionWidget Debug] courseRatingsResponse count: ${courseRatingResponse?.count ?? 'null'}',
+        );
+        print('🔍 [CompletedSectionWidget Debug] isRated: $isRated');
+        print('🔍 [CompletedSectionWidget Debug] isLoading: $isLoading');
+        if (courseRatingResponse?.results != null &&
+            courseRatingResponse!.results.isNotEmpty) {
+          print(
+            '🔍 [CompletedSectionWidget Debug] results length: ${courseRatingResponse.results.length}',
+          );
+          print(
+            '🔍 [CompletedSectionWidget Debug] first result: ${courseRatingResponse.results.first}',
+          );
+        }
+        print(
+          '🔍 [CompletedSectionWidget Debug] =============================',
+        );
+
+        return Column(
+          children: [
+            CustomButtonWidget(
+              title: isLoading
+                  ? AppLocalizations.of(context)?.translate("Loading") ??
+                        "Loading..."
+                  : isRated
+                  ? AppLocalizations.of(context)?.translate("View_Ratings") ??
+                        "View Rating"
+                  : AppLocalizations.of(context)?.translate("Rate") ?? "Rate",
+              titleStyle: AppTextStyles.s16w500.copyWith(
+                color: AppColors.textWhite,
+              ),
+              buttonColor: Theme.of(context).colorScheme.primary,
+              borderColor: Theme.of(context).colorScheme.primary,
+              onTap: isLoading
+                  ? null
+                  : () {
+                      print(
+                        '🎯 [CompletedSectionWidget] Button tapped - isRated: $isRated',
+                      );
+                      isRated
+                          ? _showViewRatingBottomSheet(context)
+                          : _showCreateRatingBottomSheet(context);
+                    },
             ),
-            buttonColor: Theme.of(context).colorScheme.primary,
-            borderColor: Theme.of(context).colorScheme.primary,
-            onTap: isLoading ? null : () {
-              isRated
-                  ? _showViewRatingBottomSheet()
-                  : _showCreateRatingBottomSheet();
-            },
-          ),
-        ],
-      ),
+          ],
+        );
+      },
     );
   }
 
-  void _showViewRatingBottomSheet() {
+  void _showViewRatingBottomSheet(BuildContext context) {
     final state = context.read<EnrollCubit>().state;
-    final ratingData = state.courseRatingsResponse?.results.isNotEmpty == true 
-        ? state.courseRatingsResponse!.results.first 
+    final courseRatingResponse = state.courseRatingsMap[widget.courseSlug];
+    final ratingData = courseRatingResponse?.results.isNotEmpty == true
+        ? courseRatingResponse!.results.first
         : null;
-        
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -104,6 +139,8 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
             ),
             child: YourReviewBottomSheetWidget(
               reviewText: ratingData?.comment ?? 'No review available',
+              rating: ratingData?.rating ?? 1,
+              timeAgo: ratingData?.createdAt ?? "Unknown",
             ),
           ),
         );
@@ -111,7 +148,10 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
     );
   }
 
-  void _showCreateRatingBottomSheet() {
+  void _showCreateRatingBottomSheet(BuildContext context) {
+    // Clear any previous text from the controller
+    reviewController.clear();
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -122,12 +162,11 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).viewInsets.bottom,
             ),
-            child: ReviewBottomSheetWidget(
-              reviewController: reviewController,
-            ),
+            child: ReviewBottomSheetWidget(reviewController: reviewController),
           ),
         );
       },
     );
+    // 🎉 No more disposal needed! Controller managed by widget lifecycle
   }
 }

@@ -11,8 +11,12 @@ abstract class EnrollRepository {
   Future<Either<Failure, List<EnrollmentModel>>> getMyCoursesRepo();
 
   /// Get course ratings with pagination
-  Future<Either<Failure, CourseRatingResponse>> getCourseRatingsRepo(GetCourseRatingsParams params);
+  Future<Either<Failure, CourseRatingResponse>> getCourseRatingsRepo(
+    GetCourseRatingsParams params,
+  );
 
   /// Create a rating for a course
-  Future<Either<Failure, CourseRatingModel>> createRatingRepo(CreateRatingParams params);
+  Future<Either<Failure, CourseRatingModel>> createRatingRepo(
+    CreateRatingParams params,
+  );
 }
