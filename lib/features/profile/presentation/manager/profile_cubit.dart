@@ -24,6 +24,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       );
   final ProfileRepository repo;
   void getPrivacyPolicyData() async {
+    emit(state.copyWith(isLoadingPrivacy: true));
     var result = await repo.getPrivacyPolicyRepo();
     result.fold(
       (error) {

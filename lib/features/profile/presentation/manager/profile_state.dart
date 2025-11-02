@@ -37,10 +37,10 @@ class ProfileState {
   }) {
     return ProfileState(
       privacyPolicyData: privacyPolicyData ?? this.privacyPolicyData,
-      errorFetchPrivacy: errorFetchPrivacy ?? this.errorFetchPrivacy,
+      errorFetchPrivacy: errorFetchPrivacy,
       isLoadingPrivacy: isLoadingPrivacy ?? false,
       aboutUsData: aboutUsData ?? this.aboutUsData,
-      errorFetchAboutUs: errorFetchAboutUs ?? this.errorFetchAboutUs,
+      errorFetchAboutUs: errorFetchAboutUs,
       isLoadingAboutUs: isLoadingAboutUs ?? false,
       termConditionData: termConditionData ?? this.termConditionData,
       errorFetchTermCondition: errorFetchTermCondition,
