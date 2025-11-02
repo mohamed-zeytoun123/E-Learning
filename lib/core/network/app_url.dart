@@ -2,7 +2,7 @@ class AppUrls {
   //?---------------------------------------------------------------
 
   static const String _ip = "192.168.100.23";
-
+//  static const String _local = "10.0.2.2";
   //?---------------------------------------------------------------
 
   static const String _baseURl = 'http://$_ip:8100/api/v1';
@@ -27,5 +27,9 @@ class AppUrls {
   //* Get Colleges
   static final String getColleges = "$_baseURl/colleges/";
 
+  //*profile Url
+  static final String privacyPolicy = "$_baseURl/privacy-policy/";
+  static final String aboutUs = "$_baseURl/about-us/";
+    static final String termsConditions = "$_baseURl/terms-conditions/";
   //?---------------------------------------------------------------
 }

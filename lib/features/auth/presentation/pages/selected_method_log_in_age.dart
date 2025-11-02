@@ -1,9 +1,15 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/network/api_general.dart';
+import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/widgets/app_logo/app_logo_widget.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
+import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -75,7 +81,17 @@ class SelectedMethodLogInPage extends StatelessWidget {
                 ),
                 buttonColor: AppColors.buttonWhite,
                 borderColor: AppColors.borderPrimary,
-                onTap: () {},
+                onTap: () {
+                   GoRouter.of(context).go(RouteNames.profile);
+                  // ProfileRemoteDataSourceImpl(
+                  //   api: appLocator<API>(),
+                  // ).getPrivacyPolicyinfo();
+                  // ProfileRepository(
+                  //   remote: ProfileRemoteDataSourceImpl(api: appLocator<API>()),
+                  //   network: appLocator<NetworkInfoService>(),
+                  // ).getPrivacyPolicyRepo();
+                  
+                },
               ),
             ],
           ),

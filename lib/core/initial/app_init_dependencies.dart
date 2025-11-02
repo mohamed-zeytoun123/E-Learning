@@ -21,6 +21,9 @@ import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_sou
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source_impl.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository_impl.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
+import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -133,6 +136,20 @@ Future<void> appInitDependencies() async {
       network: appLocator<NetworkInfoService>(),
     ),
   );
+  //?-----------Repository Profile------------------------------------------------------------------------------------
+
+  appLocator.registerLazySingleton<ProfileRemouteDataSource>(
+    () => ProfileRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
+  appLocator.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepository(
+      remote: appLocator<ProfileRemouteDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //?-----------------------------------------------------------------------------------
 
   //? --------------------------------------------------------------------------------------------
 }

@@ -1,5 +1,7 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
@@ -13,6 +15,10 @@ import 'package:e_learning/features/auth/presentation/pages/reset_password_page.
 import 'package:e_learning/features/auth/presentation/pages/sign_up_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/university_selection_page.dart';
 import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
+import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
+import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/pages/about_us.dart';
 import 'package:e_learning/features/profile/presentation/pages/downloads_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/privacy_policy.dart';
@@ -134,7 +140,13 @@ class AppRouter {
       //? --------------------------- Profile Pages --------------------------
       GoRoute(
         path: RouteNames.profile,
-        builder: (context, state) => const ProfilePage(),
+        builder: (context, state) => BlocProvider(create: (context) => ProfileCubit(
+        ProfileRepository(
+          remote:appLocator<ProfileRemouteDataSource>(),
+          network: appLocator<NetworkInfoService>(),
+        )..getPrivacyPolicyRepo(),
+      ),
+          child: const ProfilePage()),
       ),
       GoRoute(
         path: RouteNames.savedCourses,
@@ -150,18 +162,37 @@ class AppRouter {
         builder: (context, state) => const EnrollPage(),
       ),
       //?------------------------------------------------------------------
-        GoRoute(
-        path: RouteNames.aboutUs,
-        builder: (context, state) => const AboutUsPage(),
-      ),
+
+      GoRoute(
+  path: RouteNames.aboutUs,
+  builder: (context, state) {
+    final profileCubit = state.extra as ProfileCubit;
+    return BlocProvider.value(
+      value: profileCubit,
+      child: const AboutUsPage(),
+    );
+  },
+),
        //?------------------------------------------------------------------
-        GoRoute(
+      GoRoute(
         path: RouteNames.privacy,
-        builder: (context, state) => const PrivacyPolicy(),
+        builder: (context, state) {
+          final profileCubit = state.extra as ProfileCubit;
+          return BlocProvider.value(
+            value: profileCubit,
+            child: const PrivacyPolicy(),
+          );
+        },
       ),
         GoRoute(
         path: RouteNames.term,
-        builder: (context, state) => const TermsAndConditionsPage(),
+        builder: (context, state) {
+          final profileCubit = state.extra as ProfileCubit;
+          return BlocProvider.value(
+            value: profileCubit,
+            child: const TermsAndConditionsPage(),
+          );
+        },
       ),
     ],
   );

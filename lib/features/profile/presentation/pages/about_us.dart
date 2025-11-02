@@ -1,21 +1,33 @@
+import 'dart:developer';
+
+import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
+import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
-class AboutUsPage extends StatelessWidget {
+class AboutUsPage extends StatefulWidget {
   const AboutUsPage({super.key});
 
+  @override
+  State<AboutUsPage> createState() => _AboutUsPageState();
+}
+
+class _AboutUsPageState extends State<AboutUsPage> {
   // Future<void> _launchUrl(String url) async {
-  //   final Uri uri = Uri.parse(url);
-  //   if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
-  //     throw Exception('Could not launch $url');
-  //   }
-  // }
+  @override
+  void initState() {
+    BlocProvider.of<ProfileCubit>(context).getAboutUsData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
+    final colors = context.colors;
     return Scaffold(
       backgroundColor: colors.background,
       appBar: AppBar(
@@ -40,84 +52,156 @@ class AboutUsPage extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Section(
-              icon: Icons.school_rounded,
-              title: "About the App",
-              description:
-                  "E-Learning is an online platform that connects students with expert tutors and offers a wide range of courses tailored to your learning goals.",
-            ),
-            const SizedBox(height: 20),
-            Section(
-              icon: Icons.lightbulb_outline_rounded,
-              title: "Vision & Mission",
-              description:
-                  "Our mission is to make quality education accessible to everyone. We believe in empowering learners worldwide through innovation and technology.",
-            ),
-            const SizedBox(height: 20),
-            Section(
-              icon: Icons.group_rounded,
-              title: "Our Team",
-              description:
-                  "Our diverse team of educators, engineers, and designers is committed to delivering the best learning experience possible.",
-            ),
-            const SizedBox(height: 20),
-            Section(
-              icon: Icons.security_rounded,
-              title: "Our Values",
-              description:
-                  "We prioritize trust, transparency, and continuous improvement to ensure a safe and inspiring learning environment.",
-            ),
+        // child: BlocBuilder<ProfileCubit, ProfileState>(
+          
+        //   buildWhen: (previous, current) =>
+        //       previous.aboutUsData != current.aboutUsData||
+        //       previous.errorFetchAboutUs!=current.errorFetchAboutUs||
+        //       previous.isLoadingAboutUs!=current.isLoadingAboutUs,
+        //   builder: (context, state) {
+        //     log('😒 rebuild About us content');
+                  // if (state.isLoadingAboutUs == true) {
+                  //   return Center(
+                  //     child: SizedBox(
+                  //       width: 100,
+                  //       height: 500,
+                  //       child: const Center(child: CircularProgressIndicator()),
+                  //     ),
+                  //   );
+                  // }
+                  
+            child:  Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+ BlocBuilder<ProfileCubit, ProfileState>(buildWhen: (previous, current) =>   previous.aboutUsData != current.aboutUsData||
+              previous.errorFetchAboutUs!=current.errorFetchAboutUs||
+              previous.isLoadingAboutUs!=current.isLoadingAboutUs,
+  builder: (context,state){
+  if(state.isLoadingAboutUs==true ){
+      return  Center(
+                      child: SizedBox(
+                        width: 100,
+                        height: 200,
+                        child: const Center(child: CircularProgressIndicator()),
+                      ),
+                    );
+  }
+               
+                   if (state.errorFetchAboutUs != null) {
+            return  SizedBox(height: 200.h,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error_outline,
+                              size: 64.sp,
+                              color: context.colors.iconRed,
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              'Error loading About us',
+                              style: AppTextStyles.s16w500.copyWith(
+                                color: context.colors.textPrimary,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              state.errorFetchAboutUs!.message,
+                              style: AppTextStyles.s14w400.copyWith(
+                                color: context.colors.textPrimary,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                   }
+                   
+                  
+               return Section(
+                  icon: Icons.school_rounded,
+                  title: state.aboutUsData.title,
+                  description: state.aboutUsData.content,
+                  //  "E-Learning is an online platform that connects students with expert tutors and offers a wide range of courses tailored to your learning goals.",
+                );
+ }),
 
-            SizedBox(height: 24),
-             Divider(height: 40, thickness: 1,color: colors.dividerGrey,),
-            Text(
-              "Contact Us",
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-                color: colors.textPrimary,
-              ),
-            ),
-            const SizedBox(height: 16),
+                
 
-            _buildContactTile(
-              icon: Icons.email_rounded,
-              label: "support@deyram.com",
-              onTap: () {},
-              context: context
-            ),
-            const SizedBox(height: 12),
+                // const SizedBox(height: 20),
+                // Section(
+                //   icon: Icons.lightbulb_outline_rounded,
+                //   title: "Vision & Mission",
+                //   description:
+                //       "Our mission is to make quality education accessible to everyone. We believe in empowering learners worldwide through innovation and technology.",
+                // ),
+                // const SizedBox(height: 20),
+                // Section(
+                //   icon: Icons.group_rounded,
+                //   title: "Our Team",
+                //   description:
+                //       "Our diverse team of educators, engineers, and designers is committed to delivering the best learning experience possible.",
+                // ),
+                // const SizedBox(height: 20),
+                // Section(
+                //   icon: Icons.security_rounded,
+                //   title: "Our Values",
+                //   description:
+                //       "We prioritize trust, transparency, and continuous improvement to ensure a safe and inspiring learning environment.",
+                // ),
+             
+                Column(
+                children: [
+   SizedBox(height: 24),
+                Divider(height: 40, thickness: 1, color: colors.dividerGrey),
+                Text(
+                  "Contact Us",
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: colors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 16),
 
-            _buildContactTile(
-              icon: Icons.phone_rounded,
-              label: "+1 555 123 4567",
-              onTap: (){},
-               context: context
-            ),
-            const SizedBox(height: 12),
+                _buildContactTile(
+                  icon: Icons.email_rounded,
+                  label: "support@deyram.com",
+                  onTap: () {},
+                  context: context,
+                ),
+                const SizedBox(height: 12),
 
-            _buildContactTile(
-              icon: Icons.language_rounded,
-              label: "Visit our Website",
-              onTap: () {},
-               context: context
-            ),
-            const SizedBox(height: 12),
+                _buildContactTile(
+                  icon: Icons.phone_rounded,
+                  label: "+1 555 123 4567",
+                  onTap: () {},
+                  context: context,
+                ),
+                const SizedBox(height: 12),
 
-            _buildContactTile(
-              icon: Icons.chat_rounded,
-              label: "Chat on WhatsApp",
-              onTap: () {},
-               context: context
+                _buildContactTile(
+                  icon: Icons.language_rounded,
+                  label: "Visit our Website",
+                  onTap: () {},
+                  context: context,
+                ),
+                const SizedBox(height: 12),
+
+                _buildContactTile(
+                  icon: Icons.chat_rounded,
+                  label: "Chat on WhatsApp",
+                  onTap: () {},
+                  context: context,
+                ),
+                const SizedBox(height: 50),
+                  ],
+                )
+              ],
             ),
-            const SizedBox(height: 50),
-          ],
-        ),
-      ),
-    );
+    ));
   }
 }
 
@@ -196,7 +280,7 @@ Widget _buildContactTile({
   required IconData icon,
   required String label,
   required VoidCallback onTap,
-  required BuildContext  context,
+  required BuildContext context,
 }) {
   return InkWell(
     onTap: onTap,
