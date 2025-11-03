@@ -1,3 +1,4 @@
+import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/features/enroll/presentation/manager/enroll_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,7 +14,10 @@ class EnrollErrorStateWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Error occurred while enrolling',
+          AppLocalizations.of(
+                context,
+              )?.translate("Could_not_load_data._Please_try_again.") ??
+              "Could not load data. Please try again.",
           style: AppTextStyles.s16w500.copyWith(color: AppColors.textError),
         ),
         const SizedBox(height: 16),
@@ -25,7 +29,7 @@ class EnrollErrorStateWidget extends StatelessWidget {
             backgroundColor: Theme.of(context).colorScheme.primary,
           ),
           child: Text(
-            'Retry',
+            AppLocalizations.of(context)?.translate("Retry") ?? "Retry",
             style: AppTextStyles.s16w500.copyWith(color: AppColors.textWhite),
           ),
         ),

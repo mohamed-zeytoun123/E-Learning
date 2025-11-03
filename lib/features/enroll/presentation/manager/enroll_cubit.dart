@@ -41,10 +41,6 @@ class EnrollCubit extends Cubit<EnrollState> {
 
   //? ------------------------ Get Course Ratings ----------------------------
   Future<void> getCourseRatings(GetCourseRatingsParams params) async {
-    print(
-      '🔥 [EnrollCubit] getCourseRatings called with courseSlug: ${params.courseSlug}',
-    );
-
     emit(
       state.copyWith(
         getCourseRatingsState: ResponseStatusEnum.loading,
@@ -56,7 +52,6 @@ class EnrollCubit extends Cubit<EnrollState> {
 
     result.fold(
       (failure) {
-        print('🔥 [EnrollCubit] getCourseRatings FAILED: ${failure.message}');
         emit(
           state.copyWith(
             getCourseRatingsState: ResponseStatusEnum.failure,
@@ -65,15 +60,6 @@ class EnrollCubit extends Cubit<EnrollState> {
         );
       },
       (ratingsResponse) {
-        print(
-          '🔥 [EnrollCubit] getCourseRatings SUCCESS: count=${ratingsResponse.count}, results=${ratingsResponse.results.length}',
-        );
-        if (ratingsResponse.results.isNotEmpty) {
-          print(
-            '🔥 [EnrollCubit] First rating: ${ratingsResponse.results.first}',
-          );
-        }
-
         // Create updated map with new course rating data
         final updatedRatingsMap = Map<String, CourseRatingResponse>.from(
           state.courseRatingsMap,

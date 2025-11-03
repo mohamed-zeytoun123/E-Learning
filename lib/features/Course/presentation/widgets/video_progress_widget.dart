@@ -1,4 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -46,14 +47,14 @@ class VideoProgressWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '$completedVideos Of $totalVideos Videos',
+                    '$completedVideos ${AppLocalizations.of(context)?.translate("of") ?? "of"} $totalVideos ${AppLocalizations.of(context)?.translate("Videos") ?? "Videos"}',
                     style: AppTextStyles.s14w400.copyWith(
                       color: AppColors.textGrey,
                       fontSize: 14.sp,
                     ),
                   ),
                   Text(
-                    '$percentValue% Completed',
+                    '$percentValue% ${AppLocalizations.of(context)?.translate("Completed") ?? "Completed"}',
                     style: AppTextStyles.s14w400.copyWith(
                       color: AppColors.textGrey,
                     ),

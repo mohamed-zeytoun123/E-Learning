@@ -110,5 +110,15 @@
     "Resned": "إعادة الإرسال",
     "Loading...": "جار التحميل...",
     "Reset_Password": "إعادة تعيين كلمة المرور",
-    "Failed to load courses": "فشل تحميل الدورات"
+    "Failed_to_load_courses": "فشل تحميل الدورات",
+    "Coud_not_load_data._Please_try_again.": "تعذر تحميل البيانات. يرجى المحاولة مرة أخرى.",
+    "Retry": "إعادة المحاولة",
+    "Is_not_found": "غير موجود",
+    "of": "من",
+    "Videos": "الفيديوهات",
+    "Completed": "مكتمل",
+    "No_review_available": "لا توجد مراجعات متاحة",
+    "Unknown": "غير معروف",
+    "Please_write_a_review!": "يرجى كتابة مراجعة!",
+    "Rating_submitted_successfully!": "تم إرسال التقييم بنجاح!"
 }

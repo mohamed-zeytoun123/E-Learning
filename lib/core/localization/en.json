@@ -110,5 +110,15 @@
     "Resned": "Resend",
     "Loading...": "Loading...",
     "Reset_Password": "Reset Password",
-    "Failed to load courses": "Failed to load courses"
+    "Failed_to_load_courses": "Failed to load courses",
+    "Could_not_load_data._Please_try_again.": "Could not load data. Please try again.",
+    "Retry": "Retry",
+    "Is_not_found": "is not found",
+    "of": "of",
+    "Videos": "Videos",
+    "Completed": "Completed",
+    "No_review_available": "No review available",
+    "Unknown": "Unknown",
+    "Please_write_a_review!": "Please write a review!",
+    "Rating_submitted_successfully!": "Rating submitted successfully!"
 }

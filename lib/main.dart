@@ -9,11 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHive();
   await appInitDependencies();
+  // Setup timeago localization
+  timeago.setLocaleMessages('en', timeago.EnMessages());
+  timeago.setLocaleMessages('ar', timeago.ArMessages());
   runApp(const MyApp());
 }
 

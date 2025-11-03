@@ -1,10 +1,12 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/review_bottom_sheet_widget.dart';
 import 'package:e_learning/features/enroll/data/models/params/get_course_ratings_params.dart';
+import 'package:e_learning/features/enroll/data/source/repo/enroll_repository.dart';
 import 'package:e_learning/features/enroll/presentation/manager/enroll_cubit.dart';
 import 'package:e_learning/features/enroll/presentation/manager/enroll_state.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/your_review_bottom_sheet_widget.dart';
@@ -20,13 +22,7 @@ class CompletedSectionWidget extends StatefulWidget {
 }
 
 class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
-  late TextEditingController reviewController;
-
-  @override
-  void initState() {
-    super.initState();
-    reviewController = TextEditingController();
-  }
+  late TextEditingController reviewController = TextEditingController();
 
   @override
   void dispose() {
@@ -38,9 +34,6 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
   Widget build(BuildContext context) {
     // Check rating status on first build
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print(
-        '🚀 [CompletedSectionWidget] Triggering getCourseRatings for courseSlug: ${widget.courseSlug}',
-      );
       context.read<EnrollCubit>().getCourseRatings(
         GetCourseRatingsParams(courseSlug: widget.courseSlug),
       );
@@ -62,37 +55,11 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
             state.getCourseRatingsState == ResponseStatusEnum.success &&
             courseRatingResponse != null &&
             (courseRatingResponse.count > 0);
-
-        // Debug logging
-        print(
-          '🔍 [CompletedSectionWidget Debug] courseSlug: ${widget.courseSlug}',
-        );
-        print(
-          '🔍 [CompletedSectionWidget Debug] getCourseRatingsState: ${state.getCourseRatingsState}',
-        );
-        print(
-          '🔍 [CompletedSectionWidget Debug] courseRatingsResponse count: ${courseRatingResponse?.count ?? 'null'}',
-        );
-        print('🔍 [CompletedSectionWidget Debug] isRated: $isRated');
-        print('🔍 [CompletedSectionWidget Debug] isLoading: $isLoading');
-        if (courseRatingResponse?.results != null &&
-            courseRatingResponse!.results.isNotEmpty) {
-          print(
-            '🔍 [CompletedSectionWidget Debug] results length: ${courseRatingResponse.results.length}',
-          );
-          print(
-            '🔍 [CompletedSectionWidget Debug] first result: ${courseRatingResponse.results.first}',
-          );
-        }
-        print(
-          '🔍 [CompletedSectionWidget Debug] =============================',
-        );
-
         return Column(
           children: [
             CustomButtonWidget(
               title: isLoading
-                  ? AppLocalizations.of(context)?.translate("Loading") ??
+                  ? AppLocalizations.of(context)?.translate("Loading...") ??
                         "Loading..."
                   : isRated
                   ? AppLocalizations.of(context)?.translate("View_Ratings") ??
@@ -106,12 +73,71 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
               onTap: isLoading
                   ? null
                   : () {
-                      print(
-                        '🎯 [CompletedSectionWidget] Button tapped - isRated: $isRated',
-                      );
+                      final state = context.read<EnrollCubit>().state;
+                      final courseRatingResponse =
+                          state.courseRatingsMap[widget.courseSlug];
+                      final ratingData =
+                          courseRatingResponse?.results.isNotEmpty == true
+                          ? courseRatingResponse!.results.first
+                          : null;
                       isRated
-                          ? _showViewRatingBottomSheet(context)
-                          : _showCreateRatingBottomSheet(context);
+                          ? showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) {
+                                return SingleChildScrollView(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(
+                                        context,
+                                      ).viewInsets.bottom,
+                                    ),
+                                    child: YourReviewBottomSheetWidget(
+                                      reviewText:
+                                          ratingData?.comment ??
+                                          AppLocalizations.of(
+                                            context,
+                                          )?.translate("No_review_available") ??
+                                          "No review available",
+                                      rating: ratingData?.rating ?? 1,
+                                      timeAgo:
+                                          ratingData?.createdAt ??
+                                          AppLocalizations.of(
+                                            context,
+                                          )?.translate("Unknown") ??
+                                          "Unknown",
+                                    ),
+                                  ),
+                                );
+                              },
+                            )
+                          : showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.transparent,
+                              builder: (context) {
+                                return SingleChildScrollView(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(
+                                        context,
+                                      ).viewInsets.bottom,
+                                    ),
+                                    child: BlocProvider.value(
+                                      value: EnrollCubit(
+                                        repository:
+                                            appLocator<EnrollRepository>(),
+                                      ),
+                                      child: ReviewBottomSheetWidget(
+                                        reviewController: reviewController,
+                                        courseSlug: widget.courseSlug,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
                     },
             ),
           ],
@@ -120,53 +146,49 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
     );
   }
 
-  void _showViewRatingBottomSheet(BuildContext context) {
-    final state = context.read<EnrollCubit>().state;
-    final courseRatingResponse = state.courseRatingsMap[widget.courseSlug];
-    final ratingData = courseRatingResponse?.results.isNotEmpty == true
-        ? courseRatingResponse!.results.first
-        : null;
+  // void _showViewRatingBottomSheet(BuildContext context) {
+  //   final state = context.read<EnrollCubit>().state;
+  //   final courseRatingResponse = state.courseRatingsMap[widget.courseSlug];
+  //   final ratingData = courseRatingResponse?.results.isNotEmpty == true
+  //       ? courseRatingResponse!.results.first
+  //       : null;
 
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: YourReviewBottomSheetWidget(
-              reviewText: ratingData?.comment ?? 'No review available',
-              rating: ratingData?.rating ?? 1,
-              timeAgo: ratingData?.createdAt ?? "Unknown",
-            ),
-          ),
-        );
-      },
-    );
-  }
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     backgroundColor: Colors.transparent,
+  //     builder: (context) {
+  //       return SingleChildScrollView(
+  //         child: Padding(
+  //           padding: EdgeInsets.only(
+  //             bottom: MediaQuery.of(context).viewInsets.bottom,
+  //           ),
+  //           child: YourReviewBottomSheetWidget(
+  //             reviewText: ratingData?.comment ?? 'No review available',
+  //             rating: ratingData?.rating ?? 1,
+  //             timeAgo: ratingData?.createdAt ?? "Unknown",
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-  void _showCreateRatingBottomSheet(BuildContext context) {
-    // Clear any previous text from the controller
-    reviewController.clear();
-
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: ReviewBottomSheetWidget(reviewController: reviewController),
-          ),
-        );
-      },
-    );
-    // 🎉 No more disposal needed! Controller managed by widget lifecycle
-  }
+  // void _showCreateRatingBottomSheet(BuildContext context) {
+  //   reviewController.clear();
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     backgroundColor: Colors.transparent,
+  //     builder: (context) {
+  //       return SingleChildScrollView(
+  //         child: Padding(
+  //           padding: EdgeInsets.only(
+  //             bottom: MediaQuery.of(context).viewInsets.bottom,
+  //           ),
+  //           child: ReviewBottomSheetWidget(reviewController: reviewController),
+  //         ),
+  //       );
+  //     },
+  //   );
 }

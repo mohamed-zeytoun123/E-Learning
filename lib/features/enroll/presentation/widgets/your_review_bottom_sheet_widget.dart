@@ -1,13 +1,11 @@
-import 'dart:developer';
-
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/review_box_widget.dart';
-import 'package:e_learning/features/profile/presentation/widgets/modal_sheet_custom_container_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class YourReviewBottomSheetWidget extends StatelessWidget {
   final String? reviewText;
@@ -23,11 +21,32 @@ class YourReviewBottomSheetWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ModalSheetCustomContainerWidget(
+    return Container(
       height: 299.h,
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24.r),
+          topRight: Radius.circular(24.r),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // الشريط العلوي
+          Center(
+            child: Container(
+              width: 80.w,
+              height: 8.h,
+              decoration: BoxDecoration(
+                color: AppColors.formSomeWhite,
+                borderRadius: BorderRadius.circular(4.r),
+              ),
+            ),
+          ),
+          SizedBox(height: 32.h),
           Text(
             AppLocalizations.of(context)?.translate("Your_Review") ??
                 "Your Review",
@@ -36,7 +55,7 @@ class YourReviewBottomSheetWidget extends StatelessWidget {
           Padding(
             padding: EdgeInsets.only(left: 16.w, top: 20.h, bottom: 20.h),
             child: ReviewBoxWidget(
-              reviewText: reviewText ?? "No Reviews Yet",
+              reviewText: reviewText!,
               rating: rating,
               timeAgo: timeAgo,
             ),
@@ -51,7 +70,7 @@ class YourReviewBottomSheetWidget extends StatelessWidget {
               buttonColor: Theme.of(context).colorScheme.primary,
               borderColor: Theme.of(context).colorScheme.primary,
               onTap: () {
-                log('=====================>> Review Button Pressed');
+                context.pop();
               },
             ),
           ),

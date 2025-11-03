@@ -24,10 +24,6 @@ class GetCourseRatingsParams {
       params['page_size'] = pageSize.toString();
     }
 
-    // Debug logging
-    print('🔧 [GetCourseRatingsParams] courseSlug: $courseSlug');
-    print('🔧 [GetCourseRatingsParams] toQueryParams: $params');
-
     return params;
   }
 
