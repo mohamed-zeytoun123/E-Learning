@@ -168,14 +168,9 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         body = {"phone": phone, "code": code, "purpose": purpose};
       }
 
-      log("🔍 OTP Verification URL: $url");
-      log("🔍 OTP Verification Body: $body");
-
       final response = await api.post(ApiRequest(url: url, body: body));
 
       if (response.statusCode == 200 && response.body != null) {
-        log("🔍 OTP Verification Response: ${response.body}");
-
         // Parse the response based on purpose
         if (purpose == 'reset') {
           // For reset purpose, extract the reset_token
@@ -191,8 +186,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       log("error 🔥🔥🔥🔥🔥 OTP Verification:::$e");
       return Left(Failure.handleError(e as Exception));
     }
-  } //* Forget Password
+  }
 
+  //* Resend Otp
+  @override
+  Future<Either<Failure, bool>> resendOtpRemote({
+    required String phone,
+    required String purpose,
+  }) async {
+    try {
+      final response = await api.post(
+        ApiRequest(
+          url: AppUrls.resendOtp,
+          body: {"phone": phone, "purpose": purpose},
+        ),
+      );
+
+      if (response.statusCode == 200 && response.body != null) {
+        return Right(true);
+      }
+      return Left(FailureServer());
+    } catch (e) {
+      log("error 🔥🔥🔥🔥🔥 Resend OTP:::$e");
+      return Left(Failure.handleError(e as Exception));
+    }
+  }
+
+  //* Forget Password
   @override
   Future<Either<Failure, bool>> forgetPasswordRemote({
     required String phone,

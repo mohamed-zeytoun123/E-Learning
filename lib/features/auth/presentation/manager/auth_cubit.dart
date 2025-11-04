@@ -194,6 +194,45 @@ class AuthCubit extends Cubit<AuthState> {
         });
   }
 
+  // ------------------------- Resend OTP ----------------------------
+  Future<void> resendOtp(String phone, String purpose) async {
+    // Check if resend is allowed (timer expired)
+    if (!state.canResendOtp) {
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        resendOtpState: ResponseStatusEnum.loading,
+        resendOtpError: null,
+      ),
+    );
+
+    final result = await repository.resendOtpRepo(
+      phone: phone,
+      purpose: purpose,
+    );
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          resendOtpState: ResponseStatusEnum.failure,
+          resendOtpError: failure.message,
+        ),
+      ),
+      (isResent) {
+        emit(
+          state.copyWith(
+            resendOtpState: ResponseStatusEnum.success,
+            resendOtpError: null,
+          ),
+        );
+        // Restart the timer after successful resend
+        startOtpTimer();
+      },
+    );
+  }
+
   //? ------------------------ Forgot Password ----------------------------
   Future<void> forgotPassword(String phone) {
     emit(
@@ -271,22 +310,6 @@ class AuthCubit extends Cubit<AuthState> {
 
   void setOtpCode(String code) {
     emit(state.copyWith(currentOtpCode: code));
-  }
-
-  void resendOtp(String phone, String purpose) {
-    if (state.canResendOtp) {
-      if (purpose == 'reset') {
-        forgotPassword(phone);
-      } else if (purpose == 'register') {
-        final signUpParams = state.signUpRequestParams;
-        if (signUpParams != null) {
-          signUp(params: signUpParams);
-        }
-      } else {
-        forgotPassword(phone); // Fallback
-      }
-      startOtpTimer(); // Restart timer
-    }
   }
 
   //?---------------------------------------------------------------------------------------

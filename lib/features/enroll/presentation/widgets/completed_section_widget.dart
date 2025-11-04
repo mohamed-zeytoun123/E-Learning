@@ -59,7 +59,7 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
           children: [
             CustomButtonWidget(
               title: isLoading
-                  ? AppLocalizations.of(context)?.translate("Loading...") ??
+                  ? AppLocalizations.of(context)?.translate("Loading") ??
                         "Loading..."
                   : isRated
                   ? AppLocalizations.of(context)?.translate("View_Ratings") ??
@@ -96,17 +96,10 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
                                     child: YourReviewBottomSheetWidget(
                                       reviewText:
                                           ratingData?.comment ??
-                                          AppLocalizations.of(
-                                            context,
-                                          )?.translate("No_review_available") ??
-                                          "No review available",
+                                          'No review available',
                                       rating: ratingData?.rating ?? 1,
                                       timeAgo:
-                                          ratingData?.createdAt ??
-                                          AppLocalizations.of(
-                                            context,
-                                          )?.translate("Unknown") ??
-                                          "Unknown",
+                                          ratingData?.createdAt ?? "Unknown",
                                     ),
                                   ),
                                 );
@@ -145,50 +138,4 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
       },
     );
   }
-
-  // void _showViewRatingBottomSheet(BuildContext context) {
-  //   final state = context.read<EnrollCubit>().state;
-  //   final courseRatingResponse = state.courseRatingsMap[widget.courseSlug];
-  //   final ratingData = courseRatingResponse?.results.isNotEmpty == true
-  //       ? courseRatingResponse!.results.first
-  //       : null;
-
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     backgroundColor: Colors.transparent,
-  //     builder: (context) {
-  //       return SingleChildScrollView(
-  //         child: Padding(
-  //           padding: EdgeInsets.only(
-  //             bottom: MediaQuery.of(context).viewInsets.bottom,
-  //           ),
-  //           child: YourReviewBottomSheetWidget(
-  //             reviewText: ratingData?.comment ?? 'No review available',
-  //             rating: ratingData?.rating ?? 1,
-  //             timeAgo: ratingData?.createdAt ?? "Unknown",
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void _showCreateRatingBottomSheet(BuildContext context) {
-  //   reviewController.clear();
-  //   showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     backgroundColor: Colors.transparent,
-  //     builder: (context) {
-  //       return SingleChildScrollView(
-  //         child: Padding(
-  //           padding: EdgeInsets.only(
-  //             bottom: MediaQuery.of(context).viewInsets.bottom,
-  //           ),
-  //           child: ReviewBottomSheetWidget(reviewController: reviewController),
-  //         ),
-  //       );
-  //     },
-  //   );
 }

@@ -36,6 +36,12 @@ abstract class AuthRepository {
     required String purpose, // reset_password || sign_up
   });
 
+  //* Resend Otp
+  Future<Either<Failure, bool>> resendOtpRepo({
+    required String phone,
+    required String purpose, // reset_password || sign_up
+  });
+
   //* Forget Password
   Future<Either<Failure, bool>> forgetPasswordRepo({required String phone});
 

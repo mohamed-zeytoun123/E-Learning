@@ -156,6 +156,30 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  //* Resend Otp
+  @override
+  Future<Either<Failure, bool>> resendOtpRepo({
+    required String phone,
+    required String purpose, // reset_password || sign_up
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.resendOtpRemote(
+        phone: phone,
+        purpose: purpose,
+      );
+      return result.fold(
+        (error) {
+          return Left(error);
+        },
+        (isResent) async {
+          return Right(isResent);
+        },
+      );
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
   //* Forget Password
   @override
   Future<Either<Failure, bool>> forgetPasswordRepo({

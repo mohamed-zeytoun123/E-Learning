@@ -35,6 +35,12 @@ abstract class AuthRemoteDataSource {
     required String purpose, // reset_password || sign_up
   });
 
+  //* Resend Otp
+  Future<Either<Failure, bool>> resendOtpRemote({
+    required String phone,
+    required String purpose, // reset_password || sign_up
+  });
+
   //* Forget Password
   Future<Either<Failure, bool>> forgetPasswordRemote({required String phone});
 

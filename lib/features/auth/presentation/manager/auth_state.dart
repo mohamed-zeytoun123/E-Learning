@@ -30,6 +30,10 @@ class AuthState {
   final String? otpVerficationError;
   final String? resetToken; // Store the reset token from OTP verification
 
+  //* Resend OTP
+  final ResponseStatusEnum resendOtpState;
+  final String? resendOtpError;
+
   //* OTP Timer and Resend
   final int otpTimerSeconds;
   final bool canResendOtp;
@@ -67,6 +71,8 @@ class AuthState {
     this.forgotPasswordError,
     this.resetPasswordState = ResponseStatusEnum.initial,
     this.resetPasswordError,
+    this.resendOtpState = ResponseStatusEnum.initial,
+    this.resendOtpError,
   });
 
   AuthState copyWith({
@@ -91,6 +97,8 @@ class AuthState {
     String? forgotPasswordError,
     ResponseStatusEnum? resetPasswordState,
     String? resetPasswordError,
+    ResponseStatusEnum? resendOtpState,
+    String? resendOtpError,
   }) {
     return AuthState(
       loginState: loginState ?? this.loginState,
@@ -114,6 +122,8 @@ class AuthState {
       forgotPasswordError: forgotPasswordError,
       resetPasswordState: resetPasswordState ?? this.resetPasswordState,
       resetPasswordError: resetPasswordError,
+      resendOtpState: resendOtpState ?? this.resendOtpState,
+      resendOtpError: resendOtpError,
     );
   }
 }
