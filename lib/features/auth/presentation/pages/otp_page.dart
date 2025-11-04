@@ -25,24 +25,27 @@ class OtpPage extends StatefulWidget {
 }
 
 class _OtpPageState extends State<OtpPage> {
+  late AuthCubit _authCubit;
+
   @override
   void initState() {
     super.initState();
+    _authCubit = context.read<AuthCubit>();
     // Start the OTP timer
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<AuthCubit>().startOtpTimer();
+      _authCubit.startOtpTimer();
     });
   }
 
   @override
   void dispose() {
-    // Stop the timer
-    context.read<AuthCubit>().stopOtpTimer();
+    // Stop the timer safely
+    _authCubit.stopOtpTimer();
     super.dispose();
   }
 
   void _handleOtpVerification() {
-    final otpCode = context.read<AuthCubit>().state.currentOtpCode;
+    final otpCode = _authCubit.state.currentOtpCode;
 
     if (otpCode == null || otpCode.length < 6) {
       AppMessage.showSnackBar(
@@ -57,19 +60,13 @@ class _OtpPageState extends State<OtpPage> {
       return;
     }
 
-    context.read<AuthCubit>().otpVerfication(
-      widget.phone,
-      otpCode,
-      widget.purpose,
-    );
+    _authCubit.otpVerfication(widget.phone, otpCode, widget.purpose);
   }
 
   Widget _buildOtpInput() {
     return BlocConsumer<AuthCubit, AuthState>(
       listenWhen: (previous, current) =>
           previous.otpVerficationState != current.otpVerficationState ||
-          previous.forgotPasswordState != current.forgotPasswordState ||
-          previous.signUpState != current.signUpState ||
           previous.resendOtpState != current.resendOtpState,
       listener: (context, state) {
         // Handle Resend OTP state
@@ -118,7 +115,7 @@ class _OtpPageState extends State<OtpPage> {
             // Navigate to reset password page
             Future.microtask(() {
               if (context.mounted) {
-                final resetToken = context.read<AuthCubit>().state.resetToken;
+                final resetToken = _authCubit.state.resetToken;
                 context.go(
                   RouteNames.resetPassword,
                   extra: {
@@ -145,76 +142,12 @@ class _OtpPageState extends State<OtpPage> {
           case ResponseStatusEnum.initial:
             break;
         }
-
-        // Handle forgot password state (for resend OTP in password reset)
-        if (widget.purpose == 'reset') {
-          switch (state.forgotPasswordState) {
-            case ResponseStatusEnum.success:
-              AppMessage.showSnackBar(
-                context: context,
-                message:
-                    AppLocalizations.of(
-                      context,
-                    )?.translate("OTP_resent_successfully") ??
-                    "OTP has been resent successfully",
-                backgroundColor: Colors.green,
-              );
-              break;
-            case ResponseStatusEnum.failure:
-              AppMessage.showSnackBar(
-                context: context,
-                message:
-                    state.forgotPasswordError ??
-                    (AppLocalizations.of(
-                          context,
-                        )?.translate("Failed_to_resend_OTP") ??
-                        "Failed to resend OTP"),
-                backgroundColor: AppColors.textError,
-              );
-              break;
-            case ResponseStatusEnum.loading:
-            case ResponseStatusEnum.initial:
-              break;
-          }
-        }
-
-        // Handle signup state (for resend OTP in registration)
-        if (widget.purpose == 'register') {
-          switch (state.signUpState) {
-            case ResponseStatusEnum.success:
-              AppMessage.showSnackBar(
-                context: context,
-                message:
-                    AppLocalizations.of(
-                      context,
-                    )?.translate("OTP_resent_successfully") ??
-                    "OTP has been resent successfully",
-                backgroundColor: Colors.green,
-              );
-              break;
-            case ResponseStatusEnum.failure:
-              AppMessage.showSnackBar(
-                context: context,
-                message:
-                    state.signUpError ??
-                    (AppLocalizations.of(
-                          context,
-                        )?.translate("Failed_to_resend_OTP") ??
-                        "Failed to resend OTP"),
-                backgroundColor: AppColors.textError,
-              );
-              break;
-            case ResponseStatusEnum.loading:
-            case ResponseStatusEnum.initial:
-              break;
-          }
-        }
       },
       buildWhen: (previous, current) =>
           previous.otpVerficationState != current.otpVerficationState,
       builder: (context, state) => CustomOtp(
         onSubmit: (code) {
-          context.read<AuthCubit>().setOtpCode(code);
+          _authCubit.setOtpCode(code);
           // Auto-submit when 6 digits are entered
           if (code.length == 6) {
             _handleOtpVerification();
@@ -238,10 +171,7 @@ class _OtpPageState extends State<OtpPage> {
           canResend: state.canResendOtp && !isResending,
           remainingSeconds: state.otpTimerSeconds,
           onResend: () async {
-            await context.read<AuthCubit>().resendOtp(
-              widget.phone,
-              widget.purpose,
-            );
+            await _authCubit.resendOtp(widget.phone, widget.purpose);
           },
         );
       },

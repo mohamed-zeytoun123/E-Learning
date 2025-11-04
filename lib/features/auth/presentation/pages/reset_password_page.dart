@@ -3,6 +3,7 @@ import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
@@ -66,30 +67,20 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 
   void _showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppMessage.showSnackBar(
+      context: context,
+      message: message,
+      backgroundColor: AppColors.textError,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Debug: Print the received parameters
-    debugPrint('Reset Password Page - Phone: ${widget.phone}');
-    debugPrint('Reset Password Page - Reset Token: ${widget.resetToken}');
-
     return Scaffold(
-      backgroundColor: AppColors.backgroundPage,
       body: BlocListener<AuthCubit, AuthState>(
         listenWhen: (previous, current) =>
             previous.resetPasswordState != current.resetPasswordState,
         listener: (context, state) {
-          debugPrint(
-            'BlocListener - Reset Password State: ${state.resetPasswordState}',
-          );
           switch (state.resetPasswordState) {
             case ResponseStatusEnum.success:
               // Navigate immediately without showing SnackBar to avoid widget lifecycle issues
