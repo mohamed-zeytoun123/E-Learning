@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
 
 class ProfileState {
   final ResponseInfoAppModel privacyPolicyData;
@@ -12,7 +13,10 @@ class ProfileState {
   final ResponseInfoAppModel termConditionData;
   final Failure? errorFetchTermCondition;
   final bool? isLoadingTermCondition;
-  ProfileState({
+  final UserDataInfoModel dataUserInfoProfile;
+    final Failure? errorFetchDataUserInfoProfile;
+  final bool? isLoadingDataUserProfile;
+  ProfileState( {
     required this.privacyPolicyData,
     this.errorFetchPrivacy,
     this.isLoadingPrivacy = false,
@@ -22,6 +26,9 @@ class ProfileState {
     required this.termConditionData,
     this.errorFetchTermCondition,
     this.isLoadingTermCondition = false,
+    required  this.dataUserInfoProfile,
+    this.errorFetchDataUserInfoProfile,
+    this.isLoadingDataUserProfile =false,
   });
 
   ProfileState copyWith({
@@ -34,6 +41,9 @@ class ProfileState {
     ResponseInfoAppModel? termConditionData,
     Failure? errorFetchTermCondition,
     bool? isLoadingTermCondition,
+    UserDataInfoModel? dataUserInfoProfile,
+    Failure? errorFetchDataUserInfoProfile,
+    bool? isLoadingDataUserProfile,
   }) {
     return ProfileState(
       privacyPolicyData: privacyPolicyData ?? this.privacyPolicyData,
@@ -45,6 +55,9 @@ class ProfileState {
       termConditionData: termConditionData ?? this.termConditionData,
       errorFetchTermCondition: errorFetchTermCondition,
       isLoadingTermCondition: isLoadingTermCondition ?? false,
+      dataUserInfoProfile:dataUserInfoProfile ??this.dataUserInfoProfile,
+      errorFetchDataUserInfoProfile : errorFetchDataUserInfoProfile,
+      isLoadingDataUserProfile : isLoadingDataUserProfile ?? false,
     );
   }
 }

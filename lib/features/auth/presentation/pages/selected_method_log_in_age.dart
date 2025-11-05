@@ -5,6 +5,7 @@ import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/app_logo/app_logo_widget.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
@@ -19,8 +20,9 @@ class SelectedMethodLogInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
-      backgroundColor: AppColors.backgroundPage,
+      backgroundColor: colors.background,
       body: Padding(
         padding: EdgeInsets.only(top: 430.h, bottom: 50.h),
         child: Center(
@@ -36,21 +38,21 @@ class SelectedMethodLogInPage extends StatelessWidget {
 
                 style: AppTextStyles.s16w600.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.textBlack,
+                  color: colors.textPrimary,
                 ),
               ),
               Spacer(),
               CustomButtonWidget(
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.titlePrimary,
+                  color: colors.background,
                 ),
                 title:
                     AppLocalizations.of(context)?.translate("Sign_up") ??
                     "Sign Up",
 
-                buttonColor: AppColors.buttonPrimary,
-                borderColor: AppColors.borderPrimary,
+                buttonColor: colors.textBlue,
+                borderColor: colors.textBlue,
                 onTap: () {
                   GoRouter.of(context).go(RouteNames.signUp);
                 },
@@ -77,12 +79,12 @@ class SelectedMethodLogInPage extends StatelessWidget {
                     "Continue As A Guest",
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: AppColors.titleBlack,
+                  color: colors.textPrimary,
                 ),
-                buttonColor: AppColors.buttonWhite,
-                borderColor: AppColors.borderPrimary,
+                buttonColor: Colors.transparent,
+                borderColor: colors.textBlue,
                 onTap: () {
-                   GoRouter.of(context).go(RouteNames.profile);
+                  GoRouter.of(context).go(RouteNames.profile);
                   // ProfileRemoteDataSourceImpl(
                   //   api: appLocator<API>(),
                   // ).getPrivacyPolicyinfo();
@@ -90,7 +92,6 @@ class SelectedMethodLogInPage extends StatelessWidget {
                   //   remote: ProfileRemoteDataSourceImpl(api: appLocator<API>()),
                   //   network: appLocator<NetworkInfoService>(),
                   // ).getPrivacyPolicyRepo();
-                  
                 },
               ),
             ],

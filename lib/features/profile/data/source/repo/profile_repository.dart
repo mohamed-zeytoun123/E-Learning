@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
 
 class ProfileRepository {
@@ -56,6 +57,24 @@ class ProfileRepository {
           return left(error);
         },
         (data) {
+          return right(data);
+        },
+      );
+    } else {
+      log("error , no connected  🔥🔥🔥🔥🔥 ");
+      return left(FailureNoConnection());
+    }
+  }
+
+  Future<Either<Failure, UserDataInfoModel>> getDataUserProfileRepo() async {
+    if (await network.isConnected) {
+      var result = await remote.getDataUser();
+      return result.fold(
+        (error) {
+          return left(error);
+        },
+        (data) {
+          log(" ✅👌 success  ,get data user from remote  ");
           return right(data);
         },
       );

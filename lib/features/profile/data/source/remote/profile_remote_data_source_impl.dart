@@ -7,6 +7,7 @@ import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/app_url.dart';
 import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
 
 class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
@@ -55,10 +56,19 @@ class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
       var data = ResponseInfoAppModel.fromMap(response.body);
       return right(data);
     } catch (error) {
-           log("error 🔥🔥🔥🔥🔥 :::$error");
+      log("error 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserDataInfoModel>> getDataUser() async {
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.profileUserInfo));
+      var dataResponse = UserDataInfoModel.fromMap(response.body);
+      return right(dataResponse);
+    } catch (error) {
       return left(Failure.handleError(error as DioException));
     }
   }
 }
-
-

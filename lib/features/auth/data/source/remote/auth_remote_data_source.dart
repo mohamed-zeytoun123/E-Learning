@@ -42,6 +42,7 @@ abstract class AuthRemoteDataSource {
   Future<Either<Failure, bool>> resetPasswordRemote({
     required ResetPasswordRequestParams params,
   });
-
+//* logout 
+  //  Future<Either<Failure,bool>> logOutRemote(String refreshToken); 
   //? ------------------------------------------------------------
 }

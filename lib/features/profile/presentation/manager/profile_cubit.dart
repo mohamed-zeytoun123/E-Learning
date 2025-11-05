@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +10,18 @@ class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit(this.repo)
     : super(
         ProfileState(
+          dataUserInfoProfile: UserDataInfoModel(
+            id: 1,
+            phone: '',
+            username: 'User Name',
+            fullName: 'user Name',
+            universityId: 1,
+            universityName: 'university',
+            collegeId: 1,
+            collegeName: 'collage',
+            studyYearId: 1,
+            studyYearName: 'study year',
+          ),
           aboutUsData: ResponseInfoAppModel(id: 0, title: '', content: ''),
           termConditionData: ResponseInfoAppModel(
             id: 0,
@@ -62,7 +75,21 @@ class ProfileCubit extends Cubit<ProfileState> {
         emit(state.copyWith(errorFetchTermCondition: error));
       },
       (data) {
+        log(' ✅ success cubit terms & conditions');
         emit(state.copyWith(termConditionData: data));
+      },
+    );
+  }
+
+  void getDataUserInfoProfile() async {
+    // emit(state.copyWith(isLoadingDataUserProfile: true));
+    var result = await repo.getDataUserProfileRepo();
+    result.fold(
+      (error) {
+        emit(state.copyWith(errorFetchDataUserInfoProfile: error));
+      },
+      (dataResponse) {
+        emit(state.copyWith(dataUserInfoProfile: dataResponse));
       },
     );
   }

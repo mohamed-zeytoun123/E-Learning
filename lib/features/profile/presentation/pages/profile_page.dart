@@ -14,6 +14,7 @@ import 'package:e_learning/features/profile/data/source/repo/profile_repository.
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/widgets/custom_settings_item_widget.dart';
 import 'package:e_learning/features/profile/presentation/widgets/language_bottom_sheet_widget.dart';
+import 'package:e_learning/features/profile/presentation/widgets/log_out_show_dialog.dart';
 import 'package:e_learning/features/profile/presentation/widgets/profile_guest_header.dart';
 import 'package:e_learning/features/profile/presentation/widgets/profile_user_header.dart';
 import 'package:e_learning/features/profile/presentation/widgets/theme_bottom_sheet_widget.dart';
@@ -33,6 +34,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     // BlocProvider.of<ProfileCubit>(context).getPrivacyPolicyData();
+              BlocProvider.of<ProfileCubit>(
+            context).getDataUserInfoProfile();
     super.initState();
   }
 
@@ -56,6 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
               BlocBuilder<AppManagerCubit, AppManagerState>(
                 builder: (context, state) {
                   if (state.appState == AppStateEnum.user) {
+                  
                     return ProfileUserHeader();
                   } else {
                     return ProfileGuestHeader();
@@ -149,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     "Terms & Conditions",
                 onTap: () {
                   appLocator<ProfileRepository>().getTermsConditionsData();
-                      context.push(
+                  context.push(
                     RouteNames.term,
                     extra: context.read<ProfileCubit>(),
                   );
@@ -180,7 +184,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     AppLocalizations.of(context)?.translate("Log_Out") ??
                     "Log Out",
                 titleColor: context.colors.textRed,
-                onTap: () {},
+                onTap: () {
+                            showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return showDialogLogOut();
+                      },
+                    );
+                   
+                },
               ),
             ],
           ),
