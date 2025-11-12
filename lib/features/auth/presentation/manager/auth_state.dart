@@ -2,7 +2,8 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 
 class AuthState {
   //?--------------------------------------------------------------
@@ -25,10 +26,15 @@ class AuthState {
   final String? getCollegesError;
   final List<CollegeModel> colleges;
 
+  //* Get Study Years
+  final ResponseStatusEnum getStudyYearsState;
+  final String? studyYearsError;
+  final List<StudyYearModel>? studyYears;
+
   //* otp verfication
   final ResponseStatusEnum otpVerficationState;
   final String? otpVerficationError;
-  final String? resetToken; // Store the reset token from OTP verification
+  final String? resetToken;
 
   //* Forgot Password
   final ResponseStatusEnum forgotPasswordState;
@@ -41,6 +47,9 @@ class AuthState {
   //?--------------------------------------------------------------
 
   AuthState({
+    this.getStudyYearsState = ResponseStatusEnum.initial,
+    this.studyYearsError,
+    this.studyYears,
     this.signUpRequestParams,
     this.loginState = ResponseStatusEnum.initial,
     this.loginError,
@@ -80,8 +89,14 @@ class AuthState {
     String? forgotPasswordError,
     ResponseStatusEnum? resetPasswordState,
     String? resetPasswordError,
+    ResponseStatusEnum? getStudyYearsState,
+    String? studyYearsError,
+    List<StudyYearModel>? studyYears,
   }) {
     return AuthState(
+      getStudyYearsState: getStudyYearsState ?? this.getStudyYearsState,
+      studyYears: studyYears ?? this.studyYears,
+      studyYearsError: studyYearsError,
       loginState: loginState ?? this.loginState,
       signUpRequestParams: signUpRequestParams ?? this.signUpRequestParams,
       loginError: loginError,

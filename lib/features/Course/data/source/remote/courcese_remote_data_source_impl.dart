@@ -6,12 +6,16 @@ import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/api_response.dart';
 import 'package:e_learning/core/network/app_url.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/paginated_courses_model.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
-import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
-import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/Course/data/models/course_details_model.dart';
-import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
-import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/paginated_chapters_model.dart';
+import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/course/data/models/course_details_model.dart';
+import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
 
 class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   final API api;
@@ -19,11 +23,10 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   CourceseRemoteDataSourceImpl({required this.api});
 
   //?----------------------------------------------------
-  //* Get Filter Categories
+  //* Get Categories
 
   @override
-  Future<Either<Failure, List<CategorieModel>>>
-      getFilterCategoriesRemote() async {
+  Future<Either<Failure, List<CategorieModel>>> getCategoriesRemote() async {
     try {
       final ApiRequest request = ApiRequest(url: AppUrls.getCategories);
 
@@ -32,9 +35,8 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
       if (response.statusCode == 200) {
         final data = response.body;
-
-        if (data is List) {
-          for (var item in data) {
+        if (data is Map && data['results'] is List) {
+          for (var item in data['results']) {
             categories.add(CategorieModel.fromMap(item));
           }
         }
@@ -57,124 +59,51 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   //?----------------------------------------------------
   //* Get Courses
   @override
-  Future<Either<Failure, List<CourseModel>>> getCoursesRemote({
-    int? collegeId,
-    int? studyYear,
-    int? categoryId,
-    int? teacherId,
-    String? search,
+  Future<Either<Failure, PaginatedCoursesModel>> getCoursesRemote({
+    CourseFiltersModel? filters,
+    int? page,
+    int? pageSize,
     String? ordering,
+    String? search,
   }) async {
     try {
+      log(
+        'Applying filters Remote : college=${filters?.collegeId}, studyYear=${filters?.studyYear}, category=${filters?.categoryId}, page=$page, page_size=$pageSize',
+      );
+
       //* تجهيز query parameters حسب القيم المرسلة
       final Map<String, dynamic> queryParameters = {
-        if (collegeId != null) 'college': collegeId.toString(),
-        if (studyYear != null) 'study_year': studyYear.toString(),
-        if (categoryId != null) 'category': categoryId.toString(),
-        if (teacherId != null) 'teacher': teacherId.toString(),
+        if (filters?.collegeId != null)
+          'college': filters!.collegeId.toString(),
+        if (filters?.studyYear != null)
+          'study_year': filters!.studyYear.toString(),
+        if (filters?.categoryId != null)
+          'category': filters!.categoryId.toString(),
         if (search != null && search.isNotEmpty) 'search': search,
-        'ordering': (ordering != null && ordering.isNotEmpty)
-            ? ordering
-            : '-created_at', // Default ordering when not specified
+        if (ordering != null && ordering.isNotEmpty) 'ordering': ordering,
+        if (page != null) 'page': page.toString(),
+        if (pageSize != null) 'page_size': pageSize.toString(),
       };
 
       final ApiRequest request = ApiRequest(
-        url: AppUrls.getCourses,
-        queryParameters: queryParameters,
+        url: AppUrls.getCourses(queryParameters: queryParameters),
       );
 
-      log('🌐 Request URL: ${AppUrls.getCourses}');
-      log('🌐 Query Parameters: $queryParameters');
-
       final ApiResponse response = await api.get(request);
-      final List<CourseModel> courses = [];
-
-      log('📡 Courses API Response Status: ${response.statusCode}');
-      log('📡 Response body type: ${response.body.runtimeType}');
-      log('📡 Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = response.body;
 
-        // Handle paginated response (common in Django REST Framework)
         if (data is Map<String, dynamic>) {
-          log('📡 Response is Map with keys: ${data.keys.toList()}');
-
-          if (data.containsKey('results')) {
-            final results = data['results'] as List?;
-            log('📡 Results list length: ${results?.length ?? 0}');
-            if (results != null && results.isNotEmpty) {
-              for (var item in results) {
-                try {
-                  if (item is Map<String, dynamic>) {
-                    courses.add(CourseModel.fromMap(item));
-                  } else {
-                    log('⚠️ Item is not Map: ${item.runtimeType}');
-                  }
-                } catch (e) {
-                  log('❌ Error parsing course item: $e');
-                  log('❌ Item data: $item');
-                }
-              }
-            }
-          } else {
-            // Maybe the data itself is the list (like {"data": [...]})
-            log('📡 No "results" key found. Checking for other keys...');
-            // Check if there's a "data" key
-            if (data.containsKey('data') && data['data'] is List) {
-              final results = data['data'] as List;
-              log('📡 Found "data" key with ${results.length} items');
-              for (var item in results) {
-                try {
-                  if (item is Map<String, dynamic>) {
-                    courses.add(CourseModel.fromMap(item));
-                  }
-                } catch (e) {
-                  log('❌ Error parsing course item: $e');
-                }
-              }
-            } else {
-              // Try to parse the entire map as a single course (unlikely but handle it)
-              log('⚠️ Unexpected map structure, attempting direct parse...');
-            }
-          }
-        } else if (data is List) {
-          log('📡 Response is direct List with ${data.length} items');
-          // Handle direct list response
-          for (var item in data) {
-            try {
-              if (item is Map<String, dynamic>) {
-                courses.add(CourseModel.fromMap(item));
-              } else {
-                log('⚠️ List item is not Map: ${item.runtimeType}');
-              }
-            } catch (e) {
-              log('❌ Error parsing course item: $e');
-              log('❌ Item data: $item');
-            }
-          }
+          final paginatedCourses = PaginatedCoursesModel.fromMap(data);
+          return Right(paginatedCourses);
         } else {
-          log('❌ Unexpected response format: ${data.runtimeType}');
-          log('❌ Response data: $data');
-          return Left(
-            Failure(
-              message: 'Unexpected response format: ${data.runtimeType}',
-              statusCode: response.statusCode,
-            ),
-          );
+          return Left(Failure(message: 'Invalid data format from server'));
         }
-
-        log('✅ Successfully parsed ${courses.length} courses');
-        return Right(courses);
       } else {
-        String errorMessage = 'Unknown error';
-        if (response.body is Map<String, dynamic>) {
-          errorMessage =
-              response.body['message']?.toString() ?? 'Unknown error';
-        }
         return Left(
           Failure(
-            message: errorMessage,
+            message: response.body['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
@@ -198,8 +127,8 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
-          for (var item in data) {
+        if (data is Map && data['results'] is List) {
+          for (var item in data['results']) {
             colleges.add(CollegeModel.fromMap(item));
           }
         }
@@ -257,26 +186,39 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
   //?----------------------------------------------------
 
-  //* Get Chapters by Course
-  Future<Either<Failure, List<ChapterModel>>> getChaptersRemote({
-    required int courseId,
+  //* Get Chapters by Course (With Pagination)
+  @override
+  Future<Either<Failure, PaginatedChaptersModel>> getChaptersRemote({
+    required String courseSlug,
+    int? page,
+    int? pageSize,
   }) async {
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.getChapters(courseId));
+      log(
+        'Fetching chapters for course=$courseSlug, page=$page, page_size=$pageSize',
+      );
+
+      // تجهيز query parameters
+      final Map<String, dynamic> queryParameters = {
+        if (page != null) 'page': page.toString(),
+        if (pageSize != null) 'page_size': pageSize.toString(),
+      };
+
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getChapters(courseSlug, queryParameters: queryParameters),
+      );
 
       final ApiResponse response = await api.get(request);
-      final List<ChapterModel> chapters = [];
 
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
-          for (var item in data) {
-            chapters.add(ChapterModel.fromJson(item));
-          }
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          final paginatedChapters = PaginatedChaptersModel.fromMap(data);
+          return Right(paginatedChapters);
+        } else {
+          return Left(Failure(message: 'Invalid data format from server'));
         }
-
-        return Right(chapters);
       } else {
         return Left(
           Failure(
@@ -290,4 +232,146 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       return Left(Failure.handleError(exception as DioException));
     }
   }
+
+  //?----------------------------------------------------
+
+  //* Get Ratings by Slug
+  @override
+  Future<Either<Failure, List<RatingModel>>> getRatingsRemote({
+    required String courseSlug,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getRatings(courseSlug),
+      );
+
+      final ApiResponse response = await api.get(request);
+      final List<RatingModel> ratings = [];
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is List) {
+          for (var item in data) {
+            ratings.add(RatingModel.fromJson(item));
+          }
+        }
+
+        return Right(ratings);
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?------------------------------------------------------------------------
+  //* getUniversities
+  @override
+  Future<Either<Failure, List<UniversityModel>>> getUniversitiesRemote() async {
+    try {
+      final ApiRequest request = ApiRequest(url: AppUrls.getUniversities);
+      final ApiResponse response = await api.get(request);
+
+      final List<UniversityModel> universities = [];
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is List) {
+          for (var item in data) {
+            universities.add(UniversityModel.fromMap(item));
+          }
+        }
+
+        return Right(universities);
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------------------------------
+
+  //* Add or Remove Favorite Course
+  @override
+  Future<Either<Failure, bool>> toggleFavoriteCourseRemote({
+    required String courseSlug,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.favoriteCourse(courseSlug),
+      );
+
+      final ApiResponse response = await api.post(request);
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+        if (data is Map<String, dynamic> && data.containsKey('is_favorite')) {
+          return Right(data['is_favorite'] as bool);
+        } else {
+          return Left(Failure(message: 'Invalid data format from server'));
+        }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Get Study Years
+  @override
+  Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRemote() async {
+    try {
+      final ApiRequest request = ApiRequest(url: AppUrls.getStudyYears);
+      final ApiResponse response = await api.get(request);
+      final List<StudyYearModel> studyYears = [];
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        // نتأكد إن الـ data قائمة
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          for (var item in data['results']) {
+            studyYears.add(StudyYearModel.fromJson(item));
+          }
+        }
+
+        return Right(studyYears);
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------
 }

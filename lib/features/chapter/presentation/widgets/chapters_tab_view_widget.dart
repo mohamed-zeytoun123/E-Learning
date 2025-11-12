@@ -27,7 +27,6 @@ class ChaptersTabViewWidget extends StatelessWidget {
           return Column(
             children: [
               TabBar(
-                
                 controller: tabController,
                 dividerColor: AppColors.dividerGrey,
                 indicatorSize: TabBarIndicatorSize.tab,

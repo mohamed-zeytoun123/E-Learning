@@ -10,7 +10,8 @@ import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/auth/data/models/response/otp_verification_response.dart';
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source.dart';
 
@@ -233,6 +234,40 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } catch (e) {
       log("error 🔥🔥🔥🔥🔥 Reset Password:::$e");
       return Left(Failure.handleError(e as Exception));
+    }
+  }
+
+  //? -----------------------------------------------------------------
+
+  //* getStudyYears
+  @override
+  Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRemote() async {
+    try {
+      final ApiRequest request = ApiRequest(url: AppUrls.getStudyYears);
+      final ApiResponse response = await api.get(request);
+      final List<StudyYearModel> studyYears = [];
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        // نتأكد إن الـ data قائمة
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          for (var item in data['results']) {
+            studyYears.add(StudyYearModel.fromJson(item));
+          }
+        }
+
+        return Right(studyYears);
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      return Left(Failure.handleError(exception as DioException));
     }
   }
 

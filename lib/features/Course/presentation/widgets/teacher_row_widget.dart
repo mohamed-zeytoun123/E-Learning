@@ -20,7 +20,6 @@ class TeacherRowWidget extends StatelessWidget {
       spacing: 12.h,
       children: [
         ShowImageTeacherWidget(teacherImageUrl: teacherImageUrl),
-
         Expanded(
           child: Text(
             teacherName,

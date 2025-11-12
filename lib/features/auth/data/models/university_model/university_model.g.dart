@@ -1,53 +1,38 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'course_model.dart';
+part of 'university_model.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class CourseModelAdapter extends TypeAdapter<CourseModel> {
+class UniversityModelAdapter extends TypeAdapter<UniversityModel> {
   @override
-  final int typeId = 2;
+  final int typeId = 4;
 
   @override
-  CourseModel read(BinaryReader reader) {
+  UniversityModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CourseModel(
+    return UniversityModel(
       id: fields[0] as int,
-      title: fields[1] as String,
+      name: fields[1] as String,
       slug: fields[2] as String,
-      image: fields[3] as String?,
-      college: fields[4] as int,
-      collegeName: fields[5] as String,
-      price: fields[6] as String,
-      averageRating: fields[7] as double?,
     );
   }
 
   @override
-  void write(BinaryWriter writer, CourseModel obj) {
+  void write(BinaryWriter writer, UniversityModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.title)
+      ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.slug)
-      ..writeByte(3)
-      ..write(obj.image)
-      ..writeByte(4)
-      ..write(obj.college)
-      ..writeByte(5)
-      ..write(obj.collegeName)
-      ..writeByte(6)
-      ..write(obj.price)
-      ..writeByte(7)
-      ..write(obj.averageRating);
+      ..write(obj.slug);
   }
 
   @override
@@ -56,7 +41,7 @@ class CourseModelAdapter extends TypeAdapter<CourseModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CourseModelAdapter &&
+      other is UniversityModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

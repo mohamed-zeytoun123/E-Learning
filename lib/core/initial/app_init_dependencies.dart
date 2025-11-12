@@ -21,24 +21,18 @@ import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_sou
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source_impl.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository_impl.dart';
-import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source.dart';
-import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source_impl.dart';
-import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
-import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source_impl.dart';
-import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/Course/data/source/repo/courcese_repository_impl.dart';
-import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source.dart';
-import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source_impl.dart';
-import 'package:e_learning/features/Teacher/data/source/remote/teacher_remote_data_source.dart';
-import 'package:e_learning/features/Teacher/data/source/remote/teacher_remote_data_source_impl.dart';
-import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.dart';
-import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository_impl.dart';
-import 'package:e_learning/features/Article/data/source/local/article_local_data_source.dart';
-import 'package:e_learning/features/Article/data/source/local/article_local_data_source_impl.dart';
-import 'package:e_learning/features/Article/data/source/remote/article_remote_data_source.dart';
-import 'package:e_learning/features/Article/data/source/remote/article_remote_data_source_impl.dart';
-import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
-import 'package:e_learning/features/Article/data/source/repo/article_repository_impl.dart';
+import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
+import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source_impl.dart';
+import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
+import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source_impl.dart';
+import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
+import 'package:e_learning/features/chapter/data/source/repo/chapter_repository_impl.dart';
+import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
+import 'package:e_learning/features/course/data/source/local/courcese_local_data_source_impl.dart';
+import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source_impl.dart';
+import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/course/data/source/repo/courcese_repository_impl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -127,19 +121,10 @@ Future<void> appInitDependencies() async {
     () => CourceseLocalDataSourceImpl(hive: appLocator<HiveService>()),
   );
 
-  //* Teacher local
-  appLocator.registerLazySingleton<TeacherLocalDataSource>(
-    () => TeacherLocalDataSourceImpl(
-      sharedPreferences: appLocator<SharedPreferences>(),
-    ),
-  );
-
-  //* Article local
-  appLocator.registerLazySingleton<ArticleLocalDataSource>(
-    () => ArticleLocalDataSourceImpl(
-      sharedPreferences: appLocator<SharedPreferences>(),
-    ),
-  );
+  // //* Chapter local
+  // appLocator.registerLazySingleton<ChapterLocalDataSource>(
+  //   () => ChapterLocalDataSourceImpl(hive: appLocator<HiveService>()),
+  // );
 
   //? ----------- Remote Data Sources -----------------------------------------------------------
 
@@ -165,14 +150,9 @@ Future<void> appInitDependencies() async {
     () => CourceseRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
-  //* Teacher Remote
-  appLocator.registerLazySingleton<TeacherRemoteDataSource>(
-    () => TeacherRemoteDataSourceImpl(api: appLocator<API>()),
-  );
-
-  //* Article Remote
-  appLocator.registerLazySingleton<ArticleRemoteDataSource>(
-    () => ArticleRemoteDataSourceImpl(api: appLocator<API>()),
+  //* Chapter Remote
+  appLocator.registerLazySingleton<ChapterRemoteDataSource>(
+    () => ChapterRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
   //? ----------- Repositories ------------------------------------------------------------------
@@ -195,20 +175,11 @@ Future<void> appInitDependencies() async {
     ),
   );
 
-  //* Teacher Repository
-  appLocator.registerLazySingleton<TeacherRepository>(
-    () => TeacherRepositoryImpl(
-      remote: appLocator<TeacherRemoteDataSource>(),
-      local: appLocator<TeacherLocalDataSource>(),
-      network: appLocator<NetworkInfoService>(),
-    ),
-  );
-
-  //* Article Repository
-  appLocator.registerLazySingleton<ArticleRepository>(
-    () => ArticleRepositoryImpl(
-      remote: appLocator<ArticleRemoteDataSource>(),
-      local: appLocator<ArticleLocalDataSource>(),
+  //* Chapter Repository
+  appLocator.registerLazySingleton<ChapterRepository>(
+    () => ChapterRepositoryImpl(
+      remote: appLocator<ChapterRemoteDataSource>(),
+      // local: appLocator<ChapterLocalDataSource>(),
       network: appLocator<NetworkInfoService>(),
     ),
   );

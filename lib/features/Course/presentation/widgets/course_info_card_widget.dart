@@ -14,6 +14,7 @@ class CourseInfoCardWidget extends StatelessWidget {
   final double rating;
   final String price;
   final bool isLoading;
+  final bool isFavorite;
   final VoidCallback? onSave;
   final VoidCallback? onTap;
 
@@ -26,6 +27,7 @@ class CourseInfoCardWidget extends StatelessWidget {
     required this.price,
     this.isLoading = false,
     this.onTap,
+    this.isFavorite = false,
     this.onSave,
   });
 
@@ -73,7 +75,7 @@ class CourseInfoCardWidget extends StatelessWidget {
                 ),
                 Positioned(
                   top: 8.h,
-                  right:14.w,
+                  right: 14.w,
                   child: GestureDetector(
                     onTap: onSave,
                     child: Container(
@@ -85,8 +87,10 @@ class CourseInfoCardWidget extends StatelessWidget {
                         border: Border.all(color: AppColors.borderSecondary),
                       ),
                       child: Icon(
-                        Icons.bookmark_border,
-                        color: Theme.of(context).colorScheme.primary,
+                        isFavorite ? Icons.bookmark : Icons.bookmark_border,
+                        color: isFavorite
+                            ? AppColors.iconBlue
+                            : Theme.of(context).colorScheme.primary,
                       ),
                     ),
                   ),

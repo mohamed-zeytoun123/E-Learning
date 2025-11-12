@@ -14,7 +14,7 @@ class AppColors {
   static const Color backgroundPage = Color(0xffFFFFFF);
   static const Color backgroundWhiteWidget = Color(0xffFFFFFF);
   static const Color backgroundDarkPage = Color(0xff000000);
-  static const Color backgroundLittelOrange = Color(0xffFDF4F1);
+  static const Color backgroundLittelOrange = Color(0xFFFDF4F1);
 
   //* Text Colors
   static const Color textPrimary = Color(0xff0071C7);

@@ -4,7 +4,7 @@ import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 
@@ -240,6 +240,34 @@ class AuthCubit extends Cubit<AuthState> {
         },
       );
     });
+  }
+
+  //? ------------------------ Get Study Years ----------------------------
+
+  Future<void> getStudyYears() async {
+    emit(
+      state.copyWith(
+        getStudyYearsState: ResponseStatusEnum.loading,
+        studyYearsError: null,
+      ),
+    );
+
+    final result = await repository.getStudyYearsRepo();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          getStudyYearsState: ResponseStatusEnum.failure,
+          studyYearsError: failure.message,
+        ),
+      ),
+      (studyYearsList) => emit(
+        state.copyWith(
+          getStudyYearsState: ResponseStatusEnum.success,
+          studyYears: studyYearsList,
+        ),
+      ),
+    );
   }
 
   //?---------------------------------------------------------------------------------------

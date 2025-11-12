@@ -3,10 +3,22 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
-class NoInternetPage extends StatelessWidget {
-  const NoInternetPage({super.key});
+class ErrorStateWidget extends StatelessWidget {
+  final String title;
+  final String message;
+  final IconData icon;
+  final VoidCallback onRetry;
+  final String retryText;
+
+  const ErrorStateWidget({
+    super.key,
+    this.title = 'Wrong',
+    required this.message,
+    this.icon = Icons.error_outline,
+    required this.onRetry,
+    this.retryText = "Retry",
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +30,11 @@ class NoInternetPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.wifi_off, size: 100.r, color: AppColors.iconOrange),
+              Icon(icon, size: 100.r, color: AppColors.iconOrange),
               SizedBox(height: 30.h),
 
               Text(
-                "No Internet Connection",
+                title,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.s20w600.copyWith(
                   color: AppColors.textBlack,
@@ -31,7 +43,7 @@ class NoInternetPage extends StatelessWidget {
               SizedBox(height: 10.h),
 
               Text(
-                "Please check your internet settings and try again.",
+                message,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.s16w400.copyWith(
                   color: AppColors.textGrey,
@@ -40,15 +52,13 @@ class NoInternetPage extends StatelessWidget {
               SizedBox(height: 30.h),
 
               CustomButtonWidget(
-                title: "Retry",
+                title: retryText,
                 titleStyle: AppTextStyles.s18w600.copyWith(
                   color: AppColors.titlePrimary,
                 ),
                 buttonColor: AppColors.buttonPrimary,
                 borderColor: AppColors.borderPrimary,
-                onTap: () {
-                  GoRouter.of(context).pop();
-                },
+                onTap: onRetry,
               ),
             ],
           ),

@@ -7,9 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyTabReviewsWidget extends StatefulWidget {
-  const BodyTabReviewsWidget({super.key, required this.isActive});
-
+  const BodyTabReviewsWidget({
+    super.key,
+    required this.isActive,
+    required this.courseSlug,
+  });
+  final String courseSlug;
   final bool isActive;
+
   @override
   State<BodyTabReviewsWidget> createState() => _BodyTabReviewsWidgetState();
 }

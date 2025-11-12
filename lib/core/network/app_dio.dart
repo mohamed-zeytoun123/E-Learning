@@ -21,9 +21,6 @@ class AppDio {
     _initDio();
     _addLoggerToDIo();
     _addTokenInterceptor();
-    addTokenToHeader(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyMDg1MDkwLCJpYXQiOjE3NjIwODQxOTAsImp0aSI6IjcwODM3MWQ2ZDQ3YTQxMTk4ZGZlYTE0MDYzZDkyNjczIiwidXNlcl9pZCI6IjIiLCJyb2xlIjoiU1RVREVOVCJ9.4i9tgrV24k9KYg5XSq8oVtgSXHXxW6oRml-6oeHD2mY",
-    );
   }
 
   Dio get dio => _dio;

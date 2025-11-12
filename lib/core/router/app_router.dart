@@ -1,6 +1,5 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/widgets/no_internet_screen/no_internet_page.dart';
 import 'package:e_learning/features/Video/presentation/pages/video_playing_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
@@ -190,6 +189,7 @@ class AppRouter {
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
           final courseSlug = args["courseSlug"] as String;
+
           final courseCubit = args["courseCubit"] as CourseCubit;
 
           return BlocProvider.value(
@@ -204,8 +204,20 @@ class AppRouter {
         path: RouteNames.chapterPage,
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final courseSlug = args["courseSlug"] as String;
+          final courseTitle = args["courseTitle"] as String;
+          final courseImage = args["courseImage"] as String;
+          final chapterId = args["chapterId"] as int;
+          final index = args["index"] as int;
           final isActive = args["isActive"] as bool;
-          return ChapterPage(isActive: isActive);
+          return ChapterPage(
+            isActive: isActive,
+            courseSlug: courseSlug,
+            chapterId: chapterId,
+            courseImage: courseImage,
+            courseTitle: courseTitle,
+            index: index,
+          );
         },
       ),
 
@@ -226,11 +238,6 @@ class AppRouter {
       GoRoute(
         path: RouteNames.downloads,
         builder: (context, state) => const DownloadsPage(),
-      ),
-      //?------- No Internet ----------------------------------------------
-      GoRoute(
-        path: RouteNames.noInternet,
-        builder: (context, state) => const NoInternetPage(),
       ),
 
       //?-------------------------------------------------------------------

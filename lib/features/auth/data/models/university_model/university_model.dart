@@ -1,8 +1,15 @@
-import 'dart:convert';
+import 'package:hive/hive.dart';
+part 'university_model.g.dart';
 
-class UniversityModel {
+@HiveType(typeId: 4) 
+class UniversityModel extends HiveObject {
+  @HiveField(0)
   final int id;
+
+  @HiveField(1)
   final String name;
+
+  @HiveField(2)
   final String slug;
 
   UniversityModel({required this.id, required this.name, required this.slug});
@@ -14,20 +21,15 @@ class UniversityModel {
         slug: slug ?? this.slug,
       );
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{'id': id, 'name': name, 'slug': slug};
-  }
-
   factory UniversityModel.fromMap(Map<String, dynamic> map) {
     return UniversityModel(
-      id: map['id'] as int,
-      name: map['name'] as String,
-      slug: map['slug'] as String,
+      id: map['id'] ?? 0,
+      name: map['name'] ?? '',
+      slug: map['slug'] ?? '',
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory UniversityModel.fromJson(String source) =>
-      UniversityModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  Map<String, dynamic> toMap() {
+    return {'id': id, 'name': name, 'slug': slug};
+  }
 }

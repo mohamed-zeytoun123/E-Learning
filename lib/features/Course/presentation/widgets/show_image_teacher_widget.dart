@@ -12,7 +12,7 @@ class ShowImageTeacherWidget extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.circular(999.r),
       child: CustomCachedImageWidget(
-        appImage: teacherImageUrl,
+        appImage: teacherImageUrl ,
         width: 64.w,
         height: 64.h,
         fit: BoxFit.cover,

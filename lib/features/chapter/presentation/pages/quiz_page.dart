@@ -77,10 +77,7 @@ class QuizPage extends StatelessWidget {
                     total: 10,
                     onDone: () {
                       Navigator.of(context, rootNavigator: true).pop();
-                      context.pushReplacement(
-                        RouteNames.chapterPage,
-                        extra: {"isActive": true},
-                      );
+                      context.pushReplacement(RouteNames.courses);
                     },
                   ),
                 );

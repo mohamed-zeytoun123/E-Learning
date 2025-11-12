@@ -1,19 +1,21 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/widgets/error/error_state_widget.dart';
+import 'package:e_learning/core/widgets/error/no_internet_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_access_content_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_tab_view_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
+import 'package:e_learning/features/Course/data/models/course_details_model.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_access_content_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_tab_view_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_course_widget.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 
 class CourceInfoPage extends StatefulWidget {
@@ -34,15 +36,13 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
 
     Future.microtask(() {
       context.read<CourseCubit>().getCourseDetails(slug: widget.courseSlug);
+      context.read<CourseCubit>().getChapters(courseSlug: widget.courseSlug);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<CourseCubit, CourseState>(
-      listenWhen: (previous, current) =>
-          previous.courseDetailsStatus != current.courseDetailsStatus,
-      listener: (context, state) {},
+    return BlocBuilder<CourseCubit, CourseState>(
       buildWhen: (previous, current) =>
           previous.courseDetailsStatus != current.courseDetailsStatus,
       builder: (context, state) {
@@ -50,50 +50,25 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
           return Scaffold(body: Center(child: AppLoading.circular()));
         } else if (state.courseDetailsStatus == ResponseStatusEnum.failure &&
             state.courseDetailsError == "No Connection , Pleas Try Agen") {
-          return Scaffold(
-            body: Container(
-              color: AppColors.backgroundPage,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.wifi_off,
-                    size: 100.r,
-                    color: AppColors.iconOrange,
-                  ),
-                  SizedBox(height: 30.h),
-                  Text(
-                    "no_internet_connection".tr(),
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.s20w600.copyWith(
-                      color: AppColors.textBlack,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Text(
-                    "no_connection_please_try_again".tr(),
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.s16w400.copyWith(
-                      color: AppColors.textGrey,
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-                  CustomButtonWidget(
-                    title: "retry".tr(),
-                    titleStyle: AppTextStyles.s18w600.copyWith(
-                      color: AppColors.titlePrimary,
-                    ),
-                    buttonColor: AppColors.buttonPrimary,
-                    borderColor: AppColors.borderPrimary,
-                    onTap: () {
-                      context.read<CourseCubit>().getCourseDetails(
-                            slug: widget.courseSlug,
-                          );
-                    },
-                  ),
-                ],
-              ),
-            ),
+          return NoInternetWidget(
+            onRetry: () {
+              context.read<CourseCubit>().getCourseDetails(
+                slug: widget.courseSlug,
+              );
+            },
+          );
+        }
+        if (state.courseDetailsStatus == ResponseStatusEnum.failure) {
+          return ErrorStateWidget(
+            title: "Error",
+            message:
+                state.courseDetailsError ??
+                "Something went wrong. Please try again.",
+            onRetry: () {
+              context.read<CourseCubit>().getCourseDetails(
+                slug: widget.courseSlug,
+              );
+            },
           );
         } else if (state.courseDetailsStatus == ResponseStatusEnum.success &&
             state.courseDetails != null) {
@@ -115,7 +90,9 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   automaticallyImplyLeading: false,
                   flexibleSpace: FlexibleSpaceBar(
                     background: CustomCachedImageWidget(
-                      appImage: course.image ?? 'https://picsum.photos/361/180',
+                      appImage:
+                          course.image ??
+                          'https://picsum.photos/361/180', //todo remove image dynamic
                       width: double.infinity,
                       fit: BoxFit.cover,
                       height: 262,
@@ -125,7 +102,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 SliverToBoxAdapter(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppColors.formWhite,
                       borderRadius: BorderRadius.circular(24.r),
                       boxShadow: [
                         BoxShadow(
@@ -145,12 +122,14 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CourseTitleSubTitleWidget(
-                                titleStyle: AppTextStyles.s18w600.copyWith(
-                                  color: AppColors.textBlack,
+                              Expanded(
+                                child: CourseTitleSubTitleWidget(
+                                  titleStyle: AppTextStyles.s18w600.copyWith(
+                                    color: AppColors.textBlack,
+                                  ),
+                                  title: course.title,
+                                  subtitle: course.categoryDetail.name,
                                 ),
-                                title: course.title,
-                                subtitle: course.description,
                               ),
                               RatingWidget(rating: 4.5, showIcon: false),
                             ],
@@ -170,14 +149,29 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   ),
                 ),
                 SliverFillRemaining(
-                  child: CourseTabViewWidget(isActive: isActive),
+                  child: CourseTabViewWidget(
+                    chapterId: course.id,
+                    isActive: isActive,
+                    courseSlug: widget.courseSlug,
+                    courseTitle: course.categoryDetail.name,
+                    courseImage: course.image,
+                  ),
                 ),
               ],
             ),
           );
         }
 
-        return const Scaffold(body: SizedBox.shrink());
+        return ErrorStateWidget(
+          title: "Server Error",
+          message:
+              "Something went wrong on the server. Please try again later.",
+          onRetry: () {
+            context.read<CourseCubit>().getCourseDetails(
+              slug: widget.courseSlug,
+            );
+          },
+        );
       },
     );
   }

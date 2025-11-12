@@ -5,13 +5,13 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 
 class StudyYearGroupWidget extends StatelessWidget {
-  final bool Function(String) isSelected;
-  final void Function(String) toggleSelection;
+  final int? selectedYear;
+  final void Function(int?) onSelect;
 
   const StudyYearGroupWidget({
     super.key,
-    required this.isSelected,
-    required this.toggleSelection,
+    required this.selectedYear,
+    required this.onSelect,
   });
 
   @override
@@ -32,11 +32,11 @@ class StudyYearGroupWidget extends StatelessWidget {
             spacing: 8.w,
             runSpacing: 8.h,
             children: studyYears.map((year) {
-              final name = year.displayName(context);
-              final selected = isSelected(name);
+              final number = year.number; // الرقم الحقيقي للسنة
+              final selected = selectedYear == number;
 
               return GestureDetector(
-                onTap: () => toggleSelection(name),
+                onTap: () => onSelect(selected ? null : number),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
@@ -73,7 +73,7 @@ class StudyYearGroupWidget extends StatelessWidget {
                       ),
                       if (selected) SizedBox(width: 6.w),
                       Text(
-                        name,
+                        year.displayName(context),
                         style: AppTextStyles.s14w500.copyWith(
                           color: selected
                               ? AppColors.textWhite
