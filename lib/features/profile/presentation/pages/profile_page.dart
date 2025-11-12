@@ -74,7 +74,11 @@ class _ProfilePageState extends State<ProfilePage> {
                     AppLocalizations.of(context)?.translate("Saved_Courses") ??
                     "Saved Courses",
                 onTap: () {
-                  context.push(RouteNames.savedCourses);
+                 context.push(
+  RouteNames.savedCourses,
+  extra: BlocProvider.of<ProfileCubit>(context),
+);
+
                 },
               ),
               CustomSettingsItemWidget(

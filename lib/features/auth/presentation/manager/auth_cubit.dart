@@ -253,10 +253,7 @@ class AuthCubit extends Cubit<AuthState> {
   //? ------------------------ OTP Timer Management ----------------------------
   void startOtpTimer() {
     _otpTimer?.cancel();
-    emit(state.copyWith(
-      otpTimerSeconds: 60,
-      canResendOtp: false,
-    ));
+    emit(state.copyWith(otpTimerSeconds: 60, canResendOtp: false));
 
     _otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (state.otpTimerSeconds > 0) {
@@ -290,6 +287,25 @@ class AuthCubit extends Cubit<AuthState> {
       }
       startOtpTimer(); // Restart timer
     }
+  }
+
+  // ------------------------------logOut-------------------------------
+  void logout(String refreshToken) async {
+    emit(state.copyWith(logoutStatus: ResponseStatusEnum.loading));
+    var result = await repository.logOutRepo(refreshToken);
+    result.fold(
+      (error) {
+        emit(
+          state.copyWith(
+            logoutStatus: ResponseStatusEnum.failure,
+            errorlogout: error.message,
+          ),
+        );
+      },
+      (data) {
+        emit(state.copyWith(logoutStatus: ResponseStatusEnum.success));
+      },
+    );
   }
 
   //?---------------------------------------------------------------------------------------

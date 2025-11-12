@@ -1,4 +1,5 @@
 import 'package:e_learning/core/asset/app_icons.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,7 +42,7 @@ class QuizResultBottomSheet extends StatelessWidget {
       height: 344.h,
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 18.h),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.buttonTapNotSelected,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.r),
           topRight: Radius.circular(24.r),
@@ -68,12 +69,12 @@ class QuizResultBottomSheet extends StatelessWidget {
             ),
             child: Center(child: icon),
           ),
-
           SizedBox(height: 25.h),
-
           Text(
             '$score/$total Points',
-            style: AppTextStyles.s16w400.copyWith(color: AppColors.textGrey),
+            style: AppTextStyles.s16w400.copyWith(
+              color: context.colors.textGrey,
+            ),
           ),
 
           SizedBox(height: 25.h),
@@ -81,23 +82,25 @@ class QuizResultBottomSheet extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+            style: AppTextStyles.s16w600.copyWith(
+              color: context.colors.textPrimary,
+            ),
           ),
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: AppTextStyles.s16w400.copyWith(color: AppColors.textGrey),
+            style: AppTextStyles.s16w400.copyWith(
+              color: context.colors.textGrey,
+            ),
           ),
-
           const Spacer(),
-
           CustomButtonWidget(
             title: 'Done',
             titleStyle: AppTextStyles.s16w500.copyWith(
               color: AppColors.textWhite,
             ),
-            buttonColor: AppColors.buttonPrimary,
-            borderColor: AppColors.borderPrimary,
+            buttonColor: context.colors.textBlue,
+            borderColor: context.colors.textBlue,
             onTap: onDone,
           ),
         ],

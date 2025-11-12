@@ -32,6 +32,6 @@ class AppUrls {
   static final String aboutUs = "$_baseURl/about-us/";
   static final String termsConditions = "$_baseURl/terms-conditions/";
   static final String profileUserInfo = "$_baseURl/profile/";
-  
+    static final String saveCourses = "$_baseURl/my-favorites/";
   //?---------------------------------------------------------------
 }

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
+import 'package:e_learning/features/profile/data/model/data_course_saved_model.dart';
 import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
 import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
@@ -80,6 +81,23 @@ class ProfileRepository {
       );
     } else {
       log("error , no connected  🔥🔥🔥🔥🔥 ");
+      return left(FailureNoConnection());
+    }
+  }
+
+  Future<Either<Failure, DataResponseSaveCoursesPagination>> getDataSavedCoursesRepo() async {
+    if (await network.isConnected) {
+      var result = await remote.getDataCoursesSaved();
+      return result.fold(
+        (error) {
+          return left(error);
+        },
+        (data) {
+              log(" ✅👌 success  ,get data save course from remote  ");
+          return right(data);
+        },
+      );
+    } else {
       return left(FailureNoConnection());
     }
   }

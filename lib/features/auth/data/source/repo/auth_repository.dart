@@ -44,6 +44,6 @@ abstract class AuthRepository {
     required ResetPasswordRequestParams params,
   });
   //* logout student
-  // Future<Either<Failure, bool>> logOutRepo(String refreshToken);
+  Future<Either<Failure, bool>> logOutRepo(String refreshToken);
   //? -------------------------------------------------------------------
 }

@@ -94,7 +94,7 @@ class CourseInfoCardWidget extends StatelessWidget {
             SizedBox(height: 8.h),
 
             CourseTitleSubTitleWidget(
-              title: 'Flutter Development',
+              title: title,
               subtitle: 'Learn to build apps with Flutter',
             ),
 

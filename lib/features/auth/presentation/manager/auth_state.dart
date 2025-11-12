@@ -43,9 +43,13 @@ class AuthState {
   final ResponseStatusEnum resetPasswordState;
   final String? resetPasswordError;
 
+  //* logout
+  final String? errorlogout;
+  final ResponseStatusEnum logoutStatus;
+
   //?--------------------------------------------------------------
 
-  AuthState({
+  AuthState( {
     this.signUpRequestParams,
     this.loginState = ResponseStatusEnum.initial,
     this.loginError,
@@ -67,6 +71,8 @@ class AuthState {
     this.forgotPasswordError,
     this.resetPasswordState = ResponseStatusEnum.initial,
     this.resetPasswordError,
+    this.errorlogout,
+     this.logoutStatus =ResponseStatusEnum.initial,
   });
 
   AuthState copyWith({
@@ -91,6 +97,8 @@ class AuthState {
     String? forgotPasswordError,
     ResponseStatusEnum? resetPasswordState,
     String? resetPasswordError,
+    String? errorlogout,
+    ResponseStatusEnum ?logoutStatus,
   }) {
     return AuthState(
       loginState: loginState ?? this.loginState,
@@ -114,6 +122,8 @@ class AuthState {
       forgotPasswordError: forgotPasswordError,
       resetPasswordState: resetPasswordState ?? this.resetPasswordState,
       resetPasswordError: resetPasswordError,
+      errorlogout : errorlogout,
+      logoutStatus : logoutStatus ?? this.logoutStatus
     );
   }
 }

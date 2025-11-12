@@ -43,6 +43,6 @@ abstract class AuthRemoteDataSource {
     required ResetPasswordRequestParams params,
   });
 //* logout 
-  //  Future<Either<Failure,bool>> logOutRemote(String refreshToken); 
+   Future<Either<Failure,bool>> logOutRemote(String refreshToken); 
   //? ------------------------------------------------------------
 }

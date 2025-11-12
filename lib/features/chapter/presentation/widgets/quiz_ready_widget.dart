@@ -29,7 +29,7 @@ class QuizReadyWidget extends StatelessWidget {
           width: 88.w,
           height: 88.h,
           decoration: BoxDecoration(
-            color: AppColors.backgroundLittelOrange,
+            color: colors.buttonTapNotSelected,
             borderRadius: BorderRadius.circular(24.r),
           ),
           child: Center(
@@ -37,6 +37,7 @@ class QuizReadyWidget extends StatelessWidget {
               AppIcons.iconQuizzeReady,
               width: 48.w,
               height: 48.h,
+              color: colors.textBlue,
               fit: BoxFit.contain,
             ),
           ),

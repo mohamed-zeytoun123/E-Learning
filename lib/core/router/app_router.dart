@@ -140,17 +140,23 @@ class AppRouter {
       //? --------------------------- Profile Pages --------------------------
       GoRoute(
         path: RouteNames.profile,
-        builder: (context, state) => BlocProvider(create: (context) => ProfileCubit(
-        ProfileRepository(
-          remote:appLocator<ProfileRemouteDataSource>(),
-          network: appLocator<NetworkInfoService>(),
-        )..getPrivacyPolicyRepo(),
-      ),
-          child: const ProfilePage()),
+        builder: (context, state) => BlocProvider(
+          create: (context) => ProfileCubit(
+            ProfileRepository(
+              remote: appLocator<ProfileRemouteDataSource>(),
+              network: appLocator<NetworkInfoService>(),
+            )..getPrivacyPolicyRepo(),
+          ),
+          child: const ProfilePage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.savedCourses,
-        builder: (context, state) => const SavedCoursesPage(),
+        builder: (context, state) {
+           final profileCubit = state.extra as ProfileCubit;
+         return BlocProvider.value(value: profileCubit,
+            child: const SavedCoursesPage());
+        },
       ),
       GoRoute(
         path: RouteNames.downloads,
@@ -161,19 +167,19 @@ class AppRouter {
         path: RouteNames.enroll,
         builder: (context, state) => const EnrollPage(),
       ),
-      //?------------------------------------------------------------------
 
+      //?------------------------------------------------------------------
       GoRoute(
-  path: RouteNames.aboutUs,
-  builder: (context, state) {
-    final profileCubit = state.extra as ProfileCubit;
-    return BlocProvider.value(
-      value: profileCubit,
-      child: const AboutUsPage(),
-    );
-  },
-),
-       //?------------------------------------------------------------------
+        path: RouteNames.aboutUs,
+        builder: (context, state) {
+          final profileCubit = state.extra as ProfileCubit;
+          return BlocProvider.value(
+            value: profileCubit,
+            child: const AboutUsPage(),
+          );
+        },
+      ),
+      //?------------------------------------------------------------------
       GoRoute(
         path: RouteNames.privacy,
         builder: (context, state) {
@@ -184,7 +190,7 @@ class AppRouter {
           );
         },
       ),
-        GoRoute(
+      GoRoute(
         path: RouteNames.term,
         builder: (context, state) {
           final profileCubit = state.extra as ProfileCubit;
