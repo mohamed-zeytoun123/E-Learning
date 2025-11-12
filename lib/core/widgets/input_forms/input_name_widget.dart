@@ -2,6 +2,7 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/text_form_field_style.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/validator/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -41,7 +42,7 @@ class InputNameWidget extends StatelessWidget {
               decoration: TextFormFieldStyle.baseForm(
                 AppLocalizations.of(context)?.translate(hintKey) ?? hint,
                 context,
-                AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
+                AppTextStyles.s14w400.copyWith(color: context.colors.textGrey),
               ).copyWith(prefixIcon: icon != null ? Icon(icon) : null),
               validator: (value) => Validator.validateName(value, context),
             ),

@@ -21,18 +21,9 @@ import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_sou
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source_impl.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository_impl.dart';
-import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
-import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source_impl.dart';
-import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
-import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source_impl.dart';
-import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
-import 'package:e_learning/features/chapter/data/source/repo/chapter_repository_impl.dart';
-import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
-import 'package:e_learning/features/course/data/source/local/courcese_local_data_source_impl.dart';
-import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
-import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source_impl.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository_impl.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
+import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -116,16 +107,6 @@ Future<void> appInitDependencies() async {
     ),
   );
 
-  //* Course local
-  appLocator.registerLazySingleton<CourceseLocalDataSource>(
-    () => CourceseLocalDataSourceImpl(hive: appLocator<HiveService>()),
-  );
-
-  // //* Chapter local
-  // appLocator.registerLazySingleton<ChapterLocalDataSource>(
-  //   () => ChapterLocalDataSourceImpl(hive: appLocator<HiveService>()),
-  // );
-
   //? ----------- Remote Data Sources -----------------------------------------------------------
 
   //! App Manager Remote
@@ -145,16 +126,6 @@ Future<void> appInitDependencies() async {
     () => AuthRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
-  //* Course Remote
-  appLocator.registerLazySingleton<CourceseRemoteDataSource>(
-    () => CourceseRemoteDataSourceImpl(api: appLocator<API>()),
-  );
-
-  //* Chapter Remote
-  appLocator.registerLazySingleton<ChapterRemoteDataSource>(
-    () => ChapterRemoteDataSourceImpl(api: appLocator<API>()),
-  );
-
   //? ----------- Repositories ------------------------------------------------------------------
 
   //* Auth Repository
@@ -165,24 +136,20 @@ Future<void> appInitDependencies() async {
       network: appLocator<NetworkInfoService>(),
     ),
   );
+  //?-----------Repository Profile------------------------------------------------------------------------------------
 
-  //* Course Repository
-  appLocator.registerLazySingleton<CourceseRepository>(
-    () => CourceseRepositoryImpl(
-      remote: appLocator<CourceseRemoteDataSource>(),
-      local: appLocator<CourceseLocalDataSource>(),
+  appLocator.registerLazySingleton<ProfileRemouteDataSource>(
+    () => ProfileRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
+  appLocator.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepository(
+      remote: appLocator<ProfileRemouteDataSource>(),
       network: appLocator<NetworkInfoService>(),
     ),
   );
 
-  //* Chapter Repository
-  appLocator.registerLazySingleton<ChapterRepository>(
-    () => ChapterRepositoryImpl(
-      remote: appLocator<ChapterRemoteDataSource>(),
-      // local: appLocator<ChapterLocalDataSource>(),
-      network: appLocator<NetworkInfoService>(),
-    ),
-  );
+  //?-----------------------------------------------------------------------------------
 
   //? --------------------------------------------------------------------------------------------
 }

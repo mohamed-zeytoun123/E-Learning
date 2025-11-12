@@ -33,8 +33,10 @@ class RouteNames {
   static const teatcherPage = '/teatcher-page';
   static const searchPage = '/';
   static const savedCourses = '/saved-courses';
-
   static const downloads = '/downloads';
+  static const aboutUs = '/about-us';
+  static const privacy = '/privacy-policy';
+  static const term = '/term';
   //* ================= Enroll Featchers =================
   static const enroll = '/enroll';
 
