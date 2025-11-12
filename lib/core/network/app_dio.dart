@@ -11,12 +11,18 @@ class AppDio {
   late Dio _dio;
 
   AppDio({required this.tokenService}) {
-    _dio = Dio();
+    _dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 120),
+        receiveTimeout: const Duration(seconds: 120),
+        sendTimeout: const Duration(seconds: 120),
+      ),
+    );
     _initDio();
     _addLoggerToDIo();
     _addTokenInterceptor();
     addTokenToHeader(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYxNjU5NjM2LCJpYXQiOjE3NjE2NTg3MzYsImp0aSI6IjU0YTRhMTJkMWE3MjQyNDJhNThhM2YwYjQwNDg3NjY4IiwidXNlcl9pZCI6IjIiLCJyb2xlIjoiU1RVREVOVCJ9.MSzDHNyLEQzXglR-kSm5FIZyR4xzqKMsrmoSSt1Ujz4",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzYyMDg1MDkwLCJpYXQiOjE3NjIwODQxOTAsImp0aSI6IjcwODM3MWQ2ZDQ3YTQxMTk4ZGZlYTE0MDYzZDkyNjczIiwidXNlcl9pZCI6IjIiLCJyb2xlIjoiU1RVREVOVCJ9.4i9tgrV24k9KYg5XSq8oVtgSXHXxW6oRml-6oeHD2mY",
     );
   }
 
@@ -26,9 +32,9 @@ class AppDio {
   void _initDio() {
     log('Building Dio instance without token.');
     _dio.options = BaseOptions(
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 15),
+      connectTimeout: const Duration(seconds: 120),
+      receiveTimeout: const Duration(seconds: 120),
+      sendTimeout: const Duration(seconds: 120),
       contentType: Headers.jsonContentType,
       headers: {
         "Accept": Headers.jsonContentType,
@@ -43,7 +49,7 @@ class AppDio {
   //?----------------------------------------------------------------------------------------
   void addTokenToHeader(String token) {
     log('🔥 Added token to Dio headers: $token');
-    _dio.options.headers["Authorization"] = 'Bearer $token';
+    // _dio.options.headers["Authorization"] = 'Bearer $token';
   }
 
   //?----------------------------------------------------------------------------------------
@@ -87,7 +93,6 @@ class AppDio {
 
           return handler.next(options);
         },
-
         onError: (DioException err, handler) async {
           if (err.response?.statusCode == 401) {
             final refreshToken = await tokenService.getRefreshTokenService();

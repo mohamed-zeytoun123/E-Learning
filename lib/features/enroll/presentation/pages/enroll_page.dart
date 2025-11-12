@@ -7,6 +7,7 @@ import 'package:e_learning/features/enroll/presentation/widgets/completed_sectio
 import 'package:e_learning/features/enroll/presentation/widgets/custom_state_tab_bar_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/enroll_info_card_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/suspended_section_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,7 +35,7 @@ class _EnrollPageState extends State<EnrollPage> {
         .toList();
 
     return Scaffold(
-      appBar: CustomAppBarWidget(title: 'Enroll', showBack: true),
+      appBar: CustomAppBarWidget(title: 'enroll'.tr(), showBack: true),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 8.w),
         child: SingleChildScrollView(
@@ -60,10 +61,10 @@ class _EnrollPageState extends State<EnrollPage> {
                           case CourseStateEnum.active:
                             return EnrollInfoCardWidget(
                               imageUrl: filteredCourses[index]['imageUrl'],
-                              courseTitle:
-                                  filteredCourses[index]['courseTitle'],
-                              courseState:
-                                  filteredCourses[index]['courseState'],
+                              courseTitle: filteredCourses[index]
+                                  ['courseTitle'],
+                              courseState: filteredCourses[index]
+                                  ['courseState'],
                               stateSectionWidget: VideoProgressWidget(
                                 completedVideos: 12,
                                 totalVideos: 40,
@@ -73,10 +74,10 @@ class _EnrollPageState extends State<EnrollPage> {
                           case CourseStateEnum.completed:
                             return EnrollInfoCardWidget(
                               imageUrl: filteredCourses[index]['imageUrl'],
-                              courseTitle:
-                                  filteredCourses[index]['courseTitle'],
-                              courseState:
-                                  filteredCourses[index]['courseState'],
+                              courseTitle: filteredCourses[index]
+                                  ['courseTitle'],
+                              courseState: filteredCourses[index]
+                                  ['courseState'],
                               stateSectionWidget: CompletedSectionWidget(
                                 isRated: filteredCourses[index]['isRated'],
                               ),
@@ -85,10 +86,10 @@ class _EnrollPageState extends State<EnrollPage> {
                           case CourseStateEnum.suspended:
                             return EnrollInfoCardWidget(
                               imageUrl: filteredCourses[index]['imageUrl'],
-                              courseTitle:
-                                  filteredCourses[index]['courseTitle'],
-                              courseState:
-                                  filteredCourses[index]['courseState'],
+                              courseTitle: filteredCourses[index]
+                                  ['courseTitle'],
+                              courseState: filteredCourses[index]
+                                  ['courseState'],
                               stateSectionWidget: SuspendedSectionWidget(),
                               height: 236,
                             );

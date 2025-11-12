@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/api_response.dart';
 
-
 class API {
   final Dio dio;
 
@@ -13,7 +12,13 @@ class API {
   //?--- Get -----------------------------------------------------------
   Future<ApiResponse> get(ApiRequest apiRequest) async {
     try {
-      final response = await dio.get(apiRequest.url);
+      final response = await dio.get(
+        apiRequest.url,
+        queryParameters: (apiRequest.queryParameters != null &&
+                apiRequest.queryParameters!.isNotEmpty)
+            ? apiRequest.queryParameters
+            : null,
+      );
       return ApiResponse(
         statusCode: response.statusCode ?? -1,
         body: response.data,

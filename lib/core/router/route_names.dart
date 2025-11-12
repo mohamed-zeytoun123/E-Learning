@@ -26,6 +26,8 @@ class RouteNames {
   static const profile = '/profile';
   static const homePage = '/home-page';
   static const viewAllArticles = '/view-all-articles';
+  static const viewAllTeachers = '/view-all-teachers';
+  static const viewAllCourses = '/view-all-courses';
   static const aticleDetails = '/article-details';
   static const mainHomePage = '/rt';
   static const teatcherPage = '/teatcher-page';

@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,7 +11,7 @@ class SavedCoursesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: 'Saved Courses', showBack: true),
+      appBar: CustomAppBarWidget(title: 'saved_courses'.tr(), showBack: true),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 32.h),
         child: ListView.separated(

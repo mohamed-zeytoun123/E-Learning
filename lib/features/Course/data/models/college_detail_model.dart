@@ -1,4 +1,4 @@
-import 'package:e_learning/features/course/data/models/university_detail_model.dart';
+import 'package:e_learning/features/Course/data/models/university_detail_model.dart';
 
 class CollegeDetailModel {
   final int id;

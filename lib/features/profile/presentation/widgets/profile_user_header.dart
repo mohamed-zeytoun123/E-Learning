@@ -1,7 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/profile/presentation/widgets/user_info_row.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,8 +23,7 @@ class ProfileUserHeader extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                AppLocalizations.of(context)?.translate("User_Name") ??
-                    "University",
+                'user_name'.tr(),
                 style: AppTextStyles.s16w600.copyWith(
                   color: Theme.of(context).colorScheme.primary,
                 ),
@@ -36,23 +35,17 @@ class ProfileUserHeader extends StatelessWidget {
               Column(
                 children: [
                   UserInfoRow(
-                    title:
-                        AppLocalizations.of(context)?.translate("University") ??
-                        "University",
+                    title: 'university'.tr(),
                     value: 'University Name',
                   ),
                   SizedBox(height: 12.h),
                   UserInfoRow(
-                    title:
-                        AppLocalizations.of(context)?.translate("College") ??
-                        "College",
+                    title: 'college'.tr(),
                     value: 'IUST',
                   ),
                   SizedBox(height: 12.h),
                   UserInfoRow(
-                    title:
-                        AppLocalizations.of(context)?.translate("Year") ??
-                        "Year",
+                    title: 'year'.tr(),
                     value: '3rd Year',
                   ),
                 ],

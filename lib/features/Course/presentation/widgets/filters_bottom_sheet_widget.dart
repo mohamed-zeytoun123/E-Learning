@@ -3,6 +3,7 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/filter_group_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/study_year_group_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -62,13 +63,11 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
             ),
           ),
           SizedBox(height: 16.h),
-
           Text(
             "Filters",
             style: AppTextStyles.s18w600.copyWith(color: AppColors.textPrimary),
           ),
           SizedBox(height: 16.h),
-
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -76,19 +75,17 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FilterGroupWidget(
-                    title: "University",
+                    title: "university".tr(),
                     items: universities,
                     isSelected: isSelected,
                     toggleSelection: toggleSelection,
                   ),
-
                   FilterGroupWidget(
-                    title: "College",
+                    title: "college".tr(),
                     items: colleges,
                     isSelected: isSelected,
                     toggleSelection: toggleSelection,
                   ),
-
                   StudyYearGroupWidget(
                     isSelected: isSelected,
                     toggleSelection: toggleSelection,
@@ -105,7 +102,7 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
               children: [
                 Expanded(
                   child: CustomButtonWidget(
-                    title: "Cancel",
+                    title: "cancel".tr(),
                     titleStyle: AppTextStyles.s16w500.copyWith(
                       color: AppColors.textPrimary,
                     ),
@@ -116,10 +113,9 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                     },
                   ),
                 ),
-
                 Expanded(
                   child: CustomButtonWidget(
-                    title: "Apply",
+                    title: "apply".tr(),
                     titleStyle: AppTextStyles.s16w500.copyWith(
                       color: AppColors.textWhite,
                     ),

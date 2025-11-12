@@ -1,11 +1,11 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
 
 class CourseCubit extends Cubit<CourseState> {
   CourseCubit({required this.repo}) : super(CourseState());
@@ -44,8 +44,8 @@ class CourseCubit extends Cubit<CourseState> {
   Future<void> getFilterCategories() async {
     emit(state.copyWith(categoriesStatus: ResponseStatusEnum.loading));
 
-    final Either<Failure, List<CategorieModel>> result = await repo
-        .getFilterCategoriesRepo();
+    final Either<Failure, List<CategorieModel>> result =
+        await repo.getFilterCategoriesRepo();
 
     result.fold(
       (failure) {
@@ -70,13 +70,17 @@ class CourseCubit extends Cubit<CourseState> {
   //?-----------------------------------------------------------------------------
 
   //* Get Courses
-  Future<void> getCourses() async {
-    emit(state.copyWith(coursesStatus: ResponseStatusEnum.loading));
+  Future<void> getCourses({int? categoryId}) async {
+    emit(state.copyWith(
+      coursesStatus: ResponseStatusEnum.loading,
+      selectedCategoryId: categoryId,
+    ));
 
-    final result = await repo.getCoursesRepo();
+    final result = await repo.getCoursesRepo(categoryId: categoryId);
 
     result.fold(
       (failure) {
+        print('❌ CourseCubit: Failed to get courses - ${failure.message}');
         emit(
           state.copyWith(
             coursesStatus: ResponseStatusEnum.failure,
@@ -85,12 +89,17 @@ class CourseCubit extends Cubit<CourseState> {
         );
       },
       (courses) {
-        emit(
-          state.copyWith(
-            coursesStatus: ResponseStatusEnum.success,
-            courses: courses,
-          ),
+        print('✅ CourseCubit: Successfully loaded ${courses.length} courses');
+        print(
+            '✅ CourseCubit: Emitting new state with ${courses.length} courses');
+        final newState = state.copyWith(
+          coursesStatus: ResponseStatusEnum.success,
+          courses: courses,
+          coursesError: null, // Clear any previous errors
         );
+        print(
+            '✅ CourseCubit: New state courses length: ${newState.courses?.length ?? 0}');
+        emit(newState);
       },
     );
   }
@@ -129,9 +138,8 @@ class CourseCubit extends Cubit<CourseState> {
   List<CourseModel> filterCoursesByCollege(int collegeId) {
     final allCourses = state.courses ?? [];
 
-    final filteredCourses = allCourses
-        .where((course) => course.college == collegeId)
-        .toList();
+    final filteredCourses =
+        allCourses.where((course) => course.college == collegeId).toList();
 
     return filteredCourses;
   }

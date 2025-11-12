@@ -3,7 +3,6 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_padding.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/home/presentation/pages/custom_search_appbar.dart';
-import 'package:e_learning/features/home/presentation/widgets/filter_wrap.dart';
 import 'package:e_learning/features/home/presentation/widgets/filtered_bottom_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,7 @@ class SearchPage extends StatelessWidget {
                         SizedBox(
                           width: 12,
                         ),
-                        Text('last search', style: AppTextStyles.s14w400),
+                        Text('last_search'.tr(), style: AppTextStyles.s14w400),
                         Spacer(),
                         IconButton(
                             onPressed: () {

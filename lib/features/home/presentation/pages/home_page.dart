@@ -1,8 +1,10 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_padding.dart';
+import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/chips_bar.dart';
-import 'package:e_learning/features/home/presentation/manager/tabs_cubit/tabs_cubit.dart';
-import 'package:e_learning/features/home/presentation/manager/tabs_cubit/tabs_states.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/home/presentation/widgets/articles_section.dart';
 import 'package:e_learning/features/home/presentation/widgets/course_slider.dart';
 import 'package:e_learning/features/home/presentation/widgets/home_banner.dart';
@@ -15,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -62,9 +65,9 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: SeeAllSeperator(
               onTap: () {
-                context.read<HomeCubit>().changeHomeView(HomeView.courses);
+                context.push(RouteNames.viewAllCourses);
               },
-              title: 'recommended_courses'.tr(),
+              title: 'recommended courses'.tr(),
             ),
           ),
           SliverToBoxAdapter(
@@ -73,14 +76,23 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: AppPadding.appPadding.copyWith(end: 0),
-              child: ChipsBar(
-                labels: [
-                  'by_default'.tr(),
-                  'by_default'.tr(),
-                  'by_default'.tr(),
-                  'by_default'.tr(),
-                ],
-                onChipSelected: (value) {},
+              child: BlocBuilder<CourseCubit, CourseState>(
+                builder: (context, state) {
+                  return Skeletonizer(
+                    enabled:
+                        state.categoriesStatus == ResponseStatusEnum.loading,
+                    child: ChipsBar(
+                      labels: context
+                              .read<CourseCubit>()
+                              .state
+                              .categories
+                              ?.map((e) => e.name)
+                              .toList() ??
+                          [],
+                      onChipSelected: (value) {},
+                    ),
+                  );
+                },
               ),
             ),
           ),
@@ -90,7 +102,7 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: AppPadding.appPadding.copyWith(end: 0),
-              child: const CourseSlider(),
+              child: const CourseSlider(maxItems: 3),
             ),
           ),
           const SliverToBoxAdapter(
@@ -99,9 +111,9 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: SeeAllSeperator(
               onTap: () {
-                context.read<HomeCubit>().changeHomeView(HomeView.teachers);
+                context.push(RouteNames.viewAllTeachers);
               },
-              title: 'top_teachers'.tr(),
+              title: 'top teachers'.tr(),
             ),
           ),
           const SliverToBoxAdapter(
@@ -110,7 +122,7 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: AppPadding.appPadding.copyWith(end: 0),
-              child: const TeatchersSlider(),
+              child: const TeatchersSlider(maxItems: 3),
             ),
           ),
           const SliverToBoxAdapter(
@@ -119,15 +131,15 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: SeeAllSeperator(
               onTap: () {
-                context.read<HomeCubit>().changeHomeView(HomeView.articles);
+                context.push(RouteNames.viewAllArticles);
               },
-              title: 'news_and_articles'.tr(),
+              title: 'news and articles'.tr(),
             ),
           ),
           const SliverToBoxAdapter(
             child: SizedBox(height: 36),
           ),
-          const ArticlesSection(),
+          const ArticlesSection(itemsForShow: 3),
           SliverToBoxAdapter(
             child: SizedBox(height: 24.h),
           ),

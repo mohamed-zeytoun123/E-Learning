@@ -3,12 +3,12 @@ import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/course_details_model.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
-import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
-import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/course_details_model.dart';
+import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source.dart';
+import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 
 class CourceseRepositoryImpl implements CourceseRepository {
   final CourceseRemoteDataSource remote;
@@ -25,7 +25,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
   //* Get Filter Categories
   @override
   Future<Either<Failure, List<CategorieModel>>>
-  getFilterCategoriesRepo() async {
+      getFilterCategoriesRepo() async {
     if (await network.isConnected) {
       final result = await remote.getFilterCategoriesRemote();
 
@@ -48,21 +48,37 @@ class CourceseRepositoryImpl implements CourceseRepository {
   //? -----------------------------------------------------------------
   //* Get Courses
   @override
-  Future<Either<Failure, List<CourseModel>>> getCoursesRepo() async {
+  Future<Either<Failure, List<CourseModel>>> getCoursesRepo(
+      {int? categoryId}) async {
     if (await network.isConnected) {
-      final result = await remote.getCoursesRemote();
+      final result = await remote.getCoursesRemote(categoryId: categoryId);
 
-      return result.fold((failure) => Left(failure), (courses) async {
-        if (courses.isEmpty) return Left(FailureNoData());
-        await local.saveCoursesInCache(courses);
+      return result.fold((failure) {
+        print('❌ Repository: Remote call failed - ${failure.message}');
+        return Left(failure);
+      }, (courses) async {
+        print('📦 Repository: Received ${courses.length} courses from remote');
+        // Allow empty lists - let UI handle showing "No courses available"
+        if (courses.isNotEmpty && categoryId == null) {
+          // Only cache when fetching all courses, not filtered
+          await local.saveCoursesInCache(courses);
+        }
         return Right(courses);
       });
     } else {
       final cachedCourses = local.getCoursesInCache();
 
       if (cachedCourses.isNotEmpty) {
+        print(
+            '📦 Repository: Loaded ${cachedCourses.length} courses from cache');
+        // If filtering by category and we're offline, filter cached courses
+        if (categoryId != null) {
+          // Note: CourseModel doesn't have category field, so offline filtering won't work
+          // For now, return all cached courses when offline and filtering
+        }
         return Right(cachedCourses);
       } else {
+        print('❌ Repository: No cached courses available');
         return Left(FailureNoConnection());
       }
     }
@@ -112,7 +128,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
   }
 
   //? -----------------------------------------------------------------
-  
+
   //* Get Chapters by Course
   Future<Either<Failure, List<ChapterModel>>> getChaptersRepo({
     required int courseId,

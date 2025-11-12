@@ -1,6 +1,6 @@
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
 
 abstract class HiveService {
   //?---------------- Category Box -------------------------

@@ -1,8 +1,8 @@
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -26,10 +26,7 @@ class ProfileGuestHeader extends StatelessWidget {
           child: Column(
             children: [
               Text(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("Sign_In_To_Gain_Access_To_Your_Courses") ??
-                    "Sing In To Gain Access To Your Courses",
+                'sign_in_to_gain_access'.tr(),
                 style: AppTextStyles.s14w600.copyWith(
                   color: context.colors.textPrimary,
                 ),
@@ -37,9 +34,7 @@ class ProfileGuestHeader extends StatelessWidget {
               ),
               SizedBox(height: 24.h),
               CustomButtonWidget(
-                title:
-                    AppLocalizations.of(context)?.translate("Log_in") ??
-                    "Log In",
+                title: 'log_in'.tr(),
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
                   color: context.colors.titlePrimary,
@@ -56,9 +51,7 @@ class ProfileGuestHeader extends StatelessWidget {
                   fontFamily: AppTextStyles.fontGeist,
                   color: Theme.of(context).colorScheme.primary,
                 ),
-                title: AppLocalizations.of(context)?.translate("Sign_up") ??
-                    "Sign Up",
-
+                title: 'sign_up'.tr(),
                 buttonColor: context.colors.buttonWhite,
                 borderColor: Theme.of(context).colorScheme.primary,
                 onTap: () {

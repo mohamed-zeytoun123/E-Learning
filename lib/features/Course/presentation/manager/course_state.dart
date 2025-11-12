@@ -1,9 +1,9 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/course_details_model.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/course_details_model.dart';
+import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
 
 class CourseState {
   //?---------------------------------------------------------------
@@ -14,6 +14,7 @@ class CourseState {
   final List<CategorieModel>? categories;
   final ResponseStatusEnum categoriesStatus;
   final String? categoriesError;
+  final int? selectedCategoryId;
 
   //* Filter Colleges
   final List<CollegeModel>? colleges;
@@ -53,6 +54,7 @@ class CourseState {
     this.categories,
     this.categoriesStatus = ResponseStatusEnum.initial,
     this.categoriesError,
+    this.selectedCategoryId,
 
     //* Get Courses
     this.courses,
@@ -84,6 +86,7 @@ class CourseState {
     List<CategorieModel>? categories,
     ResponseStatusEnum? categoriesStatus,
     String? categoriesError,
+    int? selectedCategoryId,
 
     //* Get Courses
     List<CourseModel>? courses,
@@ -113,6 +116,7 @@ class CourseState {
       categories: categories ?? this.categories,
       categoriesStatus: categoriesStatus ?? this.categoriesStatus,
       categoriesError: categoriesError ?? this.categoriesError,
+      selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
 
       //* Get Courses
       courses: courses ?? this.courses,

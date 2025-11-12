@@ -8,10 +8,10 @@ import 'package:e_learning/core/network/api_response.dart';
 import 'package:e_learning/core/network/app_url.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/course_details_model.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
-import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/course_details_model.dart';
+import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
 
 class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   final API api;
@@ -23,7 +23,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
   @override
   Future<Either<Failure, List<CategorieModel>>>
-  getFilterCategoriesRemote() async {
+      getFilterCategoriesRemote() async {
     try {
       final ApiRequest request = ApiRequest(url: AppUrls.getCategories);
 
@@ -73,7 +73,9 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         if (categoryId != null) 'category': categoryId.toString(),
         if (teacherId != null) 'teacher': teacherId.toString(),
         if (search != null && search.isNotEmpty) 'search': search,
-        if (ordering != null && ordering.isNotEmpty) 'ordering': ordering,
+        'ordering': (ordering != null && ordering.isNotEmpty)
+            ? ordering
+            : '-created_at', // Default ordering when not specified
       };
 
       final ApiRequest request = ApiRequest(
@@ -81,23 +83,98 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         queryParameters: queryParameters,
       );
 
+      log('🌐 Request URL: ${AppUrls.getCourses}');
+      log('🌐 Query Parameters: $queryParameters');
+
       final ApiResponse response = await api.get(request);
       final List<CourseModel> courses = [];
+
+      log('📡 Courses API Response Status: ${response.statusCode}');
+      log('📡 Response body type: ${response.body.runtimeType}');
+      log('📡 Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
-          for (var item in data) {
-            courses.add(CourseModel.fromMap(item));
+        // Handle paginated response (common in Django REST Framework)
+        if (data is Map<String, dynamic>) {
+          log('📡 Response is Map with keys: ${data.keys.toList()}');
+
+          if (data.containsKey('results')) {
+            final results = data['results'] as List?;
+            log('📡 Results list length: ${results?.length ?? 0}');
+            if (results != null && results.isNotEmpty) {
+              for (var item in results) {
+                try {
+                  if (item is Map<String, dynamic>) {
+                    courses.add(CourseModel.fromMap(item));
+                  } else {
+                    log('⚠️ Item is not Map: ${item.runtimeType}');
+                  }
+                } catch (e) {
+                  log('❌ Error parsing course item: $e');
+                  log('❌ Item data: $item');
+                }
+              }
+            }
+          } else {
+            // Maybe the data itself is the list (like {"data": [...]})
+            log('📡 No "results" key found. Checking for other keys...');
+            // Check if there's a "data" key
+            if (data.containsKey('data') && data['data'] is List) {
+              final results = data['data'] as List;
+              log('📡 Found "data" key with ${results.length} items');
+              for (var item in results) {
+                try {
+                  if (item is Map<String, dynamic>) {
+                    courses.add(CourseModel.fromMap(item));
+                  }
+                } catch (e) {
+                  log('❌ Error parsing course item: $e');
+                }
+              }
+            } else {
+              // Try to parse the entire map as a single course (unlikely but handle it)
+              log('⚠️ Unexpected map structure, attempting direct parse...');
+            }
           }
+        } else if (data is List) {
+          log('📡 Response is direct List with ${data.length} items');
+          // Handle direct list response
+          for (var item in data) {
+            try {
+              if (item is Map<String, dynamic>) {
+                courses.add(CourseModel.fromMap(item));
+              } else {
+                log('⚠️ List item is not Map: ${item.runtimeType}');
+              }
+            } catch (e) {
+              log('❌ Error parsing course item: $e');
+              log('❌ Item data: $item');
+            }
+          }
+        } else {
+          log('❌ Unexpected response format: ${data.runtimeType}');
+          log('❌ Response data: $data');
+          return Left(
+            Failure(
+              message: 'Unexpected response format: ${data.runtimeType}',
+              statusCode: response.statusCode,
+            ),
+          );
         }
 
+        log('✅ Successfully parsed ${courses.length} courses');
         return Right(courses);
       } else {
+        String errorMessage = 'Unknown error';
+        if (response.body is Map<String, dynamic>) {
+          errorMessage =
+              response.body['message']?.toString() ?? 'Unknown error';
+        }
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: errorMessage,
             statusCode: response.statusCode,
           ),
         );
@@ -179,7 +256,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   }
 
   //?----------------------------------------------------
-  
+
   //* Get Chapters by Course
   Future<Either<Failure, List<ChapterModel>>> getChaptersRemote({
     required int courseId,

@@ -21,12 +21,24 @@ import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_sou
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source_impl.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository_impl.dart';
-import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
-import 'package:e_learning/features/course/data/source/local/courcese_local_data_source_impl.dart';
-import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
-import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source_impl.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository_impl.dart';
+import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source.dart';
+import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source_impl.dart';
+import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source_impl.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository_impl.dart';
+import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source.dart';
+import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source_impl.dart';
+import 'package:e_learning/features/Teacher/data/source/remote/teacher_remote_data_source.dart';
+import 'package:e_learning/features/Teacher/data/source/remote/teacher_remote_data_source_impl.dart';
+import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.dart';
+import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository_impl.dart';
+import 'package:e_learning/features/Article/data/source/local/article_local_data_source.dart';
+import 'package:e_learning/features/Article/data/source/local/article_local_data_source_impl.dart';
+import 'package:e_learning/features/Article/data/source/remote/article_remote_data_source.dart';
+import 'package:e_learning/features/Article/data/source/remote/article_remote_data_source_impl.dart';
+import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
+import 'package:e_learning/features/Article/data/source/repo/article_repository_impl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -115,6 +127,20 @@ Future<void> appInitDependencies() async {
     () => CourceseLocalDataSourceImpl(hive: appLocator<HiveService>()),
   );
 
+  //* Teacher local
+  appLocator.registerLazySingleton<TeacherLocalDataSource>(
+    () => TeacherLocalDataSourceImpl(
+      sharedPreferences: appLocator<SharedPreferences>(),
+    ),
+  );
+
+  //* Article local
+  appLocator.registerLazySingleton<ArticleLocalDataSource>(
+    () => ArticleLocalDataSourceImpl(
+      sharedPreferences: appLocator<SharedPreferences>(),
+    ),
+  );
+
   //? ----------- Remote Data Sources -----------------------------------------------------------
 
   //! App Manager Remote
@@ -139,6 +165,16 @@ Future<void> appInitDependencies() async {
     () => CourceseRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
+  //* Teacher Remote
+  appLocator.registerLazySingleton<TeacherRemoteDataSource>(
+    () => TeacherRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
+  //* Article Remote
+  appLocator.registerLazySingleton<ArticleRemoteDataSource>(
+    () => ArticleRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
   //? ----------- Repositories ------------------------------------------------------------------
 
   //* Auth Repository
@@ -155,6 +191,24 @@ Future<void> appInitDependencies() async {
     () => CourceseRepositoryImpl(
       remote: appLocator<CourceseRemoteDataSource>(),
       local: appLocator<CourceseLocalDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //* Teacher Repository
+  appLocator.registerLazySingleton<TeacherRepository>(
+    () => TeacherRepositoryImpl(
+      remote: appLocator<TeacherRemoteDataSource>(),
+      local: appLocator<TeacherLocalDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //* Article Repository
+  appLocator.registerLazySingleton<ArticleRepository>(
+    () => ArticleRepositoryImpl(
+      remote: appLocator<ArticleRemoteDataSource>(),
+      local: appLocator<ArticleLocalDataSource>(),
       network: appLocator<NetworkInfoService>(),
     ),
   );

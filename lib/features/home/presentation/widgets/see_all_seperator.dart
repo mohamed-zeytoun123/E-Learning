@@ -30,7 +30,7 @@ class SeeAllSeperator extends StatelessWidget {
                       .copyWith(color: AppColors.primaryTextColor),
                 ),
                 const SizedBox(width: 4),
-                const Icon( 
+                const Icon(
                   Icons.arrow_forward_ios,
                   size: 12,
                   color: AppColors.primaryTextColor,

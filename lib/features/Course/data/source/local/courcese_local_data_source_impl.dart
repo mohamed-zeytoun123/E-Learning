@@ -1,8 +1,8 @@
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
-import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source.dart';
 
 class CourceseLocalDataSourceImpl implements CourceseLocalDataSource {
   final HiveService hive;

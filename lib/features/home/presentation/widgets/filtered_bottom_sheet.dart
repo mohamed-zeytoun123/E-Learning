@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/features/home/presentation/widgets/filter_wrap.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 void showFilterBottomSheet(BuildContext context) {
@@ -22,7 +23,7 @@ void showFilterBottomSheet(BuildContext context) {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Filters',
+                  'filters'.tr(),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -41,11 +42,18 @@ void showFilterBottomSheet(BuildContext context) {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    _buildFilterSection('Category',
-                        ['All', 'Programming', 'Design', 'Business']),
+                    _buildFilterSection('category'.tr(), [
+                      'all_category'.tr(),
+                      'programming'.tr(),
+                      'design'.tr(),
+                      'business'.tr()
+                    ]),
                     SizedBox(height: 16),
-                    _buildFilterSection(
-                        'Level', ['Beginner', 'Intermediate', 'Advanced']),
+                    _buildFilterSection('level'.tr(), [
+                      'beginner'.tr(),
+                      'intermediate'.tr(),
+                      'advanced'.tr()
+                    ]),
                     SizedBox(height: 16),
                     // Add more sections here
                   ],
@@ -60,14 +68,14 @@ void showFilterBottomSheet(BuildContext context) {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Reset'),
+                    child: Text('reset'.tr()),
                   ),
                 ),
                 SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: Text('Apply'),
+                    child: Text('apply'.tr()),
                   ),
                 ),
               ],

@@ -1,7 +1,7 @@
 class AppUrls {
   //?---------------------------------------------------------------
 
-  static const String _ip = "192.168.1.23";
+  static const String _ip = "192.168.1.200"; // Your computer's Wi-Fi IP address
 
   //?---------------------------------------------------------------
 
@@ -31,8 +31,7 @@ class AppUrls {
   static final String getCategories = "$_baseURl/categories/";
 
   //* Get Courses
-  static final String getCourses =
-      "$_baseURl/courses/?college=&study_year=&category=&teacher=&search=&ordering=-created_at";
+  static final String getCourses = "$_baseURl/courses/";
 
   //* Get Course Details by Slug
   static String courseDetails(String courseSlug) =>
@@ -40,6 +39,20 @@ class AppUrls {
 
   //* Get Chapters by Course ID
   static String getChapters(int courseId) => '/courses/$courseId/chapters/';
+
+  //* Get Teachers
+  static final String getTeachers = "$_baseURl/teachers/";
+
+  //* Get Articles
+  static final String getArticles = "$_baseURl/articles/";
+
+  //* Get Article Details by Slug
+  static String articleDetails(String articleSlug) =>
+      "$_baseURl/articles/$articleSlug/";
+
+  //* Get Related Articles by Article ID
+  static String relatedArticles(int articleId) =>
+      "$_baseURl/articles/$articleId/related/";
 
   //?---------------------------------------------------------------
 }

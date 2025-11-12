@@ -1,115 +1,157 @@
+import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CourseCard extends StatelessWidget {
-  const CourseCard({super.key});
+  final String price;
+  final String title, collegeName;
+  final double? rating;
+  final String? imageUrl;
+  final String courseSlug;
+
+  const CourseCard(
+      {super.key,
+      required this.price,
+      required this.title,
+      required this.collegeName,
+      required this.courseSlug,
+      this.rating,
+      this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Card(
-          color: Colors.white,
-          elevation: 1, // 👈 adds soft shadow
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.r),
-          ),
-          clipBehavior:
-              Clip.antiAlias, // 👈 ensures image respects rounded corners
-          child: Padding(
-            padding: EdgeInsets.all(12.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 🖼 Course image
-                ClipRRect(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20.r),
-                    topRight: Radius.circular(20.r),
-                  ),
-                  child: Image.asset(
-                    Assets.resourceImagesPngHomeeBg,
-                    fit: BoxFit.cover,
-                    width: 300.w,
-                    height: 160.h,
-                  ),
-                ),
-
-                SizedBox(height: 16.h),
-
-                // 📘 Course Title
-                Text(
-                  'Course Title \\ Name',
-                  style: AppTextStyles.s16w500,
-                ),
-
-                SizedBox(height: 4.h),
-
-                // 🏫 University
-                Text(
-                  'College - University',
-                  style:
-                      AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
-                ),
-
-                const SizedBox(height: 20),
-
-                // ⭐ Rating + Price
-                SizedBox(
-                  width: 300.w, // fixed card width in your CourseCard layout
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return InkWell(
+      onTap: () {
+        final courseCubit = context.read<CourseCubit>();
+        context.push(
+          RouteNames.courceInf,
+          extra: {
+            'courseSlug': courseSlug,
+            'courseCubit': courseCubit,
+          },
+        );
+      },
+      borderRadius: BorderRadius.circular(20.r),
+      child: Stack(
+        children: [
+          Card(
+            color: Colors.white,
+            elevation: 1, // 👈 adds soft shadow
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.r),
+            ),
+            clipBehavior:
+                Clip.antiAlias, // 👈 ensures image respects rounded corners
+            child: Padding(
+              padding: EdgeInsets.all(12.w),
+              child: LayoutBuilder(
+                builder: (context, paddingConstraints) {
+                  final cardContentWidth = paddingConstraints.maxWidth > 0 &&
+                          paddingConstraints.maxWidth.isFinite
+                      ? paddingConstraints.maxWidth
+                      : 300.w;
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 6.w, vertical: 4.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.ligthGray,
-                          borderRadius: BorderRadius.circular(12.r),
+                      // 🖼 Course image
+                      ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20.r),
+                          topRight: Radius.circular(20.r),
                         ),
+                        child: CustomCachedImageWidget(
+                          appImage: imageUrl!,
+                          fit: BoxFit.cover,
+                          width: cardContentWidth,
+                          height: 160.h,
+                        ),
+                      ),
+
+                      SizedBox(height: 16.h),
+
+                      // 📘 Course Title
+                      Text(
+                        title,
+                        style: AppTextStyles.s16w500,
+                      ),
+
+                      SizedBox(height: 4.h),
+
+                      // 🏫 University
+                      Text(
+                        collegeName,
+                        style: AppTextStyles.s14w400
+                            .copyWith(color: AppColors.textGrey),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // ⭐ Rating + Price
+                      SizedBox(
+                        width: cardContentWidth,
                         child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              Icons.star_outlined,
-                              color: AppColors.stars,
-                              size: 14.h,
-                            ),
-                            SizedBox(width: 2.w),
-                            Text(
-                              '4',
-                              style: AppTextStyles.s14w400.copyWith(
-                                color: AppColors.stars,
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 6.w, vertical: 4.h),
+                              decoration: BoxDecoration(
+                                color: AppColors.ligthGray,
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.star_outlined,
+                                    color: AppColors.stars,
+                                    size: 14.h,
+                                  ),
+                                  SizedBox(width: 2.w),
+                                  Text(
+                                    rating?.toString() ?? '0',
+                                    style: AppTextStyles.s14w400.copyWith(
+                                      color: AppColors.stars,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Text(
+                              '$price S.P',
+                              style: AppTextStyles.s18w600
+                                  .copyWith(color: AppColors.primaryTextColor),
                             ),
                           ],
                         ),
                       ),
-                      Text(
-                        '180000 S.P',
-                        style: AppTextStyles.s18w600
-                            .copyWith(color: AppColors.primaryTextColor),
-                      ),
                     ],
-                  ),
-                ),
-              ],
+                  );
+                },
+              ),
             ),
           ),
-        ),
-        PositionedDirectional(
-          end: 25.w,
-          top: 25.h,
-          child: CircleAvatar(
-            radius: 22.r,
-            backgroundColor: Colors.white,
-            child: Icon(Icons.bookmark_border_outlined),
-          ),
-        )
-      ],
+          PositionedDirectional(
+            end: 25.w,
+            top: 25.h,
+            child: CircleAvatar(
+              radius: 22.r,
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.bookmark_border_outlined,
+                color: Colors.black,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

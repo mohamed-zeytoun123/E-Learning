@@ -2,17 +2,18 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_access_content_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_tab_view_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_course_widget.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_access_content_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_tab_view_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 
 class CourceInfoPage extends StatefulWidget {
@@ -62,7 +63,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   ),
                   SizedBox(height: 30.h),
                   Text(
-                    "No Internet Connection",
+                    "no_internet_connection".tr(),
                     textAlign: TextAlign.center,
                     style: AppTextStyles.s20w600.copyWith(
                       color: AppColors.textBlack,
@@ -70,7 +71,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   ),
                   SizedBox(height: 10.h),
                   Text(
-                    "Please check your internet settings and try again.",
+                    "no_connection_please_try_again".tr(),
                     textAlign: TextAlign.center,
                     style: AppTextStyles.s16w400.copyWith(
                       color: AppColors.textGrey,
@@ -78,7 +79,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   ),
                   SizedBox(height: 30.h),
                   CustomButtonWidget(
-                    title: "Retry",
+                    title: "retry".tr(),
                     titleStyle: AppTextStyles.s18w600.copyWith(
                       color: AppColors.titlePrimary,
                     ),

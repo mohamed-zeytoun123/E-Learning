@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
           return BlocBuilder<AppManagerCubit, AppManagerState>(
             builder: (context, state) {
               return MaterialApp.router(
-                title: 'E-Learning',
+                title: 'e_learning'.tr(),
                 debugShowCheckedModeBanner: false,
                 locale: state.appLocale,
                 themeMode: state.themeMode,
