@@ -5,17 +5,17 @@ import 'package:e_learning/core/widgets/error/error_state_widget.dart';
 import 'package:e_learning/core/widgets/error/no_internet_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/Course/data/models/course_details_model.dart';
-import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_access_content_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_tab_view_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_course_widget.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_access_content_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_tab_view_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 
 class CourceInfoPage extends StatefulWidget {

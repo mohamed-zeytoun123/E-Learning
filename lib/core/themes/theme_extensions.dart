@@ -40,5 +40,7 @@ extension ThemeExtensions on BuildContext {
         iconRed: const Color(0xffDE4C3C),
         formWhite: const Color(0xffF1F1F1),
         dividerGrey: const Color(0xffF1F1F1),
+        textBlue: const Color(0xff0071C7),
+        borderCard: const Color(0xffEAEAEA),
       );
 }

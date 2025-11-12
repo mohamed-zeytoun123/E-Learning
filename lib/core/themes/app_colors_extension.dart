@@ -37,6 +37,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     required this.iconRed,
     required this.formWhite,
     required this.dividerGrey,
+    required this.textBlue,
+    required this.borderCard,
   });
 
   final Color background;
@@ -74,6 +76,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
   final Color iconRed;
   final Color formWhite;
   final Color dividerGrey;
+  final Color textBlue;
+  final Color borderCard;
 
   @override
   ThemeExtension<AppColorsExtension> copyWith({
@@ -112,6 +116,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
     Color? iconRed,
     Color? formWhite,
     Color? dividerGrey,
+    Color? textBlue,
+    Color? borderCard,
   }) {
     return AppColorsExtension(
       background: background ?? this.background,
@@ -149,6 +155,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       iconRed: iconRed ?? this.iconRed,
       formWhite: formWhite ?? this.formWhite,
       dividerGrey: dividerGrey ?? this.dividerGrey,
+      textBlue: textBlue ?? this.textBlue,
+      borderCard: borderCard ?? this.borderCard,
     );
   }
 
@@ -206,6 +214,8 @@ class AppColorsExtension extends ThemeExtension<AppColorsExtension> {
       iconRed: Color.lerp(iconRed, other.iconRed, t)!,
       formWhite: Color.lerp(formWhite, other.formWhite, t)!,
       dividerGrey: Color.lerp(dividerGrey, other.dividerGrey, t)!,
+      textBlue: Color.lerp(textBlue, other.textBlue, t)!,
+      borderCard: Color.lerp(borderCard, other.borderCard, t)!,
     );
   }
 }

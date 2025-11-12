@@ -19,7 +19,7 @@ class HomeContent extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               CourseCubit(repo: appLocator<CourceseRepository>())
-                ..getFilterCategories()
+                ..getCategories()
                 ..getCourses(),
         ),
         BlocProvider(

@@ -81,6 +81,10 @@ class AppTheme {
 
         //* Divider Colors
         dividerGrey: AppColors.dividerGrey,
+
+        //* Additional Colors
+        textBlue: AppColors.textPrimary,
+        borderCard: AppColors.borderBrand,
       ),
     ],
   );
@@ -162,6 +166,10 @@ class AppTheme {
 
         //* Divider Colors
         dividerGrey: AppColors.dividerGrey,
+
+        //* Additional Colors
+        textBlue: AppColors.textPrimary,
+        borderCard: AppColors.borderBrand,
       ),
     ],
   );

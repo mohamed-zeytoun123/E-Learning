@@ -6,7 +6,7 @@ import 'package:e_learning/features/auth/data/models/university_model/university
 import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
 import 'package:hive/hive.dart';
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
 
 class HiveServiceImpl implements HiveService {
   //?---------------- Category Box -------------------------

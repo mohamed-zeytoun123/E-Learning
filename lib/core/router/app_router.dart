@@ -239,13 +239,7 @@ class AppRouter {
       //? --------------------------- Profile Pages --------------------------
       GoRoute(
         path: RouteNames.profile,
-        builder: (context, state) => BlocProvider(create: (context) => ProfileCubit(
-        ProfileRepository(
-          remote:appLocator<ProfileRemouteDataSource>(),
-          network: appLocator<NetworkInfoService>(),
-        )..getPrivacyPolicyRepo(),
-      ),
-          child: const ProfilePage()),
+        builder: (context, state) => const ProfilePage(),
       ),
       GoRoute(
         path: RouteNames.savedCourses,

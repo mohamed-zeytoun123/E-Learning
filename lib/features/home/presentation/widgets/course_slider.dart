@@ -27,7 +27,7 @@ class CourseSlider extends StatelessWidget {
         }
 
         // Calculate display courses with maxItems limit
-        final courses = state.courses ?? [];
+        final courses = state.courses?.courses ?? [];
         final displayCourses = maxItems != null && courses.length > maxItems!
             ? courses.take(maxItems!).toList()
             : courses;
@@ -36,8 +36,8 @@ class CourseSlider extends StatelessWidget {
           enabled: state.coursesStatus == ResponseStatusEnum.loading,
           child: SizedBox(
             height: 270.h,
-            child: state.courses != null
-                ? (state.courses!.isEmpty
+            child: state.courses != null && state.courses!.courses != null
+                ? (state.courses!.courses!.isEmpty
                     ? Center(
                         child: Text(
                           'no_courses_available'.tr(),

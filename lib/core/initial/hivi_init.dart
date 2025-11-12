@@ -5,7 +5,7 @@ import 'package:e_learning/features/auth/data/models/study_year_model/study_year
 import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
 
 Future<void> initHive() async {
   //? ---------------- Initialize Hive -------------------------

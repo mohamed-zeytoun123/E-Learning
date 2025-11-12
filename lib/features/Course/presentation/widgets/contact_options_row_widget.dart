@@ -1,5 +1,5 @@
 import 'package:e_learning/core/asset/app_icons.dart';
-import 'package:e_learning/features/course/presentation/widgets/contact_icon_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/contact_icon_widget.dart';
 import 'package:flutter/material.dart';
 
 class ContactOptionsRowWidget extends StatelessWidget {

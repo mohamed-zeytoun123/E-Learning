@@ -42,7 +42,7 @@ dependencies:
   percent_indicator: ^4.2.5
   skeletonizer: ^1.4.3
   flutter_lorem: ^2.0.0
-  google_fonts: ^6.3.2
+  google_fonts: ^6.3.0
 
 dev_dependencies:
   flutter_test:

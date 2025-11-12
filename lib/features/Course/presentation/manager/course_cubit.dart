@@ -3,12 +3,12 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
 
 class CourseCubit extends Cubit<CourseState> {
   CourseCubit({required this.repo}) : super(CourseState());

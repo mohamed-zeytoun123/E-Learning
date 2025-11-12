@@ -3,13 +3,9 @@ import 'package:e_learning/core/app/manager/app_manager_state.dart';
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/model/enums/app_state_enum.dart';
-import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
-import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
-import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/widgets/custom_settings_item_widget.dart';
@@ -33,9 +29,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
-    // BlocProvider.of<ProfileCubit>(context).getPrivacyPolicyData();
-              BlocProvider.of<ProfileCubit>(
-            context).getDataUserInfoProfile();
     super.initState();
   }
 
@@ -59,7 +52,6 @@ class _ProfilePageState extends State<ProfilePage> {
               BlocBuilder<AppManagerCubit, AppManagerState>(
                 builder: (context, state) {
                   if (state.appState == AppStateEnum.user) {
-                  
                     return ProfileUserHeader();
                   } else {
                     return ProfileGuestHeader();
