@@ -25,13 +25,15 @@ class CourseModelAdapter extends TypeAdapter<CourseModel> {
       collegeName: fields[5] as String,
       price: fields[6] as String,
       averageRating: fields[7] as double?,
+      totalVideoDurationHours: fields[8] as double,
+      isFavorite: fields[9] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, CourseModel obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(10)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +49,11 @@ class CourseModelAdapter extends TypeAdapter<CourseModel> {
       ..writeByte(6)
       ..write(obj.price)
       ..writeByte(7)
-      ..write(obj.averageRating);
+      ..write(obj.averageRating)
+      ..writeByte(8)
+      ..write(obj.totalVideoDurationHours)
+      ..writeByte(9)
+      ..write(obj.isFavorite);
   }
 
   @override

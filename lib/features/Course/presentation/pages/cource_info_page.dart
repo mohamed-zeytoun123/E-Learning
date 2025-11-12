@@ -122,12 +122,14 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CourseTitleSubTitleWidget(
-                                titleStyle: AppTextStyles.s18w600.copyWith(
-                                  color: AppColors.textBlack,
+                              Expanded(
+                                child: CourseTitleSubTitleWidget(
+                                  titleStyle: AppTextStyles.s18w600.copyWith(
+                                    color: AppColors.textBlack,
+                                  ),
+                                  title: course.title,
+                                  subtitle: course.categoryDetail.name,
                                 ),
-                                title: course.title,
-                                subtitle: course.categoryDetail.name,
                               ),
                               RatingWidget(rating: 4.5, showIcon: false),
                             ],

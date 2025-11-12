@@ -1,11 +1,11 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
-import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
+import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
 
 class ChapterState {
   //?--------------------------------------------------------
   //* Get Chapter Details
-  final ChapterModel? chapter;
+  final ChapterDetailsModel? chapter;
   final ResponseStatusEnum chaptersStatus;
   final String? chaptersError;
 
@@ -23,7 +23,7 @@ class ChapterState {
   //?--------------------------------------------------------
   ChapterState copyWith({
     //* Get Chapter Details
-    ChapterModel? chapter,
+    ChapterDetailsModel? chapter,
     ResponseStatusEnum? chaptersStatus,
     String? chaptersError,
 

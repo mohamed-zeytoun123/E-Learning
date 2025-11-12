@@ -1,7 +1,7 @@
 class AppUrls {
   //?---------------------------------------------------------------
 
-  static const String _ip = "192.168.1.101";
+  static const String _ip = "192.168.1.23";
 
   //?---------------------------------------------------------------
 
@@ -36,16 +36,44 @@ class AppUrls {
   //?------------------- Courses -------------------
 
   //* Get Courses
-  static final String getCourses =
-      "$_baseURl/courses/?college=&study_year=&category=&teacher=&search=&ordering=-created_at";
+  // static final String getCourses =
+  //     "$_baseURl/courses/?college=&study_year=&category=&teacher=&search=&ordering=-created_at";
+
+  //* Get Courses as function to accept query params
+  static String getCourses({Map<String, dynamic>? queryParameters}) {
+    String url = "$_baseURl/courses/";
+    if (queryParameters != null && queryParameters.isNotEmpty) {
+      final queryString = queryParameters.entries
+          .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+          .join("&");
+      url = "$url?$queryString";
+    }
+    return url;
+  }
+
+  //* Get Study Years
+  static final String getStudyYears = "$_baseURl/study-years/";
 
   //* Get Course Details by Slug
   static String courseDetails(String courseSlug) =>
       "$_baseURl/courses/$courseSlug/";
 
   //* Get Chapters by Course ID
-  static String getChapters(String courseSlug) =>
-      '$_baseURl/courses/$courseSlug/chapters/';
+  // static String getChapters(String courseSlug) =>
+  //     '$_baseURl/courses/$courseSlug/chapters/';
+  static String getChapters(
+    String courseSlug, {
+    Map<String, dynamic>? queryParameters,
+  }) {
+    String url = "$_baseURl/courses/$courseSlug/chapters/";
+    if (queryParameters != null && queryParameters.isNotEmpty) {
+      final queryString = queryParameters.entries
+          .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+          .join("&");
+      url = "$url?$queryString";
+    }
+    return url;
+  }
 
   //* Get Ratings
   static String getRatings(String courseSlug) =>
@@ -54,6 +82,10 @@ class AppUrls {
   //* Get Chapter by ID
   static String getChapterById(String courseSlug, int chapterId) =>
       "$_baseURl/courses/$courseSlug/chapters/$chapterId/";
+
+  //* Add/Remove Favorite for a Course
+  static String favoriteCourse(String courseSlug) =>
+      "$_baseURl/courses/$courseSlug/favorite/";
 
   //?---------------------------------------------------------------
 }

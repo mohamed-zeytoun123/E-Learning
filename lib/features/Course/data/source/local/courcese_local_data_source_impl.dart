@@ -1,9 +1,12 @@
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
 import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
+import '../../../../auth/data/models/study_year_model/study_year_model.dart'
+    show StudyYearModel;
 
 class CourceseLocalDataSourceImpl implements CourceseLocalDataSource {
   final HiveService hive;
@@ -37,8 +40,7 @@ class CourceseLocalDataSourceImpl implements CourceseLocalDataSource {
   @override
   List<CourseModel> getCoursesInCache() {
     try {
-      final courses = hive.getAllCoursesHive();
-      return courses;
+      return hive.getAllCoursesHive();
     } catch (e) {
       return [];
     }
@@ -50,6 +52,28 @@ class CourceseLocalDataSourceImpl implements CourceseLocalDataSource {
     try {
       await hive.saveCoursesHive(courses);
     } catch (_) {}
+  }
+
+  //* Append Courses To Cache (add new page courses)
+  @override
+  Future<void> appendCoursesToCache(List<CourseModel> newCourses) async {
+    try {
+      // جلب الكورسات القديمة من الكاش
+      final existingCourses = hive.getAllCoursesHive();
+
+      // دمج الكورسات القديمة مع الجديدة بدون تكرار
+      final allCourses = [
+        ...existingCourses,
+        ...newCourses.where(
+          (newCourse) => !existingCourses.any((old) => old.id == newCourse.id),
+        ),
+      ];
+
+      // حفظ الكل بالكاش من جديد
+      await hive.saveCoursesHive(allCourses);
+    } catch (e) {
+      // بتجاهل الخطأ بس للتأكد إنو التطبيق ما ينهار
+    }
   }
 
   //?--- Colleges -------------------------------------------------
@@ -104,11 +128,75 @@ class CourceseLocalDataSourceImpl implements CourceseLocalDataSource {
   }
 
   //* Clear Universities Cache
-  @override
   Future<void> clearUniversitiesCache() async {
     try {
       await hive.clearAllUniversitiesHive();
     } catch (_) {}
+  }
+
+  //?--- Study Years -------------------------------------------------
+
+  //* Get Study Years From Cache
+  @override
+  List<StudyYearModel> getStudyYearsInCache() {
+    try {
+      return hive.getAllStudyYearsHive();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  //* Save Study Years To Cache
+  @override
+  Future<void> saveStudyYearsInCache(List<StudyYearModel> years) async {
+    try {
+      await hive.saveStudyYearsHive(years);
+    } catch (_) {}
+  }
+
+  //* Clear Study Years Cache
+  Future<void> clearStudyYearsCache() async {
+    try {
+      await hive.clearAllStudyYearsHive();
+    } catch (_) {}
+  }
+
+  //?--- Filters -------------------------------------------------
+  @override
+  Future<void> saveFilters(CourseFiltersModel filters) async {
+    try {
+      await hive.clearCourseFiltersHive();
+      await hive.saveCourseFiltersHive(filters);
+    } catch (e) {
+      // تجاهل الخطأ أو تسجيله
+    }
+  }
+
+  @override
+  CourseFiltersModel? getFilters() {
+    try {
+      return hive.getCourseFiltersHive();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  @override
+  Future<void> updateFilters(CourseFiltersModel filters) async {
+    try {
+      await hive.updateCourseFiltersHive(filters);
+    } catch (e) {
+      // تجاهل الخطأ
+    }
+  }
+
+  @override
+  Future<void> clearFilters() async {
+    try {
+      await hive.clearCourseFiltersHive();
+    } catch (e) {
+      // تجاهل الخطأ
+    }
   }
 
   //?----------------------------------------------------

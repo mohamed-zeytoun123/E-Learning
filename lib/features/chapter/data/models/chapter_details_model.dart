@@ -1,7 +1,7 @@
 import 'attachment_model.dart';
 import 'quiz_model.dart';
 
-class ChapterModel {
+class ChapterDetailsModel {
   final int id;
   final int course;
   final String title;
@@ -10,7 +10,7 @@ class ChapterModel {
   final List<QuizModel> quizzes;
   final DateTime createdAt;
 
-  ChapterModel({
+  ChapterDetailsModel({
     required this.id,
     required this.course,
     required this.title,
@@ -20,8 +20,8 @@ class ChapterModel {
     required this.createdAt,
   });
 
-  factory ChapterModel.fromMap(Map<String, dynamic> map) {
-    return ChapterModel(
+  factory ChapterDetailsModel.fromMap(Map<String, dynamic> map) {
+    return ChapterDetailsModel(
       id: map['id'] ?? 0,
       course: map['course'] ?? 0,
       title: map['title'] ?? '',
@@ -56,7 +56,7 @@ class ChapterModel {
     };
   }
 
-  ChapterModel copyWith({
+  ChapterDetailsModel copyWith({
     int? id,
     int? course,
     String? title,
@@ -65,7 +65,7 @@ class ChapterModel {
     List<QuizModel>? quizzes,
     DateTime? createdAt,
   }) {
-    return ChapterModel(
+    return ChapterDetailsModel(
       id: id ?? this.id,
       course: course ?? this.course,
       title: title ?? this.title,

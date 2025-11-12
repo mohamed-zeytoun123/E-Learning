@@ -1,8 +1,9 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_info_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,26 +51,40 @@ class FilteredCoursesListWidget extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
       itemCount: courses.length,
       itemBuilder: (context, index) {
-        final course = courses[index];
-        return CourseInfoCardWidget(
-          imageUrl: course.image ?? 'https://picsum.photos/361/180',
-          title: course.title,
-          subtitle: course.collegeName,
-          rating: (course.averageRating ?? 0).toDouble(),
-          price: course.price,
-          onTap: () {
-            final courseCubit = context.read<CourseCubit>();
-            context.pushNamed(
-              RouteNames.courceInf,
-              extra: {
-                "courseSlug": course.slug,
-                "courseCubit": courseCubit,
-                
+        final courseSlug = courses[index].slug;
+
+        // BlocSelector يعتمد على الـ slug لتحديث الـ UI لكل عنصر
+        return BlocSelector<CourseCubit, CourseState, bool>(
+          selector: (state) {
+            final original = state.courses?.courses?.firstWhere(
+              (c) => c.slug == courseSlug,
+            );
+            return original?.isFavorite ?? false;
+          },
+
+          builder: (context, isFavorite) {
+            final course = courses[index];
+            return CourseInfoCardWidget(
+              imageUrl: course.image ?? 'https://picsum.photos/361/180',
+              title: course.title,
+              subtitle: course.collegeName,
+              rating: (course.averageRating ?? 0).toDouble(),
+              price: course.price,
+              isFavorite: isFavorite,
+              onTap: () {
+                final cubit = context.read<CourseCubit>();
+                context.pushNamed(
+                  RouteNames.courceInf,
+                  extra: {"courseSlug": course.slug, "courseCubit": cubit},
+                );
+              },
+              onSave: () {
+                context.read<CourseCubit>().toggleFavorite(
+                  courseSlug: course.slug,
+                );
               },
             );
           },
-
-          onSave: () => log("Course saved!"),
         );
       },
       separatorBuilder: (_, __) => SizedBox(height: 15.h),

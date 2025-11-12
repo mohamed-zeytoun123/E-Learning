@@ -242,5 +242,33 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
+  //? ------------------------ Get Study Years ----------------------------
+
+  Future<void> getStudyYears() async {
+    emit(
+      state.copyWith(
+        getStudyYearsState: ResponseStatusEnum.loading,
+        studyYearsError: null,
+      ),
+    );
+
+    final result = await repository.getStudyYearsRepo();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          getStudyYearsState: ResponseStatusEnum.failure,
+          studyYearsError: failure.message,
+        ),
+      ),
+      (studyYearsList) => emit(
+        state.copyWith(
+          getStudyYearsState: ResponseStatusEnum.success,
+          studyYears: studyYearsList,
+        ),
+      ),
+    );
+  }
+
   //?---------------------------------------------------------------------------------------
 }

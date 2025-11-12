@@ -1,5 +1,4 @@
 import 'package:hive/hive.dart';
-
 part 'course_model.g.dart';
 
 @HiveType(typeId: 2)
@@ -28,6 +27,12 @@ class CourseModel extends HiveObject {
   @HiveField(7)
   final double? averageRating;
 
+  @HiveField(8)
+  final double totalVideoDurationHours;
+
+  @HiveField(9)
+  final bool isFavorite;
+
   CourseModel({
     required this.id,
     required this.title,
@@ -37,6 +42,8 @@ class CourseModel extends HiveObject {
     required this.collegeName,
     required this.price,
     this.averageRating,
+    required this.totalVideoDurationHours,
+    required this.isFavorite,
   });
 
   CourseModel copyWith({
@@ -48,6 +55,8 @@ class CourseModel extends HiveObject {
     String? collegeName,
     String? price,
     double? averageRating,
+    double? totalVideoDurationHours,
+    bool? isFavorite,
   }) {
     return CourseModel(
       id: id ?? this.id,
@@ -58,6 +67,9 @@ class CourseModel extends HiveObject {
       collegeName: collegeName ?? this.collegeName,
       price: price ?? this.price,
       averageRating: averageRating ?? this.averageRating,
+      totalVideoDurationHours:
+          totalVideoDurationHours ?? this.totalVideoDurationHours,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
@@ -69,14 +81,16 @@ class CourseModel extends HiveObject {
       image: map['image'] as String?,
       college: map['college'] ?? 0,
       collegeName: map['college_name'] ?? '',
-      price: map['price'] ?? '',
+      price: map['price']?.toString() ?? '',
       averageRating: map['average_rating'] != null
           ? double.tryParse(map['average_rating'].toString())
           : null,
+      totalVideoDurationHours:
+          (map['total_video_duration_hours'] ?? 0.0).toDouble(),
+      isFavorite: map['is_favorite'] ?? false,
     );
   }
 
-  // لتحويل الموديل لـ JSON
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -87,6 +101,8 @@ class CourseModel extends HiveObject {
       'college_name': collegeName,
       'price': price,
       'average_rating': averageRating,
+      'total_video_duration_hours': totalVideoDurationHours,
+      'is_favorite': isFavorite,
     };
   }
 }

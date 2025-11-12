@@ -30,16 +30,19 @@ class CoursesPage extends StatelessWidget {
               onSearch: () {
                 log("app search");
 
-                cubit.getColleges();
-                cubit.getUniversities();
+                // cubit.getColleges();
+                // cubit.getUniversities();
+                // cubit.getCategories();
+                // cubit.getStudyYears();
 
-                showModalBottomSheet(
-                  context: context,
-                  builder: (_) => BlocProvider.value(
-                    value: cubit,
-                    child: const FiltersBottomSheetWidget(),
-                  ),
-                );
+                // showModalBottomSheet(
+                //   isScrollControlled: true,
+                //   context: context,
+                //   builder: (_) => BlocProvider.value(
+                //     value: cubit,
+                //     child: const FiltersBottomSheetWidget(),
+                //   ),
+                // );
               },
             ),
             body: CustomCategoryTabBarWidget(),

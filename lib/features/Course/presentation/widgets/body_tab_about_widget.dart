@@ -125,6 +125,12 @@ class BodyTabAboutWidget extends StatelessWidget {
                         color: AppColors.textBlack,
                       ),
                     ),
+                    Text(
+                      details.title,
+                      style: AppTextStyles.s18w600.copyWith(
+                        color: AppColors.textBlack,
+                      ),
+                    ),
                     SizedBox(height: 8.h),
                     Text(
                       details.description,

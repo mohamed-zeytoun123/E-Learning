@@ -1,7 +1,9 @@
 import 'package:e_learning/core/constant/cache_keys.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
 import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
-import 'package:e_learning/features/course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
 import 'package:hive/hive.dart';
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
 import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
@@ -13,12 +15,18 @@ class HiveServiceImpl implements HiveService {
   late final Box<CourseModel> _courseBox;
   late final Box<CollegeModel> _collegeBox;
   late final Box<UniversityModel> _universityBox;
+  late final Box<StudyYearModel> _studyYearBox;
+  late final Box<CourseFiltersModel> _courseFiltersBox;
 
   HiveServiceImpl() {
     _categoryBox = Hive.box<CategorieModel>(CacheKeys.categoryBox);
     _courseBox = Hive.box<CourseModel>(CacheKeys.courseBox);
     _collegeBox = Hive.box<CollegeModel>(CacheKeys.collegeBox);
-      _universityBox = Hive.box<UniversityModel>(CacheKeys.universityBox);
+    _universityBox = Hive.box<UniversityModel>(CacheKeys.universityBox);
+    _studyYearBox = Hive.box<StudyYearModel>(CacheKeys.studyYearBox);
+    _courseFiltersBox = Hive.box<CourseFiltersModel>(
+      CacheKeys.courseFiltersBox,
+    );
   }
   //?---------------- Category Box -------------------------
 
@@ -102,6 +110,64 @@ class HiveServiceImpl implements HiveService {
   List<UniversityModel> getAllUniversitiesHive() {
     return _universityBox.values.toList();
   }
+
+  //?---------------- StudyYear Box -------------------------
+
+  //* Clear all study years
+  @override
+  Future<void> clearAllStudyYearsHive() async {
+    await _studyYearBox.clear();
+  }
+
+  //* Save study years
+  @override
+  Future<void> saveStudyYearsHive(List<StudyYearModel> years) async {
+    await _studyYearBox.clear();
+    await _studyYearBox.addAll(years);
+  }
+
+  //* Get all study years
+  @override
+  List<StudyYearModel> getAllStudyYearsHive() {
+    return _studyYearBox.values.toList();
+  }
+
+  //?---------------- filters Courses Box -------------------------
+
+  //* Clear filters
+  @override
+  Future<void> clearCourseFiltersHive() async {
+    await _courseFiltersBox.clear();
+  }
+
+  //* Save filters
+  @override
+  Future<void> saveCourseFiltersHive(CourseFiltersModel filters) async {
+    await _courseFiltersBox.clear();
+    await _courseFiltersBox.add(filters);
+  }
+
+  //* Get filters
+  @override
+  CourseFiltersModel? getCourseFiltersHive() {
+    if (_courseFiltersBox.isNotEmpty) {
+      return _courseFiltersBox.values.first;
+    }
+    return null;
+  }
+
+  //* Update filters
+  @override
+  Future<void> updateCourseFiltersHive(CourseFiltersModel filters) async {
+    if (_courseFiltersBox.isNotEmpty) {
+      final key = _courseFiltersBox.keys.first;
+      await _courseFiltersBox.put(key, filters);
+    } else {
+      await _courseFiltersBox.add(filters);
+    }
+  }
+
+
 
   //?--------------------------------------------------------
 }
