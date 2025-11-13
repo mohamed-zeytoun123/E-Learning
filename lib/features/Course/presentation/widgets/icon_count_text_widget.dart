@@ -18,18 +18,17 @@ class IconCountTextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
     return Row(
       spacing: 5.w,
       children: [
-        Icon(icon, size: 20.sp, color:colors.textBlue),
+        Icon(icon, size: 20.sp, color: context.colors.textBlack),
         Text(
           count,
-          style: AppTextStyles.s16w400.copyWith(color: colors.textPrimary),
+          style: AppTextStyles.s16w400.copyWith(color: context.colors.textPrimary),
         ),
         Text(
           text,
-          style: AppTextStyles.s16w400.copyWith(color: colors.textPrimary),
+          style: AppTextStyles.s16w400.copyWith(color: context.colors.textPrimary),
         ),
       ],
     );

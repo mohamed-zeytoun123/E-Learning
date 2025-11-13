@@ -6,4 +6,5 @@ class AppIcons {
   static const iconTelegram = "assets/icons/telegram.png";
   static const iconWhatsApp = "assets/icons/whatsApp.png";
   static const iconShamCach = "assets/icons/sham_cach.png";
+
 }

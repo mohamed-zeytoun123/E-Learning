@@ -3,6 +3,7 @@ import 'package:e_learning/core/themes/app_colors_extension.dart';
 import 'package:flutter/material.dart';
 
 extension ThemeExtensions on BuildContext {
+  
   AppColorsExtension get colors =>
       Theme.of(this).extension<AppColorsExtension>() ??
       AppColorsExtension(

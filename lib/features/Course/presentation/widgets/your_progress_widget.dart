@@ -1,7 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/video_progress_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,14 +16,13 @@ class YourProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Divider(color:colors.dividerGrey , thickness: 1, height: 16.h),
+        Divider(color: AppColors.dividerGrey, thickness: 1, height: 16.h),
         Text(
           "Your Progress",
-          style: AppTextStyles.s16w400.copyWith(color: colors.textBlue),
+          style: AppTextStyles.s16w400.copyWith(color: context.colors.textBlue),
         ),
         SizedBox(height: 5.h),
         VideoProgressWidget(

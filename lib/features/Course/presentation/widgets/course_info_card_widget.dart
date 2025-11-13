@@ -2,54 +2,60 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/price_text_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CourseInfoCardWidget extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
   final String title;
   final String subtitle;
   final double rating;
   final String price;
+  final bool isLoading;
+  final bool isFavorite;
   final VoidCallback? onSave;
   final VoidCallback? onTap;
 
   const CourseInfoCardWidget({
     super.key,
-    required this.imageUrl,
+    this.imageUrl,
     required this.title,
     required this.subtitle,
     required this.rating,
     required this.price,
-    required this.onTap,
+    this.isLoading = false,
+    this.onTap,
+    this.isFavorite = false,
     this.onSave,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
+    final colors = context.colors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 361.w,
         height: 297.5.h,
-        decoration: BoxDecoration(border: Border.all(color: colors.borderCard),
-          color: colors.background,
+        decoration: BoxDecoration(
+          color:colors.background,
           borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color:colors.borderCard) ,
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 4.r,
-              offset: Offset(1.w, 2.h),
+              offset: Offset(0, 2.h),
             ),
           ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            //? Image Section
             Stack(
               children: [
                 ClipRRect(
@@ -57,33 +63,37 @@ class CourseInfoCardWidget extends StatelessWidget {
                     topLeft: Radius.circular(20.r),
                     topRight: Radius.circular(20.r),
                   ),
-                  child: CustomCachedImageWidget(
-                    appImage: imageUrl,
-                    width: double.infinity,
-                    height: 180.5,
-                    fit: BoxFit.cover,
-                    placeholder: Container(
-                      color: Colors.grey.shade300,
-                      child: Center(child: AppLoading.circular()),
-                    ),
-                  ),
+                  child: isLoading || imageUrl == null
+                      ? AppLoading.skeleton(height: 180.5)
+                      : CustomCachedImageWidget(
+                          appImage: imageUrl!,
+                          width: double.infinity,
+                          height: 180.5,
+                          fit: BoxFit.cover,
+                          placeholder: Container(
+                            color: Colors.grey.shade300,
+                            child: Center(child: AppLoading.circular()),
+                          ),
+                        ),
                 ),
                 Positioned(
                   top: 8.h,
-                  right: 8.w,
+                  right: 14.w,
                   child: GestureDetector(
                     onTap: onSave,
                     child: Container(
-                      width: 42.w,
-                      height: 42.h,
+                      width: 44.w,
+                      height: 44.h,
                       decoration: BoxDecoration(
-                        color: colors.background,
+                        color: colors.buttonTapNotSelected,
                         shape: BoxShape.circle,
-                        // border: Border.all(color: AppColors.borderSecondary),
+                        // border: Border.all(color: ),
                       ),
                       child: Icon(
-                        Icons.bookmark_border,
-                        color: colors.textSilver,
+                        isFavorite ? Icons.bookmark : Icons.bookmark_border,
+                        color: isFavorite
+                            ? colors.textBlue
+                            : colors.textPrimary,
                       ),
                     ),
                   ),
@@ -93,31 +103,34 @@ class CourseInfoCardWidget extends StatelessWidget {
 
             SizedBox(height: 8.h),
 
-            CourseTitleSubTitleWidget(
-              title: title,
-              subtitle: 'Learn to build apps with Flutter',
-            ),
+            //? Title & Subtitle
+            isLoading
+                ? AppLoading.skeleton(height: 40)
+                : CourseTitleSubTitleWidget(title: title, subtitle: subtitle),
 
             const Spacer(),
 
+            //? Rating & Price
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  //* Rating Container
-                  Container(
-                    width: 55.w,
-                    height: 25.h,
-                    decoration: BoxDecoration(
-                      color: colors.backgroundOrange,
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 6.w),
-                    child: RatingWidget(rating: rating,),
-                  ),
-                  //* Price
-                  PriceTextWidget(price: price),
+                  isLoading
+                      ? AppLoading.skeleton(width: 55, height: 25)
+                      : Container(
+                          width: 55.w,
+                          height: 25.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.formSomeWhite,
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 6.w),
+                          child: RatingWidget(rating: rating),
+                        ),
+                  isLoading
+                      ? AppLoading.skeleton(width: 60, height: 25)
+                      : PriceTextWidget(price: price),
                 ],
               ),
             ),
@@ -127,3 +140,4 @@ class CourseInfoCardWidget extends StatelessWidget {
     );
   }
 }
+//❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️

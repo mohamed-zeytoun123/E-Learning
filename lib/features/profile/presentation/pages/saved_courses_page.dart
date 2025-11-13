@@ -1,11 +1,14 @@
 import 'dart:developer';
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -99,7 +102,7 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: 'Saved Courses', showBack: true),
+      appBar: CustomAppBarWidget(title: 'saved_courses'.tr(), showBack: true),
       body: Padding(
         padding: EdgeInsetsGeometry.symmetric(horizontal: 16.w, vertical: 32.h),
         child: BlocBuilder<ProfileCubit, ProfileState>(
@@ -109,6 +112,37 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
           builder: (context, state) {
             if (state.isLoadingdataSavedcourses == true) {
               return Center(child: CircularProgressIndicator());
+            }
+            if(state.errorFetchdataSavedcourses!=null){
+              return SizedBox(height: 500.h,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.wifi_tethering_error,
+                              size: 64.sp,
+                              color: context.colors.iconRed,
+                            ),
+                            SizedBox(height: 16.h),
+                            Text(
+                              'Error loading saved courses',
+                              style: AppTextStyles.s16w500.copyWith(
+                                color: context.colors.textPrimary,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              state.errorFetchdataSavedcourses!.message,
+                              style: AppTextStyles.s14w400.copyWith(
+                                color: context.colors.textPrimary,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
             }
 
             return ListView.separated(

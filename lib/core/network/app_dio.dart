@@ -11,7 +11,13 @@ class AppDio {
   late Dio _dio;
 
   AppDio({required this.tokenService}) {
-    _dio = Dio();
+    _dio = Dio(
+      BaseOptions(
+        connectTimeout: const Duration(seconds: 120),
+        receiveTimeout: const Duration(seconds: 120),
+        sendTimeout: const Duration(seconds: 120),
+      ),
+    );
     _initDio();
     _addLoggerToDIo();
     _addTokenInterceptor();
@@ -23,9 +29,9 @@ class AppDio {
   void _initDio() {
     log('Building Dio instance without token.');
     _dio.options = BaseOptions(
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 30),
-      sendTimeout: const Duration(seconds: 15),
+      connectTimeout: const Duration(seconds: 120),
+      receiveTimeout: const Duration(seconds: 120),
+      sendTimeout: const Duration(seconds: 120),
       contentType: Headers.jsonContentType,
       headers: {
         "Accept": Headers.jsonContentType,
@@ -40,7 +46,7 @@ class AppDio {
   //?----------------------------------------------------------------------------------------
   void addTokenToHeader(String token) {
     log('🔥 Added token to Dio headers: $token');
-    _dio.options.headers["Authorization"] = 'Bearer $token';
+    // _dio.options.headers["Authorization"] = 'Bearer $token';
   }
 
   //?----------------------------------------------------------------------------------------
@@ -84,7 +90,6 @@ class AppDio {
 
           return handler.next(options);
         },
-
         onError: (DioException err, handler) async {
           if (err.response?.statusCode == 401) {
             final refreshToken = await tokenService.getRefreshTokenService();

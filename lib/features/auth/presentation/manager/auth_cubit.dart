@@ -1,25 +1,17 @@
-import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository repository;
-  Timer? _otpTimer;
 
   AuthCubit({required this.repository}) : super(AuthState());
-
-  @override
-  Future<void> close() {
-    _otpTimer?.cancel();
-    return super.close();
-  }
 
   //? ------------------------ Login ----------------------------
   Future<void> login(String numberPhone, String password) async {
@@ -250,43 +242,32 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  //? ------------------------ OTP Timer Management ----------------------------
-  void startOtpTimer() {
-    _otpTimer?.cancel();
-    emit(state.copyWith(otpTimerSeconds: 60, canResendOtp: false));
+  //? ------------------------ Get Study Years ----------------------------
 
-    _otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (state.otpTimerSeconds > 0) {
-        emit(state.copyWith(otpTimerSeconds: state.otpTimerSeconds - 1));
-      } else {
-        emit(state.copyWith(canResendOtp: true));
-        timer.cancel();
-      }
-    });
-  }
+  Future<void> getStudyYears() async {
+    emit(
+      state.copyWith(
+        getStudyYearsState: ResponseStatusEnum.loading,
+        studyYearsError: null,
+      ),
+    );
 
-  void stopOtpTimer() {
-    _otpTimer?.cancel();
-  }
+    final result = await repository.getStudyYearsRepo();
 
-  void setOtpCode(String code) {
-    emit(state.copyWith(currentOtpCode: code));
-  }
-
-  void resendOtp(String phone, String purpose) {
-    if (state.canResendOtp) {
-      if (purpose == 'reset') {
-        forgotPassword(phone);
-      } else if (purpose == 'register') {
-        final signUpParams = state.signUpRequestParams;
-        if (signUpParams != null) {
-          signUp(params: signUpParams);
-        }
-      } else {
-        forgotPassword(phone); // Fallback
-      }
-      startOtpTimer(); // Restart timer
-    }
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          getStudyYearsState: ResponseStatusEnum.failure,
+          studyYearsError: failure.message,
+        ),
+      ),
+      (studyYearsList) => emit(
+        state.copyWith(
+          getStudyYearsState: ResponseStatusEnum.success,
+          studyYears: studyYearsList,
+        ),
+      ),
+    );
   }
 
   // ------------------------------logOut-------------------------------

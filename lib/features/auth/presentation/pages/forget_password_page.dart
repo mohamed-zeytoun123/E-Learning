@@ -1,7 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/input_forms/input_phone_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/forget_password_button_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
@@ -28,7 +27,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: AppColors.backgroundPage,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -48,7 +47,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                         context,
                       )?.translate("Enter_Your_Phone_Number") ??
                       "Enter Your Phone Number",
-                  style: AppTextStyles.s16w600.copyWith(color: context.colors.textPrimary),
+                  style: AppTextStyles.s16w600,
                 ),
                 SizedBox(height: 48.h),
                 Form(

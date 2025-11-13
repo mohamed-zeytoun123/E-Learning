@@ -4,7 +4,6 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
@@ -78,8 +77,8 @@ class ForgetPasswordButtonWidget extends StatelessWidget {
               fontFamily: AppTextStyles.fontGeist,
               color: textColor ?? AppColors.titleBlack,
             ),
-            buttonColor: context.colors.borderPrimary,
-            borderColor: context.colors.borderPrimary,
+            buttonColor: buttonColor ?? AppColors.buttonSecondary,
+            borderColor: borderColor ?? AppColors.borderSecondary,
             onTap: () {
               if (formKey.currentState!.validate()) {
                 log('Forget Password form is valid');

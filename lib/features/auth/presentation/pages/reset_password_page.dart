@@ -1,7 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/style/app_text_styles.dart' hide Colors;
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
@@ -41,6 +41,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.dispose();
   }
 
+  /// Handles the reset password process
   void _handleResetPassword() {
     final isFormValid = _formKey.currentState?.validate() ?? false;
 
@@ -65,6 +66,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     }
   }
 
+  /// Shows error message using SnackBar
   void _showErrorMessage(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -75,11 +77,22 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 
+  /// Shows success message using SnackBar
+  void _showSuccessMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // Debug: Print the received parameters
-    debugPrint('Reset Password Page - Phone: ${widget.phone}');
-    debugPrint('Reset Password Page - Reset Token: ${widget.resetToken}');
+    print('Reset Password Page - Phone: ${widget.phone}');
+    print('Reset Password Page - Reset Token: ${widget.resetToken}');
 
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
@@ -87,26 +100,33 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         listenWhen: (previous, current) =>
             previous.resetPasswordState != current.resetPasswordState,
         listener: (context, state) {
-          debugPrint(
+          print(
             'BlocListener - Reset Password State: ${state.resetPasswordState}',
           );
           switch (state.resetPasswordState) {
             case ResponseStatusEnum.success:
-              // Navigate immediately without showing SnackBar to avoid widget lifecycle issues
-              if (mounted) {
-                context.go(RouteNames.logIn);
-              }
+              _showSuccessMessage(
+                AppLocalizations.of(
+                      context,
+                    )?.translate("Password_reset_successfully") ??
+                    "Password reset successfully",
+              );
+              // Navigate to login page after successful reset using Future.microtask
+              // to avoid state emission conflicts
+              Future.microtask(() {
+                if (context.mounted) {
+                  context.go(RouteNames.logIn);
+                }
+              });
               break;
             case ResponseStatusEnum.failure:
-              if (mounted) {
-                _showErrorMessage(
-                  state.resetPasswordError ??
-                      (AppLocalizations.of(
-                            context,
-                          )?.translate("Failed_to_reset_password") ??
-                          "Failed to reset password"),
-                );
-              }
+              _showErrorMessage(
+                state.resetPasswordError ??
+                    (AppLocalizations.of(
+                          context,
+                        )?.translate("Failed_to_reset_password") ??
+                        "Failed to reset password"),
+              );
               break;
             case ResponseStatusEnum.loading:
             case ResponseStatusEnum.initial:

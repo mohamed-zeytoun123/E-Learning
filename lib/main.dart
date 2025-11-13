@@ -5,16 +5,29 @@ import 'package:e_learning/core/initial/hivi_init.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/app_router.dart';
 import 'package:e_learning/core/themes/app_theme.dart';
+import 'package:e_learning/core/services/network/network_info_service.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
+import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
+import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initHive();
   await appInitDependencies();
-  runApp(const MyApp());
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+        supportedLocales: [Locale('en', ''), Locale('ar', '')],
+        path:
+            'assets/translations', // <-- change the path of the translation files
+        fallbackLocale: Locale('en', ''),
+        child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -22,8 +35,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => AppManagerCubit(), //todo || add function get user info
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => AppManagerCubit(), //todo || add function get user info
+        ),
+        BlocProvider(
+          create: (_) => ProfileCubit(
+            ProfileRepository(
+              remote: appLocator<ProfileRemouteDataSource>(),
+              network: appLocator<NetworkInfoService>(),
+            ),
+          )..getDataUserInfoProfile(),
+        ),
+      ],
       child: ScreenUtilInit(
         designSize: const Size(390, 844),
         minTextAdapt: true,
@@ -32,10 +57,10 @@ class MyApp extends StatelessWidget {
           return BlocBuilder<AppManagerCubit, AppManagerState>(
             builder: (context, state) {
               return MaterialApp.router(
-                title: 'E-Learning',
+                title: 'e_learning'.tr(),
                 debugShowCheckedModeBanner: false,
                 locale: state.appLocale,
-                themeMode: state.themeMode,
+                themeMode: ThemeMode.dark,
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,
                 supportedLocales: const [Locale('en'), Locale('ar')],
@@ -54,5 +79,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

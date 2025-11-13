@@ -8,9 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BodyTabReviewsWidget extends StatefulWidget {
-  const BodyTabReviewsWidget({super.key, required this.isActive});
-
+  const BodyTabReviewsWidget({
+    super.key,
+    required this.isActive,
+    required this.courseSlug,
+  });
+  final String courseSlug;
   final bool isActive;
+
   @override
   State<BodyTabReviewsWidget> createState() => _BodyTabReviewsWidgetState();
 }
@@ -25,9 +30,9 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
 
   @override
   Widget build(BuildContext context) {
-  final colors =context.colors;
+    final colors =context.colors;
     return Padding(
-      padding: EdgeInsets.only(top: 15.h),
+      padding: EdgeInsets.symmetric(vertical: 15.h),
       child: Column(
         children: [
           Expanded(
@@ -54,12 +59,11 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
             Container(
               padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 10.w),
               decoration: BoxDecoration(
-                border: Border.all(color: colors.borderCard),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(24.r),
                   topRight: Radius.circular(24.r),
                 ),
-                color: colors.buttonTapNotSelected,
+                color: AppColors.backgroundPage,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
@@ -81,7 +85,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                   Text(
                     "Write a Review And Let Us Know How Are You Feeling About This Course !",
                     style: AppTextStyles.s14w400.copyWith(
-                      color:colors.textGrey,
+                      color: colors.textGrey,
                     ),
                   ),
                   SizedBox(height: 10.h),

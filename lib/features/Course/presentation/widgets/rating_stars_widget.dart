@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 
 class RatingStarsWidget extends StatefulWidget {
-  final double initialRating;
-  final ValueChanged<double> onRatingSelected;
+  final int initialRating;
+  final ValueChanged<int> onRatingSelected;
 
   const RatingStarsWidget({
     super.key,
-    this.initialRating = 0.0,
+    this.initialRating = 0,
     required this.onRatingSelected,
   });
 
@@ -17,7 +17,7 @@ class RatingStarsWidget extends StatefulWidget {
 }
 
 class _RatingStarsWidgetState extends State<RatingStarsWidget> {
-  late double _currentRating;
+  late int _currentRating;
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _RatingStarsWidgetState extends State<RatingStarsWidget> {
     _currentRating = widget.initialRating;
   }
 
-  void _updateRating(double newRating) {
+  void _updateRating(int newRating) {
     setState(() {
       _currentRating = newRating;
     });
@@ -39,7 +39,7 @@ class _RatingStarsWidgetState extends State<RatingStarsWidget> {
       children: List.generate(5, (index) {
         final starIndex = index + 1;
         return GestureDetector(
-          onTap: () => _updateRating(starIndex.toDouble()),
+          onTap: () => _updateRating(starIndex),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.w),
             child: Icon(

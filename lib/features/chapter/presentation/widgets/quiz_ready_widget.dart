@@ -4,7 +4,7 @@ import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +21,7 @@ class QuizReadyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
+    final colors = context.colors;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -42,42 +42,36 @@ class QuizReadyWidget extends StatelessWidget {
             ),
           ),
         ),
-
         SizedBox(height: 25.h),
-
         Text(
           'Your Quiz Is Ready !',
           textAlign: TextAlign.center,
-          style: AppTextStyles.s18w600.copyWith(color: colors.textPrimary),
+          style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
         ),
-
         SizedBox(height: 6.h),
-
         Row(
           spacing: 5.w,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               '$questionCount Questions',
-              style: AppTextStyles.s14w400.copyWith(color: colors.textGrey),
+              style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
             ),
             IconCircleWidget(),
             Text(
               '$pointsCount Points',
-              style: AppTextStyles.s14w400.copyWith(color: colors.textGrey),
+              style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
             ),
           ],
         ),
-
         SizedBox(height: 25.h),
-
         CustomButtonWidget(
           title: "Start Quiz",
           titleStyle: AppTextStyles.s16w500.copyWith(
             color: AppColors.titlePrimary,
           ),
-          buttonColor: colors.textBlue,
-          borderColor: colors.textBlue,
+          buttonColor: AppColors.buttonPrimary,
+          borderColor: AppColors.borderPrimary,
           icon: Icon(Icons.arrow_outward_sharp, color: AppColors.iconWhite),
           onTap: () {
             context.push(RouteNames.quizPage);

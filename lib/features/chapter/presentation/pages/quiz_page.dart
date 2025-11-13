@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/quiz_info_card_widget.dart';
@@ -17,9 +16,8 @@ class QuizPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
     return Scaffold(
-      backgroundColor: colors.background,
+      backgroundColor: AppColors.backgroundPage,
       appBar: CustomAppBarWidget(title: "Quiz", showBack: true),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
@@ -52,7 +50,7 @@ class QuizPage extends StatelessWidget {
                         log(value.toString());
                       },
                     ),
-                    Divider(height: 1.h, color:colors.dividerGrey),
+                    Divider(height: 1.h, color: AppColors.dividerGrey),
                   ],
                 ),
               ),
@@ -63,8 +61,8 @@ class QuizPage extends StatelessWidget {
               titleStyle: AppTextStyles.s16w500.copyWith(
                 color: AppColors.titlePrimary,
               ),
-              buttonColor: colors.textBlue,
-              borderColor: Colors.transparent,
+              buttonColor: AppColors.buttonPrimary,
+              borderColor: AppColors.borderPrimary,
               onTap: () {
                 showModalBottomSheet(
                   context: context,
@@ -79,10 +77,7 @@ class QuizPage extends StatelessWidget {
                     total: 10,
                     onDone: () {
                       Navigator.of(context, rootNavigator: true).pop();
-                      context.pushReplacement(
-                        RouteNames.chapterPage,
-                        extra: {"isActive": true},
-                      );
+                      context.pushReplacement(RouteNames.courses);
                     },
                   ),
                 );

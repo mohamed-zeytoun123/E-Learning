@@ -173,6 +173,11 @@ class AppTheme {
         //* text Colors 
         
       ),
+      
     ],
+    
   );
+
+
+  
 }

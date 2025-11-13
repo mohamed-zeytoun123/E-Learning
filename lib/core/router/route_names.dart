@@ -11,6 +11,9 @@ class RouteNames {
   static const forgetPassword = '/forget-password';
   static const resetPassword = '/reset-password';
 
+  //* ================= Video Featchers =================
+  static const viedioPage = '/video';
+
   //* ================= Course Featchers =================
   static const courceInf = '/cource-inf';
   static const courses = '/courses';
@@ -21,6 +24,14 @@ class RouteNames {
 
   //* ================= Profile Featchers =================
   static const profile = '/profile';
+  static const homePage = '/home-page';
+  static const viewAllArticles = '/view-all-articles';
+  static const viewAllTeachers = '/view-all-teachers';
+  static const viewAllCourses = '/view-all-courses';
+  static const aticleDetails = '/article-details';
+  static const mainHomePage = '/rt';
+  static const teatcherPage = '/teatcher-page';
+  static const searchPage = '/';
   static const savedCourses = '/saved-courses';
   static const downloads = '/downloads';
   static const aboutUs = '/about-us';
@@ -28,6 +39,9 @@ class RouteNames {
   static const term = '/term';
   //* ================= Enroll Featchers =================
   static const enroll = '/enroll';
+
+  //* ================= No Internet =================
+  static const noInternet = '/no-internet';
 
   //?--------------------------------------------------------------------------
 }

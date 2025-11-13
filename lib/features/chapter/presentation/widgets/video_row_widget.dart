@@ -1,7 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/video_progress_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -25,7 +24,6 @@ class VideoRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
     return Column(
       children: [
         Material(
@@ -55,13 +53,13 @@ class VideoRowWidget extends StatelessWidget {
                             width: 48.w,
                             height: 48.h,
                             decoration: BoxDecoration(
-                              color: colors.buttonTapNotSelected,
+                              color: AppColors.formSecondary,
                               borderRadius: BorderRadius.circular(999.r),
                             ),
                             alignment: Alignment.center,
                             child: Icon(
                               Icons.play_arrow,
-                              color: colors.textBlue,
+                              color: AppColors.iconBlue,
                               size: 25.sp,
                             ),
                           ),
@@ -76,7 +74,7 @@ class VideoRowWidget extends StatelessWidget {
                             Text(
                               chapterTitle,
                               style: AppTextStyles.s16w600.copyWith(
-                                color: colors.textPrimary
+                                color: AppColors.textBlack,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -84,7 +82,7 @@ class VideoRowWidget extends StatelessWidget {
                             Text(
                               '$durationMinutes Mins',
                               style: AppTextStyles.s14w400.copyWith(
-                                color: colors.textGrey,
+                                color: AppColors.textGrey,
                               ),
                             ),
                           ],
@@ -95,7 +93,7 @@ class VideoRowWidget extends StatelessWidget {
                         size: 20.sp,
                         color: isLocked
                             ? AppColors.iconOrange
-                            : colors.textBlue,
+                            : AppColors.iconBlue,
                       ),
                     ],
                   ),

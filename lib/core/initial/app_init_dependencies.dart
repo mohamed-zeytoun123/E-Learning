@@ -24,6 +24,24 @@ import 'package:e_learning/features/auth/data/source/repo/auth_repository_impl.d
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
+import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source.dart';
+import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source_impl.dart';
+import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source_impl.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository_impl.dart';
+import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source.dart';
+import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source_impl.dart';
+import 'package:e_learning/features/Teacher/data/source/remote/teacher_remote_data_source.dart';
+import 'package:e_learning/features/Teacher/data/source/remote/teacher_remote_data_source_impl.dart';
+import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.dart';
+import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository_impl.dart';
+import 'package:e_learning/features/Article/data/source/local/article_local_data_source.dart';
+import 'package:e_learning/features/Article/data/source/local/article_local_data_source_impl.dart';
+import 'package:e_learning/features/Article/data/source/remote/article_remote_data_source.dart';
+import 'package:e_learning/features/Article/data/source/remote/article_remote_data_source_impl.dart';
+import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
+import 'package:e_learning/features/Article/data/source/repo/article_repository_impl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,7 +144,68 @@ Future<void> appInitDependencies() async {
     () => AuthRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
+  //* Course Local Data Source
+  appLocator.registerLazySingleton<CourceseLocalDataSource>(
+    () => CourceseLocalDataSourceImpl(hive: appLocator<HiveService>()),
+  );
+
+  //* Course Remote Data Source
+  appLocator.registerLazySingleton<CourceseRemoteDataSource>(
+    () => CourceseRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
+  //* Teacher Local Data Source
+  appLocator.registerLazySingleton<TeacherLocalDataSource>(
+    () => TeacherLocalDataSourceImpl(
+      sharedPreferences: appLocator<SharedPreferences>(),
+    ),
+  );
+
+  //* Teacher Remote Data Source
+  appLocator.registerLazySingleton<TeacherRemoteDataSource>(
+    () => TeacherRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
+  //* Article Local Data Source
+  appLocator.registerLazySingleton<ArticleLocalDataSource>(
+    () => ArticleLocalDataSourceImpl(
+      sharedPreferences: appLocator<SharedPreferences>(),
+    ),
+  );
+
+  //* Article Remote Data Source
+  appLocator.registerLazySingleton<ArticleRemoteDataSource>(
+    () => ArticleRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
   //? ----------- Repositories ------------------------------------------------------------------
+
+  //* Course Repository
+  appLocator.registerLazySingleton<CourceseRepository>(
+    () => CourceseRepositoryImpl(
+      remote: appLocator<CourceseRemoteDataSource>(),
+      local: appLocator<CourceseLocalDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //* Teacher Repository
+  appLocator.registerLazySingleton<TeacherRepository>(
+    () => TeacherRepositoryImpl(
+      remote: appLocator<TeacherRemoteDataSource>(),
+      local: appLocator<TeacherLocalDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //* Article Repository
+  appLocator.registerLazySingleton<ArticleRepository>(
+    () => ArticleRepositoryImpl(
+      remote: appLocator<ArticleRemoteDataSource>(),
+      local: appLocator<ArticleLocalDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
 
   //* Auth Repository
   appLocator.registerLazySingleton<AuthRepository>(

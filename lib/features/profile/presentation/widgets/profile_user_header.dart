@@ -75,7 +75,7 @@ class ProfileUserHeader extends StatelessWidget {
                     //     "University",
                     state.dataUserInfoProfile.username,
                     style: AppTextStyles.s16w600.copyWith(
-                      color: colors.textPrimary,
+                      color: context.colors.textPrimary,
                     ),
                   ),
                   Padding(

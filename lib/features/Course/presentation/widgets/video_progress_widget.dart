@@ -21,7 +21,6 @@ class VideoProgressWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
     final int safeTotal = totalVideos <= 0 ? 1 : totalVideos;
     final double percent = (completedVideos / safeTotal).clamp(0.0, 1.0);
     final int percentValue = (percent * 100).round();
@@ -37,7 +36,7 @@ class VideoProgressWidget extends StatelessWidget {
             lineHeight: hieghtProgress.h,
             percent: percent,
             backgroundColor: AppColors.formSomeWhite,
-            progressColor: colors.textBlue,
+            progressColor: context.colors.textBlue,
             barRadius: Radius.circular(999.r),
             animation: true,
             animationDuration: 700,
@@ -50,14 +49,14 @@ class VideoProgressWidget extends StatelessWidget {
                   Text(
                     '$completedVideos Of $totalVideos Videos',
                     style: AppTextStyles.s14w400.copyWith(
-                      color:colors.textGrey ,
+                      color: context.colors.textGrey,
                       fontSize: 14.sp,
                     ),
                   ),
                   Text(
                     '$percentValue% Completed',
                     style: AppTextStyles.s14w400.copyWith(
-                      color: colors.textGrey,
+                      color: context.colors.textGrey,
                     ),
                   ),
                 ],

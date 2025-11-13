@@ -10,15 +10,14 @@ class UserInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           title,
-          style: AppTextStyles.s14w400.copyWith(color: colors.textGrey),
+          style: AppTextStyles.s14w400.copyWith(color:context.colors.textPrimary),
         ),
-        Text(value, style: AppTextStyles.s14w400.copyWith(color: colors.textPrimary)),
+        Text(value, style: AppTextStyles.s14w400.copyWith(color:context.colors.textGrey)),
       ],
     );
   }

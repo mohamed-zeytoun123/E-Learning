@@ -69,13 +69,13 @@ class DataCourseSaved {
   factory DataCourseSaved.fromMap(Map<String, dynamic> map) {
     return DataCourseSaved(
       id: map['id'] as int,
-      title: map['title'] as String,
+      title: (map['title'] ?? '') as String,
       slug: map['slug'] as String,
-      image: map['image'] as dynamic,
+      image: (map['image'] ?? '') as dynamic,
       college: map['college'] as int,
       collegeName: map['college_name'] as String,
       price: map['price'] as String,
-      averageRating: map['average_rating'] as dynamic,
+      averageRating: (map['average_rating']??'') as dynamic,
       totalVideoDurationHours: map['total_video_duration_hours'] as double,
       isFavorite: map['is_favorite'] as bool,
     );

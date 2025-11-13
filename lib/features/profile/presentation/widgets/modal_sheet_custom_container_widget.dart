@@ -1,4 +1,3 @@
-import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,7 +22,7 @@ class ModalSheetCustomContainerWidget extends StatelessWidget {
         bottom: 24.h,
       ),
       decoration: BoxDecoration(
-        color: context.colors.buttonTapNotSelected,
+        color: Colors.white,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.r),
           topRight: Radius.circular(24.r),

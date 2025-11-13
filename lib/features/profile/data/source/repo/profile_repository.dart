@@ -90,6 +90,8 @@ class ProfileRepository {
       var result = await remote.getDataCoursesSaved();
       return result.fold(
         (error) {
+      
+log(' error fetch data save course 🔥🔥🔥🔥🔥 ',);
           return left(error);
         },
         (data) {
