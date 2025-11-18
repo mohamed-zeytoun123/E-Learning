@@ -3,9 +3,10 @@ import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
 
@@ -109,6 +110,23 @@ class ChapterRepositoryImpl implements ChapterRepository {
       );
 
       return result.fold((failure) => Left(failure), (answer) => Right(answer));
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //?-----------
+  //* Step 4 : Submit Completed Quiz (Final submit + grading)
+  @override
+  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRepo({
+    required int attemptId,
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.submitCompletedQuizRemote(
+        attemptId: attemptId,
+      );
+
+      return result.fold((failure) => Left(failure), (submit) => Right(submit));
     } else {
       return Left(FailureNoConnection());
     }

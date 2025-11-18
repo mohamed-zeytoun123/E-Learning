@@ -1,9 +1,10 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
 
 class ChapterState {
   //?--------------------------------------------------------
@@ -34,6 +35,11 @@ class ChapterState {
   final String? answerError;
   final Map<int, int> selectedOptions;
 
+  //* Step 4 : Submit Completed Quiz (Final submit + grading)
+  final SubmitCompletedModel? submit;
+  final ResponseStatusEnum? submitStatus;
+  final String? submitError;
+
   //?----------------------------------------------------------
   ChapterState({
     //* Get Chapter Details
@@ -62,6 +68,11 @@ class ChapterState {
     this.answerStatus = ResponseStatusEnum.initial,
     this.answerError,
     this.selectedOptions = const {},
+
+    //* Step 4 : Submit Completed Quiz (Final submit + grading)
+    this.submit,
+    this.submitStatus = ResponseStatusEnum.initial,
+    this.submitError,
   });
 
   //?--------------------------------------------------------
@@ -92,6 +103,11 @@ class ChapterState {
     ResponseStatusEnum? answerStatus,
     String? answerError,
     Map<int, int>? selectedOptions,
+
+    //* Step 4 : Submit Completed Quiz (Final submit + grading)
+    SubmitCompletedModel? submit,
+    ResponseStatusEnum? submitStatus,
+    String? submitError,
   }) {
     return ChapterState(
       //* Get Chapter Details
@@ -119,7 +135,12 @@ class ChapterState {
       answer: answer ?? this.answer,
       answerStatus: answerStatus ?? this.answerStatus,
       answerError: answerError,
-      selectedOptions: selectedOptions ??this. selectedOptions,
+      selectedOptions: selectedOptions ?? this.selectedOptions,
+
+      //* Step 4 : Submit Completed Quiz (Final submit + grading)
+      submit: submit ?? this.submit,
+      submitStatus: submitStatus ?? this.submitStatus,
+      submitError: submitError ?? this.submitError,
     );
   }
 }

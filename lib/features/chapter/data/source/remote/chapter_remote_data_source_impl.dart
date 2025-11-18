@@ -9,9 +9,10 @@ import 'package:e_learning/core/network/api_response.dart';
 import 'package:e_learning/core/network/app_url.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 
 class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
@@ -230,6 +231,59 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           Failure(message: "Unknown error", statusCode: response.statusCode),
         );
       }
+    } catch (exception) {
+      log(exception.toString());
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?------------------------------------
+  //* Step 4 : Submit Completed Quiz (Final submit + grading)
+  @override
+  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRemote({
+    required int attemptId,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.submitCompletedQuiz(attemptId),
+      );
+
+      final ApiResponse response = await api.post(request);
+
+      log("SUBMIT COMPLETED QUIZ RESPONSE: ${response.body}");
+
+      final data = response.body;
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (data is Map<String, dynamic>) {
+          if (data.containsKey("error")) {
+            return Left(
+              Failure(
+                message: data["error"].toString(),
+                statusCode: response.statusCode,
+              ),
+            );
+          }
+
+          final submit = SubmitCompletedModel.fromJson(data);
+          return Right(submit);
+        } else {
+          return Left(FailureServer());
+        }
+      }
+
+      if (data is Map<String, dynamic> && data.containsKey("error")) {
+        return Left(
+          Failure(
+            message: data["error"].toString(),
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+
+      return Left(
+        Failure(message: "Unknown error", statusCode: response.statusCode),
+      );
     } catch (exception) {
       log(exception.toString());
       return Left(Failure.handleError(exception as DioException));

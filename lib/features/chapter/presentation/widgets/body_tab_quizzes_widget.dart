@@ -3,7 +3,7 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/quiz_locked_widget.dart';

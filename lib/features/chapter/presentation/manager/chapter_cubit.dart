@@ -172,17 +172,15 @@ class ChapterCubit extends Cubit<ChapterState> {
 
     result.fold(
       (failure) {
-        // إذا فشل، رجع البيانات القديمة
         emit(
           state.copyWith(
             answerStatus: ResponseStatusEnum.failure,
             answerError: failure.message,
-            selectedOptions: previousOptions, // إعادة الحالة القديمة
+            selectedOptions: previousOptions,
           ),
         );
       },
       (answer) {
-        // إذا نجح، حدث الـ answer
         emit(
           state.copyWith(
             answerStatus: ResponseStatusEnum.success,
@@ -193,57 +191,37 @@ class ChapterCubit extends Cubit<ChapterState> {
     );
   }
 
-  // Future<void> submitAnswer({
-  //   required int quizId,
-  //   required int questionId,
-  //   required int selectedChoiceId,
-  // }) async {
-  //   // Emit loading state for this answer
-  //   emit(
-  //     state.copyWith(
-  //       answerStatus: ResponseStatusEnum.loading,
-  //       answerError: null,
-  //     ),
-  //   );
-
-  //   final result = await repo.submitQuizAnswerRepo(
-  //     quizId: quizId,
-  //     questionId: questionId,
-  //     selectedChoiceId: selectedChoiceId,
-  //   );
-
-  //   (result.fold(
-  //     (failure) {
-  //       emit(
-  //         state.copyWith(
-  //           answerStatus: ResponseStatusEnum.failure,
-  //           answerError: failure.message,
-  //         ),
-  //       );
-  //     },
-  //     (answer) {
-  //       // تحديث selectedOptions حسب السؤال والاختيار اللي تم إرساله
-  //       final updated = Map<int, int>.from(state.selectedOptions);
-  //       // نفترض عندك questionId موجود، وتحويله لمؤشر السؤال في الـ UI
-  //       final questionIndex = state.statrtQuiz?.questions.indexWhere(
-  //         (q) => q.id == answer.questionId,
-  //       );
-  //       if (questionIndex != null && questionIndex >= 0) {
-  //         updated[questionIndex] = state.selectedOptions[questionIndex] ?? 0;
-  //       }
-
-  //       emit(
-  //         state.copyWith(
-  //           answerStatus: ResponseStatusEnum.success,
-  //           answer: answer,
-  //           selectedOptions: updated, // نحدث الـ UI مع الريسبونس
-  //         ),
-  //       );
-  //     },
-  //   ));
-  // }
-
   //?--------------------------------------------------------
+  //* Step 4 : Submit Completed Quiz (Final submit + grading)
+  Future<void> submitCompletedQuiz({required int attemptId}) async {
+    emit(
+      state.copyWith(
+        submitStatus: ResponseStatusEnum.loading,
+        submitError: null,
+      ),
+    );
+
+    final result = await repo.submitCompletedQuizRepo(attemptId: attemptId);
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            submitStatus: ResponseStatusEnum.failure,
+            submitError: failure.message,
+          ),
+        );
+      },
+      (submit) {
+        emit(
+          state.copyWith(
+            submitStatus: ResponseStatusEnum.success,
+            submit: submit,
+          ),
+        );
+      },
+    );
+  }
 
   //?--------------------------------------------------------
 }

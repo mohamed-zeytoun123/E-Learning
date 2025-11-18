@@ -123,6 +123,10 @@ class AppUrls {
   static String submitQuizAnswer(int quizId) =>
       "$baseURl/quiz-attempts/$quizId/submit-answer/";
 
+  //* Step 4 : Submit Completed Quiz (final submit and grading)
+  static String submitCompletedQuiz(int attemptId) =>
+      "$baseURl/quiz-attempts/$attemptId/submit/";
+
   //?------------------- Enrollment -------------------
   //* Enroll in a Course
   static final String enrollCourse = "$baseURl/enrollments/enroll/";

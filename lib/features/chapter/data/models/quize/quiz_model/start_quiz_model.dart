@@ -1,4 +1,4 @@
-import 'package:e_learning/features/chapter/data/models/quize/question_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/question_model.dart';
 
 class StartQuizModel {
   final int id;
