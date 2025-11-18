@@ -1,37 +1,41 @@
 class AppUrls {
   //?---------------------------------------------------------------
 
-  static const String _ip = "192.168.1.23";
+  static const String _ip = "192.168.1.102";
 
   //?---------------------------------------------------------------
 
-  static const String _baseURl = 'http://$_ip:8100/api/v1';
+  static const String baseURl = 'http://$_ip:8100/api/v1';
+
+  //?---------------------------------------------------------------
+
+  static const String drmKey = 'PVqK16VcxqZLwrQs4iflv6MUikMMtRsY0BkVPbNPxBg=';
 
   //?---------------------------------------------------------------
 
   //* Auth
-  static final String login = "$_baseURl/auth/login";
-  static final String signUp = "$_baseURl/auth/register";
-  static final String logOut = "$_baseURl/auth/logout";
-  static final String verifyOtp = "$_baseURl/auth/verify-otp";
-  static final String verifyForgotPasswordOtp = "$_baseURl/auth/forgot/verify";
-  static final String forgetPassword = "$_baseURl/auth/forgot/start";
-  static final String resetPassword = "$_baseURl/auth/forgot/reset";
+  static final String login = "$baseURl/auth/login";
+  static final String signUp = "$baseURl/auth/register";
+  static final String logOut = "$baseURl/auth/logout";
+  static final String verifyOtp = "$baseURl/auth/verify-otp";
+  static final String verifyForgotPasswordOtp = "$baseURl/auth/forgot/verify";
+  static final String forgetPassword = "$baseURl/auth/forgot/start";
+  static final String resetPassword = "$baseURl/auth/forgot/reset";
 
   //?------------------- Refresh Token -------------------
 
   //* Refresh Token
-  static final String refreashToken = "$_baseURl/auth/refresh";
+  static final String refreashToken = "$baseURl/auth/refresh";
 
   //?------------------- Universities & Colleges -------------------
   //* Get University
-  static final String getUniversities = "$_baseURl/universities/";
+  static final String getUniversities = "$baseURl/universities/";
 
   //* Get Colleges
-  static final String getColleges = "$_baseURl/colleges/";
+  static final String getColleges = "$baseURl/colleges/";
 
   //* Get Categories
-  static final String getCategories = "$_baseURl/categories/";
+  static final String getCategories = "$baseURl/categories/";
 
   //?------------------- Courses -------------------
 
@@ -41,7 +45,7 @@ class AppUrls {
 
   //* Get Courses as function to accept query params
   static String getCourses({Map<String, dynamic>? queryParameters}) {
-    String url = "$_baseURl/courses/";
+    String url = "$baseURl/courses/";
     if (queryParameters != null && queryParameters.isNotEmpty) {
       final queryString = queryParameters.entries
           .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
@@ -52,20 +56,20 @@ class AppUrls {
   }
 
   //* Get Study Years
-  static final String getStudyYears = "$_baseURl/study-years/";
+  static final String getStudyYears = "$baseURl/study-years/";
 
   //* Get Course Details by Slug
   static String courseDetails(String courseSlug) =>
-      "$_baseURl/courses/$courseSlug/";
+      "$baseURl/courses/$courseSlug/";
 
   //* Get Chapters by Course ID
   // static String getChapters(String courseSlug) =>
   //     '$_baseURl/courses/$courseSlug/chapters/';
   static String getChapters(
-    String courseSlug, {
+    String courseId, {
     Map<String, dynamic>? queryParameters,
   }) {
-    String url = "$_baseURl/courses/$courseSlug/chapters/";
+    String url = "$baseURl/courses/$courseId/chapters/";
     if (queryParameters != null && queryParameters.isNotEmpty) {
       final queryString = queryParameters.entries
           .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
@@ -75,17 +79,52 @@ class AppUrls {
     return url;
   }
 
-  //* Get Ratings
-  static String getRatings(String courseSlug) =>
-      '$_baseURl/courses/$courseSlug/ratings/?ordering=-created_at';
+  //* Add Rating
+  static String addRating(String courseId) =>
+      "$baseURl/courses/$courseId/ratings/";
+
+  static String getRatings(
+    String courseId, {
+    Map<String, dynamic>? queryParameters,
+  }) {
+    String url = '$baseURl/courses/$courseId/ratings/';
+
+    if (queryParameters != null && queryParameters.isNotEmpty) {
+      final qp = queryParameters.entries
+          .map((e) => '${e.key}=${e.value}')
+          .join('&');
+      url = '$url?$qp';
+    }
+
+    return url;
+  }
 
   //* Get Chapter by ID
-  static String getChapterById(String courseSlug, int chapterId) =>
-      "$_baseURl/courses/$courseSlug/chapters/$chapterId/";
+  static String getChapterById(String courseId, String chapterId) =>
+      "$baseURl/courses/$courseId/chapters/$chapterId/";
 
   //* Add/Remove Favorite for a Course
   static String favoriteCourse(String courseSlug) =>
-      "$_baseURl/courses/$courseSlug/favorite/";
+      "$baseURl/courses/$courseSlug/favorite/";
 
+  //* Get Attachments for a Chapter
+  static String getChapterAttachments(int chapterId) =>
+      "$baseURl/chapters/$chapterId/attachments/";
+
+  //?------------------- Quizzes -------------------
+  //* step 1 : Get Quiz By Chapter ID
+  static String getQuizByChapter(String chapterId) =>
+      "$baseURl/chapters/$chapterId/quiz/";
+
+  //* Step 2 : Start Quiz
+  static String startQuiz(int quizId) => "$baseURl/quizzes/$quizId/start/";
+
+  //* Step 3 : Submit Quiz Answer
+  static String submitQuizAnswer(int quizId) =>
+      "$baseURl/quiz-attempts/$quizId/submit-answer/";
+
+  //?------------------- Enrollment -------------------
+  //* Enroll in a Course
+  static final String enrollCourse = "$baseURl/enrollments/enroll/";
   //?---------------------------------------------------------------
 }

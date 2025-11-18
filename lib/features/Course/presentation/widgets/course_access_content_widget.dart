@@ -12,13 +12,15 @@ class CourseAccessContentWidget extends StatelessWidget {
   final int completedVideos;
   final int totalVideos;
   final int videoCount;
-  final int hoursCount;
+  final double hoursCount;
+  final int courseId;
   final String price;
   final bool isActive;
 
   const CourseAccessContentWidget({
     super.key,
     required this.completedVideos,
+    required this.courseId,
     required this.totalVideos,
     required this.videoCount,
     required this.hoursCount,
@@ -46,13 +48,14 @@ class CourseAccessContentWidget extends StatelessWidget {
           if (isActive) {
             return YourProgressWidget(
               completedVideos: completedVideos,
-              totalVideos: totalVideos,
+              videoCount: videoCount,
             );
           } else {
             return CourseInfoSummaryWidget(
               videoCount: videoCount,
               hoursCount: hoursCount,
               price: price,
+              courseId: courseId,
             );
           }
         } else {

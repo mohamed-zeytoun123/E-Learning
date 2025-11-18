@@ -9,30 +9,100 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/chapter_row_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_suspended_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class BodyTabChapterWidget extends StatelessWidget {
+class BodyTabChapterWidget extends StatefulWidget {
   const BodyTabChapterWidget({
     super.key,
     required this.isActive,
-    required this.courseSlug,
     required this.chapterId,
     required this.courseImage,
     required this.courseTitle,
+    required this.courseId,
+    required this.price,
   });
   final bool isActive;
-  final String courseSlug;
   final int chapterId;
   final String courseImage;
   final String courseTitle;
+  final int courseId;
+  final String price;
+
+  @override
+  State<BodyTabChapterWidget> createState() => _BodyTabChapterWidgetState();
+}
+
+class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
+  final ScrollController _scrollController = ScrollController();
+  int page = 1;
+  void _handleFetchChapters() {
+    final cubit = context.read<CourseCubit>();
+    final state = cubit.state;
+
+    // إذا عم يتم تحميل بيانات إضافية حالياً، ما نرسل طلب جديد
+    if (state.loadchaptersMoreStatus == ResponseStatusEnum.loading) {
+      log("Already loading more chapters, skipping request.");
+      return;
+    }
+
+    // إذا لا يوجد فصول أصلاً، نحمل الصفحة الأولى
+    if (state.chapters == null || state.chapters!.chapters.isEmpty) {
+      log("Chapters empty, fetching first page.");
+      cubit.getChapters(courseId: "${widget.courseId}", reset: true, page: 1);
+      return;
+    }
+
+    // تحقق من وجود صفحات إضافية
+    if (!(state.chapters?.hasNextPage ?? false)) return;
+
+    final nextPage = page + 1;
+    log("Fetching more chapters, page: $nextPage");
+
+    cubit
+        .getChapters(
+          courseId: "${widget.courseId}",
+          reset: false,
+          page: nextPage,
+        )
+        .then((_) {
+          if (cubit.state.loadchaptersMoreStatus !=
+              ResponseStatusEnum.failure) {
+            page = nextPage; // تحديث رقم الصفحة بعد نجاح التحميل
+            log("Page $nextPage loaded successfully.");
+          } else {
+            log("Failed to load page $nextPage.");
+          }
+        })
+        .catchError((error) {
+          log("Fetch chapters failed: $error");
+        });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      final position = _scrollController.position;
+      if (position.pixels > position.maxScrollExtent * 0.85) {
+        _handleFetchChapters();
+      }
+    });
+
+    // تحميل الصفحة الأولى تلقائي عند init
+    context.read<CourseCubit>().getChapters(
+      courseId: "${widget.courseId}",
+      reset: true,
+      page: 1,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,62 +112,71 @@ class BodyTabChapterWidget extends StatelessWidget {
         return Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
           child: BlocBuilder<CourseCubit, CourseState>(
-            buildWhen: (pre, curr) => pre.chaptersStatus != curr.chaptersStatus,
+            buildWhen: (pre, curr) =>
+                pre.chapters != curr.chapters ||
+                pre.chaptersStatus != curr.chaptersStatus ||
+                pre.loadchaptersMoreStatus != curr.loadchaptersMoreStatus,
             builder: (context, state) {
+              final chapters = state.chapters?.chapters ?? [];
+
               switch (state.chaptersStatus) {
                 case ResponseStatusEnum.loading:
                   return Center(child: AppLoading.circular());
 
                 case ResponseStatusEnum.failure:
-                  {
-                    return Center(
+                  return Center(
+                    child: SingleChildScrollView(
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 20.w,
                           vertical: 40.h,
                         ),
-                        child: SingleChildScrollView(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                state.chaptersError ?? "Something went wrong",
-                                textAlign: TextAlign.center,
-                                style: AppTextStyles.s20w600.copyWith(
-                                  color: AppColors.textError,
-                                ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.error,
+                              color: AppColors.iconError,
+                              size: 40.sp,
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              state.chaptersError ?? "Something went wrong",
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.s20w600.copyWith(
+                                color: AppColors.textError,
                               ),
-                              SizedBox(height: 30.h),
-                              CustomButtonWidget(
-                                title: "Retry",
-                                titleStyle: AppTextStyles.s18w600.copyWith(
-                                  color: AppColors.titlePrimary,
-                                ),
-                                buttonColor: AppColors.buttonPrimary,
-                                borderColor: AppColors.borderPrimary,
-                                onTap: () {
-                                  context.read<CourseCubit>().getChapters(
-                                    courseSlug: courseSlug,
-                                  );
-                                },
+                            ),
+                            SizedBox(height: 30.h),
+                            CustomButtonWidget(
+                              title: "Retry",
+                              titleStyle: AppTextStyles.s18w600.copyWith(
+                                color: AppColors.titlePrimary,
                               ),
-                            ],
-                          ),
+                              buttonColor: AppColors.buttonPrimary,
+                              borderColor: AppColors.borderPrimary,
+                              onTap: () {
+                                context.read<CourseCubit>().getChapters(
+                                  courseId: "${widget.courseId}",
+                                  reset: true,
+                                  page: 1,
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  }
+                    ),
+                  );
 
                 case ResponseStatusEnum.success:
                 case ResponseStatusEnum.initial:
-                  final chapters = state.chapters;
-
-                  if (chapters == null || chapters.isEmpty) {
+                  if (chapters.isEmpty) {
                     return SingleChildScrollView(
-                      child: Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.w),
+                        child: Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -132,7 +211,9 @@ class BodyTabChapterWidget extends StatelessWidget {
                                 borderColor: AppColors.borderPrimary,
                                 onTap: () {
                                   context.read<CourseCubit>().getChapters(
-                                    courseSlug: courseSlug,
+                                    courseId: "${widget.courseId}",
+                                    reset: true,
+                                    page: 1,
                                   );
                                 },
                               ),
@@ -154,44 +235,96 @@ class BodyTabChapterWidget extends StatelessWidget {
                       ),
                       Expanded(
                         child: ListView.separated(
+                          controller: _scrollController,
                           physics: const BouncingScrollPhysics(),
-                          itemCount: chapters.length,
+                          itemCount: chapters.length + 1,
                           itemBuilder: (context, index) {
-                            bool isChapterEnabled = false;
+                            if (index < chapters.length) {
+                              bool isChapterEnabled = false;
 
-                            if (appState == AppStateEnum.guest) {
-                              isChapterEnabled = false;
-                            } else if (appState == AppStateEnum.user) {
-                              isChapterEnabled = isActive ? true : index < 1;
+                              if (appState == AppStateEnum.guest) {
+                                isChapterEnabled = false;
+                              } else if (appState == AppStateEnum.user) {
+                                isChapterEnabled = widget.isActive
+                                    ? true
+                                    : index < 1;
+                              }
+
+                              return ChapterRowWidget(
+                                chapterNumber: index + 1,
+                                chapterTitle: chapters[index].title,
+                                videoCount: 4,
+                                durationMinutes: 126,
+                                chapterState: isChapterEnabled
+                                    ? ChapterStateEnum.open
+                                    : ChapterStateEnum.locked,
+                                onTap: isChapterEnabled
+                                    ? () {
+                                        log("Chapter $index pressed");
+                                        context.push(
+                                          RouteNames.chapterPage,
+                                          extra: {
+                                            "isActive": widget.isActive,
+                                            "courseSlug": widget.courseId
+                                                .toString(),
+                                            "chapterId": chapters[index].id,
+                                            "courseTitle": widget.courseTitle,
+                                            "courseImage": widget.courseImage,
+                                            "index": index + 1,
+                                          },
+                                        );
+                                      }
+                                    : null,
+                                id: chapters[index].id,
+                              );
                             }
 
-                            return ChapterRowWidget(
-                              chapterNumber: index + 1,
-                              chapterTitle: chapters[index].title,
-                              videoCount: 4,
-                              durationMinutes: 126,
-                              chapterState: isChapterEnabled
-                                  ? ChapterStateEnum.open
-                                  : ChapterStateEnum.locked,
-                              onTap: isChapterEnabled
-                                  ? () {
-                                      log("Chapter $index pressed");
-                                      context.push(
-                                        RouteNames.chapterPage,
-                                        extra: {
-                                          "isActive": isActive,
-                                          "courseSlug": courseSlug, // صححت
-                                          "chapterId":
-                                              chapters[index].id, // صححت
-                                          "courseTitle": courseTitle,
-                                          "courseImage": courseImage,
-                                          "index": index + 1,
-                                        },
-                                      );
-                                    }
-                                  : null,
-                              id: chapters[index].id,
-                            );
+                            // Loading more or retry for pagination
+                            if (state.loadchaptersMoreStatus ==
+                                ResponseStatusEnum.loading) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 60.h),
+                                child: Center(child: AppLoading.circular()),
+                              );
+                            } else if (state.loadchaptersMoreStatus ==
+                                ResponseStatusEnum.failure) {
+                              return SingleChildScrollView(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 25.h),
+                                  child: Column(
+                                    children: [
+                                      Icon(
+                                        Icons.error,
+                                        color: AppColors.iconError,
+                                        size: 40.sp,
+                                      ),
+                                      SizedBox(height: 8.h),
+                                      Text(
+                                        state.chaptersMoreError ??
+                                            "Failed to load more chapters",
+                                        style: TextStyle(
+                                          color: AppColors.textRed,
+                                          fontSize: 14.sp,
+                                        ),
+                                      ),
+                                      SizedBox(height: 10.h),
+                                      CustomButtonWidget(
+                                        onTap: _handleFetchChapters,
+                                        title: "Retry",
+                                        titleStyle: AppTextStyles.s14w500
+                                            .copyWith(
+                                              color: AppColors.titlePrimary,
+                                            ),
+                                        buttonColor: AppColors.buttonPrimary,
+                                        borderColor: AppColors.borderPrimary,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+
+                            return const SizedBox.shrink();
                           },
                           separatorBuilder: (context, index) => Divider(
                             height: 1.h,
@@ -204,8 +337,12 @@ class BodyTabChapterWidget extends StatelessWidget {
                           padding: EdgeInsets.only(top: 10.h),
                           child: const CourseSuspendedWidget(),
                         )
-                      else if (appState == AppStateEnum.user && !isActive)
-                        const CourseEnrollWidget()
+                      else if (appState == AppStateEnum.user &&
+                          !widget.isActive)
+                        CourseEnrollWidget(
+                          courseId: widget.courseId,
+                          price: widget.price,
+                        )
                       else
                         const SizedBox.shrink(),
                     ],
@@ -216,5 +353,11 @@ class BodyTabChapterWidget extends StatelessWidget {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }

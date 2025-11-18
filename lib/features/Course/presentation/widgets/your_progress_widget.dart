@@ -7,11 +7,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class YourProgressWidget extends StatelessWidget {
   const YourProgressWidget({
     required this.completedVideos,
-    required this.totalVideos,
+    required this.videoCount,
     super.key,
   });
   final int completedVideos;
-  final int totalVideos;
+  final int videoCount;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class YourProgressWidget extends StatelessWidget {
         SizedBox(height: 5.h),
         VideoProgressWidget(
           completedVideos: completedVideos,
-          totalVideos: totalVideos,
+          videoCount: videoCount,
         ),
         SizedBox(height: 16.h),
       ],

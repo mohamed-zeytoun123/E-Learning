@@ -12,10 +12,13 @@ class AppManagerState {
   //* App State
   final AppStateEnum appState;
 
+  final String token;
+
   //? -------------------------------------------
 
   const AppManagerState({
     required this.appLocale,
+    required this.token,
     required this.themeMode,
     required this.appState,
   });
@@ -24,8 +27,10 @@ class AppManagerState {
     Locale? appLocale,
     ThemeMode? themeMode,
     AppStateEnum? appState,
+    String? token,
   }) {
     return AppManagerState(
+      token: token ?? this.token,
       appLocale: appLocale ?? this.appLocale,
       appState: appState ?? this.appState,
       themeMode: themeMode ?? this.themeMode,

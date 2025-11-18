@@ -1,3 +1,4 @@
+import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
 import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/course/data/models/college_detail_model.dart';
 import 'package:e_learning/features/course/data/models/university_detail_model.dart';
@@ -15,8 +16,14 @@ class CourseDetailsModel {
   final int college;
   final CollegeDetailModel collegeDetail;
   final int studyYear;
+  final StudyYearModel studyYearDetail;
   final String price;
   final String status;
+  final double totalVideoDurationHours;
+  final double? averageRating;
+  final double totalRatings;
+  final bool isFavorite;
+  final bool isPaid;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -33,14 +40,27 @@ class CourseDetailsModel {
     required this.college,
     required this.collegeDetail,
     required this.studyYear,
+    required this.studyYearDetail,
     required this.price,
     required this.status,
+    required this.totalVideoDurationHours,
+    this.averageRating,
+    required this.totalRatings,
+    required this.isFavorite,
+    required this.isPaid,
     required this.createdAt,
     required this.updatedAt,
   });
 
   //* From Map
   factory CourseDetailsModel.fromMap(Map<String, dynamic> map) {
+    double parseDouble(dynamic value) {
+      if (value == null) return 0.0;
+      if (value is int) return value.toDouble();
+      if (value is double) return value;
+      return double.tryParse(value.toString()) ?? 0.0;
+    }
+
     return CourseDetailsModel(
       id: map['id'] ?? 0,
       title: map['title'] ?? '',
@@ -62,8 +82,24 @@ class CourseDetailsModel {
               university: UniversityDetailModel(id: 0, name: ''),
             ),
       studyYear: map['study_year'] ?? 0,
+      studyYearDetail: map['study_year_detail'] != null
+          ? StudyYearModel.fromJson(map['study_year_detail'])
+          : StudyYearModel(
+              id: 0,
+              yearNumber: 0,
+              name: '',
+              description: '',
+              isActive: false,
+            ),
       price: map['price']?.toString() ?? '0',
       status: map['status'] ?? '',
+      totalVideoDurationHours: parseDouble(map['total_video_duration_hours']),
+      averageRating: map['average_rating'] != null
+          ? parseDouble(map['average_rating'])
+          : null,
+      totalRatings: parseDouble(map['total_ratings']),
+      isFavorite: map['is_favorite'] ?? false,
+      isPaid: map['is_paid'] ?? false,
       createdAt: map['created_at'] != null
           ? DateTime.parse(map['created_at'])
           : DateTime.now(),
@@ -88,8 +124,14 @@ class CourseDetailsModel {
       'college': college,
       'college_detail': collegeDetail.toMap(),
       'study_year': studyYear,
+      'study_year_detail': studyYearDetail.toJson(),
       'price': price,
       'status': status,
+      'total_video_duration_hours': totalVideoDurationHours,
+      'average_rating': averageRating,
+      'total_ratings': totalRatings,
+      'is_favorite': isFavorite,
+      'is_paid': isPaid,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };

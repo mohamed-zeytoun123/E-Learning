@@ -129,7 +129,10 @@ class ChapterPage extends StatelessWidget {
                     ),
                   ),
                   SliverFillRemaining(
-                    child: ChaptersTabViewWidget(isActive: isActive),
+                    child: ChaptersTabViewWidget(
+                      isActive: isActive,
+                      chapterId: chapterId,
+                    ),
                   ),
                 ],
               );

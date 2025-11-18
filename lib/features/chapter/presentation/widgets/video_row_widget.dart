@@ -104,7 +104,7 @@ class VideoRowWidget extends StatelessWidget {
                       padding: EdgeInsets.only(top: 10.h),
                       child: VideoProgressWidget(
                         completedVideos: completedVideos!,
-                        totalVideos: totalVideos!,
+                        videoCount: totalVideos ?? 00,
                         hieghtProgress: 4,
                         showDetiels: false,
                       ),

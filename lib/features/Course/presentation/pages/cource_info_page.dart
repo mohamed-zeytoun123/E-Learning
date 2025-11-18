@@ -19,8 +19,8 @@ import 'package:e_learning/features/course/presentation/widgets/rating_widget.da
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 
 class CourceInfoPage extends StatefulWidget {
-  const CourceInfoPage({super.key, required this.courseSlug});
-  final String courseSlug;
+  const CourceInfoPage({super.key, required this.courseId});
+  final int courseId;
 
   @override
   State<CourceInfoPage> createState() => _CourceInfoPageState();
@@ -35,8 +35,8 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
     isActive = false;
 
     Future.microtask(() {
-      context.read<CourseCubit>().getCourseDetails(slug: widget.courseSlug);
-      context.read<CourseCubit>().getChapters(courseSlug: widget.courseSlug);
+      context.read<CourseCubit>().getCourseDetails(id: "${widget.courseId}");
+      // context.read<CourseCubit>().getChapters(courseId: "${widget.courseId}");
     });
   }
 
@@ -53,7 +53,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
           return NoInternetWidget(
             onRetry: () {
               context.read<CourseCubit>().getCourseDetails(
-                slug: widget.courseSlug,
+                id: "${widget.courseId}",
               );
             },
           );
@@ -66,14 +66,14 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 "Something went wrong. Please try again.",
             onRetry: () {
               context.read<CourseCubit>().getCourseDetails(
-                slug: widget.courseSlug,
+                id: "${widget.courseId}",
               );
             },
           );
         } else if (state.courseDetailsStatus == ResponseStatusEnum.success &&
             state.courseDetails != null) {
           final course = state.courseDetails!;
-          isActive = course.status == "PUBLISHED";
+          isActive = course.isPaid;
 
           return Scaffold(
             appBar: CustomAppBarCourseWidget(
@@ -131,15 +131,19 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                                   subtitle: course.categoryDetail.name,
                                 ),
                               ),
-                              RatingWidget(rating: 4.5, showIcon: false),
+                              RatingWidget(
+                                rating: course.totalRatings,
+                                showIcon: false,
+                              ),
                             ],
                           ),
                           SizedBox(height: 5.h),
                           CourseAccessContentWidget(
+                            courseId: course.id,
                             completedVideos: 30,
                             totalVideos: 40,
                             videoCount: 28,
-                            hoursCount: 20,
+                            hoursCount: course.totalVideoDurationHours,
                             price: course.price,
                             isActive: isActive,
                           ),
@@ -150,9 +154,10 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 ),
                 SliverFillRemaining(
                   child: CourseTabViewWidget(
-                    chapterId: course.id,
+                    houresDurtion: course.totalVideoDurationHours,
+                    price: course.price,
+                    courseId: course.id,
                     isActive: isActive,
-                    courseSlug: widget.courseSlug,
                     courseTitle: course.categoryDetail.name,
                     courseImage: course.image,
                   ),
@@ -168,7 +173,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
               "Something went wrong on the server. Please try again later.",
           onRetry: () {
             context.read<CourseCubit>().getCourseDetails(
-              slug: widget.courseSlug,
+              id: "${widget.courseId}",
             );
           },
         );

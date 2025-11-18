@@ -43,9 +43,17 @@ class ChapterTitleSubTitleWidget extends StatelessWidget {
           spacing: 15.h,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                title,
+                style: AppTextStyles.s18w600.copyWith(
+                  color: AppColors.textBlack,
+                ),
+              ),
             ),
             Row(
               spacing: 7.w,

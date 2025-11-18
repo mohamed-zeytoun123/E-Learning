@@ -1,9 +1,11 @@
 import 'package:e_learning/core/asset/app_icons.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/contact_options_row_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class CourseEnrollBottomSheet extends StatelessWidget {
   const CourseEnrollBottomSheet({super.key});
@@ -11,7 +13,7 @@ class CourseEnrollBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400.h,
+      height: 450.h,
       padding: EdgeInsets.only(left: 10.w, right: 10.w, bottom: 15.h, top: 3.h),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -100,6 +102,21 @@ class CourseEnrollBottomSheet extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          SizedBox(height: 10.h),
+
+          Center(
+            child: CustomButtonWidget(
+              onTap: () {
+                context.pop();
+              },
+              title: "Cancel",
+              titleStyle: AppTextStyles.s16w400.copyWith(
+                color: AppColors.titlePrimary,
+              ),
+              buttonColor: AppColors.buttonPrimary,
+              borderColor: AppColors.borderPrimary,
             ),
           ),
         ],

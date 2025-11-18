@@ -6,21 +6,21 @@ import 'package:percent_indicator/percent_indicator.dart';
 
 class VideoProgressWidget extends StatelessWidget {
   final int completedVideos;
-  final int totalVideos;
+  final int videoCount;
   final bool showDetiels;
   final double hieghtProgress;
 
   const VideoProgressWidget({
     super.key,
     required this.completedVideos,
-    required this.totalVideos,
+    required this.videoCount,
     this.hieghtProgress = 12,
     this.showDetiels = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    final int safeTotal = totalVideos <= 0 ? 1 : totalVideos;
+    final int safeTotal = videoCount <= 0 ? 1 : videoCount;
     final double percent = (completedVideos / safeTotal).clamp(0.0, 1.0);
     final int percentValue = (percent * 100).round();
 
@@ -46,7 +46,7 @@ class VideoProgressWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '$completedVideos Of $totalVideos Videos',
+                    '$completedVideos Of $videoCount Videos',
                     style: AppTextStyles.s14w400.copyWith(
                       color: AppColors.textGrey,
                       fontSize: 14.sp,

@@ -1,6 +1,7 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/features/Video/presentation/pages/video_playing_page.dart';
+import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
@@ -120,13 +121,13 @@ class AppRouter {
         name: RouteNames.courceInf,
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
-          final courseSlug = args["courseSlug"] as String;
+          final courseId = args["courseId"] as int;
 
           final courseCubit = args["courseCubit"] as CourseCubit;
 
           return BlocProvider.value(
             value: courseCubit,
-            child: CourceInfoPage(courseSlug: courseSlug),
+            child: CourceInfoPage(courseId: courseId),
           );
         },
       ),
@@ -155,7 +156,15 @@ class AppRouter {
 
       GoRoute(
         path: RouteNames.quizPage,
-        builder: (context, state) => const QuizPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final chapterCubit = args["chapterCubit"] as ChapterCubit;
+
+          return BlocProvider.value(
+            value: chapterCubit,
+            child: const QuizPage(),
+          );
+        },
       ),
 
       //? --------------------------- Profile Pages --------------------------

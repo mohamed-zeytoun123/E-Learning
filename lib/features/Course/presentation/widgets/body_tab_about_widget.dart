@@ -7,9 +7,9 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/error/error_state_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_count_text_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/teacher_row_widget.dart';
@@ -21,10 +21,14 @@ class BodyTabAboutWidget extends StatelessWidget {
   const BodyTabAboutWidget({
     super.key,
     required this.isActive,
-    required this.courseSlug,
+    required this.courseId,
+    required this.price,
+    required this.houresDurtion,
   });
   final bool isActive;
-  final String courseSlug;
+  final int courseId;
+  final double houresDurtion;
+  final String price;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +44,7 @@ class BodyTabAboutWidget extends StatelessWidget {
             return ErrorStateWidget(
               message: state.courseDetailsError ?? 'Something went wrong',
               onRetry: () {
-                context.read<CourseCubit>().getCourseDetails(slug: courseSlug);
+                context.read<CourseCubit>().getCourseDetails(id: "$courseId");
               },
             );
 
@@ -85,7 +89,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                         borderColor: AppColors.borderPrimary,
                         onTap: () {
                           context.read<CourseCubit>().getCourseDetails(
-                            slug: courseSlug,
+                            id: "$courseId",
                           );
                         },
                       ),
@@ -179,7 +183,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                             ),
                             IconCountTextWidget(
                               icon: Icons.access_time,
-                              count: 20.toString(),
+                              count: houresDurtion.toString(),
                               text: 'Hours',
                             ),
                           ],
@@ -189,7 +193,9 @@ class BodyTabAboutWidget extends StatelessWidget {
                           children: [
                             IconCountTextWidget(
                               icon: Icons.assignment_outlined,
-                              count: 10.toString(),
+                              count: state.chapters != null
+                                  ? state.chapters!.chapters.length.toString()
+                                  : "0",
                               text: 'Chapters',
                             ),
                             IconCountTextWidget(
@@ -213,7 +219,10 @@ class BodyTabAboutWidget extends StatelessWidget {
                           return Column(
                             children: [
                               SizedBox(height: 20.h),
-                              CourseEnrollWidget(),
+                              CourseEnrollWidget(
+                                courseId: courseId,
+                                price: price,
+                              ),
                             ],
                           );
                         } else {

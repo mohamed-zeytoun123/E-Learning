@@ -7,16 +7,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class BodyTabFilesWidget extends StatelessWidget {
+class BodyTabFilesWidget extends StatefulWidget {
   final bool isActive;
   final void Function(int index)? onFileTap;
 
   const BodyTabFilesWidget({super.key, this.isActive = true, this.onFileTap});
 
   @override
+  State<BodyTabFilesWidget> createState() => _BodyTabFilesWidgetState();
+}
+
+class _BodyTabFilesWidgetState extends State<BodyTabFilesWidget> {
+  @override
+  void initState() {
+    final chapterId = context.read<ChapterCubit>().state.chapter?.id ?? 0;
+    context.read<ChapterCubit>().getChapterAttachments(chapterId: chapterId);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final attachments =
-        context.read<ChapterCubit>().state.chapter?.attachments ?? [];
+    final attachments = context.read<ChapterCubit>().state.attachments ?? [];
 
     if (attachments.isEmpty) {
       return Center(
@@ -46,18 +57,18 @@ class BodyTabFilesWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           final file = attachments[index];
           return InkWell(
-            onTap: isActive
+            onTap: widget.isActive
                 ? () {
-                    if (onFileTap != null) onFileTap!(index);
+                    if (widget.onFileTap != null) widget.onFileTap!(index);
                     log("File ${file.id} pressed");
                   }
                 : null,
             child: FileRowWidget(
               chapterTitle: file.fileName,
               sizeFile: double.tryParse(file.fileSizeMb) ?? 0,
-              onTap: isActive
+              onTap: widget.isActive
                   ? () {
-                      if (onFileTap != null) onFileTap!(index);
+                      if (widget.onFileTap != null) widget.onFileTap!(index);
                       log("File ${file.id} pressed");
                     }
                   : null,

@@ -1,22 +1,17 @@
-import 'attachment_model.dart';
-import 'quiz_model.dart';
-
 class ChapterDetailsModel {
   final int id;
   final int course;
+  final String courseTitle;
   final String title;
   final String description;
-  final List<AttachmentModel> attachments;
-  final List<QuizModel> quizzes;
   final DateTime createdAt;
 
   ChapterDetailsModel({
     required this.id,
     required this.course,
+    required this.courseTitle,
     required this.title,
     required this.description,
-    required this.attachments,
-    required this.quizzes,
     required this.createdAt,
   });
 
@@ -24,54 +19,29 @@ class ChapterDetailsModel {
     return ChapterDetailsModel(
       id: map['id'] ?? 0,
       course: map['course'] ?? 0,
+      courseTitle: map['course_title'] ?? '',
       title: map['title'] ?? '',
       description: map['description'] ?? '',
-      attachments: map['attachments'] != null
-          ? List<AttachmentModel>.from(
-              (map['attachments'] as List).map(
-                (x) => AttachmentModel.fromJson(x),
-              ),
-            )
-          : [],
-      quizzes: map['quiz'] != null
-          ? List<QuizModel>.from(
-              (map['quiz'] as List).map((x) => QuizModel.fromJson(x)),
-            )
-          : [],
       createdAt: map['created_at'] != null
           ? DateTime.parse(map['created_at'])
           : DateTime.now(),
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'course': course,
-      'title': title,
-      'description': description,
-      'attachments': attachments.map((x) => x.toJson()).toList(),
-      'quiz': quizzes.map((x) => x.toJson()).toList(),
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
-
   ChapterDetailsModel copyWith({
     int? id,
     int? course,
+    String? courseTitle,
     String? title,
     String? description,
-    List<AttachmentModel>? attachments,
-    List<QuizModel>? quizzes,
     DateTime? createdAt,
   }) {
     return ChapterDetailsModel(
       id: id ?? this.id,
       course: course ?? this.course,
+      courseTitle: courseTitle ?? this.courseTitle,
       title: title ?? this.title,
       description: description ?? this.description,
-      attachments: attachments ?? this.attachments,
-      quizzes: quizzes ?? this.quizzes,
       createdAt: createdAt ?? this.createdAt,
     );
   }

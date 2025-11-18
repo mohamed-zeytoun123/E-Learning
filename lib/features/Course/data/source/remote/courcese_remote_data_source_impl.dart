@@ -8,7 +8,9 @@ import 'package:e_learning/core/network/api_response.dart';
 import 'package:e_learning/core/network/app_url.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/paginated_courses_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
-import 'package:e_learning/features/Course/data/models/rating_model.dart';
+import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/paginated_ratings_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
 import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
@@ -189,13 +191,13 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   //* Get Chapters by Course (With Pagination)
   @override
   Future<Either<Failure, PaginatedChaptersModel>> getChaptersRemote({
-    required String courseSlug,
+    required String courseId,
     int? page,
     int? pageSize,
   }) async {
     try {
       log(
-        'Fetching chapters for course=$courseSlug, page=$page, page_size=$pageSize',
+        'Fetching chapters for course=$courseId, page=$page, page_size=$pageSize',
       );
 
       // تجهيز query parameters
@@ -205,7 +207,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       };
 
       final ApiRequest request = ApiRequest(
-        url: AppUrls.getChapters(courseSlug, queryParameters: queryParameters),
+        url: AppUrls.getChapters(courseId, queryParameters: queryParameters),
       );
 
       final ApiResponse response = await api.get(request);
@@ -235,29 +237,40 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
   //?----------------------------------------------------
 
-  //* Get Ratings by Slug
+  //* Get Ratings by Course with Pagination
   @override
-  Future<Either<Failure, List<RatingModel>>> getRatingsRemote({
-    required String courseSlug,
+  Future<Either<Failure, PaginatedRatingsModel>> getRatingsRemote({
+    required String courseId,
+    int? page,
+    int? pageSize,
+    String? ordering,
   }) async {
     try {
+      log(
+        'Fetching ratings for course=$courseId, page=$page, page_size=$pageSize',
+      );
+
+      final Map<String, dynamic> queryParameters = {
+        if (page != null) 'page': page.toString(),
+        if (pageSize != null) 'page_size': pageSize.toString(),
+        if (ordering != null && ordering.isNotEmpty) 'ordering': ordering,
+      };
+
       final ApiRequest request = ApiRequest(
-        url: AppUrls.getRatings(courseSlug),
+        url: AppUrls.getRatings(courseId, queryParameters: queryParameters),
       );
 
       final ApiResponse response = await api.get(request);
-      final List<RatingModel> ratings = [];
 
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
-          for (var item in data) {
-            ratings.add(RatingModel.fromJson(item));
-          }
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          final paginatedRatings = PaginatedRatingsModel.fromJson(data);
+          return Right(paginatedRatings);
+        } else {
+          return Left(Failure(message: 'Invalid data format from server'));
         }
-
-        return Right(ratings);
       } else {
         return Left(
           Failure(
@@ -369,6 +382,84 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         );
       }
     } catch (exception) {
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Add Rating to Course
+  @override
+  Future<Either<Failure, RatingModel>> addRatingRemote({
+    required int rating,
+    required String courseId,
+    String? comment,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.addRating(courseId),
+        body: {
+          'rating': rating,
+          if (comment != null && comment.isNotEmpty) 'comment': comment,
+        },
+      );
+
+      final ApiResponse response = await api.post(request);
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is Map<String, dynamic>) {
+          final newRating = RatingModel.fromJson(data);
+          return Right(newRating);
+        } else {
+          return Left(Failure(message: "Invalid data format from server"));
+        }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Enroll Cource
+  @override
+  Future<Either<Failure, EnrollmentModel>> enrollCourseRemote({
+    required int courseId,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.enrollCourse,
+        body: {'course_id': courseId},
+      );
+
+      final ApiResponse response = await api.post(request);
+
+      if (response.statusCode == 201) {
+        final data = response.body;
+        if (data is Map<String, dynamic> && data.containsKey('enrollment')) {
+          final enrollment = EnrollmentModel.fromJson(data['enrollment']);
+          return Right(enrollment);
+        } else {
+          return Left(Failure(message: 'Invalid data format from server'));
+        }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
       return Left(Failure.handleError(exception as DioException));
     }
   }

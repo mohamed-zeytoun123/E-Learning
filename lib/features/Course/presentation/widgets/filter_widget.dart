@@ -31,7 +31,6 @@ class _FilterWidgetState extends State<FilterWidget> {
 
     if (state.loadCoursesMoreStatus == ResponseStatusEnum.loading) return;
 
-    // إذا القائمة فارغة أو لا يوجد صفحة تالية لا تحمل المزيد
     if ((state.courses?.courses?.isEmpty ?? true) ||
         !(state.courses?.hasNextPage ?? false)) {
       return;
@@ -147,21 +146,20 @@ class _FilterWidgetState extends State<FilterWidget> {
                         context.pushNamed(
                           RouteNames.courceInf,
                           extra: {
-                            "courseSlug": course.slug,
+                            "courseId": course.id,
                             "courseCubit": courseCubit,
                           },
                         );
                       },
                       onSave: () {
                         context.read<CourseCubit>().toggleFavorite(
-                          courseSlug: course.slug,
+                          courseId: "${course.id}",
                         );
                         log("Course saved!");
                       },
                     );
                   }
 
-                  // العنصر الأخير: لودينغ أو خطأ عند تحميل المزيد
                   if (state.loadCoursesMoreStatus ==
                       ResponseStatusEnum.loading) {
                     return Padding(
