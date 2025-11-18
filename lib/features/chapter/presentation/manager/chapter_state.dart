@@ -32,6 +32,7 @@ class ChapterState {
   final AnswerModel? answer;
   final ResponseStatusEnum answerStatus;
   final String? answerError;
+  final Map<int, int> selectedOptions;
 
   //?----------------------------------------------------------
   ChapterState({
@@ -60,6 +61,7 @@ class ChapterState {
     this.answer,
     this.answerStatus = ResponseStatusEnum.initial,
     this.answerError,
+    this.selectedOptions = const {},
   });
 
   //?--------------------------------------------------------
@@ -89,6 +91,7 @@ class ChapterState {
     AnswerModel? answer,
     ResponseStatusEnum? answerStatus,
     String? answerError,
+    Map<int, int>? selectedOptions,
   }) {
     return ChapterState(
       //* Get Chapter Details
@@ -116,6 +119,7 @@ class ChapterState {
       answer: answer ?? this.answer,
       answerStatus: answerStatus ?? this.answerStatus,
       answerError: answerError,
+      selectedOptions: selectedOptions ??this. selectedOptions,
     );
   }
 }

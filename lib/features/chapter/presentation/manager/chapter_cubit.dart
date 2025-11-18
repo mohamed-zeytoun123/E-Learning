@@ -8,6 +8,14 @@ class ChapterCubit extends Cubit<ChapterState> {
   final ChapterRepository repo;
 
   //?--------------------------------------------------------
+  void selectAnswer({required int questionIndex, required int choiceIndex}) {
+    final updated = Map<int, int>.from(state.selectedOptions);
+    updated[questionIndex] = choiceIndex;
+
+    emit(state.copyWith(selectedOptions: updated));
+  }
+
+  //?--------------------------------------------------------
   //* Get Chapter by ID
   Future<void> getChapterById({
     required String courseSlug,
@@ -130,13 +138,25 @@ class ChapterCubit extends Cubit<ChapterState> {
   //?--------------------------
 
   //* Step 3 : Submit Quiz Answer
-
   Future<void> submitAnswer({
     required int quizId,
     required int questionId,
     required int selectedChoiceId,
   }) async {
-    // Emit loading state for this answer
+    // حفظ نسخة من الخيارات الحالية
+    final previousOptions = Map<int, int>.from(state.selectedOptions);
+
+    // تحديث UI مباشرة على أساس questionId
+    final questionIndex = state.statrtQuiz?.questions.indexWhere(
+      (q) => q.id == questionId,
+    );
+    if (questionIndex != null && questionIndex >= 0) {
+      final updated = Map<int, int>.from(state.selectedOptions);
+      updated[questionIndex] = state.selectedOptions[questionIndex] ?? 0;
+      emit(state.copyWith(selectedOptions: updated));
+    }
+
+    // Emit loading state
     emit(
       state.copyWith(
         answerStatus: ResponseStatusEnum.loading,
@@ -152,14 +172,17 @@ class ChapterCubit extends Cubit<ChapterState> {
 
     result.fold(
       (failure) {
+        // إذا فشل، رجع البيانات القديمة
         emit(
           state.copyWith(
             answerStatus: ResponseStatusEnum.failure,
             answerError: failure.message,
+            selectedOptions: previousOptions, // إعادة الحالة القديمة
           ),
         );
       },
       (answer) {
+        // إذا نجح، حدث الـ answer
         emit(
           state.copyWith(
             answerStatus: ResponseStatusEnum.success,
@@ -169,6 +192,56 @@ class ChapterCubit extends Cubit<ChapterState> {
       },
     );
   }
+
+  // Future<void> submitAnswer({
+  //   required int quizId,
+  //   required int questionId,
+  //   required int selectedChoiceId,
+  // }) async {
+  //   // Emit loading state for this answer
+  //   emit(
+  //     state.copyWith(
+  //       answerStatus: ResponseStatusEnum.loading,
+  //       answerError: null,
+  //     ),
+  //   );
+
+  //   final result = await repo.submitQuizAnswerRepo(
+  //     quizId: quizId,
+  //     questionId: questionId,
+  //     selectedChoiceId: selectedChoiceId,
+  //   );
+
+  //   (result.fold(
+  //     (failure) {
+  //       emit(
+  //         state.copyWith(
+  //           answerStatus: ResponseStatusEnum.failure,
+  //           answerError: failure.message,
+  //         ),
+  //       );
+  //     },
+  //     (answer) {
+  //       // تحديث selectedOptions حسب السؤال والاختيار اللي تم إرساله
+  //       final updated = Map<int, int>.from(state.selectedOptions);
+  //       // نفترض عندك questionId موجود، وتحويله لمؤشر السؤال في الـ UI
+  //       final questionIndex = state.statrtQuiz?.questions.indexWhere(
+  //         (q) => q.id == answer.questionId,
+  //       );
+  //       if (questionIndex != null && questionIndex >= 0) {
+  //         updated[questionIndex] = state.selectedOptions[questionIndex] ?? 0;
+  //       }
+
+  //       emit(
+  //         state.copyWith(
+  //           answerStatus: ResponseStatusEnum.success,
+  //           answer: answer,
+  //           selectedOptions: updated, // نحدث الـ UI مع الريسبونس
+  //         ),
+  //       );
+  //     },
+  //   ));
+  // }
 
   //?--------------------------------------------------------
 
