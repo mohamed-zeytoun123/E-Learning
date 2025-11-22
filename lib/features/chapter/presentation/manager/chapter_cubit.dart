@@ -669,8 +669,12 @@ class ChapterCubit extends Cubit<ChapterState> {
       }
 
       final tempDir = await getTemporaryDirectory();
-      final safeName = 'video_$videoId';
-      final tempFile = File('${tempDir.path}/$safeName.mp4');
+
+      // استخدام اسم الملف الأصلي بدلاً من اسم عام
+      final safeFileName = fileName.isNotEmpty
+          ? fileName
+          : 'video_$videoId.mp4';
+      final tempFile = File('${tempDir.path}/$safeFileName');
 
       // Always attempt to decrypt the video
       try {
