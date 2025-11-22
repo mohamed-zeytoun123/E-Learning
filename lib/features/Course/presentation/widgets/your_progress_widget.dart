@@ -25,8 +25,8 @@ class YourProgressWidget extends StatelessWidget {
         ),
         SizedBox(height: 5.h),
         VideoProgressWidget(
-          completedVideos: completedVideos,
-          videoCount: videoCount,
+          completedVideosSecond: completedVideos.toDouble(),
+          totalVideoSecond: videoCount,
         ),
         SizedBox(height: 16.h),
       ],

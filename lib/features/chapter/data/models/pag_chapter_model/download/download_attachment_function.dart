@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:dio/dio.dart';
 import 'package:e_learning/core/network/app_url.dart';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart' as crypto;
@@ -11,13 +12,13 @@ import 'package:pointycastle/block/aes.dart';
 import 'package:pointycastle/block/modes/cbc.dart';
 import 'package:pointycastle/padded_block_cipher/padded_block_cipher_impl.dart';
 import 'package:pointycastle/paddings/pkcs7.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 Future<String> downloadAndDecryptAttachment({
   required String baseUrl,
   required int attachmentId,
   required String drmKey,
   required String authToken,
+  required String fileName,
 }) async {
   final url = Uri.parse(
     '$baseUrl/attachments/$attachmentId/download-encrypted/',
@@ -89,17 +90,22 @@ Future<String> downloadAndDecryptAttachment({
   // -----------------------------
   // 💾 6) حفظ الملف
   // -----------------------------
-  if (!await Permission.storage.request().isGranted) {
-    throw Exception("Storage permission denied");
-  }
-
+  // لا حاجة للصلاحيات في Android 13+ عند استخدام مجلد التطبيق الخاص
   Directory? extDir = await getExternalStorageDirectory();
   if (extDir == null) throw Exception("Cannot access external storage");
 
   final folder = Directory('${extDir.path}/MyAttachments');
   await folder.create(recursive: true);
 
-  final filePath = '${folder.path}/file_$attachmentId.bin';
+  String sanitizedName = fileName.replaceAll(RegExp(r'[^a-zA-Z0-9._\-]'), '_');
+  if (sanitizedName.length > 100) {
+    final ext = sanitizedName.contains('.')
+        ? sanitizedName.split('.').last
+        : 'bin';
+    sanitizedName = 'file_$attachmentId.$ext';
+  }
+
+  final filePath = '${folder.path}/$sanitizedName';
   final file = File(filePath);
 
   await file.writeAsBytes(decrypted);
@@ -123,20 +129,77 @@ Uint8List base64UrlDecodeLenient(String input) {
   return base64.decode(s);
 }
 
-void downloadAttachment({
+Future<String> downloadAttachment({
   required int attachmentId,
   required String token,
+  required String fileName,
+  String? fileUrl,
+  void Function(double progress)? onProgress,
 }) async {
   try {
-    String filePath = await downloadAndDecryptAttachment(
-      baseUrl: AppUrls.baseURl,
-      attachmentId: attachmentId,
-      drmKey: AppUrls.drmKey,
-      authToken: token,
-    );
+    // إذا كان file_url موجود، حمل مباشرة بدون تشفير
+    if (fileUrl != null && fileUrl.isNotEmpty) {
+      log('Downloading file directly from URL: $fileUrl');
 
-    log('Saved at: $filePath');
+      // حفظ الملف مباشرة بدون فك تشفير
+      // لا حاجة للصلاحيات في Android 13+ عند استخدام مجلد التطبيق الخاص
+      Directory? extDir = await getExternalStorageDirectory();
+      if (extDir == null) throw Exception("Cannot access external storage");
+
+      final folder = Directory('${extDir.path}/MyAttachments');
+      await folder.create(recursive: true);
+
+      String sanitizedName = fileName.replaceAll(
+        RegExp(r'[^a-zA-Z0-9._\-]'),
+        '_',
+      );
+      if (sanitizedName.length > 100) {
+        final ext = sanitizedName.contains('.')
+            ? sanitizedName.split('.').last
+            : 'bin';
+        sanitizedName = 'file_${attachmentId}.$ext';
+      }
+
+      final filePath = '${folder.path}/$sanitizedName';
+
+      // استخدم Dio لتتبع progress
+      final dio = Dio();
+      await dio.download(
+        fileUrl,
+        filePath,
+        options: Options(
+          headers: {if (token.isNotEmpty) 'Authorization': 'Bearer $token'},
+        ),
+        onReceiveProgress: (received, total) {
+          if (total != -1 && onProgress != null) {
+            final progress = received / total;
+            onProgress(progress);
+          }
+        },
+      );
+
+      log('File saved at: $filePath');
+      return filePath;
+    }
+
+    // محاولة التحميل والفك تشفير أولاً (للملفات المشفرة)
+    try {
+      String filePath = await downloadAndDecryptAttachment(
+        baseUrl: AppUrls.baseURl,
+        attachmentId: attachmentId,
+        drmKey: AppUrls.drmKey,
+        authToken: token,
+        fileName: fileName,
+      );
+
+      log('File saved at: $filePath');
+      return filePath;
+    } catch (e) {
+      log('Encrypted download failed: $e');
+      throw Exception('Failed to download attachment. Please try again.');
+    }
   } catch (e, st) {
     log("Download Error: $e\n$st");
+    rethrow; // إعادة رمي الخطأ ليتم التعامل معه في الواجهة
   }
 }

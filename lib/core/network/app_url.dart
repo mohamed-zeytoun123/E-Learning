@@ -1,7 +1,7 @@
 class AppUrls {
   //?---------------------------------------------------------------
 
-  static const String _ip = "192.168.1.23";
+  static const String _ip = "192.168.1.22";
 
   //?---------------------------------------------------------------
 
@@ -62,9 +62,6 @@ class AppUrls {
   static String courseDetails(String courseSlug) =>
       "$baseURl/courses/$courseSlug/";
 
-  //* Get Chapters by Course ID
-  // static String getChapters(String courseSlug) =>
-  //     '$_baseURl/courses/$courseSlug/chapters/';
   static String getChapters(
     String courseId, {
     Map<String, dynamic>? queryParameters,
@@ -111,6 +108,11 @@ class AppUrls {
   static String getChapterAttachments(int chapterId) =>
       "$baseURl/chapters/$chapterId/attachments/";
 
+  //* Get list of videos for a chapter with pagination
+  static String getVideos({required int chapterId, int page = 1}) {
+    return "$baseURl/videos/?chapter_id=$chapterId&page=$page";
+  }
+
   //?------------------- Quizzes -------------------
   //* step 1 : Get Quiz By Chapter ID
   static String getQuizByChapter(String chapterId) =>
@@ -130,5 +132,15 @@ class AppUrls {
   //?------------------- Enrollment -------------------
   //* Enroll in a Course
   static final String enrollCourse = "$baseURl/enrollments/enroll/";
+
+  //?------------------- Video -------------------
+  //* Get Secure Video Streaming URL
+  static String getSecureVideoUrl(String videoId) =>
+      "$baseURl/videos/$videoId/streaming-url/";
+
+  //* Download Video File
+  static String downloadVideo(String videoId) =>
+      "$baseURl/videos/$videoId/download/";
+
   //?---------------------------------------------------------------
 }

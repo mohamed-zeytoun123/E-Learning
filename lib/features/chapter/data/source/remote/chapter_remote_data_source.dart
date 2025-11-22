@@ -1,11 +1,15 @@
+import 'dart:typed_data';
+
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_model/video_pagination_model.dart';
 
 abstract class ChapterRemoteDataSource {
   //?--------------------------------------------------------
@@ -45,8 +49,29 @@ abstract class ChapterRemoteDataSource {
     required int attemptId,
   });
 
+  //?--------------------------------------------------------
 
-  
+  //* Get Videos by Chapter ID (with pagination)
+  Future<Either<Failure, VideoPaginationModel>> getVideosByChapterRemote({
+    required int chapterId,
+    int page = 1,
+  });
+
+  //* Get Secure Video Streaming URL
+  Future<Either<Failure, VideoStreamModel>> getSecureVideoUrlRemote({
+    required String videoId,
+  });
+
+  //* Download Video File (Bytes)
+  Future<Either<Failure, Uint8List>> downloadVideoRemote({
+    required String videoId,
+  });
+
+  //* Download Video File (Bytes) with Progress Callback
+  Future<Either<Failure, Uint8List>> downloadVideoRemoteWithProgress({
+    required String videoId,
+    Function(double progress)? onProgress,
+  });
 
   //?--------------------------------------------------------
 }

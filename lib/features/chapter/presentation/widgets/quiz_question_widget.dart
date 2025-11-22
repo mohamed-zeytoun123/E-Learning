@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
@@ -95,7 +97,10 @@ class QuizQuestionWidget extends StatelessWidget {
             final isSelected = selectedOptionIndex == index;
 
             return InkWell(
-              onTap: () => onOptionSelected(index),
+              onTap: () {
+                onOptionSelected(index);
+                log("$option 😊😊😊😊😊😊😊😊😊😊😊😊 $index");
+              },
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.h),
                 child: Row(

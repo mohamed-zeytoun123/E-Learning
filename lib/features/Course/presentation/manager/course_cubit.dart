@@ -22,33 +22,8 @@ class CourseCubit extends Cubit<CourseState> {
   //* Change Selected Index
   void changeSelectedIndex(int index) {
     emit(state.copyWith(selectedIndex: index));
+    //* emit this function apply with changed info tabs
   }
-
-  //?-------------------------------------------------
-
-  //?-------------------------------------------------
-
-  // List<CourseModel> getCoursesBySelectedCollege() {
-  //   final selectedIndex = state.selectedIndex;
-  //   final allCourses = state.courses ?? [];
-  //   final colleges = state.colleges ?? [];
-
-  //   if (selectedIndex == 0) {
-  //     return allCourses;
-  //   }
-
-  //   final selectedCollegeIndex = selectedIndex - 1;
-  //   if (selectedCollegeIndex < 0 || selectedCollegeIndex >= colleges.length) {
-  //     return [];
-  //   }
-
-  //   final selectedCollegeId = colleges[selectedCollegeIndex].id;
-
-  //   return allCourses
-  //       .where((course) => course.college == selectedCollegeId)
-  //       .toList();
-  // }
-
   //?-----------------------------------------------------------------------------
 
   //* Get Filter Categories
@@ -284,48 +259,6 @@ class CourseCubit extends Cubit<CourseState> {
     }
   }
 
-  //?-----------------------------------------------------------------------------
-
-  // //* Get Courses
-  // Future<void> getCourses({
-  //   int? collegeId,
-  //   int? studyYear,
-  //   int? categoryId,
-  //   int? teacherId,
-  //   String? search,
-  //   String? ordering,
-  // }) async {
-  //   emit(state.copyWith(coursesStatus: ResponseStatusEnum.loading));
-  //   log('Applying filters Cubit : college=$categoryId, studyYear=$studyYear');
-  //   final result = await repo.getCoursesRepo(
-  //     collegeId: collegeId,
-  //     studyYear: studyYear,
-  //     categoryId: categoryId,
-  //     teacherId: teacherId,
-  //     search: search,
-  //     ordering: ordering,
-  //   );
-
-  //   result.fold(
-  //     (failure) {
-  //       emit(
-  //         state.copyWith(
-  //           coursesStatus: ResponseStatusEnum.failure,
-  //           coursesError: failure.message,
-  //         ),
-  //       );
-  //     },
-  //     (courses) {
-  //       emit(
-  //         state.copyWith(
-  //           coursesStatus: ResponseStatusEnum.success,
-  //           courses: courses,
-  //           coursesError: null,
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   //?-------------------------------------------------
 
@@ -355,42 +288,9 @@ class CourseCubit extends Cubit<CourseState> {
     );
   }
 
-  //?-------------------------------------------------
-
-  // Future<void> applyFilters(CourseFiltersModel filters) async {
-  //   try {
-  //     // تحديث الفلاتر في الـ state
-  //     emit(state.copyWith(coursefilters: filters));
-
-  //     // حفظ الفلاتر بالكاش (لو عندك طريقة للكاش)
-  //     // await local.saveCourseFilters(filters);
-
-  //     // استدعاء getCourses مع تحويل الفلاتر للباراميترات المناسبة
-  //     await getCourses(
-  //       collegeId: filters.collegeId,
-
-  //       studyYear: filters.studyYear,
-  //     );
-  //   } catch (e) {
-  //     log('Error in applyFilters: $e');
-  //   }
-  // }
 
   //?-------------------------------------------------
-
-  //* Filter Courses by College
-  // List<CourseModel> filterCoursesByCollege(int collegeId) {
-  //   final allCourses = state.courses ?? [];
-
-  //   final filteredCourses = allCourses
-  //       .where((course) => course.college == collegeId)
-  //       .toList();
-
-  //   return filteredCourses;
-  // }
-
-  //?-------------------------------------------------
-  //* Get Course Details by Slug
+  //* Get Course Details by id
   Future<void> getCourseDetails({required String id}) async {
     emit(state.copyWith(courseDetailsStatus: ResponseStatusEnum.loading));
 
@@ -417,9 +317,7 @@ class CourseCubit extends Cubit<CourseState> {
   }
 
   //?-------------------------------------------------
-
-  //* Get Chapters by Course
-  //* Get Chapters with Pagination & optional reset
+  //* Get Chapters with Pagination & optional reset by Course
   Future<void> getChapters({
     required String courseId,
     bool reset = true,

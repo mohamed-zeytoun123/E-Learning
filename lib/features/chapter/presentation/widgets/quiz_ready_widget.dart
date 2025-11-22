@@ -74,6 +74,8 @@ class QuizReadyWidget extends StatelessWidget {
 
         SizedBox(height: 25.h),
         BlocConsumer<ChapterCubit, ChapterState>(
+          listenWhen: (previous, current) =>
+              previous.statrtQuizStatus != current.statrtQuizStatus,
           listener: (context, state) {
             if (state.statrtQuizStatus == ResponseStatusEnum.success) {
               context.push(
@@ -90,6 +92,8 @@ class QuizReadyWidget extends StatelessWidget {
               );
             }
           },
+          buildWhen: (previous, current) =>
+              previous.statrtQuizStatus != current.statrtQuizStatus,
           builder: (context, state) {
             if (state.statrtQuizStatus == ResponseStatusEnum.loading) {
               return Center(

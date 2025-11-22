@@ -1,5 +1,7 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/features/Video/presentation/pages/cached_videos_screen.dart';
 import 'package:e_learning/features/Video/presentation/pages/video_playing_page.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
@@ -53,8 +55,41 @@ class AppRouter {
       //?-----  Viedeo Featchers   --------------------------------------------------------------
       GoRoute(
         path: RouteNames.viedioPage,
-        builder: (context, state) => const VideoPlayingPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final chapterCubit = args["chapterCubit"] as ChapterCubit;
+          final videoModel = args["videoModel"] as VideoStreamModel?;
+          final videoFile = args["videoFile"] as dynamic;
+
+          return BlocProvider.value(
+            value: chapterCubit,
+            child: VideoPlayingPage(
+              videoModel: videoModel,
+              videoFile: videoFile,
+            ),
+          );
+        },
       ),
+
+      // GoRoute(
+      //   path: RouteNames.cachedVideos,
+      //   builder: (context, state) {
+      //     final Map<String, dynamic>? args =
+      //         state.extra as Map<String, dynamic>?;
+      //     final chapterCubit = args != null
+      //         ? args["chapterCubit"] as ChapterCubit
+      //         : null;
+
+      //     if (chapterCubit != null) {
+      //       return BlocProvider.value(
+      //         value: chapterCubit,
+      //         child: const CachedVideosScreen(),
+      //       );
+      //     } else {
+      //       return const CachedVideosScreen();
+      //     }
+      //   },
+      // ),
 
       //?-------------------------------------------------------------------
       GoRoute(
@@ -178,7 +213,22 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.downloads,
-        builder: (context, state) => const DownloadsPage(),
+        builder: (context, state) {
+          final Map<String, dynamic>? args =
+              state.extra as Map<String, dynamic>?;
+          final chapterCubit = args != null
+              ? args["chapterCubit"] as ChapterCubit
+              : null;
+
+          if (chapterCubit != null) {
+            return BlocProvider.value(
+              value: chapterCubit,
+              child: const DownloadsPage(),
+            );
+          } else {
+            return const DownloadsPage();
+          }
+        },
       ),
 
       //?-------------------------------------------------------------------

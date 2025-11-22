@@ -43,6 +43,11 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<CourseCubit, CourseState>(
+      listenWhen: (previous, current) =>
+          previous.coursesStatus != current.coursesStatus ||
+          previous.collegesStatus != current.collegesStatus ||
+          previous.categoriesStatus != current.categoriesStatus ||
+          previous.studyYearsStatus != current.studyYearsStatus,
       listener: (context, state) {
         if (_hasApplied) {
           if (state.coursesStatus == ResponseStatusEnum.success) {
@@ -70,6 +75,13 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
           }
         }
       },
+      buildWhen: (previous, current) =>
+          previous.colleges != current.colleges ||
+          previous.categories != current.categories ||
+          previous.studyYears != current.studyYears ||
+          previous.collegesStatus != current.collegesStatus ||
+          previous.categoriesStatus != current.categoriesStatus ||
+          previous.studyYearsStatus != current.studyYearsStatus,
       builder: (context, state) {
         final isLoading =
             (state.collegesStatus != ResponseStatusEnum.success &&

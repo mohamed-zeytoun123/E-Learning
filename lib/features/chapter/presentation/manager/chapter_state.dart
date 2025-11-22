@@ -1,10 +1,15 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/features/chapter/data/models/attachment_download_state.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_model/download_item.dart';
+import 'package:e_learning/features/chapter/data/models/video_model/video_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_model/videos_result_model.dart';
 
 class ChapterState {
   //?--------------------------------------------------------
@@ -17,6 +22,9 @@ class ChapterState {
   final List<AttachmentModel>? attachments;
   final ResponseStatusEnum attachmentsStatus;
   final String? attachmentsError;
+    
+  //* Attachment Downloads Map (attachmentId -> download state)
+  final Map<int, AttachmentDownloadState> attachmentDownloads;
 
   //*---  Quize  ---------------------------
   //* Step 1 : Get Quiz Details by Chapter ID
@@ -40,6 +48,22 @@ class ChapterState {
   final ResponseStatusEnum? submitStatus;
   final String? submitError;
 
+  //* Get Videos by Chapter with Pagination
+  final VideosResultModel? videos;
+  final ResponseStatusEnum? videosStatus;
+  final String? videosError;
+  final String? videosMoreError;
+  final ResponseStatusEnum? videosMoreStatus;
+
+  //* Get Video Streaming
+  final VideoStreamModel? videoStreaming;
+  final ResponseStatusEnum videoStreamingStatus;
+  final String? videoStreamingError;
+  final VideoModel? selectVideo;
+
+  //* Video Downloads (progress + state)
+  final List<DownloadItem> downloads;
+
   //?----------------------------------------------------------
   ChapterState({
     //* Get Chapter Details
@@ -51,6 +75,9 @@ class ChapterState {
     this.attachments,
     this.attachmentsStatus = ResponseStatusEnum.initial,
     this.attachmentsError,
+    
+    //* Attachment Downloads
+    this.attachmentDownloads = const {},
 
     //*---  Quize  ---------------------------
     //* Step 1  : Get Quiz Details by Chapter ID
@@ -73,6 +100,22 @@ class ChapterState {
     this.submit,
     this.submitStatus = ResponseStatusEnum.initial,
     this.submitError,
+
+    //* Get Videos by Chapter with Pagination
+    this.videos,
+    this.videosStatus = ResponseStatusEnum.initial,
+    this.videosError,
+    this.videosMoreError,
+    this.videosMoreStatus = ResponseStatusEnum.initial,
+
+    //* Get Video Streaming
+    this.videoStreaming,
+    this.videoStreamingStatus = ResponseStatusEnum.initial,
+    this.videoStreamingError,
+    this.selectVideo,
+
+    //* Download Video
+    this.downloads = const [],
   });
 
   //?--------------------------------------------------------
@@ -86,8 +129,11 @@ class ChapterState {
     List<AttachmentModel>? attachments,
     ResponseStatusEnum? attachmentsStatus,
     String? attachmentsError,
+    
+    //* Attachment Downloads
+    Map<int, AttachmentDownloadState>? attachmentDownloads,
 
-    //*---  Quize  ---------------------------
+    //*---  Quize  ----
     //* Step 1  : Get Quiz Details by Chapter ID
     QuizDetailsModel? quizDetails,
     ResponseStatusEnum? quizDetailsStatus,
@@ -108,6 +154,22 @@ class ChapterState {
     SubmitCompletedModel? submit,
     ResponseStatusEnum? submitStatus,
     String? submitError,
+
+    //* Get Videos by Chapter with Pagination
+    VideosResultModel? videos,
+    ResponseStatusEnum? videosStatus,
+    String? videosError,
+    String? videosMoreError,
+    ResponseStatusEnum? videosMoreStatus,
+
+    //* Get Video Streaming
+    VideoStreamModel? videoStreaming,
+    ResponseStatusEnum? videoStreamingStatus,
+    String? videoStreamingError,
+    VideoModel? selectVideo,
+
+    //* Video Downloads (progress + state)
+    List<DownloadItem>? downloads,
   }) {
     return ChapterState(
       //* Get Chapter Details
@@ -119,6 +181,9 @@ class ChapterState {
       attachments: attachments ?? this.attachments,
       attachmentsStatus: attachmentsStatus ?? this.attachmentsStatus,
       attachmentsError: attachmentsError,
+      
+      //* Attachment Downloads
+      attachmentDownloads: attachmentDownloads ?? this.attachmentDownloads,
 
       //*---  Quize  ---------------------------
       //* Step 1  : Get Quiz Details by Chapter ID
@@ -141,6 +206,22 @@ class ChapterState {
       submit: submit ?? this.submit,
       submitStatus: submitStatus ?? this.submitStatus,
       submitError: submitError ?? this.submitError,
+
+      //* Get Videos by Chapter with Pagination
+      videos: videos ?? this.videos,
+      videosStatus: videosStatus ?? this.videosStatus,
+      videosError: videosError ?? this.videosError,
+      videosMoreError: videosMoreError ?? this.videosMoreError,
+      videosMoreStatus: videosMoreStatus ?? this.videosMoreStatus,
+
+      //* Get Video Streaming
+      videoStreaming: videoStreaming ?? this.videoStreaming,
+      videoStreamingStatus: videoStreamingStatus ?? this.videoStreamingStatus,
+      videoStreamingError: videoStreamingError,
+      selectVideo: selectVideo ?? this.selectVideo,
+
+      //* Video Downloads (progress + state)
+      downloads: downloads ?? this.downloads,
     );
   }
 }

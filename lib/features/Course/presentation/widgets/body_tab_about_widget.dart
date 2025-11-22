@@ -115,7 +115,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                     ),
                     TeacherRowWidget(
                       teacherName: details.teacherName,
-                      teacherImageUrl: "", //todo image is not exist
+                      teacherImageUrl: details.teacherAvatar ?? "",
                     ),
                     Divider(
                       color: AppColors.dividerGrey,
@@ -200,14 +200,13 @@ class BodyTabAboutWidget extends StatelessWidget {
                             ),
                             IconCountTextWidget(
                               icon: Icons.edit_note,
-                              count: 10.toString(),
+                              count: details.totalQuizzesCount.toString(),
                               text: 'Quizes',
                             ),
                           ],
                         ),
                       ],
                     ),
-
                     BlocSelector<
                       AppManagerCubit,
                       AppManagerState,

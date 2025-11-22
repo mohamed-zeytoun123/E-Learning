@@ -1,3 +1,5 @@
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/choice_model.dart';
+
 class AnswerSubmitModel {
   final int? id;
   final int? question;
@@ -8,7 +10,7 @@ class AnswerSubmitModel {
   final String? selectedChoiceText;
   final bool? isCorrect;
   final String? pointsEarned;
-  final int? correctChoice;
+  final ChoiceModel? correctChoice;
   final String? answeredAt;
 
   AnswerSubmitModel({
@@ -36,7 +38,10 @@ class AnswerSubmitModel {
       selectedChoiceText: json['selected_choice_text']?.toString(),
       isCorrect: json['is_correct'] as bool?,
       pointsEarned: json['points_earned']?.toString(),
-      correctChoice: json['correct_choice'],
+      correctChoice: json['correct_choice'] != null
+          ? ChoiceModel.fromJson(json['correct_choice'])
+          : null,
+
       answeredAt: json['answered_at']?.toString(),
     );
   }
@@ -52,7 +57,7 @@ class AnswerSubmitModel {
       'selected_choice_text': selectedChoiceText,
       'is_correct': isCorrect,
       'points_earned': pointsEarned,
-      'correct_choice': correctChoice,
+      'correct_choice': correctChoice?.toJson(),
       'answered_at': answeredAt,
     };
   }

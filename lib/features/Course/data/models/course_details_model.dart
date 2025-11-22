@@ -11,6 +11,7 @@ class CourseDetailsModel {
   final String? image;
   final int teacher;
   final String teacherName;
+  final String? teacherAvatar;
   final int category;
   final CategorieModel categoryDetail;
   final int college;
@@ -20,6 +21,7 @@ class CourseDetailsModel {
   final String price;
   final String status;
   final double totalVideoDurationHours;
+  final int totalQuizzesCount;
   final double? averageRating;
   final double totalRatings;
   final bool isFavorite;
@@ -35,6 +37,7 @@ class CourseDetailsModel {
     this.image,
     required this.teacher,
     required this.teacherName,
+    this.teacherAvatar,
     required this.category,
     required this.categoryDetail,
     required this.college,
@@ -44,6 +47,7 @@ class CourseDetailsModel {
     required this.price,
     required this.status,
     required this.totalVideoDurationHours,
+    required this.totalQuizzesCount,
     this.averageRating,
     required this.totalRatings,
     required this.isFavorite,
@@ -69,6 +73,7 @@ class CourseDetailsModel {
       image: map['image']?.toString(),
       teacher: map['teacher'] ?? 0,
       teacherName: map['teacher_name'] ?? '',
+      teacherAvatar: map['teacher_avatar']?.toString(),
       category: map['category'] ?? 0,
       categoryDetail: map['category_detail'] != null
           ? CategorieModel.fromMap(map['category_detail'])
@@ -94,6 +99,7 @@ class CourseDetailsModel {
       price: map['price']?.toString() ?? '0',
       status: map['status'] ?? '',
       totalVideoDurationHours: parseDouble(map['total_video_duration_hours']),
+      totalQuizzesCount: map['total_quizzes_count'] ?? 0,
       averageRating: map['average_rating'] != null
           ? parseDouble(map['average_rating'])
           : null,
@@ -119,6 +125,7 @@ class CourseDetailsModel {
       'image': image,
       'teacher': teacher,
       'teacher_name': teacherName,
+      'teacher_avatar': teacherAvatar,
       'category': category,
       'category_detail': categoryDetail.toMap(),
       'college': college,
@@ -128,6 +135,7 @@ class CourseDetailsModel {
       'price': price,
       'status': status,
       'total_video_duration_hours': totalVideoDurationHours,
+      'total_quizzes_count': totalQuizzesCount,
       'average_rating': averageRating,
       'total_ratings': totalRatings,
       'is_favorite': isFavorite,

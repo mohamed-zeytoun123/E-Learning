@@ -1,5 +1,6 @@
 import 'dart:developer';
-
+import 'dart:typed_data';
+import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:e_learning/core/Error/failure.dart';
@@ -7,13 +8,16 @@ import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/api_response.dart';
 import 'package:e_learning/core/network/app_url.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_model/video_pagination_model.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
   final API api;
@@ -21,7 +25,6 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
   ChapterRemoteDataSourceImpl({required this.api});
 
   //?----------------------------------------------------
-
   //* Get Chapter by ID
   @override
   Future<Either<Failure, ChapterDetailsModel>> getChapterByIdRemote({
@@ -53,12 +56,15 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       }
     } catch (exception) {
       log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      } else {
+        return Left(Failure(message: exception.toString()));
+      }
     }
   }
 
   //?----------------------------------------------------
-
   //* Get Chapter Attachments
   @override
   Future<Either<Failure, List<AttachmentModel>>> getChapterAttachmentsRemote({
@@ -93,13 +99,16 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       }
     } catch (exception) {
       log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      } else {
+        return Left(Failure(message: exception.toString()));
+      }
     }
   }
 
-  //?--  Quiz --------------------------------------------------
-
-  //* Step 1 : Get Quiz Details by Chapter ID
+  //?----------------------------------------------------
+  //* Get Quiz Details by Chapter ID
   @override
   Future<Either<Failure, QuizDetailsModel>> getQuizDetailsByChapterRemote({
     required int chapterId,
@@ -138,12 +147,16 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       }
     } catch (exception) {
       log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      } else {
+        return Left(Failure(message: exception.toString()));
+      }
     }
   }
 
-  //?------------------------------------
-  //* Step 2 : Start Quiz
+  //?----------------------------------------------------
+  //* Start Quiz
   @override
   Future<Either<Failure, StartQuizModel>> startQuizRemote({
     required int quizId,
@@ -173,13 +186,16 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       }
     } catch (exception) {
       log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      } else {
+        return Left(Failure(message: exception.toString()));
+      }
     }
   }
 
-  //?------------------------------------
-
-  //* Step 3 : Submit Quiz Answer
+  //?----------------------------------------------------
+  //* Submit Quiz Answer
   @override
   Future<Either<Failure, AnswerModel>> submitQuizAnswerRemote({
     required int quizId,
@@ -203,7 +219,6 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         if (data is Map<String, dynamic>) {
-          // حالة النجاح أو حتى الخطأ المرسل في body
           if (data.containsKey("error")) {
             return Left(
               Failure(
@@ -233,12 +248,16 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       }
     } catch (exception) {
       log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      } else {
+        return Left(Failure(message: exception.toString()));
+      }
     }
   }
 
-  //?------------------------------------
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
+  //?----------------------------------------------------
+  //* Submit Completed Quiz
   @override
   Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRemote({
     required int attemptId,
@@ -286,7 +305,188 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       );
     } catch (exception) {
       log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      } else {
+        return Left(Failure(message: exception.toString()));
+      }
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Get Videos by Chapter ID (pagination)
+  @override
+  Future<Either<Failure, VideoPaginationModel>> getVideosByChapterRemote({
+    required int chapterId,
+    int page = 1,
+  }) async {
+    try {
+      log('Fetching videos for chapterId=$chapterId, page=$page');
+
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getVideos(chapterId: chapterId, page: page),
+      );
+
+      final ApiResponse response = await api.get(request);
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          final paginatedVideos = VideoPaginationModel.fromMap(data);
+          return Right(paginatedVideos);
+        } else {
+          return Left(Failure(message: 'Invalid data format from server'));
+        }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      } else {
+        return Left(Failure(message: exception.toString()));
+      }
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Get Secure Video Streaming URL
+  @override
+  Future<Either<Failure, VideoStreamModel>> getSecureVideoUrlRemote({
+    required String videoId,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getSecureVideoUrl(videoId),
+      );
+
+      final ApiResponse response = await api.get(request);
+
+      log("SECURE VIDEO RESPONSE: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is Map<String, dynamic> &&
+            data.containsKey("secure_streaming_url")) {
+          final video = VideoStreamModel.fromJson(data);
+          return Right(video);
+        } else {
+          return Left(FailureServer());
+        }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      } else {
+        return Left(Failure(message: exception.toString()));
+      }
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Download Video File (Bytes)
+  @override
+  Future<Either<Failure, Uint8List>> downloadVideoRemote({
+    required String videoId,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.downloadVideo(videoId),
+        // مهم: لأنو الفيديو بيرجع binary
+        responseType: ResponseType.bytes,
+      );
+
+      final ApiResponse response = await api.get(request);
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is Uint8List) {
+          return Right(data);
+        }
+
+        if (data is List<int>) {
+          return Right(Uint8List.fromList(data));
+        }
+
+        return Left(Failure(message: "Invalid video data format"));
+      } else {
+        return Left(
+          Failure(message: "Download error", statusCode: response.statusCode),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      }
+
+      return Left(Failure(message: exception.toString()));
+    }
+  }
+
+  //* Download Video File (Bytes) with Progress Callback
+  @override
+  Future<Either<Failure, Uint8List>> downloadVideoRemoteWithProgress({
+    required String videoId,
+    Function(double progress)? onProgress,
+  }) async {
+    try {
+      final url = AppUrls.downloadVideo(videoId);
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File('${tempDir.path}/temp_video_$videoId.mp4');
+      
+      // Use Dio's download method with progress callback
+      final response = await (api.dio as Dio).download(
+        url,
+        tempFile.path,
+        onReceiveProgress: (received, total) {
+          if (onProgress != null && total > 0) {
+            onProgress(received / total);
+          }
+        },
+      );
+
+      if (response.statusCode == 200) {
+        // Read the downloaded file as bytes
+        final bytes = await tempFile.readAsBytes();
+        // Delete the temporary file
+        await tempFile.delete();
+        return Right(bytes);
+      } else {
+        // Delete the temporary file if download failed
+        if (await tempFile.exists()) {
+          await tempFile.delete();
+        }
+        return Left(
+          Failure(message: "Download error", statusCode: response.statusCode ?? 500),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      }
+
+      return Left(Failure(message: exception.toString()));
     }
   }
 

@@ -29,6 +29,9 @@ class _BodyTabQuizzesWidgetState extends State<BodyTabQuizzesWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChapterCubit, ChapterState>(
+      buildWhen: (previous, current) =>
+          previous.quizDetailsStatus != current.quizDetailsStatus ||
+          previous.quizDetails != current.quizDetails,
       builder: (context, state) {
         if (state.quizDetailsStatus == ResponseStatusEnum.loading) {
           return Center(child: AppLoading.circular());

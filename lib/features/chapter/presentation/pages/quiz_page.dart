@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
@@ -55,7 +57,9 @@ class _QuizPageState extends State<QuizPage> {
         });
       },
 
-      buildWhen: (pre, curr) => pre.answerStatus != curr.answerStatus,
+      buildWhen: (pre, curr) =>
+          pre.submitStatus != curr.submitStatus ||
+          pre.selectedOptions != curr.selectedOptions,
 
       builder: (context, state) {
         final startQuiz = state.statrtQuiz;
@@ -124,6 +128,8 @@ class _QuizPageState extends State<QuizPage> {
                   ),
                 SizedBox(height: 20.h),
                 BlocBuilder<ChapterCubit, ChapterState>(
+                  buildWhen: (previous, current) =>
+                      previous.submitStatus != current.submitStatus,
                   builder: (context, state) {
                     switch (state.submitStatus) {
                       case ResponseStatusEnum.loading:
@@ -156,7 +162,7 @@ class _QuizPageState extends State<QuizPage> {
                                 context
                                     .read<ChapterCubit>()
                                     .submitCompletedQuiz(
-                                      attemptId: state.submit?.attempt?.id ?? 0,
+                                      attemptId: startQuiz?.id ?? 0,
                                     );
                               },
                             ),
@@ -172,8 +178,9 @@ class _QuizPageState extends State<QuizPage> {
                           buttonColor: AppColors.buttonPrimary,
                           borderColor: AppColors.borderPrimary,
                           onTap: () {
+                            log("${startQuiz?.id}");
                             context.read<ChapterCubit>().submitCompletedQuiz(
-                              attemptId: state.submit?.attempt?.id ?? 0,
+                              attemptId: startQuiz?.id ?? 0,
                             );
                           },
                         );
@@ -187,8 +194,8 @@ class _QuizPageState extends State<QuizPage> {
                             isScrollControlled: false,
                             isDismissible: false,
                             enableDrag: false,
-                            builder: (ctx) => WillPopScope(
-                              onWillPop: () async => false,
+                            builder: (ctx) => PopScope(
+                              canPop: false,
                               child: QuizResultBottomSheet(
                                 score: result?.attempt?.score ?? "0.0",
                                 total: result?.attempt?.totalPoints ?? 0,
@@ -198,7 +205,7 @@ class _QuizPageState extends State<QuizPage> {
                                     context,
                                     rootNavigator: true,
                                   ).pop();
-                                  context.pushReplacement(RouteNames.courses);
+                                  context.go(RouteNames.courses);
                                 },
                               ),
                             ),

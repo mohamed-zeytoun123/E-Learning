@@ -37,8 +37,9 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
 
     if (state.loadratingsMoreStatus == ResponseStatusEnum.loading) return;
     if ((state.ratings?.ratings?.isEmpty ?? true) ||
-        !(state.ratings?.hasNextPage ?? false))
+        !(state.ratings?.hasNextPage ?? false)) {
       return;
+    }
 
     final nextPage = page + 1;
     log("Fetching more reviews, page: $nextPage");
@@ -204,7 +205,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                     if (index < reviews.length) {
                       final r = reviews[index];
                       return CourceReviewCardWidget(
-                        teacherImageUrl: "https://picsum.photos/361/180",
+                        teacherImageUrl: r.studentImage ?? "",
                         username: r.studentName,
                         reviewText: r.comment,
                         rating: r.rating.toDouble(),

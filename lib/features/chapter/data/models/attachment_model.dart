@@ -6,7 +6,7 @@ class AttachmentModel {
   final String? description;
   final String? tag;
   final String uploadedAt;
-  final String encryptedDownloadUrl;
+  final String fileUrl;
 
   AttachmentModel({
     required this.id,
@@ -16,19 +16,19 @@ class AttachmentModel {
     required this.description,
     required this.tag,
     required this.uploadedAt,
-    required this.encryptedDownloadUrl,
+    required this.fileUrl,
   });
 
   factory AttachmentModel.fromMap(Map<String, dynamic> map) {
     return AttachmentModel(
-      id: map['id'],
-      fileName: map['file_name'],
-      extension: map['extension'],
-      fileSizeMb: map['file_size_mb'],
+      id: map['id'] ?? 0,
+      fileName: map['file_name'] ?? '',
+      extension: map['extension'] ?? '',
+      fileSizeMb: map['file_size_mb'] ?? '',
       description: map['description'],
       tag: map['tag'],
-      uploadedAt: map['uploaded_at'],
-      encryptedDownloadUrl: map['encrypted_download_url'],
+      uploadedAt: map['uploaded_at'] ?? '',
+      fileUrl: map['file_url'] ?? '',
     );
   }
 }

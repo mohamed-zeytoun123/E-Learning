@@ -1,6 +1,7 @@
 class RatingModel {
   final int id;
   final String studentName;
+  final String? studentImage;
   final int rating;
   final String comment;
   final bool isFeatured;
@@ -9,6 +10,7 @@ class RatingModel {
   RatingModel({
     required this.id,
     required this.studentName,
+    this.studentImage,
     required this.rating,
     required this.comment,
     required this.isFeatured,
@@ -19,6 +21,7 @@ class RatingModel {
     return RatingModel(
       id: json['id'] ?? 0,
       studentName: json['student_name'] ?? '',
+      studentImage: json['student_image'],
       rating: json['rating'] ?? 0,
       comment: json['comment'] ?? '',
       isFeatured: json['is_featured'] ?? false,
@@ -30,6 +33,7 @@ class RatingModel {
     return {
       'id': id,
       'student_name': studentName,
+      'student_image': studentImage,
       'rating': rating,
       'comment': comment,
       'is_featured': isFeatured,

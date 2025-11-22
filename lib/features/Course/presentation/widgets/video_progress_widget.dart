@@ -4,30 +4,101 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+// class VideoProgressWidget extends StatelessWidget {
+//   final double completedVideosSecond;
+//   final int totalVideoSecond;
+//   final bool showDetiels;
+//   final double hieghtProgress;
+
+//   const VideoProgressWidget({
+//     super.key,
+//     required this.completedVideosSecond,
+//     required this.totalVideoSecond,
+//     this.hieghtProgress = 12,
+//     this.showDetiels = true,
+//   });
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final double safeTotal = totalVideoSecond <= 0
+//         ? 1.0
+//         : totalVideoSecond.toDouble();
+//     final double percent = (completedVideosSecond / safeTotal).clamp(0.0, 1.0);
+//     final int percentValue = (percent * 100).round();
+
+//     return Column(
+//       spacing: 15.h,
+//       crossAxisAlignment: CrossAxisAlignment.start,
+
+//       children: [
+//         ClipRRect(
+//           borderRadius: BorderRadius.circular(999.r),
+//           child: LinearPercentIndicator(
+//             lineHeight: hieghtProgress.h,
+//             percent: percent,
+//             backgroundColor: AppColors.formSomeWhite,
+//             progressColor: AppColors.formProgress,
+//             barRadius: Radius.circular(999.r),
+//             animation: true,
+//             animationDuration: 700,
+//           ),
+//         ),
+//         showDetiels
+//             ? Row(
+//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                 children: [
+//                   Text(
+//                     '$completedVideosSecond Of $totalVideoSecond Videos',
+//                     style: AppTextStyles.s14w400.copyWith(
+//                       color: AppColors.textGrey,
+//                       fontSize: 14.sp,
+//                     ),
+//                   ),
+//                   Text(
+//                     '$percentValue% Completed',
+//                     style: AppTextStyles.s14w400.copyWith(
+//                       color: AppColors.textGrey,
+//                     ),
+//                   ),
+//                 ],
+//               )
+//             : SizedBox(),
+//       ],
+//     );
+//   }
+// }
+
 class VideoProgressWidget extends StatelessWidget {
-  final int completedVideos;
-  final int videoCount;
+  final double completedVideosSecond;
+  final int totalVideoSecond;
   final bool showDetiels;
   final double hieghtProgress;
 
   const VideoProgressWidget({
     super.key,
-    required this.completedVideos,
-    required this.videoCount,
+    required this.completedVideosSecond,
+    required this.totalVideoSecond,
     this.hieghtProgress = 12,
     this.showDetiels = true,
   });
 
+  /// دالة لتحويل الثواني إلى دقائق وثواني للعرض
+  String formatDuration(double seconds) {
+    final int min = seconds ~/ 60;
+    final int sec = (seconds % 60).round();
+    return '${min}m of${sec}s';
+  }
+
   @override
   Widget build(BuildContext context) {
-    final int safeTotal = videoCount <= 0 ? 1 : videoCount;
-    final double percent = (completedVideos / safeTotal).clamp(0.0, 1.0);
+    // النسبة الدقيقة من 0.0 إلى 1.0
+    final double percent = (completedVideosSecond / 100).clamp(0.0, 1.0);
+
+    // النسبة المئوية للعرض
     final int percentValue = (percent * 100).round();
 
     return Column(
-      spacing: 15.h,
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
         ClipRRect(
           borderRadius: BorderRadius.circular(999.r),
@@ -41,26 +112,28 @@ class VideoProgressWidget extends StatelessWidget {
             animationDuration: 700,
           ),
         ),
-        showDetiels
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '$completedVideos Of $videoCount Videos',
-                    style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textGrey,
-                      fontSize: 14.sp,
-                    ),
+        if (showDetiels)
+          Padding(
+            padding: EdgeInsets.only(top: 8.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '$completedVideosSecond Of $totalVideoSecond Videos',
+                  style: AppTextStyles.s14w400.copyWith(
+                    color: AppColors.textGrey,
+                    fontSize: 14.sp,
                   ),
-                  Text(
-                    '$percentValue% Completed',
-                    style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textGrey,
-                    ),
+                ),
+                Text(
+                  '$percentValue% Completed',
+                  style: AppTextStyles.s14w400.copyWith(
+                    color: AppColors.textGrey,
                   ),
-                ],
-              )
-            : SizedBox(),
+                ),
+              ],
+            ),
+          ),
       ],
     );
   }

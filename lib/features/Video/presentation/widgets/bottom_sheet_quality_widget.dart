@@ -11,7 +11,7 @@ class BottomSheetQualityWidget extends StatefulWidget {
   const BottomSheetQualityWidget({
     super.key,
     required this.onQualitySelected,
-    this.initialQuality = "240P",
+    this.initialQuality = "480P",
   });
 
   @override
@@ -22,7 +22,7 @@ class BottomSheetQualityWidget extends StatefulWidget {
 class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
   late String _selectedQuality;
 
-  final List<String> qualities = ["240P", "360P", "480P", "720P", "1080P"];
+  final List<String> qualities = ["480P", "720P"];
 
   @override
   void initState() {
@@ -45,7 +45,6 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // الخط العلوي
           Container(
             margin: EdgeInsets.only(top: 8.h, bottom: 16.h),
             width: 80.w,
@@ -56,7 +55,6 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
             ),
           ),
 
-          // العنوان + زر الإغلاق
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -76,52 +74,52 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
           SizedBox(height: 10.h),
 
           Column(
-            spacing: 10.h,
             children: qualities.map((quality) {
               bool isSelected = _selectedQuality == quality;
-
-              return InkWell(
-                onTap: () {
-                  setState(() {
-                    _selectedQuality = quality;
-                  });
-                },
-                child: Row(
-                  spacing: 10.h,
-                  children: [
-                    Container(
-                      width: 20.w,
-                      height: 30.w,
-                      margin: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isSelected ? Colors.blue : Color(0xFFF1F1F1),
-                          width: 2.w,
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.h),
+                child: InkWell(
+                  onTap: () {
+                    setState(() {
+                      _selectedQuality = quality;
+                    });
+                  },
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 20.w,
+                        height: 30.w,
+                        margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: isSelected ? Colors.blue : Color(0xFFF1F1F1),
+                            width: 2.w,
+                          ),
+                        ),
+                        child: isSelected
+                            ? Center(
+                                child: Container(
+                                  width: 12.w,
+                                  height: 12.w,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.iconBlue,
+                                  ),
+                                ),
+                              )
+                            : null,
+                      ),
+                      Text(
+                        quality,
+                        style: AppTextStyles.s14w500.copyWith(
+                          color: isSelected
+                              ? AppColors.textPrimary
+                              : AppColors.textBlack,
                         ),
                       ),
-                      child: isSelected
-                          ? Center(
-                              child: Container(
-                                width: 12.w,
-                                height: 12.w,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.iconBlue,
-                                ),
-                              ),
-                            )
-                          : null,
-                    ),
-                    Text(
-                      quality,
-                      style: AppTextStyles.s14w500.copyWith(
-                        color: isSelected
-                            ? AppColors.textPrimary
-                            : AppColors.textBlack,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             }).toList(),
