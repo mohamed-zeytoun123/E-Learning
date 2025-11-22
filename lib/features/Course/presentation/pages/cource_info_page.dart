@@ -140,9 +140,9 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                           SizedBox(height: 5.h),
                           CourseAccessContentWidget(
                             courseId: course.id,
-                            completedVideos: 30,
-                            totalVideos: 40,
-                            videoCount: 28,
+                            completedVideos: 30, //todo
+                            totalVideos: 100, //todo
+                            videoCount: 28, // todo
                             hoursCount: course.totalVideoDurationHours,
                             price: course.price,
                             isActive: isActive,

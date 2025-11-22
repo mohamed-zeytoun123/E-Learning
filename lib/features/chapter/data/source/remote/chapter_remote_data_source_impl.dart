@@ -15,7 +15,8 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/video_pagination_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_pagination_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -357,6 +358,36 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
   }
 
   //?----------------------------------------------------
+  //* Update Video Progress
+  @override
+  Future<void> updateVideoProgressRemote({
+    required int videoId,
+    required int watchedSeconds,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.updateVideoProgress(videoId),
+        body: {"watched_seconds": watchedSeconds.toString()},
+      );
+
+      final ApiResponse response = await api.post(request);
+
+      log("UPDATE VIDEO PROGRESS RESPONSE: ${response.body}");
+
+      // حتى لو حصل خطأ في الـ status code، مجرد تسجيله ولا ترجع شيء
+      if (!(response.statusCode == 200 || response.statusCode == 201)) {
+        final data = response.body;
+        log(
+          "Error updating video progress: ${data['message'] ?? "Unknown error"}",
+        );
+      }
+    } catch (exception) {
+      log("Exception updating video progress: $exception");
+      // أي خطأ في Dio أو آخر، نسجله فقط
+    }
+  }
+
+  //?----------------------------------------------------
   //* Get Secure Video Streaming URL
   @override
   Future<Either<Failure, VideoStreamModel>> getSecureVideoUrlRemote({
@@ -452,7 +483,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       final url = AppUrls.downloadVideo(videoId);
       final tempDir = await getTemporaryDirectory();
       final tempFile = File('${tempDir.path}/temp_video_$videoId.mp4');
-      
+
       // Use Dio's download method with progress callback
       final response = await (api.dio as Dio).download(
         url,
@@ -476,7 +507,10 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           await tempFile.delete();
         }
         return Left(
-          Failure(message: "Download error", statusCode: response.statusCode ?? 500),
+          Failure(
+            message: "Download error",
+            statusCode: response.statusCode ?? 500,
+          ),
         );
       }
     } catch (exception) {

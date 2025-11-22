@@ -8,7 +8,8 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 
 abstract class ChapterRepository {
   //?--------------------------------------------------------
@@ -67,8 +68,11 @@ abstract class ChapterRepository {
     String url, {
     Function(double progress)? onProgress,
   });
-  
+
   //* Check if device is connected to the internet
   Future<bool> get isConnected;
+
+  //* Update Video Progress (Repository)
+  void updateVideoProgress({required int videoId, required int watchedSeconds});
   //?--------------------------------------------------------
 }

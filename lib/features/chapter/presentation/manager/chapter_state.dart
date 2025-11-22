@@ -7,9 +7,9 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/download_item.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/video_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 
 class ChapterState {
   //?--------------------------------------------------------
@@ -22,7 +22,7 @@ class ChapterState {
   final List<AttachmentModel>? attachments;
   final ResponseStatusEnum attachmentsStatus;
   final String? attachmentsError;
-    
+
   //* Attachment Downloads Map (attachmentId -> download state)
   final Map<int, AttachmentDownloadState> attachmentDownloads;
 
@@ -75,7 +75,7 @@ class ChapterState {
     this.attachments,
     this.attachmentsStatus = ResponseStatusEnum.initial,
     this.attachmentsError,
-    
+
     //* Attachment Downloads
     this.attachmentDownloads = const {},
 
@@ -129,7 +129,7 @@ class ChapterState {
     List<AttachmentModel>? attachments,
     ResponseStatusEnum? attachmentsStatus,
     String? attachmentsError,
-    
+
     //* Attachment Downloads
     Map<int, AttachmentDownloadState>? attachmentDownloads,
 
@@ -181,7 +181,7 @@ class ChapterState {
       attachments: attachments ?? this.attachments,
       attachmentsStatus: attachmentsStatus ?? this.attachmentsStatus,
       attachmentsError: attachmentsError,
-      
+
       //* Attachment Downloads
       attachmentDownloads: attachmentDownloads ?? this.attachmentDownloads,
 

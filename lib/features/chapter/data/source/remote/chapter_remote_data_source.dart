@@ -9,7 +9,8 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/video_pagination_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_pagination_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
 
 abstract class ChapterRemoteDataSource {
   //?--------------------------------------------------------
@@ -71,6 +72,12 @@ abstract class ChapterRemoteDataSource {
   Future<Either<Failure, Uint8List>> downloadVideoRemoteWithProgress({
     required String videoId,
     Function(double progress)? onProgress,
+  });
+
+  //* Update Video Progress
+  Future<void> updateVideoProgressRemote({
+    required int videoId,
+    required int watchedSeconds,
   });
 
   //?--------------------------------------------------------

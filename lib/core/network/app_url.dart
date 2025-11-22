@@ -142,5 +142,9 @@ class AppUrls {
   static String downloadVideo(String videoId) =>
       "$baseURl/videos/$videoId/download/";
 
+  //* Update Video Progress
+  static String updateVideoProgress(int videoId) =>
+      "$baseURl/videos/$videoId/progress/";
+
   //?---------------------------------------------------------------
 }

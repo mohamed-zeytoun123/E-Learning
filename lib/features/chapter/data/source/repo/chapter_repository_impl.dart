@@ -10,7 +10,8 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
@@ -145,7 +146,21 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
   //?--------------------------------------------------------
 
-  // Repository method
+  //* Update Video Progress (Cubit)
+  void updateVideoProgress({
+    required int videoId,
+    required int watchedSeconds,
+  }) {
+    // استدعاء الريبو بدون انتظار أو التعامل مع النتيجة
+    remote.updateVideoProgressRemote(
+      videoId: videoId,
+      watchedSeconds: watchedSeconds,
+    );
+  }
+
+  //?--------------------------------------------------------
+
+  //* Repository method
   @override
   Future<Either<Failure, VideosResultModel>> getVideosRepo({
     required int chapterId,
@@ -187,7 +202,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold(
         (failure) => Left(failure),
-        (videoModel) => Right(videoModel), // نرجع الموديل كامل
+        (videoModel) => Right(videoModel),
       );
     } else {
       return Left(FailureNoConnection());
@@ -215,7 +230,9 @@ class ChapterRepositoryImpl implements ChapterRepository {
           onProgress: onProgress,
         );
 
-        return downloadResult.fold((failure) => Left(failure), (downloadedBytes) async {
+        return downloadResult.fold((failure) => Left(failure), (
+          downloadedBytes,
+        ) async {
           final encryptedForCache = _encryptForCache(downloadedBytes, videoId);
           await local.cacheEncryptedVideo(
             videoId: videoId,
@@ -255,7 +272,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
     return Uint8List.fromList(bytes);
   }
-  
+
   //?--------------------------------------------------------
   //* Check if device is connected to the internet
   @override
@@ -268,14 +285,15 @@ class ChapterRepositoryImpl implements ChapterRepository {
   Uint8List _encryptForCache(Uint8List plainBytes, String videoId) {
     final key = _getKeyFromVideoId(videoId);
     final iv = Uint8List(16);
-    final cipher = PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()))
-      ..init(
-        true,
-        pc.PaddedBlockCipherParameters(
-          pc.ParametersWithIV(pc.KeyParameter(key), iv),
-          null,
-        ),
-      );
+    final cipher =
+        PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()))
+          ..init(
+            true,
+            pc.PaddedBlockCipherParameters(
+              pc.ParametersWithIV(pc.KeyParameter(key), iv),
+              null,
+            ),
+          );
     return cipher.process(plainBytes);
   }
 

@@ -4,13 +4,12 @@ import 'dart:typed_data';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_download_state.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/download/download_attachment_function.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/download_item.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/video_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
-import 'package:e_learning/core/network/app_url.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -496,7 +495,7 @@ class ChapterCubit extends Cubit<ChapterState> {
             _updateDownloadProgress(videoId, progress);
           },
         );
-        
+
         await result.fold(
           (failure) async {
             log('Failed to download video: ${failure.message}');
@@ -506,14 +505,16 @@ class ChapterCubit extends Cubit<ChapterState> {
             // تحديث progress لـ 100% والحالة مكتمل
             _updateDownloadProgress(videoId, 1.0);
             _completeDownload(videoId);
-            
+
             // حفظ ميتاداتا الكاش لعرضها لاحقًا بعد إعادة التشغيل التطبيق
             await local.saveCachedVideoMeta(
               videoId: videoId,
               fileName: fileName,
             );
-            
-            log('Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes');
+
+            log(
+              'Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes',
+            );
           },
         );
       } else {
@@ -609,7 +610,7 @@ class ChapterCubit extends Cubit<ChapterState> {
     try {
       // استخدام طريقة الريبو موجود لتحميل و تشفير الفيديو
       final result = await repo.getEncryptedVideoRepo(videoId: videoId);
-      
+
       await result.fold(
         (failure) async {
           log('Failed to download video: ${failure.message}');
@@ -618,8 +619,10 @@ class ChapterCubit extends Cubit<ChapterState> {
         (encryptedBytes) async {
           // اكتمال التحميل
           _completeDownload(videoId);
-          
-          log('Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes');
+
+          log(
+            'Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes',
+          );
         },
       );
     } catch (e) {
@@ -668,7 +671,7 @@ class ChapterCubit extends Cubit<ChapterState> {
       final tempDir = await getTemporaryDirectory();
       final safeName = 'video_$videoId';
       final tempFile = File('${tempDir.path}/$safeName.mp4');
-      
+
       // Always attempt to decrypt the video
       try {
         final decryptedBytes = _decryptVideoBytesSafe(
@@ -712,6 +715,19 @@ class ChapterCubit extends Cubit<ChapterState> {
     final padded = videoId.padRight(16, '0');
     final keyStr = padded.substring(0, 16);
     return Uint8List.fromList(keyStr.codeUnits);
+  }
+
+  //?--------------------------------------------------------
+
+  //* Update Video Progress
+  Future<void> updateVideoProgress({
+    required int videoId,
+    required int watchedSeconds,
+  }) async {
+    final result = repo.updateVideoProgress(
+      videoId: videoId,
+      watchedSeconds: watchedSeconds,
+    );
   }
 
   //?--------------------------------------------------------

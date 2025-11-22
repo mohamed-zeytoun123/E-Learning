@@ -1,4 +1,4 @@
-import 'package:e_learning/features/chapter/data/models/video_model/video_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
 
 class VideoPaginationModel {
   final int count;

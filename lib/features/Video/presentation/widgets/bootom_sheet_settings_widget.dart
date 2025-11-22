@@ -99,9 +99,8 @@ class BootomSheetSettingsWidget extends StatelessWidget {
                     ),
                     builder: (context) {
                       return BottomSheetSpeedWidget(
-                        initialSpeed: currentSpeed, // ✅ آخر قيمة
-                        onSpeedSelected:
-                            onSpeedSelected, // ✅ تمرير التعديل للصفحة الأساسية
+                        initialSpeed: currentSpeed,
+                        onSpeedSelected: onSpeedSelected,
                       );
                     },
                   );
