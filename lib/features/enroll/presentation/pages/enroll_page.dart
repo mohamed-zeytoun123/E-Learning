@@ -1,4 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/video_progress_widget.dart';
 import 'package:e_learning/features/enroll/data/models/enums/course_state_enum.dart';
@@ -29,6 +30,7 @@ class _EnrollPageState extends State<EnrollPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     // Filter courses based on selected state
     final filteredCourses = courses
         .where((course) => course['courseState'] == selectedCourseState)
@@ -45,7 +47,7 @@ class _EnrollPageState extends State<EnrollPage> {
               CustomStateTabBarWidget(onTabSelected: _onTabSelected),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.h),
-                child: Divider(color: AppColors.dividerGrey),
+                child: Divider(color: colors.dividerGrey),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),

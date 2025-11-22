@@ -8,6 +8,7 @@ import 'package:e_learning/features/profile/presentation/widgets/user_info_row.d
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileUserHeader extends StatelessWidget {
   const ProfileUserHeader({super.key});
@@ -17,15 +18,15 @@ class ProfileUserHeader extends StatelessWidget {
     final colors = context.colors;
     return BlocBuilder<ProfileCubit, ProfileState>(
       builder: (context, state) {
-        if (state.isLoadingDataUserProfile == true) {
-          return SizedBox(
-            height: 198.h,
-            width: 362.w,
-            child: Center(child: CircularProgressIndicator()),
-          );
-        } 
+        // if (state.isLoadingDataUserProfile == true) {
+        //   return SizedBox(
+        //     height: 198.h,
+        //     width: 362.w,
+        //     child: Center(child: CircularProgressIndicator()),
+        //   );
+        // } 
         if(state.errorFetchDataUserInfoProfile!=null){
-          return SizedBox(height: 500.h,
+          return SizedBox(height: 300.h,
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -44,7 +45,7 @@ class ProfileUserHeader extends StatelessWidget {
                             ),
                             SizedBox(height: 8.h),
                             Text(
-                              state.errorFetchTermCondition!.message,
+                              state.errorFetchDataUserInfoProfile!.message,
                               style: AppTextStyles.s14w400.copyWith(
                                 color: context.colors.textPrimary,
                               ),
@@ -57,60 +58,77 @@ class ProfileUserHeader extends StatelessWidget {
         }
 
         return SizedBox(
-          height: 198.h,
+          // height: 198.h,
           width: 362.w,
           // var dataUser= state.dataUserInfoProfile;
-          child: Card(
-            color: colors.background,
-            shape: RoundedRectangleBorder(
-              side: BorderSide(color: colors.borderCard),
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
-              child: Column(
-                children: [
-                  Text(
-                    // AppLocalizations.of(context)?.translate("User_Name") ??
-                    //     "University",
-                    state.dataUserInfoProfile.username,
-                    style: AppTextStyles.s16w600.copyWith(
-                      color: context.colors.textPrimary,
+          child: Skeletonizer(
+            enabled:  state.isLoadingDataUserProfile == true,
+            child: Card(
+              color: colors.background,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(color: colors.borderCard),
+                borderRadius: BorderRadius.circular(16.r),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
+                child: Column(
+                  children: [
+                    Text(
+                      // AppLocalizations.of(context)?.translate("User_Name") ??
+                      //     "University",
+                      state.dataUserInfoProfile.fullName,
+                      style: AppTextStyles.s16w600.copyWith(
+                        color: context.colors.textPrimary,
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.h),
-                    child: Divider(color: colors.dividerGrey),
-                  ),
-                  Column(
-                    children: [
-                      UserInfoRow(
-                        title:
-                            AppLocalizations.of(
-                              context,
-                            )?.translate("University") ??
-                            "University",
-                        value: state.dataUserInfoProfile.universityName,
-                      ),
-                      SizedBox(height: 12.h),
-                      UserInfoRow(
-                        title:
-                            AppLocalizations.of(
-                              context,
-                            )?.translate("College") ??
-                            "College",
-                        value: state.dataUserInfoProfile.collegeName,
-                      ),
-                      SizedBox(height: 12.h),
-                      UserInfoRow(
-                        title:
-                            AppLocalizations.of(context)?.translate("Year") ??
-                            "Year",
-                        value: state.dataUserInfoProfile.studyYearName,
-                      ),
-                    ],
-                  ),
-                ],
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 8.h),
+                      child: Divider(color: colors.dividerGrey),
+                    ),
+                    Column(
+                      children: [
+                        UserInfoRow(
+                          title:
+                              AppLocalizations.of(
+                                context,
+                              )?.translate("University") ??
+                              "University",
+                          value: state.dataUserInfoProfile.universityName,
+                        ),
+                        SizedBox(height: 12.h),
+                        UserInfoRow(
+                          title:
+                              AppLocalizations.of(
+                                context,
+                              )?.translate("College") ??
+                              "College",
+                          value: state.dataUserInfoProfile.collegeName,
+                        ),
+                        SizedBox(height: 12.h),
+                        UserInfoRow(
+                          title:
+                              AppLocalizations.of(context)?.translate("Year") ??
+                              "Year",
+                          value: state.dataUserInfoProfile.studyYearName,
+                        ),
+                        SizedBox(height: 12.h),
+                          UserInfoRow(
+                          title:
+                              // AppLocalizations.of(context)?.translate("email") ??
+                              "Email",
+                          value: state.dataUserInfoProfile.email,
+                        ),
+                             SizedBox(height: 12.h),
+                          UserInfoRow(
+                          title:
+                              // AppLocalizations.of(context)?.translate("email") ??
+                              "phone number",
+                          value: state.dataUserInfoProfile.phone,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

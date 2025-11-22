@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/review_bottom_sheet_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/your_review_bottom_sheet_widget.dart';
@@ -35,8 +36,8 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
           titleStyle: AppTextStyles.s16w500.copyWith(
             color: AppColors.textWhite,
           ),
-          buttonColor: Theme.of(context).colorScheme.primary,
-          borderColor: Theme.of(context).colorScheme.primary,
+          buttonColor: context.colors.textBlue,
+          borderColor: context.colors.textBlue,
           onTap: () {
             widget.isRated
                 ? showModalBottomSheet(

@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/Course/presentation/widgets/video_progress_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -53,7 +54,7 @@ class VideoRowWidget extends StatelessWidget {
                             width: 48.w,
                             height: 48.h,
                             decoration: BoxDecoration(
-                              color: AppColors.formSecondary,
+                              color: context.colors.buttonTapNotSelected,
                               borderRadius: BorderRadius.circular(999.r),
                             ),
                             alignment: Alignment.center,
@@ -74,7 +75,7 @@ class VideoRowWidget extends StatelessWidget {
                             Text(
                               chapterTitle,
                               style: AppTextStyles.s16w600.copyWith(
-                                color: AppColors.textBlack,
+                                color: context.colors.textPrimary,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -82,7 +83,7 @@ class VideoRowWidget extends StatelessWidget {
                             Text(
                               '$durationMinutes Mins',
                               style: AppTextStyles.s14w400.copyWith(
-                                color: AppColors.textGrey,
+                                color: context.colors.textGrey,
                               ),
                             ),
                           ],

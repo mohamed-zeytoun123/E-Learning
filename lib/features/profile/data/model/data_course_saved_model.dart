@@ -4,7 +4,7 @@ import 'dart:convert';
 class DataCourseSaved {
     final int id;
     final String title;
-    final String slug;
+    final int totalRating;
     final dynamic image;
     final int college;
     final String collegeName;
@@ -16,7 +16,7 @@ class DataCourseSaved {
     DataCourseSaved({
         required this.id,
         required this.title,
-        required this.slug,
+        required this.totalRating,
         required this.image,
         required this.college,
         required this.collegeName,
@@ -29,7 +29,7 @@ class DataCourseSaved {
     DataCourseSaved copyWith({
         int? id,
         String? title,
-        String? slug,
+        int? totalRating,
         dynamic image,
         int? college,
         String? collegeName,
@@ -41,7 +41,7 @@ class DataCourseSaved {
         DataCourseSaved(
             id: id ?? this.id,
             title: title ?? this.title,
-            slug: slug ?? this.slug,
+            totalRating: totalRating ?? this.totalRating,
             image: image ?? this.image,
             college: college ?? this.college,
             collegeName: collegeName ?? this.collegeName,
@@ -55,7 +55,7 @@ class DataCourseSaved {
     return <String, dynamic>{
       'id': id,
       'title': title,
-      'slug': slug,
+      'totalRating': totalRating,
       'image': image,
       'college': college,
       'college_name': collegeName,
@@ -70,11 +70,11 @@ class DataCourseSaved {
     return DataCourseSaved(
       id: map['id'] as int,
       title: (map['title'] ?? '') as String,
-      slug: map['slug'] as String,
+      totalRating: (map['total_ratings'] ?? 0) as int,
       image: (map['image'] ?? '') as dynamic,
       college: map['college'] as int,
       collegeName: map['college_name'] as String,
-      price: map['price'] as String,
+      price: (map['price'] ?? '') as String,
       averageRating: (map['average_rating']??'') as dynamic,
       totalVideoDurationHours: map['total_video_duration_hours'] as double,
       isFavorite: map['is_favorite'] as bool,

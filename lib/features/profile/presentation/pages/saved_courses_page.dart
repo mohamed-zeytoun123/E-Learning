@@ -4,6 +4,8 @@ import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
@@ -101,76 +103,97 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: CustomAppBarWidget(title: 'saved_courses'.tr(), showBack: true),
-      body: Padding(
-        padding: EdgeInsetsGeometry.symmetric(horizontal: 16.w, vertical: 32.h),
-        child: BlocBuilder<ProfileCubit, ProfileState>(
-          bloc: profileCubit,
-          buildWhen: (previous, current) =>
-              previous.dataSavedcourses != current.dataSavedcourses,
-          builder: (context, state) {
-            if (state.isLoadingdataSavedcourses == true) {
-              return Center(child: CircularProgressIndicator());
-            }
-            if(state.errorFetchdataSavedcourses!=null){
-              return SizedBox(height: 500.h,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.wifi_tethering_error,
-                              size: 64.sp,
-                              color: context.colors.iconRed,
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              'Error loading saved courses',
-                              style: AppTextStyles.s16w500.copyWith(
-                                color: context.colors.textPrimary,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              state.errorFetchdataSavedcourses!.message,
-                              style: AppTextStyles.s14w400.copyWith(
-                                color: context.colors.textPrimary,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ProfileCubit>(
+          create: (context) => profileCubit,
+        ),
+        BlocProvider<CourseCubit>(
+          create: (context) =>
+              CourseCubit(repo: appLocator<CourceseRepository>()),
+        ),
+      ],
+      child: Scaffold(
+        appBar: CustomAppBarWidget(title: 'saved_courses'.tr(), showBack: true),
+        body: Padding(
+          padding:
+              EdgeInsetsGeometry.symmetric(horizontal: 16.w, vertical: 32.h),
+          child: BlocBuilder<ProfileCubit, ProfileState>(
+            bloc: profileCubit,
+            buildWhen: (previous, current) =>
+                previous.dataSavedcourses != current.dataSavedcourses,
+            builder: (context, state) {
+              if (state.isLoadingdataSavedcourses == true) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (state.errorFetchdataSavedcourses != null) {
+                return SizedBox(
+                  height: 500.h,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.wifi_tethering_error,
+                          size: 64.sp,
+                          color: context.colors.iconRed,
                         ),
-                      ),
-                    );
-            }
-
-            return ListView.separated(
-              controller: _scrollController,
-              physics: const BouncingScrollPhysics(),
-              itemCount: state.dataSavedcourses.data.length,
-              itemBuilder: (context, index) {
-                var item = state.dataSavedcourses.data[index];
-                // log('😒 ${state.dataSavedcourses}------------------');
-                return CourseInfoCardWidget(
-                  onTap: () {
-                    context.push(RouteNames.courceInf);
-                  },
-                  imageUrl: "https://picsum.photos/361/180",
-                  title: item.title,
-                  subtitle: item.slug,
-                  rating: item.averageRating ?? 4.8,
-                  price: formatNumberString(item.price),
-                  onSave: () {
-                    log("Course saved!");
-                  },
+                        SizedBox(height: 16.h),
+                        Text(
+                          'Error loading saved courses',
+                          style: AppTextStyles.s16w500.copyWith(
+                            color: context.colors.textPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          state.errorFetchdataSavedcourses!.message,
+                          style: AppTextStyles.s14w400.copyWith(
+                            color: context.colors.textPrimary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
                 );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(height: 22.h);
-              },
-            );
-          },
+              }
+
+              return ListView.separated(
+                controller: _scrollController,
+                physics: const BouncingScrollPhysics(),
+                itemCount: state.dataSavedcourses.data.length,
+                itemBuilder: (context, index) {
+                  var item = state.dataSavedcourses.data[index];
+                  // log('😒 ${state.dataSavedcourses}------------------');
+                  return CourseInfoCardWidget(
+                    onTap: () {
+                      // context.push(RouteNames.courceInf);
+                      final cubit = BlocProvider.of<CourseCubit>(context);
+                      context.pushNamed(
+                        RouteNames.courceInf,
+                        extra: {
+                          "courseSlug": item.id.toString(),
+                          "courseCubit": cubit,
+                        },
+                      );
+                    },
+                    imageUrl: "https://picsum.photos/361/180",
+                    title: item.title,
+                    subtitle: '',
+                    rating: 4.8,
+                    price: formatNumberString(item.price),
+                    onSave: () {
+                      log("Course saved!");
+                    },
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return SizedBox(height: 22.h);
+                },
+              );
+            },
+          ),
         ),
       ),
     );

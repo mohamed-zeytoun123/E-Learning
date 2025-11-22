@@ -6,7 +6,10 @@ import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/app_url.dart';
+import 'package:e_learning/features/profile/data/model/data_college_model.dart';
 import 'package:e_learning/features/profile/data/model/data_course_saved_model.dart';
+import 'package:e_learning/features/profile/data/model/data_univarcity_response_model.dart';
+import 'package:e_learning/features/profile/data/model/data_year_response_model.dart';
 import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
 import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
@@ -77,7 +80,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
   // -------------------------- fetch data save Courses---------------
   @override
   Future<Either<Failure, DataResponseSaveCoursesPagination>>
-  getDataCoursesSaved() async {
+      getDataCoursesSaved() async {
     try {
       var response = await api.get(
         ApiRequest(url: '${AppUrls.saveCourses}?page=1&page_size=10'),
@@ -86,13 +89,65 @@ class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
       // var data = (response.body as List).map((item) {
       //   return DataResponseSaveCoursesPagination.fromMap(item);
       // }).toList();
-      var data = DataResponseSaveCoursesPagination.fromMap(
-        response.body
-      );
+      var data = DataResponseSaveCoursesPagination.fromMap(response.body);
       log("👌✅ success fetch data course saved 🔥🔥🔥");
       return right(data);
     } catch (error) {
       log("error fetch data Course saved 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserDataInfoModel>> editDataProfileStudent(String phone,String name,int universityId,int collegeId,int studyYearId) async {
+    try {
+      var response = await api.patch(ApiRequest(url: AppUrls.profileUserInfo,body: {
+  'full_name': name,
+  'phone': phone,
+  'university_id' : universityId,
+  'college_id' : collegeId,
+  'study_year_id' : studyYearId,
+}));
+      var data = UserDataInfoModel.fromMap(response.body);
+      log("👌✅ success Editing data profile 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log(" error Editing data profile 🔥🔥🔥");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+  Future<Either<Failure,DataResonseunivarsity>> getDataUnivarcity() async {
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.getUniversities));
+      var data = DataResonseunivarsity.fromMap(response.body);
+      log("👌✅ success fetch data univarcity 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log("error fetch data univarcity 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+  Future<Either<Failure,DataResonseCollege>> getCollegeData(int idUnivarcity) async {
+    try {
+      var response = await api.get(ApiRequest(url: '${AppUrls.getColleges}?university=$idUnivarcity'));
+      var data = DataResonseCollege.fromMap(response.body);
+      log("👌✅ success fetch data college 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log("error fetch data college 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DataResonseYearStudent>> getYearDataStudent()async {
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.getStudyYears));
+      var data = DataResonseYearStudent.fromMap(response.body);
+      log("👌✅ success fetch data year student 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log("error fetch data year student 🔥🔥🔥🔥🔥 :::$error");
       return left(Failure.handleError(error as DioException));
     }
   }
