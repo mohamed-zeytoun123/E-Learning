@@ -219,8 +219,7 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                       }
                     : null,
                 child: VideoRowWidget(
-                  videoId: video.id
-                      .toString(), // Pass videoId for download tracking
+                  videoId: video.id.toString(),
                   chapterTitle: video.title,
                   durationSecond: video.duration,
                   completedVideos: video.progress,
