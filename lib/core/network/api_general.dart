@@ -10,6 +10,10 @@ class API {
   // ------------------- GET -------------------
   Future<ApiResponse> get(ApiRequest apiRequest) async {
     try {
+      print('🌐 Making GET request to: ${apiRequest.url}');
+      if (apiRequest.queryParameters != null && apiRequest.queryParameters!.isNotEmpty) {
+        print('📋 Query parameters: ${apiRequest.queryParameters}');
+      }
       final response = await dio.get(
         apiRequest.url,
         queryParameters: (apiRequest.queryParameters != null &&
@@ -17,11 +21,21 @@ class API {
             ? apiRequest.queryParameters
             : null,
       );
+      print('✅ Response status: ${response.statusCode}');
+      print('📦 Response data type: ${response.data.runtimeType}');
       return ApiResponse(
         statusCode: response.statusCode ?? -1,
         body: response.data,
       );
     } catch (e) {
+      print('❌ GET request failed for ${apiRequest.url}');
+      print('❌ Error: $e');
+      if (e is DioException) {
+        print('❌ DioException type: ${e.type}');
+        print('❌ Response status: ${e.response?.statusCode}');
+        print('❌ Response data: ${e.response?.data}');
+        print('❌ Error message: ${e.message}');
+      }
       rethrow;
     }
   }

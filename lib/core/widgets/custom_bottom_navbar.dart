@@ -1,7 +1,6 @@
 import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -29,7 +28,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
             ),
             Text(
-              'home'.tr(),
+              'Home',
               style:
                   AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
             ),
@@ -40,7 +39,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           children: [
             SvgPicture.asset(Assets.resourceImagesVectorsHome3),
             Text(
-              'home'.tr(),
+              'Home',
               style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
             ),
           ],
@@ -58,7 +57,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
             ),
             Text(
-              'Search'.tr(),
+              'Search',
               style:
                   AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
             ),
@@ -69,7 +68,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           children: [
             SvgPicture.asset(Assets.resourceImagesVectorsSearch1),
             Text(
-              'Search'.tr(),
+              'Search',
               style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
             ),
           ],
@@ -87,7 +86,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
             ),
             Text(
-              'courses'.tr(),
+              'Courses',
               style:
                   AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
             ),
@@ -98,7 +97,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           children: [
             SvgPicture.asset(Assets.resourceImagesVectorsClipboardList),
             Text(
-              'courses'.tr(),
+              'Courses',
               style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
             ),
           ],
@@ -116,7 +115,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
             ),
             Text(
-              'enrolls'.tr(),
+              'Enrolls',
               style:
                   AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
             ),
@@ -127,7 +126,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           children: [
             SvgPicture.asset(Assets.resourceImagesVectorsBookCheck),
             Text(
-              'enrolls'.tr(),
+              'Enrolls',
               style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
             ),
           ],
@@ -145,7 +144,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
             ),
             Text(
-              'profile'.tr(),
+              'Profile',
               style:
                   AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
             ),
@@ -158,7 +157,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               Assets.resourceImagesVectorsPerson,
             ),
             Text(
-              'profile'.tr(),
+              'Profile',
               style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
             ),
           ],

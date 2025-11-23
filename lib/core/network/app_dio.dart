@@ -32,9 +32,9 @@ class AppDio {
   void _initDio() {
     log('Building Dio instance without token.');
     _dio.options = BaseOptions(
-      connectTimeout: const Duration(seconds: 120),
-      receiveTimeout: const Duration(seconds: 120),
-      sendTimeout: const Duration(seconds: 120),
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 30),
+      sendTimeout: const Duration(seconds: 30),
       contentType: Headers.jsonContentType,
       headers: {
         "Accept": Headers.jsonContentType,
@@ -44,6 +44,7 @@ class AppDio {
         "Accept-Language": "en",
       },
     );
+    log('🌐 Base URL: ${AppUrls.baseURl}');
   }
 
   //?----------------------------------------------------------------------------------------

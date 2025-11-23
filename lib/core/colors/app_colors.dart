@@ -92,6 +92,9 @@ class AppColors {
   //* Rating Color
   static const Color ratingStar = Color(0xffD45F2E);
 
+  //* Orange Overlay
+  static const Color orangeOverlay = Color(0xFFFDF4F1);
+
   //AppBar Color
   static const Color appBar = Color(0xff333333);
   static const Color ligthGray = Color(0xfff1f1f1);

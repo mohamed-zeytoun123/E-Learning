@@ -10,9 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CourseSlider extends StatelessWidget {
-  const CourseSlider({super.key, this.maxItems});
-
-  final int? maxItems;
+  const CourseSlider({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +24,9 @@ class CourseSlider extends StatelessWidget {
           );
         }
 
-        // Calculate display courses with maxItems limit
+        // Display all courses from API (already limited to 5 by pageSize)
         final courses = state.courses?.courses ?? [];
-        final displayCourses = maxItems != null && courses.length > maxItems!
-            ? courses.take(maxItems!).toList()
-            : courses;
+        final displayCourses = courses;
 
         return Skeletonizer(
           enabled: state.coursesStatus == ResponseStatusEnum.loading,

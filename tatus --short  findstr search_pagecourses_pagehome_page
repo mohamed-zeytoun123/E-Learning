@@ -1,0 +1,140 @@
+[1mdiff --git a/lib/features/home/presentation/pages/search_page.dart b/lib/features/home/presentation/pages/search_page.dart[m
+[1mdeleted file mode 100644[m
+[1mindex 2d9fc1a..0000000[m
+[1m--- a/lib/features/home/presentation/pages/search_page.dart[m
+[1m+++ /dev/null[m
+[36m@@ -1,144 +0,0 @@[m
+[31m-import 'package:e_learning/constant/assets.dart';[m
+[31m-import 'package:e_learning/core/colors/app_colors.dart';[m
+[31m-import 'package:e_learning/core/style/app_padding.dart';[m
+[31m-import 'package:e_learning/core/style/app_text_styles.dart';[m
+[31m-import 'package:e_learning/features/home/presentation/pages/custom_search_appbar.dart';[m
+[31m-import 'package:e_learning/features/home/presentation/widgets/filtered_bottom_sheet.dart';[m
+[31m-import 'package:easy_localization/easy_localization.dart';[m
+[31m-import 'package:flutter/material.dart';[m
+[31m-import 'package:flutter_svg/flutter_svg.dart';[m
+[31m-[m
+[31m-class SearchPage extends StatelessWidget {[m
+[31m-  const SearchPage({super.key});[m
+[31m-[m
+[31m-  @override[m
+[31m-  Widget build(BuildContext context) {[m
+[31m-    return Scaffold([m
+[31m-      resizeToAvoidBottomInset: false,[m
+[31m-      appBar: CustomSearchAppbar(),[m
+[31m-      body: Padding([m
+[31m-        padding: AppPadding.appPadding,[m
+[31m-        child: SingleChildScrollView([m
+[31m-          child: Column([m
+[31m-            crossAxisAlignment: CrossAxisAlignment.start,[m
+[31m-            children: [[m
+[31m-              SizedBox([m
+[31m-                height: 36,[m
+[31m-              ),[m
+[31m-              Text([m
+[31m-                'recent_search'.tr(),[m
+[31m-                style:[m
+[31m-                    AppTextStyles.s18w600.copyWith(color: AppColors.blackText),[m
+[31m-              ),[m
+[31m-              SizedBox([m
+[31m-                height: 16,[m
+[31m-              ),[m
+[31m-              ListView.separated([m
+[31m-                  physics: NeverScrollableScrollPhysics(),[m
+[31m-                  shrinkWrap: true,[m
+[31m-                  itemBuilder: (context, index) {[m
+[31m-                    return Row([m
+[31m-                      children: [[m
+[31m-                        SvgPicture.asset(Assets.resourceImagesVectorsSearchAd),[m
+[31m-                        SizedBox([m
+[31m-                          width: 12,[m
+[31m-                        ),[m
+[31m-                        Text('last_search'.tr(), style: AppTextStyles.s14w400),[m
+[31m-                        Spacer(),[m
+[31m-                        IconButton([m
+[31m-                            onPressed: () {[m
+[31m-                              showFilterBottomSheet(context);[m
+[31m-                              // showModalBottomSheet([m
+[31m-                              //   showDragHandle: true,[m
+[31m-                              //   backgroundColor: Colors.white,[m
+[31m-                              //   context: context,[m
+[31m-                              //   builder: (context) => Container([m
+[31m-                              //     height: 600,[m
+[31m-                              //     width: double.infinity,[m
+[31m-                              //     padding: EdgeInsets.all(20),[m
+[31m-                              //     child: Column([m
+[31m-                              //       crossAxisAlignment:[m
+[31m-                              //           CrossAxisAlignment.start,[m
+[31m-                              //       children: [[m
+[31m-                              //         Text([m
+[31m-                              //           'filter'.tr(),[m
+[31m-                              //           style: AppTextStyles.s18w600.copyWith([m
+[31m-                              //             color: AppColors.primaryTextColor,[m
+[31m-                              //           ),[m
+[31m-                              //         ),[m
+[31m-                              //         SizedBox(height: 40),[m
+[31m-                              //         Text([m
+[31m-                              //           'university',[m
+[31m-                              //           style: AppTextStyles.s16w400.copyWith([m
+[31m-                              //             color: AppColors.blackText,[m
+[31m-                              //           ),[m
+[31m-                              //         ),[m
+[31m-                              //         SizedBox(height: 24),[m
+[31m-                              //         Expanded([m
+[31m-                              //           child: FilterWrap([m
+[31m-                              //             labels: [[m
+[31m-                              //               'Harvard',[m
+[31m-                              //               'MIT',[m
+[31m-                              //               'Stanford',[m
+[31m-                              //               'Oxford',[m
+[31m-                              //               'Cambridge',[m
+[31m-                              //               'Yale',[m
+[31m-                              //               'Princeton',[m
+[31m-                              //               'Columbia',[m
+[31m-                              //             ],[m
+[31m-                              //             onSelected:[m
+[31m-                              //                 (selectedIndex, selectedLabel) {[m
+[31m-                              //               // You can use these values to filter your courses[m
+[31m-                              //               // For example: filterCourses(selectedLabel);[m
+[31m-                              //             },[m
+[31m-                              //           ),[m
+[31m-                              //         ),[m
+[31m-                              //         Text([m
+[31m-                              //           'study_year'.tr(),[m
+[31m-                              //           style: AppTextStyles.s16w400.copyWith([m
+[31m-                              //             color: AppColors.blackText,[m
+[31m-                              //           ),[m
+[31m-                              //         ),[m
+[31m-                              //         SizedBox(height: 24),[m
+[31m-                              //         Expanded([m
+[31m-                              //           child: FilterWrap([m
+[31m-                              //             labels: [[m
+[31m-                              //               'Harvard',[m
+[31m-                              //               'MIT',[m
+[31m-                              //               'Stanford',[m
+[31m-                              //               'Oxford',[m
+[31m-                              //               'Cambridge',[m
+[31m-                              //               'Yale',[m
+[31m-                              //               'Princeton',[m
+[31m-                              //               'Columbia',[m
+[31m-                              //             ],[m
+[31m-                              //             onSelected:[m
+[31m-                              //                 (selectedIndex, selectedLabel) {[m
+[31m-                              //               // You can use these values to filter your courses[m
+[31m-                              //               // For example: filterCourses(selectedLabel);[m
+[31m-                              //             },[m
+[31m-                              //           ),[m
+[31m-                              //         ),[m
+[31m-                              //       ],[m
+[31m-                              //     ),[m
+[31m-                              //   ),[m
+[31m-                              // );[m
+[31m-                            },[m
+[31m-                            icon: Icon([m
+[31m-                              Icons.close,[m
+[31m-                              color: AppColors.blackText,[m
+[31m-                            ))[m
+[31m-                      ],[m
+[31m-                    );[m
+[31m-                  },[m
+[31m-                  separatorBuil

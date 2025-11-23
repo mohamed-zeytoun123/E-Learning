@@ -298,7 +298,11 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
+        if (data is Map && data['results'] is List) {
+          for (var item in data['results']) {
+            universities.add(UniversityModel.fromMap(item));
+          }
+        } else if (data is List) {
           for (var item in data) {
             universities.add(UniversityModel.fromMap(item));
           }

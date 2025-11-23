@@ -15,6 +15,7 @@ class TeacherState {
   final int? count;
   final bool hasNextPage;
   final bool hasPreviousPage;
+  final bool isLoadingMore;
 
   //?----------------------------------------------------------------
   TeacherState({
@@ -29,6 +30,7 @@ class TeacherState {
     this.count,
     this.hasNextPage = false,
     this.hasPreviousPage = false,
+    this.isLoadingMore = false,
   });
 
   //?------------------------------------------------------------------
@@ -45,6 +47,7 @@ class TeacherState {
     int? count,
     bool? hasNextPage,
     bool? hasPreviousPage,
+    bool? isLoadingMore,
   }) {
     return TeacherState(
       //* Get Teachers
@@ -58,6 +61,7 @@ class TeacherState {
       count: count ?? this.count,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
     );
   }
 

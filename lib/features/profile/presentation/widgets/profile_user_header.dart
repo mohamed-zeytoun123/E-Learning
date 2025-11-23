@@ -1,4 +1,3 @@
-import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
@@ -44,7 +43,7 @@ class ProfileUserHeader extends StatelessWidget {
                             ),
                             SizedBox(height: 8.h),
                             Text(
-                              state.errorFetchTermCondition!.message,
+                              state.errorFetchDataUserInfoProfile?.message ?? 'Error loading data',
                               style: AppTextStyles.s14w400.copyWith(
                                 color: context.colors.textPrimary,
                               ),

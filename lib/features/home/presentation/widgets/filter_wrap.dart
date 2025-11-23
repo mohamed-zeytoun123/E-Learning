@@ -6,6 +6,7 @@ class FilterWrap extends StatefulWidget {
   final List<String> labels;
   final double spacing;
   final double runSpacing;
+  final int? selectedIndex;
   final Function(int? selectedIndex, String? selectedLabel)? onSelected;
 
   const FilterWrap({
@@ -13,6 +14,7 @@ class FilterWrap extends StatefulWidget {
     required this.labels,
     this.spacing = 8.0,
     this.runSpacing = 8.0,
+    this.selectedIndex,
     this.onSelected,
   });
 
@@ -22,14 +24,30 @@ class FilterWrap extends StatefulWidget {
 
 class _FilterWrapState extends State<FilterWrap> {
   int? selectedIndex;
+  
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = widget.selectedIndex;
+  }
+  
+  @override
+  void didUpdateWidget(FilterWrap oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.selectedIndex != oldWidget.selectedIndex) {
+      selectedIndex = widget.selectedIndex;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
+      alignment: WrapAlignment.start,
+      crossAxisAlignment: WrapCrossAlignment.start,
       spacing: widget.spacing, // Horizontal spacing between chips
       runSpacing: widget.runSpacing, // Vertical spacing between lines
       children: List.generate(widget.labels.length, (index) {
-        bool isSelected = selectedIndex == index;
+        bool isSelected = selectedIndex != null && selectedIndex! >= 0 && selectedIndex == index;
         return ChoiceChip(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),

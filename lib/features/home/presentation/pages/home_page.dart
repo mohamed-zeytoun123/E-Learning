@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: AppPadding.appPadding.copyWith(end: 0),
-              child: const CourseSlider(maxItems: 3),
+              child: const CourseSlider(),
             ),
           ),
           const SliverToBoxAdapter(
@@ -139,7 +139,7 @@ class HomePage extends StatelessWidget {
           const SliverToBoxAdapter(
             child: SizedBox(height: 36),
           ),
-          const ArticlesSection(itemsForShow: 3),
+          const ArticlesSection(),
           SliverToBoxAdapter(
             child: SizedBox(height: 24.h),
           ),

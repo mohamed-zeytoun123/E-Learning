@@ -15,7 +15,7 @@ class CoursesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<CourseCubit>(
       create: (context) => CourseCubit(repo: appLocator<CourceseRepository>())
-        ..getColleges()
+        ..getCategories()
         ..getCourses(),
       child: Builder(
         builder: (context) {

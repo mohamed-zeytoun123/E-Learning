@@ -1,7 +1,15 @@
 class AppUrls {
   //?---------------------------------------------------------------
+  //* IP Configuration for Physical Device:
+  //* - Make sure your device and computer are on the same WiFi network
+  //* - Use your computer's local network IP address
+  //* - Find your IP: Windows (ipconfig) or check your router settings
+  //* - Make sure port 8100 is not blocked by firewall
+  static const String _ip = "192.168.1.240"; // Change this to your computer's actual IP
 
-  static const String _ip = "192.168.1.23";
+  //?---------------------------------------------------------------
+
+  static const String baseURl = 'http://$_ip:8100/api/v1';
 
   //?---------------------------------------------------------------
 
@@ -10,13 +18,13 @@ class AppUrls {
   //?---------------------------------------------------------------
 
   //* Auth
-  static final String login = "$_baseURl/auth/login";
-  static final String signUp = "$_baseURl/auth/register";
-  static final String logOut = "$_baseURl/auth/logout";
-  static final String verifyOtp = "$_baseURl/auth/verify-otp";
-  static final String verifyForgotPasswordOtp = "$_baseURl/auth/forgot/verify";
-  static final String forgetPassword = "$_baseURl/auth/forgot/start";
-  static final String resetPassword = "$_baseURl/auth/forgot/reset";
+  static final String login = "$baseURl/auth/login";
+  static final String signUp = "$baseURl/auth/register";
+  static final String logOut = "$baseURl/auth/logout";
+  static final String verifyOtp = "$baseURl/auth/verify-otp";
+  static final String verifyForgotPasswordOtp = "$baseURl/auth/forgot/verify";
+  static final String forgetPassword = "$baseURl/auth/forgot/start";
+  static final String resetPassword = "$baseURl/auth/forgot/reset";
 
   //?------------------- Refresh Token -------------------
 
@@ -30,7 +38,7 @@ class AppUrls {
   static final String getColleges = "$baseURl/colleges/";
 
   //* Get Categories
-  static final String getCategories = "$_baseURl/categories/";
+  static final String getCategories = "$baseURl/categories/";
 
   //?------------------- Courses -------------------
 
@@ -140,27 +148,28 @@ class AppUrls {
   static String downloadVideo(String videoId) =>
       "$baseURl/videos/$videoId/download/";
 
-      "$_baseURl/courses/$courseSlug/favorite/";
-
   //* Get Teachers
-  static final String getTeachers = "$_baseURl/teachers/";
+  static final String getTeachers = "$baseURl/teachers/";
 
   //* Get Articles
-  static final String getArticles = "$_baseURl/articles/";
+  static final String getArticles = "$baseURl/articles/";
 
   //* Get Article Details by Slug
   static String articleDetails(String articleSlug) =>
-      "$_baseURl/articles/$articleSlug/";
+      "$baseURl/articles/$articleSlug/";
 
   //* Get Related Articles by Article ID
   static String relatedArticles(int articleId) =>
-      "$_baseURl/articles/$articleId/related/";
+      "$baseURl/articles/$articleId/related/";
 
   //*profile Url
-  static final String privacyPolicy = "$_baseURl/privacy-policy/";
-  static final String aboutUs = "$_baseURl/about-us/";
-  static final String termsConditions = "$_baseURl/terms-conditions/";
-  static final String profileUserInfo = "$_baseURl/profile/";
+  static final String privacyPolicy = "$baseURl/privacy-policy/";
+  static final String aboutUs = "$baseURl/about-us/";
+  static final String termsConditions = "$baseURl/terms-conditions/";
+  static final String profileUserInfo = "$baseURl/profile/";
+
+  //* Advertisements
+  static final String getAdvertisements = "$baseURl/advertisements/";
   
   //?---------------------------------------------------------------
 }

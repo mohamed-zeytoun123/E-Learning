@@ -16,8 +16,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ArticlesSection extends StatelessWidget {
-  const ArticlesSection({super.key, this.itemsForShow});
-  final int? itemsForShow;
+  const ArticlesSection({super.key});
 
   String _formatDate(DateTime date) {
     final months = [
@@ -51,17 +50,15 @@ class ArticlesSection extends StatelessWidget {
           );
         }
 
-        // Handle loading or empty state
+        // Display all articles from API (already limited to 5 by pageSize)
         final articles = state.articles;
-        final displayArticles = itemsForShow != null && articles != null
-            ? articles.take(itemsForShow!).toList()
-            : articles ?? [];
+        final displayArticles = articles ?? [];
 
         if (displayArticles.isEmpty &&
             state.articlesStatus == ResponseStatusEnum.loading) {
           return SliverList.separated(
             separatorBuilder: (context, index) => SizedBox(height: 12.h),
-            itemCount: itemsForShow ?? 5,
+            itemCount: 5,
             itemBuilder: (context, index) {
               return Skeletonizer(
                 enabled: true,

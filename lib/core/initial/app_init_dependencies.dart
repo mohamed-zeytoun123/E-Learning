@@ -46,6 +46,18 @@ import 'package:e_learning/features/Article/data/source/remote/article_remote_da
 import 'package:e_learning/features/Article/data/source/remote/article_remote_data_source_impl.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository_impl.dart';
+import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
+import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source_impl.dart';
+import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
+import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source_impl.dart';
+import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
+import 'package:e_learning/features/chapter/data/source/repo/chapter_repository_impl.dart';
+import 'package:e_learning/features/Course/data/source/local/advertisement_local_data_source.dart';
+import 'package:e_learning/features/Course/data/source/local/advertisement_local_data_source_impl.dart';
+import 'package:e_learning/features/Course/data/source/remote/advertisement_remote_data_source.dart';
+import 'package:e_learning/features/Course/data/source/remote/advertisement_remote_data_source_impl.dart';
+import 'package:e_learning/features/Course/data/source/repo/advertisement_repository.dart';
+import 'package:e_learning/features/Course/data/source/repo/advertisement_repository_impl.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -158,11 +170,6 @@ Future<void> appInitDependencies() async {
     () => AuthRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
-  //* Course Local Data Source
-  appLocator.registerLazySingleton<CourceseLocalDataSource>(
-    () => CourceseLocalDataSourceImpl(hive: appLocator<HiveService>()),
-  );
-
   //* Course Remote Data Source
   appLocator.registerLazySingleton<CourceseRemoteDataSource>(
     () => CourceseRemoteDataSourceImpl(api: appLocator<API>()),
@@ -190,6 +197,23 @@ Future<void> appInitDependencies() async {
   //* Article Remote Data Source
   appLocator.registerLazySingleton<ArticleRemoteDataSource>(
     () => ArticleRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
+  //* Chapter Remote Data Source
+  appLocator.registerLazySingleton<ChapterRemoteDataSource>(
+    () => ChapterRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
+  //* Advertisement Local Data Source
+  appLocator.registerLazySingleton<AdvertisementLocalDataSource>(
+    () => AdvertisementLocalDataSourceImpl(
+      sharedPreferences: appLocator<SharedPreferences>(),
+    ),
+  );
+
+  //* Advertisement Remote Data Source
+  appLocator.registerLazySingleton<AdvertisementRemoteDataSource>(
+    () => AdvertisementRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
   //* Video Remote
@@ -243,11 +267,24 @@ Future<void> appInitDependencies() async {
   appLocator.registerLazySingleton<ProfileRepository>(
     () => ProfileRepository(
       remote: appLocator<ProfileRemouteDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
   //* Chapter Repository
   appLocator.registerLazySingleton<ChapterRepository>(
     () => ChapterRepositoryImpl(
       remote: appLocator<ChapterRemoteDataSource>(),
       local: appLocator<ChapterLocalDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //* Advertisement Repository
+  appLocator.registerLazySingleton<AdvertisementRepository>(
+    () => AdvertisementRepositoryImpl(
+      remote: appLocator<AdvertisementRemoteDataSource>(),
+      local: appLocator<AdvertisementLocalDataSource>(),
       network: appLocator<NetworkInfoService>(),
     ),
   );

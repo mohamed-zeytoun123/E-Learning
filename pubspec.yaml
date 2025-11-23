@@ -43,6 +43,9 @@ dependencies:
   skeletonizer: ^1.4.3
   flutter_lorem: ^2.0.0
   google_fonts: ^6.3.0
+  pointycastle: ^4.0.0
+  open_filex: ^4.7.0
+  permission_handler: ^12.0.1
 
 dev_dependencies:
   flutter_test:

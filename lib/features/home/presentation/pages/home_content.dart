@@ -1,6 +1,8 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_cubit.dart';
+import 'package:e_learning/features/Course/data/source/repo/advertisement_repository.dart';
 import 'package:e_learning/features/Teacher/presentation/manager/teacher_cubit.dart';
 import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_cubit.dart';
@@ -20,7 +22,7 @@ class HomeContent extends StatelessWidget {
           create: (context) =>
               CourseCubit(repo: appLocator<CourceseRepository>())
                 ..getCategories()
-                ..getCourses(),
+                ..getCourses(pageSize: 5),
         ),
         BlocProvider(
           create: (context) =>
@@ -30,7 +32,12 @@ class HomeContent extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               ArticleCubit(repo: appLocator<ArticleRepository>())
-                ..getArticles(),
+                ..getArticles(pageSize: 5),
+        ),
+        BlocProvider(
+          create: (context) =>
+              AdvertisementCubit(repo: appLocator<AdvertisementRepository>())
+                ..getAdvertisements(),
         ),
       ],
       child: const HomePage(),
