@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lorem/flutter_lorem.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class TermsAndConditionsPage extends StatefulWidget {
   const TermsAndConditionsPage({super.key});
@@ -48,7 +49,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
           ),
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.fromLTRB(24,46,24,24),
               child: BlocBuilder<ProfileCubit, ProfileState>(
                 buildWhen: (previous, current) =>
                     previous.termConditionData != current.termConditionData ||
@@ -59,15 +60,15 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
 
                 builder: (context, state) {
                   log('rebuild cubit 😒');
-                  if (state.isLoadingTermCondition == true) {
-                    return Center(
-                      child: SizedBox(
-                        width: 100,
-                        height: 500,
-                        child: const Center(child: CircularProgressIndicator()),
-                      ),
-                    );
-                  }
+                  // if (state.isLoadingTermCondition == true) {
+                  //   return Center(
+                  //     child: SizedBox(
+                  //       width: 100,
+                  //       height: 500,
+                  //       child: const Center(child: CircularProgressIndicator()),
+                  //     ),
+                  //   );
+                  // }
                   if (state.errorFetchTermCondition != null) {
                     return SizedBox(height: 500.h,
                       child: Center(
@@ -102,10 +103,13 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
                   return Column(
                     children: [
                       ...List.generate(1, (index) {
-                        return privacyPolicySectionWidget(
-                          title: state.termConditionData.title,
-                          text: state.termConditionData.content,
-                          counter: index + 1,
+                        return Skeletonizer(
+                          enabled: state.isLoadingTermCondition == true,
+                          child: privacyPolicySectionWidget(
+                            title: state.termConditionData.title,
+                            text: state.termConditionData.content,
+                            counter: index + 1,
+                          ),
                         );
                       }),
 

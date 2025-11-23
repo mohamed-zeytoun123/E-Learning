@@ -122,7 +122,7 @@ class CourseInfoCardWidget extends StatelessWidget {
                           width: 55.w,
                           height: 25.h,
                           decoration: BoxDecoration(
-                            color: AppColors.formSomeWhite,
+                            color: context.colors.backgroundOrange,
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 6.w),

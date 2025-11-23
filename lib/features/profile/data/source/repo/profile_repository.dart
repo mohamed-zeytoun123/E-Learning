@@ -89,9 +89,9 @@ class ProfileRepository {
   }
 
   Future<Either<Failure, DataResponseSaveCoursesPagination>>
-      getDataSavedCoursesRepo() async {
+      getDataSavedCoursesRepo(int page) async {
     if (await network.isConnected) {
-      var result = await remote.getDataCoursesSaved();
+      var result = await remote.getDataCoursesSaved(page);
       return result.fold(
         (error) {
           log(

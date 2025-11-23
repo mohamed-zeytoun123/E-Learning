@@ -63,7 +63,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                   topLeft: Radius.circular(24.r),
                   topRight: Radius.circular(24.r),
                 ),
-                color: AppColors.backgroundPage,
+                color: colors.buttonTapNotSelected,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,

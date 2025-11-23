@@ -21,7 +21,7 @@ class IconCountTextWidget extends StatelessWidget {
     return Row(
       spacing: 5.w,
       children: [
-        Icon(icon, size: 20.sp, color: context.colors.textBlack),
+        Icon(icon, size: 20.sp, color: context.colors.textPrimary),
         Text(
           count,
           style: AppTextStyles.s16w400.copyWith(color: context.colors.textPrimary),

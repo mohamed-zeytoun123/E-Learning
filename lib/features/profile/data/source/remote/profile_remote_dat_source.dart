@@ -13,7 +13,7 @@ abstract class ProfileRemouteDataSource {
   Future<Either<Failure, ResponseInfoAppModel>> getAboutUpInfo();
   Future<Either<Failure, ResponseInfoAppModel>> getTermsCondition();
   Future<Either<Failure, UserDataInfoModel>> getDataUser();
-  Future<Either<Failure, DataResponseSaveCoursesPagination>>getDataCoursesSaved();
+  Future<Either<Failure, DataResponseSaveCoursesPagination>>getDataCoursesSaved(int page);
   Future<Either<Failure, UserDataInfoModel>> editDataProfileStudent(String phone,String name,int universityId,int collegeId,int studyYearId);
   Future<Either<Failure,DataResonseunivarsity>> getDataUnivarcity();
   Future<Either<Failure,DataResonseCollege>> getCollegeData(int idUnivarcity);

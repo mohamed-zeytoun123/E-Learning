@@ -106,14 +106,14 @@ class BodyTabChapterWidget extends StatelessWidget {
                               Icon(
                                 Icons.menu_book_outlined,
                                 size: 100.r,
-                                color: AppColors.iconOrange,
+                                color: AppColors.iconRed,
                               ),
                               SizedBox(height: 20.h),
                               Text(
                                 "No Chapters",
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.s20w600.copyWith(
-                                  color: AppColors.textBlack,
+                                  color: colors.textPrimary,
                                 ),
                               ),
                               SizedBox(height: 10.h),
@@ -121,7 +121,7 @@ class BodyTabChapterWidget extends StatelessWidget {
                                 "This course currently has no chapters available.",
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.s16w400.copyWith(
-                                  color: AppColors.textGrey,
+                                  color: colors.textGrey,
                                 ),
                               ),
                               SizedBox(height: 30.h),

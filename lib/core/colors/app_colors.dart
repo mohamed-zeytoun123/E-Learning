@@ -187,6 +187,7 @@ class AppColors {
   //* Rating Color
   static const Color ratingStar = Color(0xffD45F2E);
   static const Color retingback = Color(0xff51443F);
+  static const Color ratingbackStarDark = Color(0xff312926);
 static const Color lightGrey = Color(0xffbababa);
   static const Color overLay = Color(0xffEDF7FF);
    static const Color ligthGray = Color(0xfff1f1f1);

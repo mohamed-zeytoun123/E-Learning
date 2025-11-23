@@ -178,12 +178,16 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
                         },
                       );
                     },
-                    imageUrl: "https://picsum.photos/361/180",
+                    imageUrl: item.image,
                     title: item.title,
                     subtitle: '',
-                    rating: 4.8,
+                    rating: item.totalRating.toDouble(),
+                    isFavorite: state.dataSavedcourses.data[index].isFavorite,
                     price: formatNumberString(item.price),
                     onSave: () {
+                      context.read<CourseCubit>().toggleFavorite(
+                            courseSlug: item.id.toString(),
+                          );
                       log("Course saved!");
                     },
                   );

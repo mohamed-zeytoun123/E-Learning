@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 // import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsPage extends StatefulWidget {
@@ -77,15 +78,15 @@ class _AboutUsPageState extends State<AboutUsPage> {
               previous.errorFetchAboutUs!=current.errorFetchAboutUs||
               previous.isLoadingAboutUs!=current.isLoadingAboutUs,
   builder: (context,state){
-  if(state.isLoadingAboutUs==true ){
-      return  Center(
-                      child: SizedBox(
-                        width: 100,
-                        height: 200,
-                        child: const Center(child: CircularProgressIndicator()),
-                      ),
-                    );
-  }
+  // if(state.isLoadingAboutUs==true ){
+  //     return  Center(
+  //                     child: SizedBox(
+  //                       width: 100,
+  //                       height: 200,
+  //                       child: const Center(child: CircularProgressIndicator()),
+  //                     ),
+  //                   );
+  // }
                
                    if (state.errorFetchAboutUs != null) {
             return  SizedBox(height: 200.h,
@@ -120,12 +121,15 @@ class _AboutUsPageState extends State<AboutUsPage> {
                    }
                    
                   
-               return Section(
-                  icon: Icons.school_rounded,
-                  title: state.aboutUsData.title,
-                  description: state.aboutUsData.content,
-                  //  "E-Learning is an online platform that connects students with expert tutors and offers a wide range of courses tailored to your learning goals.",
-                );
+               return Skeletonizer(
+                enabled: state.isLoadingAboutUs==true,
+                 child: Section(
+                    icon: Icons.school_rounded,
+                    title: state.aboutUsData.title,
+                    description: state.aboutUsData.content,
+                    //  "E-Learning is an online platform that connects students with expert tutors and offers a wide range of courses tailored to your learning goals.",
+                  ),
+               );
  }),
 
                 
@@ -182,20 +186,20 @@ class _AboutUsPageState extends State<AboutUsPage> {
                 ),
                 const SizedBox(height: 12),
 
-                _buildContactTile(
-                  icon: Icons.language_rounded,
-                  label: "Visit our Website",
-                  onTap: () {},
-                  context: context,
-                ),
-                const SizedBox(height: 12),
+                // _buildContactTile(
+                //   icon: Icons.language_rounded,
+                //   label: "Visit our Website",
+                //   onTap: () {},
+                //   context: context,
+                // ),
+                // const SizedBox(height: 12),
 
-                _buildContactTile(
-                  icon: Icons.chat_rounded,
-                  label: "Chat on WhatsApp",
-                  onTap: () {},
-                  context: context,
-                ),
+                // _buildContactTile(
+                //   icon: Icons.chat_rounded,
+                //   label: "Chat on WhatsApp",
+                //   onTap: () {},
+                //   context: context,
+                // ),
                 const SizedBox(height: 50),
                   ],
                 )

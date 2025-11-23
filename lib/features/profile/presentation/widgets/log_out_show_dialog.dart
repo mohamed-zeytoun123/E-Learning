@@ -2,6 +2,7 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/services/storage/secure_storage/secure_storage_service.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
@@ -11,6 +12,7 @@ import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
 void showLogoutDialog(BuildContext context) {
@@ -51,15 +53,17 @@ class showDialogLogOut extends StatelessWidget {
               ),
               BlocConsumer<AuthCubit, AuthState>(
                 listenWhen: (previous, current) =>
-                    previous.loginState != current.logoutStatus||previous.errorlogout != current.errorlogout,
-                    buildWhen: (previous, current) => previous.loginState != current.logoutStatus,
+                    previous.loginState != current.logoutStatus ||
+                    previous.errorlogout != current.errorlogout,
+                buildWhen: (previous, current) =>
+                    previous.loginState != current.logoutStatus,
                 listener: (context, state) {
                   if (state.logoutStatus == ResponseStatusEnum.failure) {
                     AppMessage.showFlushbar(
                       context: context,
                       title:
                           AppLocalizations.of(context)?.translate("wrrong") ??
-                          "Wrrong",
+                              "Wrrong",
                       mainButtonOnPressed: () {
                         context.pop();
                       },
@@ -70,18 +74,21 @@ class showDialogLogOut extends StatelessWidget {
                       message: state.errorlogout,
                       isShowProgress: true,
                     );
-                  }
-                  else if(state.logoutStatus == ResponseStatusEnum.success){
-                   context.go(RouteNames.selectedMethodLogin);
+                  } else if (state.logoutStatus == ResponseStatusEnum.success) {
+                    context.go(RouteNames.selectedMethodLogin);
+                      appLocator<SecureStorageService>().removeAllInCach();
                   }
                 },
                 builder: (context, state) {
                   if (state.logoutStatus == ResponseStatusEnum.loading)
-                    return SizedBox(width: 40,
-                    height: 30,
+                    return SizedBox(
+                      width: 40,
+                      height: 30,
                       child: Center(
-                        child: SizedBox(height: 20.h,width: 20,
-                          child: CircularProgressIndicator()),
+                        child: SizedBox(
+                            height: 20.h,
+                            width: 20,
+                            child: CircularProgressIndicator()),
                       ),
                     );
 
@@ -90,10 +97,10 @@ class showDialogLogOut extends StatelessWidget {
                       backgroundColor: Colors.red,
                     ),
                     onPressed: () {
-                      //   appLocator<SharedPreferencesService>().removeAll();
-                      // BlocProvider.of<AuthCubit>(context).logout(state.loginError!);
-                                       context.go(RouteNames.selectedMethodLogin);
-
+                    
+                      BlocProvider.of<AuthCubit>(context)
+                          .logout(state.loginError!);
+                      // context.go(RouteNames.selectedMethodLogin);
 
                       // Navigator.of(context).pop(); // إغلاق الحوار
                       // أضف هنا منطق تسجيل الخروج
@@ -101,7 +108,7 @@ class showDialogLogOut extends StatelessWidget {
                       print('تم تسجيل الخروج');
                     },
                     child: Text(
-                      'Log Out',
+                      'Log  Out',
                       style: TextStyle(color: Colors.white),
                     ),
                   );

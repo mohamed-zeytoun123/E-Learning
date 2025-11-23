@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_lorem/flutter_lorem.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:skeletonizer/skeletonizer.dart';
 class PrivacyPolicy extends StatefulWidget {
   const PrivacyPolicy({super.key});
 
@@ -70,15 +70,15 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                   previous.isLoadingPrivacy != current.isLoadingPrivacy ||
                   previous.errorFetchPrivacy != current.errorFetchPrivacy,
               builder: (context, state) {
-                if (state.isLoadingPrivacy == true) {
-                  return Center(
-                    child: SizedBox(
-                      width: 100,
-                      height: 400,
-                      child: const Center(child: CircularProgressIndicator()),
-                    ),
-                  );
-                }
+                // if (state.isLoadingPrivacy == true) {
+                //   return Center(
+                //     child: SizedBox(
+                //       width: 100,
+                //       height: 400,
+                //       child: const Center(child: CircularProgressIndicator()),
+                //     ),
+                //   );
+                // }
                 if (state.errorFetchPrivacy != null) {
                   return SizedBox(
             height: 500.h,
@@ -111,46 +111,49 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                     ),
                   );
                 }
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 30),
-                    Text(
-                      state.privacyPolicyData!.title ?? 'ghassan',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
+                return Skeletonizer(
+                  enabled: state.isLoadingPrivacy == true,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 30),
+                      Text(
+                        state.privacyPolicyData!.title ,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      state.privacyPolicyData!.content,
-                      // 'Privacy Policy for Deyram At Deyram.com, accessible from makemeup.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Deyram.com and how we use it.\nIf you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.\nThis Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Deyram.com. This policy is not applicable to any information collected offline or via channels other than this website.\nConsent\nBy using our website, you hereby consent to our Privacy Policy and agree to its terms.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: colors.textGrey,
+                      SizedBox(height: 10),
+                      Text(
+                        state.privacyPolicyData!.content,
+                        // 'Privacy Policy for Deyram At Deyram.com, accessible from makemeup.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Deyram.com and how we use it.\nIf you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.\nThis Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Deyram.com. This policy is not applicable to any information collected offline or via channels other than this website.\nConsent\nBy using our website, you hereby consent to our Privacy Policy and agree to its terms.',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: colors.textGrey,
+                        ),
                       ),
-                    ),
-                    // SizedBox(height: 18.h),
-                    // Text(
-                    //   'Information we collect',
-                    //   style: TextStyle(
-                    //     fontSize: 16,
-                    //     fontWeight: FontWeight.w600,
-                    //   ),
-                    // ),
-                    // SizedBox(height: 10),
-                    // Text(
-                    //   lorem(paragraphs: 2, words: 110),
-                    //   // 'Privacy Policy for Deyram At Deyram.com, accessible from makemeup.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Deyram.com and how we use it.\nIf you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.\nThis Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Deyram.com. This policy is not applicable to any information collected offline or via channels other than this website.\nConsent\nBy using our website, you hereby consent to our Privacy Policy and agree to its terms.',
-                    //   style: TextStyle(
-                    //     fontSize: 14,
-                    //     fontWeight: FontWeight.w400,
-                    //     color: colors.textGrey,
-                    //   ),
-                    // ),
-                  ],
+                      // SizedBox(height: 18.h),
+                      // Text(
+                      //   'Information we collect',
+                      //   style: TextStyle(
+                      //     fontSize: 16,
+                      //     fontWeight: FontWeight.w600,
+                      //   ),
+                      // ),
+                      // SizedBox(height: 10),
+                      // Text(
+                      //   lorem(paragraphs: 2, words: 110),
+                      //   // 'Privacy Policy for Deyram At Deyram.com, accessible from makemeup.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Deyram.com and how we use it.\nIf you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.\nThis Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Deyram.com. This policy is not applicable to any information collected offline or via channels other than this website.\nConsent\nBy using our website, you hereby consent to our Privacy Policy and agree to its terms.',
+                      //   style: TextStyle(
+                      //     fontSize: 14,
+                      //     fontWeight: FontWeight.w400,
+                      //     color: colors.textGrey,
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 );
               },
             ),

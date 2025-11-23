@@ -126,7 +126,8 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     emit(state.copyWith(isLoadingdataSavedcourses: true, isLoadingMore: true));
 
-    var result = await repo.getDataSavedCoursesRepo();
+    var result = await repo.getDataSavedCoursesRepo(
+        state.dataSavedcourses.currentPage);
 
     result.fold(
       (error) {

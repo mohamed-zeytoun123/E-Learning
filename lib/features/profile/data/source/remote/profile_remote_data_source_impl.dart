@@ -80,10 +80,10 @@ class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
   // -------------------------- fetch data save Courses---------------
   @override
   Future<Either<Failure, DataResponseSaveCoursesPagination>>
-      getDataCoursesSaved() async {
+      getDataCoursesSaved(int page) async {
     try {
       var response = await api.get(
-        ApiRequest(url: '${AppUrls.saveCourses}?page=1&page_size=10'),
+        ApiRequest(url: '${AppUrls.saveCourses}?page=$page&page_size=3'),
       );
       // var data =       DataCourseSaved.fromMap(response.body);
       // var data = (response.body as List).map((item) {
