@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/error/error_state_widget.dart';
 import 'package:e_learning/core/widgets/error/no_internet_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
@@ -42,6 +43,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return BlocBuilder<CourseCubit, CourseState>(
       buildWhen: (previous, current) =>
           previous.courseDetailsStatus != current.courseDetailsStatus,
@@ -76,11 +78,11 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
           isActive = course.isPaid;
 
           return Scaffold(
-            appBar: CustomAppBarCourseWidget(
+            appBar: CustomAppBarWidget(
               title: course.title,
               showBack: true,
             ),
-            backgroundColor: AppColors.backgroundPage,
+            backgroundColor: colors.background,
             body: CustomScrollView(
               slivers: [
                 SliverAppBar(
@@ -101,8 +103,8 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.formWhite,
+                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: colors.borderCard)),
+                      color: colors.background,
                       borderRadius: BorderRadius.circular(24.r),
                       boxShadow: [
                         BoxShadow(
@@ -125,7 +127,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                               Expanded(
                                 child: CourseTitleSubTitleWidget(
                                   titleStyle: AppTextStyles.s18w600.copyWith(
-                                    color: AppColors.textBlack,
+                                    color: colors.textPrimary,
                                   ),
                                   title: course.title,
                                   subtitle: course.categoryDetail.name,

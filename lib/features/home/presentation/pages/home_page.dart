@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_padding.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/chips_bar.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
@@ -26,15 +27,16 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 250.h,
             floating: false,
             pinned: false,
-            backgroundColor: AppColors.background,
+            backgroundColor: colors.background,
             automaticallyImplyLeading: false,
             clipBehavior: Clip.none,
             flexibleSpace: ClipRect(

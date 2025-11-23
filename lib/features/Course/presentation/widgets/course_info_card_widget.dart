@@ -1,4 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
@@ -33,14 +34,16 @@ class CourseInfoCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: 361.w,
         height: 297.5.h,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:colors.background,
           borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color:colors.borderCard) ,
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -82,15 +85,15 @@ class CourseInfoCardWidget extends StatelessWidget {
                       width: 44.w,
                       height: 44.h,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: colors.buttonTapNotSelected,
                         shape: BoxShape.circle,
-                        border: Border.all(color: AppColors.borderSecondary),
+                        // border: Border.all(color: ),
                       ),
                       child: Icon(
                         isFavorite ? Icons.bookmark : Icons.bookmark_border,
                         color: isFavorite
-                            ? AppColors.iconBlue
-                            : Theme.of(context).colorScheme.primary,
+                            ? colors.textBlue
+                            : colors.textPrimary,
                       ),
                     ),
                   ),
@@ -137,3 +140,4 @@ class CourseInfoCardWidget extends StatelessWidget {
     );
   }
 }
+//❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️❤️

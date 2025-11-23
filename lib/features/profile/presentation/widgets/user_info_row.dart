@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class UserInfoRow extends StatelessWidget {
@@ -14,9 +15,9 @@ class UserInfoRow extends StatelessWidget {
       children: [
         Text(
           title,
-          style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
+          style: AppTextStyles.s14w400.copyWith(color:context.colors.textPrimary),
         ),
-        Text(value, style: AppTextStyles.s14w400),
+        Text(value, style: AppTextStyles.s14w400.copyWith(color:context.colors.textGrey)),
       ],
     );
   }

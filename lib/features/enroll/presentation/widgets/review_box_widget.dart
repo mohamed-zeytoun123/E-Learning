@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -15,7 +16,7 @@ class ReviewBoxWidget extends StatelessWidget {
       // height: 105.h,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
+          color: context.colors.buttonTapNotSelected,
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Padding(
@@ -26,7 +27,7 @@ class ReviewBoxWidget extends StatelessWidget {
               Text(
                 /*reviewText */ 'The Written Review From The User, About The Course And The Instructor',
                 style: AppTextStyles.s14w400.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
+                  color: context.colors.textPrimary,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
@@ -40,7 +41,7 @@ class ReviewBoxWidget extends StatelessWidget {
                     width: 60.w,
                     height: 30.h,
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: context.colors.textBlue,
                       borderRadius: BorderRadius.circular(16.r),
                     ),
                     padding: EdgeInsets.symmetric(horizontal: 6.w),
@@ -48,7 +49,7 @@ class ReviewBoxWidget extends StatelessWidget {
                     child: RatingWidget(
                       showIcon: false,
                       rating: 3,
-                      iconColor: AppColors.iconWhite,
+                      iconColor: AppColors.textWhite,
                       textColor: AppColors.textWhite,
                     ),
                   ),

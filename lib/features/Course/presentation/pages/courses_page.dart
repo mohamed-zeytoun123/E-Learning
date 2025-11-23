@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
@@ -13,6 +14,7 @@ class CoursesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return BlocProvider<CourseCubit>(
       create: (context) => CourseCubit(repo: appLocator<CourceseRepository>())
         ..getCategories()
@@ -22,8 +24,8 @@ class CoursesPage extends StatelessWidget {
           final cubit = context.read<CourseCubit>();
 
           return Scaffold(
-            backgroundColor: AppColors.backgroundPage,
-            appBar: CustomAppBarCourseWidget(
+            backgroundColor: colors.background,
+            appBar: CustomAppBarWidget(
               title: "Course’s Title",
               showBack: true,
               onSearch: () {

@@ -204,22 +204,22 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  // @override
-  // Future<Either<Failure, bool>> logOutRepo(String refreshToken) async {
-  //   if (await network.isConnected) {
-  //     var result = await remote.logOutRemote(refreshToken);
-  //     return result.fold(
-  //       (error) {
-  //         return left(error);
-  //       },
-  //       (data) {
-  //         return right(data);
-  //       },
-  //     );
-  //   } else {
-  //     return left(FailureNoConnection());
-  //   }
-  // }
+  @override
+  Future<Either<Failure, bool>> logOutRepo(String refreshToken) async {
+    if (await network.isConnected) {
+      var result = await remote.logOutRemote(refreshToken);
+      return result.fold(
+        (error) {
+          return left(error);
+        },
+        (data) {
+          return right(data);
+        },
+      );
+    } else {
+      return left(FailureNoConnection());
+    }
+  }
 
   //? -----------------------------------------------------------------
 

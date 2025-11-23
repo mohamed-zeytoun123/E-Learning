@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/Course/presentation/widgets/body_tab_about_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/body_tab_chapter_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/body_tab_reviews_widget.dart';
@@ -25,17 +26,18 @@ class CourseTabViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors= context.colors;
     return DefaultTabController(
       length: 3,
       child: Column(
         children: [
           TabBar(
-            dividerColor: AppColors.dividerGrey,
+            dividerColor: colors.dividerGrey,
             indicatorSize: TabBarIndicatorSize.tab,
-            indicatorColor: AppColors.textPrimary,
+            indicatorColor: colors.textBlue,
             indicatorWeight: 2.h,
-            labelColor: AppColors.textPrimary,
-            unselectedLabelColor: AppColors.textGrey,
+            labelColor: colors.textBlue,
+            unselectedLabelColor: colors.textGrey,
             labelStyle: AppTextStyles.s14w600,
             tabs: [
               Tab(

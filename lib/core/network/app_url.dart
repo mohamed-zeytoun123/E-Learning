@@ -167,9 +167,9 @@ class AppUrls {
   static final String aboutUs = "$baseURl/about-us/";
   static final String termsConditions = "$baseURl/terms-conditions/";
   static final String profileUserInfo = "$baseURl/profile/";
+  static final String saveCourses = "$baseURl/my-favorites/";
 
   //* Advertisements
   static final String getAdvertisements = "$baseURl/advertisements/";
-  
   //?---------------------------------------------------------------
 }

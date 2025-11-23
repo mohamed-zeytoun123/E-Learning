@@ -27,6 +27,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
       backgroundColor: context.colors.background,
       appBar: CustomAppBarWidget(title: 'Term & Conditions', showBack: true),

@@ -1,6 +1,7 @@
 import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart' hide Colors;
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,9 @@ class ProgressCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Card(
-      color: Colors.white,
+      color: colors.background,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -37,12 +39,12 @@ class ProgressCard extends StatelessWidget {
                   Text(
                     '${'continueLearning'.tr()}!',
                     style: AppTextStyles.s14w400
-                        .copyWith(color: AppColors.textGrey),
+                        .copyWith(color: colors.textGrey),
                   ),
                   Text(
                     'The Full Course Title',
                     style: AppTextStyles.s16w400
-                        .copyWith(color: AppColors.primaryTextColor),
+                        .copyWith(color: colors.textBlue),
                   ),
                 ],
               ),
@@ -52,8 +54,8 @@ class ProgressCard extends StatelessWidget {
               lineHeight: 12.h,
               barRadius: Radius.circular(16),
               percent: progress,
-              progressColor: AppColors.primaryColor,
-              backgroundColor: AppColors.iconGrey,
+              progressColor: colors.textBlue,
+              backgroundColor: colors.textGrey,
               animation: true,
               animationDuration: 800,
             ),
@@ -69,14 +71,14 @@ class ProgressCard extends StatelessWidget {
             CustomButtonWidget(
                 title: 'view_all'.tr(),
                 titleStyle: AppTextStyles.s16w400
-                    .copyWith(color: AppColors.primaryTextColor),
-                buttonColor: Color(0xffECF6FE),
+                    .copyWith(color: colors.textBlue),
+                buttonColor: colors.buttonTapNotSelected,
                 borderColor: Colors.transparent)
           ],
         ),
       ),
       shape: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+          borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: context.colors.borderCard),),
     );
   }
 }

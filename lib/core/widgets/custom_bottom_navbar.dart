@@ -1,6 +1,7 @@
 import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,31 +17,32 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     final bottomNavItems = [
       // Home
-      BottomNavigationBarItem(
+      BottomNavigationBarItem(backgroundColor: colors.buttonTapNotSelected,
         activeIcon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
               Assets.resourceImagesVectorsHome3,
               colorFilter:
-                  ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+                  ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
             Text(
               'Home',
               style:
-                  AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
+                  AppTextStyles.s12w400.copyWith(color: colors.textBlue),
             ),
           ],
         ),
         icon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.resourceImagesVectorsHome3),
+            SvgPicture.asset(Assets.resourceImagesVectorsHome3,color:colors.textGrey),
             Text(
               'Home',
-              style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
+              style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
             ),
           ],
         ),
@@ -54,22 +56,22 @@ class CustomBottomNavigationBar extends StatelessWidget {
             SvgPicture.asset(
               Assets.resourceImagesVectorsSearch1,
               colorFilter:
-                  ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+                  ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
             Text(
               'Search',
               style:
-                  AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
+                  AppTextStyles.s12w400.copyWith(color: colors.textBlue),
             ),
           ],
         ),
         icon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.resourceImagesVectorsSearch1),
+            SvgPicture.asset(Assets.resourceImagesVectorsSearch1,color:colors.textGrey),
             Text(
               'Search',
-              style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
+              style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
             ),
           ],
         ),
@@ -81,24 +83,24 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsClipboardList,
+              Assets.resourceImagesVectorsClipboardList,color:colors.textGrey,
               colorFilter:
-                  ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+                  ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
             Text(
               'Courses',
               style:
-                  AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
+                  AppTextStyles.s12w400.copyWith(color: colors.textBlue),
             ),
           ],
         ),
         icon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.resourceImagesVectorsClipboardList),
+            SvgPicture.asset(Assets.resourceImagesVectorsClipboardList,color:colors.textGrey),
             Text(
               'Courses',
-              style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
+              style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
             ),
           ],
         ),
@@ -110,24 +112,24 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsBookCheck,
+              Assets.resourceImagesVectorsBookCheck,color:colors.textGrey,
               colorFilter:
-                  ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+                  ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
             Text(
               'Enrolls',
               style:
-                  AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
+                  AppTextStyles.s12w400.copyWith(color: colors.textBlue),
             ),
           ],
         ),
         icon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.resourceImagesVectorsBookCheck),
+            SvgPicture.asset(Assets.resourceImagesVectorsBookCheck,color:colors.textGrey),
             Text(
               'Enrolls',
-              style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
+              style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
             ),
           ],
         ),
@@ -139,14 +141,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsPerson,
+              Assets.resourceImagesVectorsPerson,color:colors.textGrey,
               colorFilter:
-                  ColorFilter.mode(AppColors.primaryColor, BlendMode.srcIn),
+                  ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
             Text(
               'Profile',
               style:
-                  AppTextStyles.s12w400.copyWith(color: AppColors.primaryColor),
+                  AppTextStyles.s12w400.copyWith(color: colors.textBlue),
             ),
           ],
         ),
@@ -154,11 +156,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsPerson,
+              Assets.resourceImagesVectorsPerson,color:colors.textGrey
             ),
             Text(
               'Profile',
-              style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
+              style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
             ),
           ],
         ),
@@ -168,7 +170,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.buttonTapNotSelected,
       elevation: 0,
       currentIndex: currentIndex,
       selectedItemColor: AppColors.primaryColor,

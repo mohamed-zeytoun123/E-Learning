@@ -6,6 +6,7 @@ import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
@@ -106,6 +107,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return BlocSelector<AppManagerCubit, AppManagerState, AppStateEnum>(
       selector: (state) => state.appState,
       builder: (context, appState) {
@@ -230,7 +232,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                       Text(
                         "Chapters",
                         style: AppTextStyles.s18w600.copyWith(
-                          color: AppColors.textBlack,
+                          color: context.colors.textPrimary
                         ),
                       ),
                       Expanded(
@@ -328,7 +330,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                           },
                           separatorBuilder: (context, index) => Divider(
                             height: 1.h,
-                            color: AppColors.dividerGrey,
+                            color: colors.dividerGrey,
                           ),
                         ),
                       ),

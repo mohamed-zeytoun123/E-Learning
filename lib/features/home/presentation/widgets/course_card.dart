@@ -1,3 +1,4 @@
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
@@ -26,6 +27,7 @@ class CourseCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return InkWell(
       onTap: () {
         final courseCubit = context.read<CourseCubit>();
@@ -41,7 +43,7 @@ class CourseCard extends StatelessWidget {
       child: Stack(
         children: [
           Card(
-            color: Colors.white,
+            color: colors.buttonTapNotSelected,
             elevation: 1, // 👈 adds soft shadow
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.r),
@@ -79,7 +81,9 @@ class CourseCard extends StatelessWidget {
                       // 📘 Course Title
                       Text(
                         title,
-                        style: AppTextStyles.s16w500,
+                        style: AppTextStyles.s16w500.copyWith(
+                          color: colors.textPrimary,
+                        ),
                       ),
 
                       SizedBox(height: 4.h),
@@ -88,7 +92,7 @@ class CourseCard extends StatelessWidget {
                       Text(
                         collegeName,
                         style: AppTextStyles.s14w400
-                            .copyWith(color: AppColors.textGrey),
+                            .copyWith(color: colors.textGrey),
                       ),
 
                       const SizedBox(height: 20),
@@ -127,7 +131,7 @@ class CourseCard extends StatelessWidget {
                             Text(
                               '$price S.P',
                               style: AppTextStyles.s18w600
-                                  .copyWith(color: AppColors.primaryTextColor),
+                                  .copyWith(color: colors.textBlue),
                             ),
                           ],
                         ),

@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_padding.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
 import 'package:e_learning/features/home/presentation/widgets/course_card.dart';
@@ -19,27 +20,30 @@ class TeatcherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final colors =context.colors;
     if (teacher == null) {
       return Scaffold(
         appBar: AppBar(
-          title: Text("teachers".tr()),
+          title: Text("teachers".tr(),style: TextStyle(color: colors.textPrimary),),
         ),
         body: Center(
-          child: Text('teacher_not_found'.tr()),
+          child: Text('teacher_not_found'.tr(),
+              style: TextStyle(fontSize: 14.sp,color: colors.textPrimary)),
         ),
       );
     }
 
     final teacherData = teacher!;
     final courses = teacherData.courses;
-
+ 
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(backgroundColor: colors.background,
+      
         leading: IconButton(
           onPressed: () => context.pop(),
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: colors.textPrimary),
         ),
-        title: Text("teachers".tr()),
+        title: Text("teachers".tr(),style: TextStyle(color: colors.textPrimary)),
       ),
       body: Padding(
         padding: AppPadding.appPadding.copyWith(top: 56),
@@ -63,11 +67,11 @@ class TeatcherPage extends StatelessWidget {
                         : CircleAvatar(
                             radius: 40.r,
                             backgroundColor:
-                                AppColors.textGrey.withOpacity(0.2),
+                                colors.textGrey.withOpacity(0.2),
                             child: Icon(
                               Icons.person,
                               size: 40.sp,
-                              color: AppColors.textGrey,
+                              color: colors.textGrey,
                             ),
                           ),
                   ),
@@ -75,7 +79,7 @@ class TeatcherPage extends StatelessWidget {
                   // Teacher Name
                   Text(
                     teacherData.fullName,
-                    style: AppTextStyles.s18w600,
+                    style: AppTextStyles.s18w600.copyWith(color: colors.textPrimary  ),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: 12.h),
@@ -84,7 +88,7 @@ class TeatcherPage extends StatelessWidget {
                     Text(
                       teacherData.bio!,
                       style: AppTextStyles.s14w400
-                          .copyWith(color: AppColors.textGrey),
+                          .copyWith(color: colors.textGrey),
                       textAlign: TextAlign.center,
                     ),
                   // Qualifications
@@ -109,12 +113,12 @@ class TeatcherPage extends StatelessWidget {
                           Text(
                             '${teacherData.coursesNumber}',
                             style: AppTextStyles.s16w600
-                                .copyWith(color: AppColors.primaryTextColor),
+                                .copyWith(color: colors.textBlue),
                           ),
                           Text(
                             'courses'.tr(),
                             style: AppTextStyles.s14w400
-                                .copyWith(color: AppColors.textGrey),
+                                .copyWith(color: colors.textGrey),
                           )
                         ],
                       ),
@@ -124,12 +128,12 @@ class TeatcherPage extends StatelessWidget {
                           Text(
                             '${teacherData.students}',
                             style: AppTextStyles.s16w600
-                                .copyWith(color: AppColors.primaryTextColor),
+                                .copyWith(color: colors.textBlue),
                           ),
                           Text(
                             'students'.tr(),
                             style: AppTextStyles.s14w400
-                                .copyWith(color: AppColors.textGrey),
+                                .copyWith(color: colors.textGrey),
                           )
                         ],
                       ),
@@ -142,7 +146,7 @@ class TeatcherPage extends StatelessWidget {
                     child: Text(
                       'courses'.tr(),
                       style: AppTextStyles.s18w600.copyWith(
-                          color: AppColors.textBlack,
+                          color: colors.textPrimary,
                           fontWeight: FontWeight.bold),
                     ),
                   ),

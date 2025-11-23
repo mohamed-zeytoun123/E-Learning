@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class FilterWrap extends StatefulWidget {
@@ -52,17 +53,17 @@ class _FilterWrapState extends State<FilterWrap> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: isSelected ? AppColors.primaryColor : Colors.transparent,
+              color: isSelected ? context.colors.textBlue : Colors.transparent,
               width: 2,
             ),
           ),
           showCheckmark: false,
-          backgroundColor: AppColors.overLay,
-          selectedColor: AppColors.overLay,
+          backgroundColor: context.colors.buttonTapNotSelected,
+          selectedColor: context.colors.buttonTapNotSelected,
           label: Text(
             widget.labels[index],
             style: AppTextStyles.s14w500.copyWith(
-              color: AppColors.primaryTextColor,
+              color: context.colors.textBlue,
             ),
           ),
           selected: isSelected,

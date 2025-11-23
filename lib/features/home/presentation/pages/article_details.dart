@@ -2,6 +2,7 @@ import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_padding.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
@@ -46,8 +47,8 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("news".tr()),
+      appBar: AppBar(backgroundColor: context.colors.background,
+        title: Text("news".tr(),style: TextStyle(color: context.colors.textPrimary),),
         leading: IconButton(
           onPressed: () => context.pop(),
           icon: const Icon(
@@ -176,7 +177,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                       Text(
                         article.title,
                         style: AppTextStyles.s18w600
-                            .copyWith(fontWeight: FontWeight.w900),
+                            .copyWith(fontWeight: FontWeight.w900,color: context.colors.textPrimary),
                       ),
                       SizedBox(height: 24.h),
                       if (article.content != null &&
@@ -184,7 +185,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                         Text(
                           article.content!,
                           style: AppTextStyles.s14w500
-                              .copyWith(color: AppColors.blackText),
+                              .copyWith(color: context.colors.textGrey),
                           textAlign: TextAlign.justify,
                         )
                       else if (article.summary.isNotEmpty)
@@ -203,18 +204,18 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 16.w, vertical: 8.h),
                               decoration: BoxDecoration(
-                                  color: AppColors.overLay,
+                                  color: context.colors.buttonTapNotSelected,
                                   borderRadius: BorderRadius.circular(16.r)),
                               child: Text(
                                 article.categoryName,
                                 style: AppTextStyles.s14w500.copyWith(
-                                    color: AppColors.primaryTextColor),
+                                    color:context.colors.textBlue),
                               ),
                             ),
                           Text(
                             _formatDate(displayDate),
                             style: AppTextStyles.s14w500
-                                .copyWith(color: AppColors.primaryTextColor),
+                                .copyWith(color: context.colors.textBlue),
                           ),
                         ],
                       ),
@@ -222,7 +223,7 @@ class _ArticleDetailsPageState extends State<ArticleDetailsPage> {
                       Text(
                         'related_news'.tr(),
                         style: AppTextStyles.s16w600
-                            .copyWith(fontWeight: FontWeight.w900),
+                            .copyWith(fontWeight: FontWeight.w900,color: context.colors.textPrimary),
                       ),
                       SizedBox(height: 24.h),
                     ]),

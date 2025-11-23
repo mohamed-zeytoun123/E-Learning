@@ -47,7 +47,7 @@ class CustomSettingsItemWidget extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.h),
-          child: Divider(color: AppColors.dividerGrey),
+          child: Divider(color: context.colors.dividerGrey, thickness: 1),
         ),
       ],
     );

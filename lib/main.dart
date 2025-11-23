@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
                 title: 'e_learning'.tr(),
                 debugShowCheckedModeBanner: false,
                 locale: state.appLocale,
-                themeMode: state.themeMode,
+                themeMode: ThemeMode.dark,
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,
                 supportedLocales: const [Locale('en'), Locale('ar')],

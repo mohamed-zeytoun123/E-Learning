@@ -270,5 +270,24 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
+  // ------------------------------logOut-------------------------------
+  void logout(String refreshToken) async {
+    emit(state.copyWith(logoutStatus: ResponseStatusEnum.loading));
+    var result = await repository.logOutRepo(refreshToken);
+    result.fold(
+      (error) {
+        emit(
+          state.copyWith(
+            logoutStatus: ResponseStatusEnum.failure,
+            errorlogout: error.message,
+          ),
+        );
+      },
+      (data) {
+        emit(state.copyWith(logoutStatus: ResponseStatusEnum.success));
+      },
+    );
+  }
+
   //?---------------------------------------------------------------------------------------
 }

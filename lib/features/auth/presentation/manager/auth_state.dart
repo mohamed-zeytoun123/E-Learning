@@ -44,6 +44,10 @@ class AuthState {
   final ResponseStatusEnum resetPasswordState;
   final String? resetPasswordError;
 
+  //* logout
+  final String? errorlogout;
+  final ResponseStatusEnum logoutStatus;
+
   //?--------------------------------------------------------------
 
   AuthState({
@@ -68,6 +72,8 @@ class AuthState {
     this.forgotPasswordError,
     this.resetPasswordState = ResponseStatusEnum.initial,
     this.resetPasswordError,
+    this.errorlogout,
+     this.logoutStatus =ResponseStatusEnum.initial,
   });
 
   AuthState copyWith({
@@ -92,6 +98,8 @@ class AuthState {
     ResponseStatusEnum? getStudyYearsState,
     String? studyYearsError,
     List<StudyYearModel>? studyYears,
+       String? errorlogout,
+  ResponseStatusEnum? logoutStatus,
   }) {
     return AuthState(
       getStudyYearsState: getStudyYearsState ?? this.getStudyYearsState,
@@ -115,6 +123,8 @@ class AuthState {
       forgotPasswordError: forgotPasswordError,
       resetPasswordState: resetPasswordState ?? this.resetPasswordState,
       resetPasswordError: resetPasswordError,
+      errorlogout : errorlogout,
+      logoutStatus : logoutStatus ?? this.logoutStatus
     );
   }
 }
