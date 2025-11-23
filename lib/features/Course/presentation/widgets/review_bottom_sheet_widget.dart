@@ -88,7 +88,8 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
           // حقل الكتابة
           InputReviewWidget(
             controller: widget.reviewController,
-            hint: AppLocalizations.of(context)?.translate("yourOpinion") ??
+            hint:
+                AppLocalizations.of(context)?.translate("yourOpinion") ??
                 "Your Opinion",
             hintKey: "yourOpinion",
           ),
@@ -99,10 +100,13 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
           Center(
             child: CustomButtonWidget(
               onTap: () {
-                log('Final rating: $selectedRating');
-                context.pop(); // تغلق البوتوم شيت
+                context.pop({
+                  'rating': selectedRating,
+                  'review': widget.reviewController.text.trim(),
+                });
               },
-              title: AppLocalizations.of(context)?.translate("Send_Review") ??
+              title:
+                  AppLocalizations.of(context)?.translate("Send_Review") ??
                   "Send Review",
               titleStyle: AppTextStyles.s16w500.copyWith(
                 color: AppColors.titlePrimary,

@@ -75,8 +75,41 @@ class AppRouter {
       //?-----  Viedeo Featchers   --------------------------------------------------------------
       GoRoute(
         path: RouteNames.viedioPage,
-        builder: (context, state) => const VideoPlayingPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final chapterCubit = args["chapterCubit"] as ChapterCubit;
+          final videoModel = args["videoModel"] as VideoStreamModel?;
+          final videoFile = args["videoFile"] as dynamic;
+
+          return BlocProvider.value(
+            value: chapterCubit,
+            child: VideoPlayingPage(
+              videoModel: videoModel,
+              videoFile: videoFile,
+            ),
+          );
+        },
       ),
+
+      // GoRoute(
+      //   path: RouteNames.cachedVideos,
+      //   builder: (context, state) {
+      //     final Map<String, dynamic>? args =
+      //         state.extra as Map<String, dynamic>?;
+      //     final chapterCubit = args != null
+      //         ? args["chapterCubit"] as ChapterCubit
+      //         : null;
+
+      //     if (chapterCubit != null) {
+      //       return BlocProvider.value(
+      //         value: chapterCubit,
+      //         child: const CachedVideosScreen(),
+      //       );
+      //     } else {
+      //       return const CachedVideosScreen();
+      //     }
+      //   },
+      // ),
 
       //?-------------------------------------------------------------------
       GoRoute(
@@ -198,13 +231,13 @@ class AppRouter {
         name: RouteNames.courceInf,
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
-          final courseSlug = args["courseSlug"] as String;
+          final courseId = args["courseId"] as int;
 
           final courseCubit = args["courseCubit"] as CourseCubit;
 
           return BlocProvider.value(
             value: courseCubit,
-            child: CourceInfoPage(courseSlug: courseSlug),
+            child: CourceInfoPage(courseId: courseId),
           );
         },
       ),
@@ -233,7 +266,15 @@ class AppRouter {
 
       GoRoute(
         path: RouteNames.quizPage,
-        builder: (context, state) => const QuizPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final chapterCubit = args["chapterCubit"] as ChapterCubit;
+
+          return BlocProvider.value(
+            value: chapterCubit,
+            child: const QuizPage(),
+          );
+        },
       ),
 
       //? --------------------------- Profile Pages --------------------------
@@ -247,7 +288,22 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.downloads,
-        builder: (context, state) => const DownloadsPage(),
+        builder: (context, state) {
+          final Map<String, dynamic>? args =
+              state.extra as Map<String, dynamic>?;
+          final chapterCubit = args != null
+              ? args["chapterCubit"] as ChapterCubit
+              : null;
+
+          if (chapterCubit != null) {
+            return BlocProvider.value(
+              value: chapterCubit,
+              child: const DownloadsPage(),
+            );
+          } else {
+            return const DownloadsPage();
+          }
+        },
       ),
 
       //?-------------------------------------------------------------------

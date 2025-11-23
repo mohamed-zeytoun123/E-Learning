@@ -2,9 +2,15 @@ import 'package:e_learning/core/asset/app_icons.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/icon_circle_widget.dart';
+import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
+import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
+import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -67,17 +73,55 @@ class QuizReadyWidget extends StatelessWidget {
         ),
 
         SizedBox(height: 25.h),
-
-        CustomButtonWidget(
-          title: "Start Quiz",
-          titleStyle: AppTextStyles.s16w500.copyWith(
-            color: AppColors.titlePrimary,
-          ),
-          buttonColor: AppColors.buttonPrimary,
-          borderColor: AppColors.borderPrimary,
-          icon: Icon(Icons.arrow_outward_sharp, color: AppColors.iconWhite),
-          onTap: () {
-            context.push(RouteNames.quizPage);
+        BlocConsumer<ChapterCubit, ChapterState>(
+          listenWhen: (previous, current) =>
+              previous.statrtQuizStatus != current.statrtQuizStatus,
+          listener: (context, state) {
+            if (state.statrtQuizStatus == ResponseStatusEnum.success) {
+              context.push(
+                RouteNames.quizPage,
+                extra: {"chapterCubit": context.read<ChapterCubit>()},
+              );
+            } else if (state.statrtQuizStatus == ResponseStatusEnum.failure) {
+              AppMessage.showFlushbar(
+                context: context,
+                title: "Error",
+                message: state.statrtQuizError ?? "Something went wrong",
+                iconData: Icons.error_outline,
+                iconColor: AppColors.iconWhite,
+              );
+            }
+          },
+          buildWhen: (previous, current) =>
+              previous.statrtQuizStatus != current.statrtQuizStatus,
+          builder: (context, state) {
+            if (state.statrtQuizStatus == ResponseStatusEnum.loading) {
+              return Center(
+                child: SizedBox(
+                  width: 40.w,
+                  height: 40.w,
+                  child: AppLoading.circular(),
+                ),
+              );
+            } else {
+              return CustomButtonWidget(
+                title: "Start Quiz",
+                titleStyle: AppTextStyles.s16w500.copyWith(
+                  color: AppColors.titlePrimary,
+                ),
+                buttonColor: AppColors.buttonPrimary,
+                borderColor: AppColors.borderPrimary,
+                icon: Icon(
+                  Icons.arrow_outward_sharp,
+                  color: AppColors.iconWhite,
+                ),
+                onTap: () {
+                  final quizId =
+                      context.read<ChapterCubit>().state.quizDetails?.id ?? 0;
+                  context.read<ChapterCubit>().startQuiz(quizId: quizId);
+                },
+              );
+            }
           },
         ),
       ],

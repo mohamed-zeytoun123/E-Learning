@@ -6,12 +6,14 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 
 class QuizInfoCardWidget extends StatelessWidget {
   final String title;
+  final String quiz;
   final int questionCount;
   final int points;
 
   const QuizInfoCardWidget({
     super.key,
     required this.title,
+    required this.quiz,
     required this.questionCount,
     required this.points,
   });
@@ -35,14 +37,22 @@ class QuizInfoCardWidget extends StatelessWidget {
         border: Border.all(color: Colors.black.withOpacity(0.05), width: 1),
       ),
       margin: EdgeInsets.symmetric(horizontal: 10.w),
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+      padding: EdgeInsets.only(left: 20.w, top: 20.h, bottom: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            "$title - Quiz",
-            style: AppTextStyles.s18w600.copyWith(color: AppColors.textPrimary),
+          SingleChildScrollView(
+            padding: EdgeInsets.only(right: 10.w),
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: Text(
+              maxLines: 1,
+              "$title - $quiz",
+              style: AppTextStyles.s18w600.copyWith(
+                color: AppColors.textPrimary,
+              ),
+            ),
           ),
           SizedBox(height: 8.h),
 

@@ -21,23 +21,52 @@ class CourceReviewCardWidget extends StatelessWidget {
     required this.timeAgo,
   });
 
+  void _showFullReviewDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text(username, style: AppTextStyles.s16w600),
+        content: SingleChildScrollView(
+          child: Text(
+            reviewText,
+            style: AppTextStyles.s14w400.copyWith(color: AppColors.textBlack),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(
+              "Close",
+              style: AppTextStyles.s16w400.copyWith(
+                color: AppColors.textPrimary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 112.h,
-      child: Column(
-        spacing: 10.h,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Row(
+    return GestureDetector(
+      onTap: () => _showFullReviewDialog(context),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundPage,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               spacing: 10.w,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ShowImageTeacherWidget(teacherImageUrl: teacherImageUrl),
                 Expanded(
                   child: Column(
-                    spacing: 7.h,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -46,12 +75,16 @@ class CourceReviewCardWidget extends StatelessWidget {
                           color: AppColors.textBlack,
                         ),
                       ),
+                      SizedBox(height: 4.h),
                       Text(
                         reviewText,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.s14w400.copyWith(
                           color: AppColors.textBlack,
                         ),
                       ),
+                      SizedBox(height: 6.h),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -69,8 +102,8 @@ class CourceReviewCardWidget extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

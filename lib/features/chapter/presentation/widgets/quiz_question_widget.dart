@@ -1,18 +1,22 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 
-class QuizQuestionWidget extends StatefulWidget {
+class QuizQuestionWidget extends StatelessWidget {
   final String questionNumber;
   final String questionTitle;
   final String points;
   final List<String> options;
   final ValueChanged<int> onOptionSelected;
+  final int? selectedOptionIndex;
 
   const QuizQuestionWidget({
     super.key,
     required this.questionNumber,
+    required this.selectedOptionIndex,
     required this.questionTitle,
     required this.points,
     required this.options,
@@ -20,14 +24,50 @@ class QuizQuestionWidget extends StatefulWidget {
   });
 
   @override
-  State<QuizQuestionWidget> createState() => _QuizQuestionWidgetState();
-}
-
-class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
-  int? selectedOptionIndex;
-
-  @override
   Widget build(BuildContext context) {
+    if (options.isEmpty) {
+      return SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${questionNumber.padLeft(2, '0')} - $questionTitle",
+              style: AppTextStyles.s16w500.copyWith(color: AppColors.textBlack),
+            ),
+            SizedBox(height: 12.h),
+
+            Container(
+              margin: EdgeInsets.only(bottom: 10.h),
+              padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 14.w),
+              decoration: BoxDecoration(
+                color: AppColors.formGreyPro.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(
+                  color: AppColors.formGreyPro.withOpacity(0.3),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.info_outline,
+                    color: AppColors.iconError,
+                    size: 24.sp,
+                  ),
+                  SizedBox(width: 10.w),
+                  Text(
+                    "No options available for this question.",
+                    style: AppTextStyles.s14w400.copyWith(
+                      color: AppColors.textError,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -36,14 +76,14 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
           children: [
             Expanded(
               child: Text(
-                "${widget.questionNumber.toString().padLeft(2, '0')} - ${widget.questionTitle}",
+                "${questionNumber.padLeft(2, '0')} - $questionTitle",
                 style: AppTextStyles.s16w500.copyWith(
                   color: AppColors.textBlack,
                 ),
               ),
             ),
             Text(
-              "${widget.points} Points",
+              "$points Points",
               style: AppTextStyles.s14w400.copyWith(
                 color: AppColors.textPrimary,
               ),
@@ -52,16 +92,14 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
         ),
         SizedBox(height: 10.h),
         Column(
-          children: List.generate(widget.options.length, (index) {
-            final option = widget.options[index];
+          children: List.generate(options.length, (index) {
+            final option = options[index];
             final isSelected = selectedOptionIndex == index;
 
             return InkWell(
               onTap: () {
-                setState(() {
-                  selectedOptionIndex = index;
-                });
-                widget.onOptionSelected(index);
+                onOptionSelected(index);
+                log("$option 😊😊😊😊😊😊😊😊😊😊😊😊 $index");
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.h),
@@ -82,7 +120,6 @@ class _QuizQuestionWidgetState extends State<QuizQuestionWidget> {
                       ),
                     ),
                     SizedBox(width: 12.w),
-
                     Expanded(
                       child: Text(
                         option,

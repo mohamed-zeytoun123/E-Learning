@@ -82,6 +82,8 @@ class AppColors {
   static const Color formProgress = Color(0xff0071C7);
   static const Color formCompleted = Color(0xff018532);
   static const Color formSuspended = Color(0xffFDF4F1);
+  static const Color formGrey = Color(0xff737373);
+  static const Color formGreyPro = Color(0xffBABABA);
 
   //* Divider Colors
   static const Color dividerGrey = Color(0xffF1F1F1);

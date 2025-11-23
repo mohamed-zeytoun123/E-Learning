@@ -45,7 +45,11 @@ class Failure {
           if (data.isNotEmpty) {
             String? errorMsg;
 
-            if (data.containsKey('detail')) {
+            if (data.containsKey('non_field_errors') &&
+                data['non_field_errors'] is List &&
+                data['non_field_errors'].isNotEmpty) {
+              errorMsg = data['non_field_errors'].first.toString();
+            } else if (data.containsKey('detail')) {
               errorMsg = data['detail']?.toString();
             } else if (data.containsKey('message')) {
               errorMsg = data['message']?.toString();

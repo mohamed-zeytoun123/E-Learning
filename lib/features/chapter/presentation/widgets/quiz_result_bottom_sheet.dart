@@ -6,18 +6,18 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 
 class QuizResultBottomSheet extends StatelessWidget {
-  final int score;
+  final String score;
   final int total;
   final VoidCallback? onDone;
+  final bool isPassed;
 
   const QuizResultBottomSheet({
     super.key,
     required this.score,
     required this.total,
     this.onDone,
+    required this.isPassed,
   });
-
-  bool get isPassed => score >= (total / 2);
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class QuizResultBottomSheet extends StatelessWidget {
             style: AppTextStyles.s16w400.copyWith(color: AppColors.textGrey),
           ),
 
-          const Spacer(),
+          SizedBox(height: 20.h),
 
           CustomButtonWidget(
             title: 'Done',

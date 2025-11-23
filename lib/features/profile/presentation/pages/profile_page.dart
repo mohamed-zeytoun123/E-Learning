@@ -50,6 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               //TODO: Pass user data to ProfileUserHeader and UserInfoRow
               BlocBuilder<AppManagerCubit, AppManagerState>(
+                buildWhen: (previous, current) =>
+                    previous.appState != current.appState,
                 builder: (context, state) {
                   if (state.appState == AppStateEnum.user) {
                     return ProfileUserHeader();

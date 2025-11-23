@@ -5,43 +5,30 @@ class AttachmentModel {
   final String fileSizeMb;
   final String? description;
   final String? tag;
-  final DateTime uploadedAt;
-  final String encryptedDownloadUrl;
+  final String uploadedAt;
+  final String fileUrl;
 
   AttachmentModel({
     required this.id,
     required this.fileName,
     required this.extension,
     required this.fileSizeMb,
-    this.description,
-    this.tag,
+    required this.description,
+    required this.tag,
     required this.uploadedAt,
-    required this.encryptedDownloadUrl,
+    required this.fileUrl,
   });
 
-  factory AttachmentModel.fromJson(Map<String, dynamic> json) {
+  factory AttachmentModel.fromMap(Map<String, dynamic> map) {
     return AttachmentModel(
-      id: json['id'],
-      fileName: json['file_name'],
-      extension: json['extension'],
-      fileSizeMb: json['file_size_mb'],
-      description: json['description'],
-      tag: json['tag'],
-      uploadedAt: DateTime.parse(json['uploaded_at']),
-      encryptedDownloadUrl: json['encrypted_download_url'],
+      id: map['id'] ?? 0,
+      fileName: map['file_name'] ?? '',
+      extension: map['extension'] ?? '',
+      fileSizeMb: map['file_size_mb'] ?? '',
+      description: map['description'],
+      tag: map['tag'],
+      uploadedAt: map['uploaded_at'] ?? '',
+      fileUrl: map['file_url'] ?? '',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'file_name': fileName,
-      'extension': extension,
-      'file_size_mb': fileSizeMb,
-      'description': description,
-      'tag': tag,
-      'uploaded_at': uploadedAt.toIso8601String(),
-      'encrypted_download_url': encryptedDownloadUrl,
-    };
   }
 }

@@ -15,6 +15,10 @@ import 'package:e_learning/core/services/token/token_service.dart';
 import 'package:e_learning/core/services/token/token_service_impl.dart';
 import 'package:e_learning/core/services/translation/translation_service.dart';
 import 'package:e_learning/core/services/translation/translation_service_impl.dart';
+import 'package:e_learning/features/Video/data/source/remote/video_remote_data_source.dart';
+import 'package:e_learning/features/Video/data/source/remote/video_remote_data_source_impl.dart';
+import 'package:e_learning/features/Video/data/source/repo/video_repository.dart';
+import 'package:e_learning/features/Video/data/source/repo/video_repository_impl.dart';
 import 'package:e_learning/features/auth/data/source/local/auth_local_data_source.dart';
 import 'package:e_learning/features/auth/data/source/local/auth_local_data_source_impl.dart';
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source.dart';
@@ -125,6 +129,16 @@ Future<void> appInitDependencies() async {
     ),
   );
 
+  //* Course local
+  appLocator.registerLazySingleton<CourceseLocalDataSource>(
+    () => CourceseLocalDataSourceImpl(hive: appLocator<HiveService>()),
+  );
+
+  //* Chapter local
+  appLocator.registerLazySingleton<ChapterLocalDataSource>(
+    () => ChapterLocalDataSourceImpl(hive: appLocator<HiveService>()),
+  );
+
   //? ----------- Remote Data Sources -----------------------------------------------------------
 
   //! App Manager Remote
@@ -178,6 +192,11 @@ Future<void> appInitDependencies() async {
     () => ArticleRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
+  //* Video Remote
+  // appLocator.registerLazySingleton<VideoRemoteDataSource>(
+  //   () => VideoRemoteDataSourceImpl(api: appLocator<API>()),
+  // );
+
   //? ----------- Repositories ------------------------------------------------------------------
 
   //* Course Repository
@@ -224,11 +243,25 @@ Future<void> appInitDependencies() async {
   appLocator.registerLazySingleton<ProfileRepository>(
     () => ProfileRepository(
       remote: appLocator<ProfileRemouteDataSource>(),
+  //* Chapter Repository
+  appLocator.registerLazySingleton<ChapterRepository>(
+    () => ChapterRepositoryImpl(
+      remote: appLocator<ChapterRemoteDataSource>(),
+      local: appLocator<ChapterLocalDataSource>(),
       network: appLocator<NetworkInfoService>(),
     ),
   );
 
   //?-----------------------------------------------------------------------------------
+
+  //* Video Repository
+  // appLocator.registerLazySingleton<VideoRepository>(
+  //   () => VideoRepositoryImpl(
+  //     remote: appLocator<VideoRemoteDataSource>(),
+  //     // local: appLocator<ChapterLocalDataSource>(),
+  //     network: appLocator<NetworkInfoService>(),
+  //   ),
+  // );
 
   //? --------------------------------------------------------------------------------------------
 }

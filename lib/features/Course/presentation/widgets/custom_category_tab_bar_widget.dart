@@ -27,7 +27,8 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
       builder: (context, state) {
         final selectedIndex = state.selectedIndex;
 
-        if (state.collegesStatus == ResponseStatusEnum.loading) {
+        if (state.collegesStatus == ResponseStatusEnum.loading ||
+            state.coursesStatus == ResponseStatusEnum.loading) {
           return Column(
             children: [
               SingleChildScrollView(
@@ -63,16 +64,23 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
         if (state.collegesStatus == ResponseStatusEnum.failure) {
           return Center(
             child: Column(
-              spacing: 20.h,
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                Icon(
+                  Icons.error_outline,
+                  size: 50.sp,
+                  color: AppColors.iconError,
+                ),
+                SizedBox(height: 12.h),
                 Text(
                   state.collegesError ?? 'Something went wrong',
                   style: AppTextStyles.s16w500.copyWith(
                     color: AppColors.textError,
                   ),
+                  textAlign: TextAlign.center,
                 ),
+                SizedBox(height: 20.h),
                 CustomButtonWidget(
                   onTap: () {
                     context.read<CourseCubit>().getColleges();
@@ -127,13 +135,11 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                             if (index == 0)
                               GestureDetector(
                                 onTap: () {
-                                  // الضغط العادي: يختار الـ tab الخاص بالفلترة
                                   context
                                       .read<CourseCubit>()
                                       .changeSelectedIndex(0);
                                 },
                                 onLongPress: () {
-                                  // الضغط المطول: يفتح البوتوم شيت
                                   final cubit = context.read<CourseCubit>();
                                   cubit.getCategories();
                                   cubit.getStudyYears();
@@ -197,7 +203,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                                   .map(
                                     (course) =>
                                         state.courses?.courses?.firstWhere(
-                                          (c) => c.slug == course.slug,
+                                          (c) => c.id == course.id,
                                           orElse: () => course,
                                         ) ??
                                         course,

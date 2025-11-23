@@ -10,16 +10,18 @@ class CourseTabViewWidget extends StatelessWidget {
   const CourseTabViewWidget({
     super.key,
     required this.isActive,
-    required this.courseSlug,
-    required this.chapterId,
+    required this.courseId,
     required this.courseImage,
     required this.courseTitle,
+    required this.price,
+    required this.houresDurtion,
   });
   final bool isActive;
-  final String courseSlug;
   final String? courseImage;
   final String courseTitle;
-  final int chapterId;
+  final int courseId;
+  final double houresDurtion;
+  final String price;
 
   @override
   Widget build(BuildContext context) {
@@ -72,18 +74,20 @@ class CourseTabViewWidget extends StatelessWidget {
             child: TabBarView(
               children: [
                 BodyTabChapterWidget(
+                  courseId: courseId,
                   isActive: isActive,
-                  courseSlug: courseSlug,
-                  chapterId: chapterId,
+                  chapterId: courseId,
                   courseTitle: courseTitle,
-                  courseImage:
-                      courseImage ?? 'assets/images/default_course.png',
+                  courseImage: courseImage ?? '',
+                  price: price,
                 ),
-                BodyTabAboutWidget(isActive: isActive, courseSlug: courseSlug),
-                BodyTabReviewsWidget(
+                BodyTabAboutWidget(
+                  houresDurtion: houresDurtion,
                   isActive: isActive,
-                  courseSlug: courseSlug,
+                  courseId: courseId,
+                  price: price,
                 ),
+                BodyTabReviewsWidget(isActive: isActive, courseId: courseId),
               ],
             ),
           ),

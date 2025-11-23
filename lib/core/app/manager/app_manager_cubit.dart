@@ -10,6 +10,7 @@ class AppManagerCubit extends Cubit<AppManagerState> {
           appLocale: Locale('en'),
           themeMode: ThemeMode.light,
           appState: AppStateEnum.user,
+          token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyNjYyMTcwNDc1LCJpYXQiOjE3NjIxNzA0NzUsImp0aSI6IjBhNzM2MjNhZmJhYzQxYjdhMTYzNzUxMzE0NjUxNjY0IiwidXNlcl9pZCI6IjIiLCJyb2xlIjoiU1RVREVOVCJ9.H5DYscdVIi2OcgdNRZ4zsdcBBqB397o63JmHYXXzPig',
         ),
       );
 

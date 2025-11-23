@@ -2,11 +2,13 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
 import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapters_result/chapters_result_model.dart';
 import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/Course/data/models/course_details_model.dart';
 
@@ -32,6 +34,20 @@ class CourseState {
   final String? coursesMoreError;
   final ResponseStatusEnum loadCoursesMoreStatus;
 
+  //* Get Ratings
+  final RatingsResultModel? ratings;
+  final ResponseStatusEnum ratingsStatus;
+  final String? ratingsError;
+  final String? ratingsMoreError;
+  final ResponseStatusEnum loadratingsMoreStatus;
+
+  //* Get Chapters by  ID Course ( Chapters Tap )
+  final ChaptersResultModel? chapters;
+  final ResponseStatusEnum chaptersStatus;
+  final String? chaptersError;
+  final String? chaptersMoreError;
+  final ResponseStatusEnum loadchaptersMoreStatus;
+
   //* Pagination
   final bool hasMoreCourses;
   final int currentPage;
@@ -40,11 +56,6 @@ class CourseState {
   final CourseDetailsModel? courseDetails;
   final ResponseStatusEnum courseDetailsStatus;
   final String? courseDetailsError;
-
-  //* Get Chapters by  Slug Course ( Chapters Tap )
-  final List<ChapterModel>? chapters;
-  final ResponseStatusEnum chaptersStatus;
-  final String? chaptersError;
 
   //* Get Universities
   final List<UniversityModel>? universities;
@@ -62,14 +73,41 @@ class CourseState {
   //* Toggle Is Favorite
   final String? isFavoriteError;
 
+  //* Add Rating
+  final ResponseStatusEnum addRatingStatus;
+  final String? addRatingError;
+
+  //* Enroll Cource
+  final ResponseStatusEnum enrollStatus;
+  final String? enrollError;
+
+  //* Enroll Cource B
+  final ResponseStatusEnum enrollStatusB;
+
   //?----------------------------------------------------------------
   CourseState({
     //* Get Chapters by Course
     this.chapters,
     this.chaptersStatus = ResponseStatusEnum.initial,
+    this.loadchaptersMoreStatus = ResponseStatusEnum.initial,
     this.chaptersError,
+    this.chaptersMoreError,
 
-    //* Get Course Details by Slug
+    //* Get Courses
+    this.courses,
+    this.coursesStatus = ResponseStatusEnum.initial,
+    this.loadCoursesMoreStatus = ResponseStatusEnum.initial,
+    this.coursesError,
+    this.coursesMoreError,
+
+    //* Get Ratings
+    this.ratings,
+    this.ratingsStatus = ResponseStatusEnum.initial,
+    this.loadratingsMoreStatus = ResponseStatusEnum.initial,
+    this.ratingsError,
+    this.ratingsMoreError,
+
+    //* Get Course Details by ID
     this.courseDetails,
     this.courseDetailsStatus = ResponseStatusEnum.initial,
     this.courseDetailsError,
@@ -90,13 +128,6 @@ class CourseState {
     this.categoriesStatus = ResponseStatusEnum.initial,
     this.categoriesError,
 
-    //* Get Courses
-    this.courses,
-    this.coursesStatus = ResponseStatusEnum.initial,
-    this.loadCoursesMoreStatus = ResponseStatusEnum.initial,
-    this.coursesError,
-    this.coursesMoreError,
-
     //* Pagination
     this.hasMoreCourses = true,
     // this.loadMoreStatus = ResponseStatusEnum.initial,
@@ -114,14 +145,41 @@ class CourseState {
 
     //* Toggle Is Favorite
     this.isFavoriteError,
+
+    //* Add Rating
+    this.addRatingStatus = ResponseStatusEnum.initial,
+    this.addRatingError,
+
+    //* Enroll Cource
+    this.enrollStatus = ResponseStatusEnum.initial,
+    this.enrollError,
+
+    //* Enroll Cource B
+    this.enrollStatusB = ResponseStatusEnum.initial,
   });
 
   //?------------------------------------------------------------------
   CourseState copyWith({
     //* Get Chapters by Course
-    List<ChapterModel>? chapters,
+    ChaptersResultModel? chapters,
     ResponseStatusEnum? chaptersStatus,
     String? chaptersError,
+    String? chaptersMoreError,
+    ResponseStatusEnum? loadchaptersMoreStatus,
+
+    //* Get Courses
+    CoursesResultModel? courses,
+    ResponseStatusEnum? coursesStatus,
+    ResponseStatusEnum? loadCoursesMoreStatus,
+    String? coursesError,
+    String? coursesMoreError,
+
+    //* Get Ratings
+    RatingsResultModel? ratings,
+    ResponseStatusEnum? ratingsStatus,
+    ResponseStatusEnum? loadratingsMoreStatus,
+    String? ratingsError,
+    String? ratingsMoreError,
 
     //* Get Course Details by Slug
     CourseDetailsModel? courseDetails,
@@ -147,13 +205,6 @@ class CourseState {
     //* Toggle Is Favorite
     String? isFavoriteError,
 
-    //* Get Courses
-    CoursesResultModel? courses,
-    ResponseStatusEnum? coursesStatus,
-    ResponseStatusEnum? loadCoursesMoreStatus,
-    String? coursesError,
-    String? coursesMoreError,
-
     //* Pagination
     bool? hasMoreCourses,
     // ResponseStatusEnum? loadMoreStatus,
@@ -168,12 +219,34 @@ class CourseState {
     List<UniversityModel>? universities,
     ResponseStatusEnum? universitiesState,
     String? universitiesError,
+
+    //* Add Rating
+    ResponseStatusEnum? addRatingStatus,
+    String? addRatingError,
+
+    //* Enroll Cource
+    ResponseStatusEnum? enrollStatus,
+    String? enrollError,
+
+    //* Enroll Cource B
+    ResponseStatusEnum? enrollStatusB,
   }) {
     return CourseState(
       //* Get Chapters by Course
+      ratings: ratings ?? this.ratings,
+      ratingsStatus: ratingsStatus ?? this.ratingsStatus,
+      loadchaptersMoreStatus:
+          loadchaptersMoreStatus ?? this.loadchaptersMoreStatus,
+      chaptersError: chaptersError,
+      chaptersMoreError: chaptersMoreError,
+
+      //* Get Ratings
       chapters: chapters ?? this.chapters,
       chaptersStatus: chaptersStatus ?? this.chaptersStatus,
-      chaptersError: chaptersError,
+      loadratingsMoreStatus:
+          loadratingsMoreStatus ?? this.loadratingsMoreStatus,
+      ratingsError: ratingsError,
+      ratingsMoreError: ratingsMoreError,
 
       //* Get Study Years
       studyYears: studyYears ?? this.studyYears,
@@ -221,6 +294,17 @@ class CourseState {
 
       //* Toggle Is Favorite
       isFavoriteError: isFavoriteError,
+
+      //* Add Rating
+      addRatingStatus: addRatingStatus ?? this.addRatingStatus,
+      addRatingError: addRatingError,
+
+      //* Enroll Cource
+      enrollStatus: enrollStatus ?? this.enrollStatus,
+      enrollError: enrollError,
+
+      //* Enroll Cource
+      enrollStatusB: enrollStatusB ?? this.enrollStatusB,
     );
   }
 }
