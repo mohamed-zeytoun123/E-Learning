@@ -222,7 +222,7 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                   videoId: video.id.toString(),
                   chapterTitle: video.title,
                   durationSecond: video.duration,
-                  completedVideos: video.progress,
+                  completedVideos: video.progressPercentage,
                   isLocked: !isVideoEnabled,
                   onTap: isVideoEnabled
                       ? () {

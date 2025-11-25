@@ -253,8 +253,8 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                               return ChapterRowWidget(
                                 chapterNumber: index + 1,
                                 chapterTitle: chapters[index].title,
-                                videoCount: 4,
-                                durationMinutes: 126,
+                                videoCount: chapters[index].videosCount,
+                                durationMinutes: 12345, //todo
                                 chapterState: isChapterEnabled
                                     ? ChapterStateEnum.open
                                     : ChapterStateEnum.locked,

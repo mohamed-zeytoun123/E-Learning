@@ -51,7 +51,6 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
       listener: (context, state) {
         if (_hasApplied) {
           if (state.coursesStatus == ResponseStatusEnum.success) {
-            // الحفظ بالكاش فقط بعد نجاح العملية
             appLocator<HiveService>().saveCourseFiltersHive(
               CourseFiltersModel(
                 collegeId: tempCollege,

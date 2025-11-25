@@ -59,11 +59,13 @@ class AppRouter {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
           final chapterCubit = args["chapterCubit"] as ChapterCubit;
           final videoModel = args["videoModel"] as VideoStreamModel?;
+          final videoId = args["videoId"] as int?;
           final videoFile = args["videoFile"] as dynamic;
 
           return BlocProvider.value(
             value: chapterCubit,
             child: VideoPlayingPage(
+              videoId: videoId,
               videoModel: videoModel,
               videoFile: videoFile,
             ),

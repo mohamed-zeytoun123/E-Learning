@@ -133,6 +133,7 @@ class ChaptersTabViewWidget extends StatelessWidget {
                               extra: {
                                 "chapterCubit": context.read<ChapterCubit>(),
                                 "videoModel": state.videoStreaming,
+                                "videoId": state.selectVideo?.id,
                               },
                             );
 

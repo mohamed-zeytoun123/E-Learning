@@ -64,9 +64,9 @@ class _EnrollPageState extends State<EnrollPage> {
                               courseState:
                                   filteredCourses[index]['courseState'],
                               stateSectionWidget: VideoProgressWidget(
-                                completedVideosSecond: 12,
+                                completed: 12,
                                 // videoCount: 40,
-                                totalVideoSecond: 65,
+                                total: 65,
                               ),
                               height: 203,
                             );

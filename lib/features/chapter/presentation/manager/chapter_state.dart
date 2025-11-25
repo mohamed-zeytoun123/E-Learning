@@ -7,6 +7,8 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
@@ -64,6 +66,18 @@ class ChapterState {
   //* Video Downloads (progress + state)
   final List<DownloadItem> downloads;
 
+  //* Get Comments
+  final CommentsResultModel? comments;
+  final ResponseStatusEnum? commentsStatus;
+  final String? commentsError;
+  final String? commentsMoreError;
+  final ResponseStatusEnum? commentsMoreStatus;
+
+  //* Add Comment Repository
+  final CommentModel? comment;
+  final ResponseStatusEnum commentStatus;
+  final String? commentError;
+
   //?----------------------------------------------------------
   ChapterState({
     //* Get Chapter Details
@@ -116,6 +130,18 @@ class ChapterState {
 
     //* Download Video
     this.downloads = const [],
+
+    //* Get Comments
+    this.comments,
+    this.commentsStatus = ResponseStatusEnum.initial,
+    this.commentsError,
+    this.commentsMoreError,
+    this.commentsMoreStatus,
+
+    //* Add Comment Repository
+    this.comment,
+    this.commentStatus = ResponseStatusEnum.initial,
+    this.commentError,
   });
 
   //?--------------------------------------------------------
@@ -170,6 +196,18 @@ class ChapterState {
 
     //* Video Downloads (progress + state)
     List<DownloadItem>? downloads,
+
+    //* Get Comments
+    CommentsResultModel? comments,
+    ResponseStatusEnum? commentsStatus,
+    String? commentsError,
+    String? commentsMoreError,
+    ResponseStatusEnum? commentsMoreStatus,
+
+    //* Add Comment Repository
+    CommentModel? comment,
+    ResponseStatusEnum? commentStatus,
+    String? commentError,
   }) {
     return ChapterState(
       //* Get Chapter Details
@@ -222,6 +260,18 @@ class ChapterState {
 
       //* Video Downloads (progress + state)
       downloads: downloads ?? this.downloads,
+
+      //* Get Comments
+      comments: comments ?? this.comments,
+      commentsStatus: commentsStatus ?? this.commentsStatus,
+      commentsError: commentsError,
+      commentsMoreError: commentsMoreError,
+      commentsMoreStatus: commentsMoreStatus ?? this.commentsMoreStatus,
+
+      //* Add Comment Repository
+      comment: comment ?? this.comment,
+      commentStatus: commentStatus ?? this.commentStatus,
+      commentError: commentError,
     );
   }
 }

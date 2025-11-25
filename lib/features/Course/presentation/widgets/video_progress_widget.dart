@@ -5,24 +5,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class VideoProgressWidget extends StatelessWidget {
-  final double completedVideosSecond;
-  final int totalVideoSecond;
+  final int completed;
+  final int total;
   final bool showDetiels;
   final double hieghtProgress;
 
   const VideoProgressWidget({
     super.key,
-    required this.completedVideosSecond,
-    required this.totalVideoSecond,
+    required this.completed,
+    required this.total,
     this.hieghtProgress = 12,
     this.showDetiels = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    double percent = double.parse(completedVideosSecond.toString()) / 100;
+    // قيمة البار (0 إلى 1)
+    final double fraction = total == 0 ? 0 : completed / total;
 
-    final int percentValue = completedVideosSecond.round();
+    // النسبة المئوية للعرض
+    final double percentValue = fraction * 100;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +33,7 @@ class VideoProgressWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(999.r),
           child: LinearPercentIndicator(
             lineHeight: hieghtProgress.h,
-            percent: percent,
+            percent: fraction.clamp(0, 1), // هون لازم fraction
             backgroundColor: AppColors.formSomeWhite,
             progressColor: AppColors.formProgress,
             barRadius: Radius.circular(999.r),
@@ -46,14 +48,14 @@ class VideoProgressWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '${completedVideosSecond.toStringAsFixed(0)} of $totalVideoSecond Videos',
+                  '$completed of $total Videos',
                   style: AppTextStyles.s14w400.copyWith(
                     color: AppColors.textGrey,
                     fontSize: 14.sp,
                   ),
                 ),
                 Text(
-                  '$percentValue% Completed',
+                  '${percentValue.toStringAsFixed(2)}% Completed',
                   style: AppTextStyles.s14w400.copyWith(
                     color: AppColors.textGrey,
                   ),

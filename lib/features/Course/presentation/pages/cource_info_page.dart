@@ -132,7 +132,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                                 ),
                               ),
                               RatingWidget(
-                                rating: course.totalRatings,
+                                rating: course.averageRating ?? 0.0,
                                 showIcon: false,
                               ),
                             ],
@@ -140,9 +140,9 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                           SizedBox(height: 5.h),
                           CourseAccessContentWidget(
                             courseId: course.id,
-                            completedVideos: 30, //todo
-                            totalVideos: 100, //todo
-                            videoCount: 28, // todo
+                            completedVideos: course.completedVideos,
+                            totalVideos: course.totalVideos,
+                            videoCount: course.totalVideos,
                             hoursCount: course.totalVideoDurationHours,
                             price: course.price,
                             isActive: isActive,
@@ -154,6 +154,9 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 ),
                 SliverFillRemaining(
                   child: CourseTabViewWidget(
+                    countChapter: 123456,
+                    //  course.totalChapters,
+                    countVideos: course.totalVideos,
                     houresDurtion: course.totalVideoDurationHours,
                     price: course.price,
                     courseId: course.id,

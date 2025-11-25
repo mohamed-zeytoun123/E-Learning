@@ -1,7 +1,8 @@
 class AppUrls {
   //?---------------------------------------------------------------
 
-  static const String _ip = "192.168.1.22";
+  // static const String _ip = "192.168.1.22";
+  static const String _ip = "192.168.1.103";
 
   //?---------------------------------------------------------------
 
@@ -145,6 +146,14 @@ class AppUrls {
   //* Update Video Progress
   static String updateVideoProgress(int videoId) =>
       "$baseURl/videos/$videoId/progress/";
+
+  //* Get Comments for a Video
+  static String getVideoComments(int videoId, {int page = 1}) =>
+      "$baseURl/videos/$videoId/comments/?page=$page";
+
+  //* Add Comment to Video
+  static String addVideoComment(String videoId) =>
+      "$baseURl/videos/$videoId/comments/";
 
   //?---------------------------------------------------------------
 }

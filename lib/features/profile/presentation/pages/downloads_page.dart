@@ -185,6 +185,7 @@ class DownloadsPage extends StatelessWidget {
                                     "chapterCubit": cubit,
                                     "videoModel": null,
                                     "videoFile": videoFile,
+                                    "videoId": null,
                                   },
                                 );
                               } catch (e) {

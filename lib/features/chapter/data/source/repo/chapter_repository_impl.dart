@@ -10,6 +10,8 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
@@ -147,6 +149,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
   //?--------------------------------------------------------
 
   //* Update Video Progress (Cubit)
+  @override
   void updateVideoProgress({
     required int videoId,
     required int watchedSeconds,
@@ -302,4 +305,47 @@ class ChapterRepositoryImpl implements ChapterRepository {
     final keyStr = padded.substring(0, 16);
     return Uint8List.fromList(keyStr.codeUnits);
   }
+
+  //?--------------------------------------------------------
+  //* Get Comments Repository
+  @override
+  Future<Either<Failure, CommentsResultModel>> getCommentsRepo({
+    required int videoId,
+    int page = 1,
+  }) async {
+    if (!await network.isConnected) {
+      return Left(FailureNoConnection());
+    }
+
+    final result = await remote.getCommentsRemote(
+      chapterId: videoId,
+      page: page,
+    );
+
+    return result.fold(
+      (failure) => Left(failure),
+      (commentsResult) => Right(commentsResult),
+    );
+  }
+
+  //?--------------------------------------------------------
+  //* Add Comment Repository
+  @override
+  Future<Either<Failure, CommentModel>> addVideoCommentRepo({
+    required String videoId,
+    required String content,
+  }) async {
+    if (!await network.isConnected) {
+      return Left(FailureNoConnection());
+    }
+
+    final result = await remote.addVideoCommentRemote(
+      videoId: videoId,
+      content: content,
+    );
+
+    return result.fold((failure) => Left(failure), (comment) => Right(comment));
+  }
+
+  //?--------------------------------------------------------
 }

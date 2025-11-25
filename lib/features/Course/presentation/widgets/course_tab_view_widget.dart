@@ -14,9 +14,13 @@ class CourseTabViewWidget extends StatelessWidget {
     required this.courseImage,
     required this.courseTitle,
     required this.price,
+    required this.countVideos,
     required this.houresDurtion,
+    required this.countChapter,
   });
+  final int countChapter;
   final bool isActive;
+  final int countVideos;
   final String? courseImage;
   final String courseTitle;
   final int courseId;
@@ -82,6 +86,8 @@ class CourseTabViewWidget extends StatelessWidget {
                   price: price,
                 ),
                 BodyTabAboutWidget(
+                  countChapter: countChapter,
+                  countVideos: countVideos,
                   houresDurtion: houresDurtion,
                   isActive: isActive,
                   courseId: courseId,

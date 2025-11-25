@@ -15,8 +15,11 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_pagination_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -523,6 +526,102 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       return Left(Failure(message: exception.toString()));
     }
   }
+  //?--------------------------------------------------------
+
+  //* Get Comments for a Video (Pagenations)
+  @override
+  Future<Either<Failure, CommentsResultModel>> getCommentsRemote({
+    required int chapterId,
+    int page = 1,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getVideoComments(chapterId, page: page),
+      );
+
+      final ApiResponse response = await api.get(request);
+
+      log('COMMENTS RESPONSE page $page: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          final commentsList = (data['results'] as List)
+              .map((e) => CommentModel.fromMap(e as Map<String, dynamic>))
+              .toList();
+
+          final hasNext = data['next'] != null;
+
+          return Right(
+            CommentsResultModel(comments: commentsList, hasNextPage: hasNext),
+          );
+        } else {
+          return Right(CommentsResultModel.empty());
+        }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log('getCommentsRemote error: $exception');
+
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      }
+
+      return Left(Failure(message: exception.toString()));
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Add Comment to Video
+  @override
+  Future<Either<Failure, CommentModel>> addVideoCommentRemote({
+    required String videoId,
+    required String content,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.addVideoComment(videoId),
+        body: {"content": content},
+      );
+
+      final ApiResponse response = await api.post(request);
+
+      log("ADD COMMENT RESPONSE: ${response.body}");
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final data = response.body;
+        if (data is Map<String, dynamic>) {
+          final comment = CommentModel.fromMap(data);
+          return Right(comment);
+        } else {
+          return Left(FailureServer());
+        }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log("addVideoCommentRemote exception: $exception");
+
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      }
+
+      return Left(Failure(message: exception.toString()));
+    }
+  }
+  //?----------------------------------------------------
 
   //?--------------------------------------------------------
 }

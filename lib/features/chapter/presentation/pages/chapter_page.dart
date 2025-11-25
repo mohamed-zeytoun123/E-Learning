@@ -116,16 +116,14 @@ class ChapterPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ChapterTitleSubTitleWidget(
+                          quizText: state.chapter?.quizCount.toString() ?? "0",
+                          durationText:
+                              state.chapter?.totalVideoDurationMinutes
+                                  .toString() ??
+                              '0',
                           title: '$index ${state.chapter?.title ?? ""}',
                           videosText:
-                              // state.chapter?.videosCount.toString() ??
-                              "0",
-                          durationText:
-                              // state.chapter?.duration.toString() ??
-                              "0",
-                          quizText:
-                              // state.chapter?.quizzesCount.toString() ??
-                              "0",
+                              state.chapter?.totalVideosCount.toString() ?? "0",
                         ),
                       ],
                     ),

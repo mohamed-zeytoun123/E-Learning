@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:chewie/chewie.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Video/data/functions/open_comments_sheet.dart';
 import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
@@ -23,11 +22,13 @@ class VideoPlayingPage extends StatefulWidget {
   final VideoStreamModel? videoModel;
   final void Function(Duration)? onPositionChanged;
   final File? videoFile;
+  final int? videoId;
 
   //?-----------------------------------------------------
   const VideoPlayingPage({
     super.key,
     this.onPositionChanged,
+    this.videoId,
     this.videoModel,
     this.videoFile,
   }) : assert(
@@ -230,7 +231,8 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                   ),
                                   SizedBox(height: 2.h),
                                   Text(
-                                    selectedVideo?.storageType ?? "Course Name",
+                                    selectedVideo?.chapterName ??
+                                        "Chapter Name",
                                     style: AppTextStyles.s12w400.copyWith(
                                       color: AppColors.textGrey,
                                     ),
@@ -331,6 +333,17 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                         color: Colors.red,
                                       ),
                                       onPressed: () async {
+                                        // AppMessage.showFlushbar(
+                                        //   context: context,
+                                        //   title: "Info",
+                                        //   message: 'Video already downloaded',
+                                        //   backgroundColor:
+                                        //       AppColors.messageInfo,
+                                        //   iconData: Icons.check_circle,
+                                        //   iconColor: AppColors.iconWhite,
+                                        //   isShowProgress: true,
+                                        //   duration: const Duration(seconds: 4),
+                                        // );
                                         if (video != null) {
                                           final cubit = context
                                               .read<ChapterCubit>();
@@ -412,7 +425,10 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                   Icons.messenger_outline,
                                   color: Colors.white,
                                 ),
-                                onPressed: () => openCommentsSheet(context),
+                                onPressed: () => openCommentsSheet(
+                                  context,
+                                  widget.videoId ?? 0,
+                                ),
                               ),
                               IconButton(
                                 icon: const Icon(

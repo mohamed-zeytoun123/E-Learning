@@ -23,10 +23,14 @@ class BodyTabAboutWidget extends StatelessWidget {
     required this.isActive,
     required this.courseId,
     required this.price,
+    required this.countVideos,
+    required this.countChapter,
     required this.houresDurtion,
   });
   final bool isActive;
   final int courseId;
+  final int countVideos;
+  final int countChapter;
   final double houresDurtion;
   final String price;
 
@@ -178,7 +182,10 @@ class BodyTabAboutWidget extends StatelessWidget {
                           children: [
                             IconCountTextWidget(
                               icon: Icons.videocam_outlined,
-                              count: 28.toString(),
+                              count: countVideos.toString(),
+
+                              // state.chapters?.chapters[courseId].videosCount
+                              // .toString()
                               text: 'Videos',
                             ),
                             IconCountTextWidget(
@@ -193,9 +200,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                           children: [
                             IconCountTextWidget(
                               icon: Icons.assignment_outlined,
-                              count: state.chapters != null
-                                  ? state.chapters!.chapters.length.toString()
-                                  : "0",
+                              count: countChapter.toString(),
                               text: 'Chapters',
                             ),
                             IconCountTextWidget(

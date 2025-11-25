@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_download_state.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/download/download_attachment_function.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
@@ -649,8 +651,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     return cipher.process(plainBytes);
   }
 
-  //* فك تشفير الفيديو من الكاش
-
   //* فك التشفير من الكاش وتحويله لملف مؤقت
   Future<File?> decryptVideoFromCache(String videoId, String fileName) async {
     try {
@@ -732,6 +732,220 @@ class ChapterCubit extends Cubit<ChapterState> {
       videoId: videoId,
       watchedSeconds: watchedSeconds,
     );
+  }
+
+  //?--------------------------------------------------------
+  //* Get Comments by Video (Pagination)
+  // Future<void> getComments({
+  //   required int videoId,
+  //   bool reset = true,
+  //   int page = 1,
+  // }) async {
+  //   final cubitState = state;
+
+  //   if (reset) {
+  //     emit(
+  //       cubitState.copyWith(
+  //         commentsStatus: ResponseStatusEnum.loading,
+  //         commentsMoreStatus: ResponseStatusEnum.initial,
+  //         commentsError: null,
+  //         commentsMoreError: null,
+  //         comments: CommentsResultModel.empty(),
+  //       ),
+  //     );
+  //   } else {
+  //     emit(
+  //       cubitState.copyWith(
+  //         commentsMoreStatus: ResponseStatusEnum.loading,
+  //         commentsMoreError: null,
+  //       ),
+  //     );
+  //   }
+
+  //   try {
+  //     final result = await repo.getCommentsRepo(videoId: videoId, page: page);
+  //     result.fold(
+  //       (failure) {
+  //         if (reset) {
+  //           emit(
+  //             cubitState.copyWith(
+  //               commentsStatus: ResponseStatusEnum.failure,
+  //               commentsError: failure.message,
+  //               commentsMoreStatus: ResponseStatusEnum.initial,
+  //             ),
+  //           );
+  //         } else {
+  //           emit(
+  //             cubitState.copyWith(
+  //               commentsMoreStatus: ResponseStatusEnum.failure,
+  //               commentsMoreError: failure.message,
+  //             ),
+  //           );
+  //         }
+  //       },
+  //       (newCommentsResult) {
+  //         final oldComments = reset
+  //             ? <CommentModel>[]
+  //             : (cubitState.comments?.comments ?? []);
+
+  //         final updatedComments = <CommentModel>[
+  //           ...oldComments,
+  //           ...?newCommentsResult.comments,
+  //         ];
+
+  //         emit(
+  //           cubitState.copyWith(
+  //             commentsStatus: ResponseStatusEnum.success,
+  //             commentsMoreStatus: ResponseStatusEnum.success,
+  //             comments: (cubitState.comments ?? CommentsResultModel.empty())
+  //                 .copyWith(
+  //                   comments: updatedComments,
+  //                   hasNextPage: newCommentsResult.hasNextPage,
+  //                 ),
+  //             commentsError: null,
+  //             commentsMoreError: null,
+  //           ),
+  //         );
+  //       },
+  //     );
+  //   } catch (e) {
+  //     log("❌ getComments Error: $e");
+  //     if (reset) {
+  //       emit(
+  //         cubitState.copyWith(
+  //           commentsStatus: ResponseStatusEnum.failure,
+  //           commentsError: "An unexpected error occurred",
+  //           commentsMoreStatus: ResponseStatusEnum.initial,
+  //         ),
+  //       );
+  //     } else {
+  //       emit(
+  //         cubitState.copyWith(
+  //           commentsMoreStatus: ResponseStatusEnum.failure,
+  //           commentsMoreError: "An unexpected error occurred",
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
+  Future<void> getComments({
+    required int videoId,
+    bool reset = true,
+    int page = 1,
+  }) async {
+    final currentState = state;
+    if (reset) {
+      emit(currentState.copyWith(commentsStatus: ResponseStatusEnum.loading));
+    } else {
+      emit(
+        currentState.copyWith(commentsMoreStatus: ResponseStatusEnum.loading),
+      );
+    }
+
+    final result = await repo.getCommentsRepo(videoId: videoId, page: page);
+
+    result.fold(
+      (failure) {
+        if (reset) {
+          emit(
+            currentState.copyWith(
+              commentsStatus: ResponseStatusEnum.failure,
+              commentsError: failure.message,
+            ),
+          );
+        } else {
+          emit(
+            currentState.copyWith(
+              commentsMoreStatus: ResponseStatusEnum.failure,
+              commentsMoreError: failure.message,
+            ),
+          );
+        }
+      },
+      (commentsResult) {
+        if (reset) {
+          emit(
+            currentState.copyWith(
+              commentsStatus: ResponseStatusEnum.success,
+              comments: commentsResult,
+            ),
+          );
+        } else {
+          final mergedComments = [
+            ...?currentState.comments?.comments,
+            ...?commentsResult.comments,
+          ];
+          emit(
+            currentState.copyWith(
+              commentsMoreStatus: ResponseStatusEnum.success,
+              comments: currentState.comments?.copyWith(
+                comments: mergedComments,
+                hasNextPage: commentsResult.hasNextPage,
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  //?--------------------------------------------------------
+  //* Add Comment to Video
+  Future<void> addComment({
+    required int videoId,
+    required String content,
+  }) async {
+    // 1️⃣ Emit loading state
+    emit(
+      state.copyWith(
+        commentStatus: ResponseStatusEnum.loading,
+        commentError: null,
+      ),
+    );
+
+    try {
+      // 2️⃣ Call repository method
+      final result = await repo.addVideoCommentRepo(
+        videoId: videoId.toString(),
+        content: content,
+      );
+
+      // 3️⃣ Handle result
+      result.fold(
+        (failure) {
+          emit(
+            state.copyWith(
+              commentStatus: ResponseStatusEnum.failure,
+              commentError: failure.message,
+            ),
+          );
+        },
+        (newComment) {
+          // دمج الكومنت الجديد مع الموجودين إذا أردت
+          // final updatedComments = [newComment, ...?state.comments?.comments];
+
+          emit(
+            state.copyWith(
+              commentStatus: ResponseStatusEnum.success,
+              comment: newComment,
+              // comments:
+              //     state.comments?.copyWith(comments: updatedComments) ??
+              //     CommentsResultModel(
+              //       comments: updatedComments,
+              //       hasNextPage: true,
+              //     ),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          commentStatus: ResponseStatusEnum.failure,
+          commentError: e.toString(),
+        ),
+      );
+    }
   }
 
   //?--------------------------------------------------------

@@ -8,6 +8,8 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 
@@ -74,5 +76,17 @@ abstract class ChapterRepository {
 
   //* Update Video Progress (Repository)
   void updateVideoProgress({required int videoId, required int watchedSeconds});
+
+  //* Get Comments Repository
+  Future<Either<Failure, CommentsResultModel>> getCommentsRepo({
+    required int videoId,
+    int page = 1,
+  });
+
+  //* Add Comment Repository
+  Future<Either<Failure, CommentModel>> addVideoCommentRepo({
+    required String videoId,
+    required String content,
+  });
   //?--------------------------------------------------------
 }

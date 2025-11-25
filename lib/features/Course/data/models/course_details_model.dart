@@ -1,12 +1,11 @@
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/college_detail_model.dart';
 import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/college_detail_model.dart';
 import 'package:e_learning/features/course/data/models/university_detail_model.dart';
 
 class CourseDetailsModel {
   final int id;
   final String title;
-  final String slug;
   final String description;
   final String? image;
   final int teacher;
@@ -23,16 +22,17 @@ class CourseDetailsModel {
   final double totalVideoDurationHours;
   final int totalQuizzesCount;
   final double? averageRating;
-  final double totalRatings;
+  final int totalRatings;
   final bool isFavorite;
   final bool isPaid;
+  final int totalVideos;
+  final int completedVideos;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   CourseDetailsModel({
     required this.id,
     required this.title,
-    required this.slug,
     required this.description,
     this.image,
     required this.teacher,
@@ -52,6 +52,8 @@ class CourseDetailsModel {
     required this.totalRatings,
     required this.isFavorite,
     required this.isPaid,
+    required this.totalVideos,
+    required this.completedVideos,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -68,7 +70,6 @@ class CourseDetailsModel {
     return CourseDetailsModel(
       id: map['id'] ?? 0,
       title: map['title'] ?? '',
-      slug: map['slug'] ?? '',
       description: map['description'] ?? '',
       image: map['image']?.toString(),
       teacher: map['teacher'] ?? 0,
@@ -96,22 +97,20 @@ class CourseDetailsModel {
               description: '',
               isActive: false,
             ),
-      price: map['price']?.toString() ?? '0',
+      price: map['price']?.toString() ?? '0.00',
       status: map['status'] ?? '',
       totalVideoDurationHours: parseDouble(map['total_video_duration_hours']),
       totalQuizzesCount: map['total_quizzes_count'] ?? 0,
       averageRating: map['average_rating'] != null
           ? parseDouble(map['average_rating'])
           : null,
-      totalRatings: parseDouble(map['total_ratings']),
+      totalRatings: map['total_ratings'] ?? 0,
       isFavorite: map['is_favorite'] ?? false,
       isPaid: map['is_paid'] ?? false,
-      createdAt: map['created_at'] != null
-          ? DateTime.parse(map['created_at'])
-          : DateTime.now(),
-      updatedAt: map['updated_at'] != null
-          ? DateTime.parse(map['updated_at'])
-          : DateTime.now(),
+      totalVideos: map['total_videos'] ?? 0,
+      completedVideos: map['completed_videos'] ?? 0,
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt: DateTime.parse(map['updated_at']),
     );
   }
 
@@ -120,7 +119,6 @@ class CourseDetailsModel {
     return {
       'id': id,
       'title': title,
-      'slug': slug,
       'description': description,
       'image': image,
       'teacher': teacher,
@@ -140,6 +138,8 @@ class CourseDetailsModel {
       'total_ratings': totalRatings,
       'is_favorite': isFavorite,
       'is_paid': isPaid,
+      'total_videos': totalVideos,
+      'completed_videos': completedVideos,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };

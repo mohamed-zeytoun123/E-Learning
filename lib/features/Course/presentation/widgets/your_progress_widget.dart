@@ -24,10 +24,7 @@ class YourProgressWidget extends StatelessWidget {
           style: AppTextStyles.s16w400.copyWith(color: AppColors.textPrimary),
         ),
         SizedBox(height: 5.h),
-        VideoProgressWidget(
-          completedVideosSecond: completedVideos.toDouble(),
-          totalVideoSecond: videoCount,
-        ),
+        VideoProgressWidget(completed: completedVideos, total: videoCount),
         SizedBox(height: 16.h),
       ],
     );
