@@ -88,5 +88,11 @@ abstract class ChapterRepository {
     required String videoId,
     required String content,
   });
+
+  //* Submit quiz with all answers
+  Future<Either<Failure, SubmitCompletedModel>> submitQuizAnswersListRepo({
+    required int attemptId,
+    required List<Map<String, dynamic>> answers,
+  });
   //?--------------------------------------------------------
 }

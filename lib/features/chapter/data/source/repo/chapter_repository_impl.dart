@@ -348,4 +348,23 @@ class ChapterRepositoryImpl implements ChapterRepository {
   }
 
   //?--------------------------------------------------------
+  //* Submit quiz with all answers
+  @override
+  Future<Either<Failure, SubmitCompletedModel>> submitQuizAnswersListRepo({
+    required int attemptId,
+    required List<Map<String, dynamic>> answers,
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.submitQuizFinalRemote(
+        attemptId: attemptId,
+        answers: answers,
+      );
+
+      return result.fold((failure) => Left(failure), (submit) => Right(submit));
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //?--------------------------------------------------------
 }

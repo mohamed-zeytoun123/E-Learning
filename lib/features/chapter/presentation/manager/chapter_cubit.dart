@@ -30,10 +30,10 @@ class ChapterCubit extends Cubit<ChapterState> {
   //?--------------------------------------------------------
   //* Set Selected Answer
   void selectAnswer({required int questionIndex, required int choiceIndex}) {
-    final updated = Map<int, int>.from(state.selectedOptions);
-    updated[questionIndex] = choiceIndex;
+    final newOptions = Map<int, int>.from(state.selectedOptions);
+    newOptions[questionIndex] = choiceIndex;
 
-    emit(state.copyWith(selectedOptions: updated));
+    emit(state.copyWith(selectedOptions: newOptions));
   }
 
   //?--------------------------------------------------------
@@ -946,6 +946,45 @@ class ChapterCubit extends Cubit<ChapterState> {
         ),
       );
     }
+  }
+
+  //?--------------------------------------------------------
+
+  //* Step 4 : Submit Completed
+  Future<void> submitAnswersList({
+    required int attemptId,
+    required List<Map<String, dynamic>> answers,
+  }) async {
+    emit(
+      state.copyWith(
+        submitAnswersListStatus: ResponseStatusEnum.loading,
+        submitAnswersListError: null,
+      ),
+    );
+
+    final result = await repo.submitQuizAnswersListRepo(
+      attemptId: attemptId,
+      answers: answers,
+    );
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            submitAnswersListStatus: ResponseStatusEnum.failure,
+            submitAnswersListError: failure.message,
+          ),
+        );
+      },
+      (submit) {
+        emit(
+          state.copyWith(
+            submitAnswersListStatus: ResponseStatusEnum.success,
+            submitAnswersList: submit,
+          ),
+        );
+      },
+    );
   }
 
   //?--------------------------------------------------------

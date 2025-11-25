@@ -621,7 +621,67 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       return Left(Failure(message: exception.toString()));
     }
   }
+
   //?----------------------------------------------------
+  //?----------------------------------------------------
+  //* Submit quiz with all answers
+  @override
+  Future<Either<Failure, SubmitCompletedModel>> submitQuizFinalRemote({
+    required int attemptId,
+    required List<Map<String, dynamic>> answers,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.submitCompletedQuiz(attemptId),
+        body: {"answers": answers},
+      );
+
+      final ApiResponse response = await api.post(request);
+
+      log("FINAL SUBMIT QUIZ RESPONSE: ${response.body}");
+
+      final data = response.body;
+
+      // SUCCESS
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        if (data is Map<String, dynamic>) {
+          if (data.containsKey("error")) {
+            return Left(
+              Failure(
+                message: data["error"].toString(),
+                statusCode: response.statusCode,
+              ),
+            );
+          }
+
+          final submit = SubmitCompletedModel.fromJson(data);
+          return Right(submit);
+        } else {
+          return Left(FailureServer());
+        }
+      }
+
+      // ERROR
+      if (data is Map<String, dynamic> && data.containsKey("error")) {
+        return Left(
+          Failure(
+            message: data["error"].toString(),
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+
+      return Left(
+        Failure(message: "Unknown error", statusCode: response.statusCode),
+      );
+    } catch (exception) {
+      log(exception.toString());
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      }
+      return Left(Failure(message: exception.toString()));
+    }
+  }
 
   //?--------------------------------------------------------
 }

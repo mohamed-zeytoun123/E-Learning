@@ -51,6 +51,12 @@ abstract class ChapterRemoteDataSource {
     required int attemptId,
   });
 
+  //* Alternative Step 4 : Submit Completed Quiz with Answers (Final submit + grading)
+  Future<Either<Failure, SubmitCompletedModel>> submitQuizFinalRemote({
+    required int attemptId,
+    required List<Map<String, dynamic>> answers,
+  });
+
   //?--------------------------------------------------------
 
   //* Get Videos by Chapter ID (with pagination)
