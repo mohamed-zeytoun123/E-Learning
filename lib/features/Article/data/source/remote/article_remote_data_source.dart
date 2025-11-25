@@ -1,12 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/features/Article/data/models/article_model/article_model.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:e_learning/features/Article/data/models/article_model.dart';
 import 'package:e_learning/features/Article/data/models/article_response_model.dart';
 
 abstract class ArticleRemoteDataSource {
-  //?----------------------------------------------------
-
-  //* Get Articles
   Future<Either<Failure, ArticleResponseModel>> getArticlesRemote({
     int? page,
     int? pageSize,
@@ -14,15 +11,12 @@ abstract class ArticleRemoteDataSource {
     int? categoryId,
   });
 
-  //* Get Article Details by ID
   Future<Either<Failure, ArticleModel>> getArticleDetailsRemote({
     required int articleId,
   });
 
-  //* Get Related Articles by Article ID
   Future<Either<Failure, ArticleResponseModel>> getRelatedArticlesRemote({
     required int articleId,
   });
 
-  //?----------------------------------------------------
 }

@@ -1,10 +1,10 @@
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:netwoek/failures/failures.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 

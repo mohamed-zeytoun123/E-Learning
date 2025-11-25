@@ -1,16 +1,16 @@
 import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:e_learning/core/Error/failure.dart';
+import 'package:netwoek/failures/failures.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
-import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
@@ -49,7 +49,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
         (chapter) => Right(chapter),
       );
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -69,7 +69,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
         (attachments) => Right(attachments),
       );
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -86,7 +86,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold((failure) => Left(failure), (quiz) => Right(quiz));
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -101,7 +101,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold((failure) => Left(failure), (quiz) => Right(quiz));
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -122,7 +122,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold((failure) => Left(failure), (answer) => Right(answer));
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -139,7 +139,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold((failure) => Left(failure), (submit) => Right(submit));
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -152,7 +152,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
     int? page,
   }) async {
     if (!await network.isConnected) {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
 
     final result = await remote.getVideosByChapterRemote(
@@ -164,7 +164,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
       final videos = paginatedVideos.results;
 
       if (videos.isEmpty) {
-        return Left(FailureNoData());
+        return Left(Failure(message: 'No data available'));
       }
 
       return Right(
@@ -190,7 +190,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
         (videoModel) => Right(videoModel), // نرجع الموديل كامل
       );
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -226,9 +226,12 @@ class ChapterRepositoryImpl implements ChapterRepository {
       }
 
       // 5) لا كاش ولا إنترنت
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     } catch (e) {
-      return Left(Failure.handleError(e as DioException));
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
 

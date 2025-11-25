@@ -1,15 +1,43 @@
-class TeacherCourseModel {
-  final int id;
-  final String title;
-  final String slug;
-  final String? image;
-  final int college;
-  final String collegeName;
-  final String price;
-  final double? averageRating;
-  final double totalVideoDurationHours;
-  final bool isFavorite;
+import 'package:e_learning/core/utils/json_converters.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'teacher_course_model.g.dart';
+
+@JsonSerializable()
+class TeacherCourseModel {
+  @IntConverter()
+  final int id;
+  
+  @StringConverter()
+  final String title;
+  
+  @StringConverter()
+  final String slug;
+  
+  @NullableStringConverter()
+  final String? image;
+  
+  @IntConverter()
+  final int college;
+  
+  @JsonKey(name: 'college_name')
+  @StringConverter()
+  final String collegeName;
+  
+  @StringConverter()
+  final String price;
+  
+  @NullableDoubleConverter()
+  final double? averageRating;
+  
+  @JsonKey(name: 'total_video_duration_hours')
+  @DoubleConverter()
+  final double totalVideoDurationHours;
+  
+  @JsonKey(name: 'is_favorite')
+  @BoolConverter()
+  final bool isFavorite;
+  
   TeacherCourseModel({
     required this.id,
     required this.title,
@@ -50,37 +78,14 @@ class TeacherCourseModel {
     );
   }
 
-  factory TeacherCourseModel.fromMap(Map<String, dynamic> map) {
-    return TeacherCourseModel(
-      id: map['id'] ?? 0,
-      title: map['title'] ?? '',
-      slug: map['slug'] ?? '',
-      image: map['image'] as String?,
-      college: map['college'] ?? 0,
-      collegeName: map['college_name'] ?? '',
-      price: map['price'] ?? '',
-      averageRating: map['average_rating'] != null
-          ? double.tryParse(map['average_rating'].toString())
-          : null,
-      totalVideoDurationHours: map['total_video_duration_hours'] != null
-          ? double.tryParse(map['total_video_duration_hours'].toString()) ?? 0.0
-          : 0.0,
-      isFavorite: map['is_favorite'] ?? false,
-    );
-  }
+  factory TeacherCourseModel.fromJson(Map<String, dynamic> json) =>
+      _$TeacherCourseModelFromJson(json);
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'slug': slug,
-      'image': image,
-      'college': college,
-      'college_name': collegeName,
-      'price': price,
-      'average_rating': averageRating,
-      'total_video_duration_hours': totalVideoDurationHours,
-      'is_favorite': isFavorite,
-    };
-  }
+  Map<String, dynamic> toJson() => _$TeacherCourseModelToJson(this);
+
+  // Keep fromMap and toMap for backward compatibility
+  factory TeacherCourseModel.fromMap(Map<String, dynamic> map) =>
+      TeacherCourseModel.fromJson(map);
+
+  Map<String, dynamic> toMap() => toJson();
 }

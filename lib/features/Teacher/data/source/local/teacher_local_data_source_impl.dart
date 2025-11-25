@@ -1,4 +1,4 @@
-import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
+import 'package:e_learning/features/Teacher/data/models/teacher_model.dart';
 import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';

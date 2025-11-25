@@ -1,4 +1,4 @@
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/features/Video/data/source/repo/video_repository.dart';
 import 'package:e_learning/features/Video/presentation/manager/video_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

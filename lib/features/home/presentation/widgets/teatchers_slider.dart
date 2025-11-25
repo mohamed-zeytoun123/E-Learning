@@ -1,6 +1,10 @@
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/custom_error_widget.dart';
 import 'package:e_learning/features/Teacher/presentation/manager/teacher_cubit.dart';
 import 'package:e_learning/features/Teacher/presentation/manager/teacher_state.dart';
@@ -49,7 +53,7 @@ class TeatchersSlider extends StatelessWidget {
                       )
                     : ListView.separated(
                         separatorBuilder: (context, index) =>
-                            SizedBox(width: 16.w),
+                            16.sizedW,
                         itemCount: displayTeachers.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {

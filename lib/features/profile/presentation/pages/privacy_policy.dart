@@ -1,10 +1,10 @@
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_lorem/flutter_lorem.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -91,14 +91,14 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                     size: 64.sp,
                     color: context.colors.iconRed,
                           ),
-                          SizedBox(height: 16.h),
+                          16.sizedH,
                           Text(
                             'Error loading Privacy',
                             style: AppTextStyles.s16w500.copyWith(
                               color: context.colors.textPrimary,
                             ),
                           ),
-                          SizedBox(height: 8.h),
+                          8.sizedH,
                           Text(
                             state.errorFetchPrivacy!.message,
                             style: AppTextStyles.s14w400.copyWith(
@@ -116,7 +116,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                   children: [
                     SizedBox(height: 30),
                     Text(
-                      state.privacyPolicyData!.title ?? 'ghassan',
+                      state.privacyPolicyData.title ?? 'ghassan',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 16,
@@ -124,7 +124,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                     ),
                     SizedBox(height: 10),
                     Text(
-                      state.privacyPolicyData!.content,
+                      state.privacyPolicyData.content,
                       // 'Privacy Policy for Deyram At Deyram.com, accessible from makemeup.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Deyram.com and how we use it.\nIf you have additional questions or require more information about our Privacy Policy, do not hesitate to contact us.\nThis Privacy Policy applies only to our online activities and is valid for visitors to our website with regards to the information that they shared and/or collect in Deyram.com. This policy is not applicable to any information collected offline or via channels other than this website.\nConsent\nBy using our website, you hereby consent to our Privacy Policy and agree to its terms.',
                       style: TextStyle(
                         fontSize: 14,
@@ -132,7 +132,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
                         color: colors.textGrey,
                       ),
                     ),
-                    // SizedBox(height: 18.h),
+                    // 18.sizedH,
                     // Text(
                     //   'Information we collect',
                     //   style: TextStyle(

@@ -1,17 +1,17 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/network/api_general.dart';
-import 'package:e_learning/core/network/api_request.dart';
-import 'package:e_learning/core/network/app_url.dart';
-import 'package:e_learning/features/profile/data/model/data_college_model.dart';
-import 'package:e_learning/features/profile/data/model/data_course_saved_model.dart';
-import 'package:e_learning/features/profile/data/model/data_univarcity_response_model.dart';
-import 'package:e_learning/features/profile/data/model/data_year_response_model.dart';
-import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
-import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
+import 'package:e_learning/core/api/api_parameters.dart';
+import 'package:e_learning/core/api/api_urls.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:netwoek/network.dart';
+import 'package:netwoek/network/api/api_request.dart';
+import 'package:e_learning/core/model/paginated_model.dart';
+import 'package:e_learning/features/profile/data/models/data_college_model.dart';
+import 'package:e_learning/features/profile/data/models/data_course_saved_model.dart';
+import 'package:e_learning/features/profile/data/models/data_univarcity_response_model.dart';
+import 'package:e_learning/features/profile/data/models/data_year_response_model.dart';
+import 'package:e_learning/features/profile/data/models/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/models/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
 
 class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
@@ -22,58 +22,86 @@ class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
   //* fetch privacy policy remote data
   @override
   Future<Either<Failure, ResponseInfoAppModel>> getPrivacyPolicyinfo() async {
-    // TODO: implement getPrivacyPolicyinfo
     try {
-      var response = await api.get(ApiRequest(url: AppUrls.privacyPolicy));
-      // print(response.bo)
-      final data = ResponseInfoAppModel.fromMap(response.body);
-      print('✅ privacy policy status code ${response.statusCode}');
-      return right(data);
+      var response = await api.get(ApiRequest(
+        url: AppUrls.privacyPolicy,
+        headers: ApiRequestParameters.authHeaders,
+      ));
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        final data = ResponseInfoAppModel.fromMap(body);
+        return right(data);
+      }
+      return Left(Failure(message: 'Invalid response format'));
     } catch (error) {
-      log("error 🔥🔥🔥🔥🔥 :::$error");
-      return Left(Failure.handleError(error as DioException));
+      if (error is DioException) {
+        return Left(Failure.fromException(error));
+      }
+      return Left(Failure(message: error.toString()));
     }
-
-    // throw UnimplementedError();
   }
 
   //*--------------------------     fetch About Us remote data     --------------------------------
   @override
   Future<Either<Failure, ResponseInfoAppModel>> getAboutUpInfo() async {
-    // TODO: implement getAboutUpInfo
     try {
-      var response = await api.get(ApiRequest(url: AppUrls.aboutUs));
-      var data = ResponseInfoAppModel.fromMap(response.body);
-      log(' ✅  about us Status Code : ${response.statusCode}');
-      return right(data);
+      var response = await api.get(ApiRequest(
+        url: AppUrls.aboutUs,
+        headers: ApiRequestParameters.authHeaders,
+      ));
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        var data = ResponseInfoAppModel.fromMap(body);
+        return right(data);
+      }
+      return Left(Failure(message: 'Invalid response format'));
     } catch (error) {
-      return left(Failure.handleError(error as DioException));
+      if (error is DioException) {
+        return left(Failure.fromException(error));
+      }
+      return left(Failure(message: error.toString()));
     }
-
-    // throw UnimplementedError();
   }
 
   @override
   Future<Either<Failure, ResponseInfoAppModel>> getTermsCondition() async {
     try {
-      var response = await api.get(ApiRequest(url: AppUrls.termsConditions));
-      var data = ResponseInfoAppModel.fromMap(response.body);
-      return right(data);
+      var response = await api.get(ApiRequest(
+        url: AppUrls.termsConditions,
+        headers: ApiRequestParameters.authHeaders,
+      ));
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        var data = ResponseInfoAppModel.fromMap(body);
+        return right(data);
+      }
+      return Left(Failure(message: 'Invalid response format'));
     } catch (error) {
-      log("error 🔥🔥🔥🔥🔥 :::$error");
-      return left(Failure.handleError(error as DioException));
+      if (error is DioException) {
+        return left(Failure.fromException(error));
+      }
+      return left(Failure(message: error.toString()));
     }
   }
 
   @override
   Future<Either<Failure, UserDataInfoModel>> getDataUser() async {
     try {
-      var response = await api.get(ApiRequest(url: AppUrls.profileUserInfo));
-      var dataResponse = UserDataInfoModel.fromMap(response.body);
-      return right(dataResponse);
+      var response = await api.get(ApiRequest(
+        url: AppUrls.profileUserInfo,
+        headers: ApiRequestParameters.authHeaders,
+      ));
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        var dataResponse = UserDataInfoModel.fromMap(body);
+        return right(dataResponse);
+      }
+      return Left(Failure(message: 'Invalid response format'));
     } catch (error) {
-      log("error fetch data user 🔥🔥🔥🔥🔥 :::$error");
-      return left(Failure.handleError(error as DioException));
+      if (error is DioException) {
+        return left(Failure.fromException(error));
+      }
+      return left(Failure(message: error.toString()));
     }
   }
 
@@ -83,72 +111,119 @@ class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
       getDataCoursesSaved() async {
     try {
       var response = await api.get(
-        ApiRequest(url: '${AppUrls.saveCourses}?page=1&page_size=10'),
+        ApiRequest(
+          url: '${AppUrls.saveCourses}?page=1&page_size=10',
+          headers: ApiRequestParameters.authHeaders,
+        ),
       );
-      // var data =       DataCourseSaved.fromMap(response.body);
-      // var data = (response.body as List).map((item) {
-      //   return DataResponseSaveCoursesPagination.fromMap(item);
-      // }).toList();
-      var data = DataResponseSaveCoursesPagination.fromMap(response.body);
-      log("👌✅ success fetch data course saved 🔥🔥🔥");
-      return right(data);
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        var data = PaginationModel<DataCourseSaved>.fromJson(body, (json) => DataCourseSaved.fromJson(json as Map<String, dynamic>));
+        return right(data);
+      }
+      return Left(Failure(message: 'Invalid response format'));
     } catch (error) {
-      log("error fetch data Course saved 🔥🔥🔥🔥🔥 :::$error");
-      return left(Failure.handleError(error as DioException));
+      if (error is DioException) {
+        return left(Failure.fromException(error));
+      }
+      return left(Failure(message: error.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, UserDataInfoModel>> editDataProfileStudent(String phone,String name,int universityId,int collegeId,int studyYearId) async {
+  Future<Either<Failure, UserDataInfoModel>> editDataProfileStudent(
+      String phone,
+      String name,
+      int universityId,
+      int collegeId,
+      int studyYearId) async {
     try {
-      var response = await api.patch(ApiRequest(url: AppUrls.profileUserInfo,body: {
-  'full_name': name,
-  'phone': phone,
-  'university_id' : universityId,
-  'college_id' : collegeId,
-  'study_year_id' : studyYearId,
-}));
-      var data = UserDataInfoModel.fromMap(response.body);
-      log("👌✅ success Editing data profile 🔥🔥🔥");
-      return right(data);
+      var response = await api.put(ApiRequest(
+        url: AppUrls.profileUserInfo,
+        body: {
+          'full_name': name,
+          'phone': phone,
+          'university_id': universityId,
+          'college_id': collegeId,
+          'study_year_id': studyYearId,
+        },
+        headers: ApiRequestParameters.authHeaders,
+      ));
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        var data = UserDataInfoModel.fromMap(body);
+        return right(data);
+      }
+      return Left(Failure(message: 'Invalid response format'));
     } catch (error) {
-      log(" error Editing data profile 🔥🔥🔥");
-      return left(Failure.handleError(error as DioException));
-    }
-  }
-  Future<Either<Failure,DataResonseunivarsity>> getDataUnivarcity() async {
-    try {
-      var response = await api.get(ApiRequest(url: AppUrls.getUniversities));
-      var data = DataResonseunivarsity.fromMap(response.body);
-      log("👌✅ success fetch data univarcity 🔥🔥🔥");
-      return right(data);
-    } catch (error) {
-      log("error fetch data univarcity 🔥🔥🔥🔥🔥 :::$error");
-      return left(Failure.handleError(error as DioException));
-    }
-  }
-  Future<Either<Failure,DataResonseCollege>> getCollegeData(int idUnivarcity) async {
-    try {
-      var response = await api.get(ApiRequest(url: '${AppUrls.getColleges}?university=$idUnivarcity'));
-      var data = DataResonseCollege.fromMap(response.body);
-      log("👌✅ success fetch data college 🔥🔥🔥");
-      return right(data);
-    } catch (error) {
-      log("error fetch data college 🔥🔥🔥🔥🔥 :::$error");
-      return left(Failure.handleError(error as DioException));
+      if (error is DioException) {
+        return left(Failure.fromException(error));
+      }
+      return left(Failure(message: error.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, DataResonseYearStudent>> getYearDataStudent()async {
+  Future<Either<Failure, DataResonseunivarsity>> getDataUnivarcity() async {
     try {
-      var response = await api.get(ApiRequest(url: AppUrls.getStudyYears));
-      var data = DataResonseYearStudent.fromMap(response.body);
-      log("👌✅ success fetch data year student 🔥🔥🔥");
-      return right(data);
+      var response = await api.get(ApiRequest(
+        url: AppUrls.getUniversities,
+        headers: ApiRequestParameters.authHeaders,
+      ));
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        var data = PaginationModel<UniData>.fromJson(body, (json) => UniData.fromJson(json as Map<String, dynamic>));
+        return right(data);
+      }
+      return Left(Failure(message: 'Invalid response format'));
     } catch (error) {
-      log("error fetch data year student 🔥🔥🔥🔥🔥 :::$error");
-      return left(Failure.handleError(error as DioException));
+      if (error is DioException) {
+        return left(Failure.fromException(error));
+      }
+      return left(Failure(message: error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DataResonseCollege>> getCollegeData(
+      int idUnivarcity) async {
+    try {
+      var response = await api.get(ApiRequest(
+        url: '${AppUrls.getColleges}?university=$idUnivarcity',
+        headers: ApiRequestParameters.authHeaders,
+      ));
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        var data = PaginationModel<College>.fromJson(body, (json) => College.fromJson(json as Map<String, dynamic>));
+        return right(data);
+      }
+      return Left(Failure(message: 'Invalid response format'));
+    } catch (error) {
+      if (error is DioException) {
+        return left(Failure.fromException(error));
+      }
+      return left(Failure(message: error.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DataResonseYearStudent>> getYearDataStudent() async {
+    try {
+      var response = await api.get(ApiRequest(
+        url: AppUrls.getStudyYears,
+        headers: ApiRequestParameters.authHeaders,
+      ));
+      final body = response.body;
+      if (body is Map<String, dynamic>) {
+        var data = PaginationModel<YearDataModel>.fromJson(body, (json) => YearDataModel.fromJson(json as Map<String, dynamic>));
+        return right(data);
+      }
+      return Left(Failure(message: 'Invalid response format'));
+    } catch (error) {
+      if (error is DioException) {
+        return left(Failure.fromException(error));
+      }
+      return left(Failure(message: error.toString()));
     }
   }
 }

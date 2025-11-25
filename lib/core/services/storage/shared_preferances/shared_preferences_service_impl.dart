@@ -1,6 +1,6 @@
 import 'dart:ui';
 import 'package:e_learning/core/constant/cache_keys.dart';
-import 'package:e_learning/core/model/enums/app_role_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/services/storage/shared_preferances/shared_preferences_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -83,6 +83,69 @@ class SharedPreferencesServiceImpl implements SharedPreferencesService {
     } catch (_) {
       return null;
     }
+  }
+
+  //?-------------------- Enrollments --------------------------------------
+
+  //* Save Enrollments
+  @override
+  Future<void> saveEnrollmentsInCache(String enrollmentsJson) async {
+    try {
+      await storagePreferences.setString(CacheKeys.enrollmentsKey, enrollmentsJson);
+    } catch (_) {}
+  }
+
+  //* Get Enrollments
+  @override
+  Future<String?> getEnrollmentsInCache() async {
+    try {
+      return storagePreferences.getString(CacheKeys.enrollmentsKey);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  //* Remove Enrollments
+  @override
+  Future<void> removeEnrollmentsInCache() async {
+    try {
+      await storagePreferences.remove(CacheKeys.enrollmentsKey);
+    } catch (_) {}
+  }
+
+  //?-------------------- Course Ratings --------------------------------------
+
+  //* Save Course Ratings
+  @override
+  Future<void> saveCourseRatingsInCache(String courseSlug, String ratingsJson) async {
+    try {
+      await storagePreferences.setString(
+        '${CacheKeys.enrollmentsKey}_ratings_$courseSlug',
+        ratingsJson,
+      );
+    } catch (_) {}
+  }
+
+  //* Get Course Ratings
+  @override
+  Future<String?> getCourseRatingsInCache(String courseSlug) async {
+    try {
+      return storagePreferences.getString(
+        '${CacheKeys.enrollmentsKey}_ratings_$courseSlug',
+      );
+    } catch (_) {
+      return null;
+    }
+  }
+
+  //* Remove Course Ratings
+  @override
+  Future<void> removeCourseRatingsInCache(String courseSlug) async {
+    try {
+      await storagePreferences.remove(
+        '${CacheKeys.enrollmentsKey}_ratings_$courseSlug',
+      );
+    } catch (_) {}
   }
 
   //?-----------------------------------------------------------------------

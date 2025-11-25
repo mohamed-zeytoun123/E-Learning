@@ -1,8 +1,9 @@
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_cubit.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_state.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -149,7 +150,7 @@ class _ArticlesTabContentState extends State<ArticlesTabContent> {
                 return ListView.separated(
                   padding: EdgeInsets.all(16.w),
                   itemCount: 5,
-                  separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                  separatorBuilder: (context, index) => 12.sizedH,
                   itemBuilder: (context, index) {
                     return Skeletonizer(
                       enabled: true,
@@ -171,7 +172,7 @@ class _ArticlesTabContentState extends State<ArticlesTabContent> {
                               width: double.infinity,
                               color: AppColors.textGrey.withOpacity(0.2),
                             ),
-                            SizedBox(height: 8.h),
+                            8.sizedH,
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -205,7 +206,7 @@ class _ArticlesTabContentState extends State<ArticlesTabContent> {
                         size: 48.sp,
                         color: AppColors.textError,
                       ),
-                      SizedBox(height: 16.h),
+                      16.sizedH,
                       Text(
                         state.articlesError ?? 'something_went_wrong'.tr(),
                         style: AppTextStyles.s16w500.copyWith(
@@ -230,7 +231,7 @@ class _ArticlesTabContentState extends State<ArticlesTabContent> {
                         size: 64.sp,
                         color: AppColors.textGrey,
                       ),
-                      SizedBox(height: 16.h),
+                      16.sizedH,
                       Text(
                         'no_articles_found'.tr(),
                         style: AppTextStyles.s18w600.copyWith(
@@ -246,7 +247,7 @@ class _ArticlesTabContentState extends State<ArticlesTabContent> {
                 controller: _scrollController,
                 padding: EdgeInsets.all(16.w),
                 itemCount: articles.length + (state.articlesStatus == ResponseStatusEnum.loading ? 1 : 0),
-                separatorBuilder: (context, index) => SizedBox(height: 12.h),
+                separatorBuilder: (context, index) => 12.sizedH,
                 itemBuilder: (context, index) {
                   if (index >= articles.length) {
                     return const Center(
@@ -296,7 +297,7 @@ class _ArticlesTabContentState extends State<ArticlesTabContent> {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 8.h),
+                          8.sizedH,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -317,7 +318,7 @@ class _ArticlesTabContentState extends State<ArticlesTabContent> {
                                       color: AppColors.stars,
                                       size: 16.sp,
                                     ),
-                                    SizedBox(width: 4.w),
+                                    4.sizedW,
                                     Text(
                                       article.readingTime,
                                       style: AppTextStyles.s12w400.copyWith(

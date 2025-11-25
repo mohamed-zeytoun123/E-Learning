@@ -1,6 +1,6 @@
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/features/Course/data/models/course_model.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 
 class SearchState {
   final String? error;

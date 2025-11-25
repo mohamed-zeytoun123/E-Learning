@@ -1,18 +1,18 @@
 import 'dart:developer';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
-import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
-import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
-import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
-import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
-import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapters_result/chapters_result_model.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/features/Course/data/models/course_model.dart';
+import 'package:e_learning/features/Course/data/models/courses_result_model.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_model.dart';
+import 'package:e_learning/features/Course/data/models/ratings_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
+import 'package:e_learning/features/chapter/data/models/chapters_result_model.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model.dart';
 
 class CourseCubit extends Cubit<CourseState> {
   CourseCubit({required this.repo}) : super(CourseState());

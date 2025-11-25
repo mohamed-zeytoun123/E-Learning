@@ -1,9 +1,12 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
 import 'package:e_learning/features/enroll/data/source/static/contact_methods.dart';
 import 'package:e_learning/features/profile/presentation/widgets/modal_sheet_custom_container_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,20 +21,14 @@ class ContactUsBottomSheetWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppLocalizations.of(
-                  context,
-                )?.translate("Course_Has_Been_Suspended!") ??
-                'Course Has Been Suspended!',
+            "Course_Has_Been_Suspended!".tr(),
             style: AppTextStyles.s16w600,
           ),
           Text(
-            AppLocalizations.of(
-                  context,
-                )?.translate('Contact_Us_To_Activate_Your_Course') ??
-                'Contact Us To Activate Your Course',
+            "Contact_Us_To_Activate_Your_Course".tr(),
             style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
           ),
-          SizedBox(height: 24.h),
+          24.sizedH,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: List.generate(contactMethods.length, (index) {
@@ -46,7 +43,7 @@ class ContactUsBottomSheetWidget extends StatelessWidget {
                       fit: BoxFit.contain,
                     ),
                   ),
-                  SizedBox(height: 8.h),
+                  8.sizedH,
                   Text(
                     contactMethods[index]['name']!,
                     style: AppTextStyles.s14w400.copyWith(

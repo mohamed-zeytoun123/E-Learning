@@ -1,9 +1,10 @@
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_padding.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/theme/spacing.dart';
+
 import 'package:e_learning/core/widgets/custom_error_widget.dart';
-import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
+import 'package:e_learning/features/Teacher/data/models/teacher_model.dart';
 import 'package:e_learning/features/Teacher/presentation/manager/teacher_cubit.dart';
 import 'package:e_learning/features/Teacher/presentation/manager/teacher_state.dart';
 import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.dart';
@@ -22,7 +23,7 @@ class ViewAllTeachers extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          TeacherCubit(repo: appLocator<TeacherRepository>())..getTeachers(),
+          TeacherCubit(repo: di<TeacherRepository>())..getTeachers(),
       child: Scaffold(
         appBar: AppBar(
           title: Text("teachers".tr()),
@@ -57,7 +58,7 @@ class ViewAllTeachers extends StatelessWidget {
               return Skeletonizer(
                 enabled: true,
                 child: GridView.builder(
-                  padding: AppPadding.appPadding.copyWith(top: 32),
+                  padding: AppPadding.defaultScreen.copyWith(top: 32),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 28,
@@ -92,7 +93,7 @@ class ViewAllTeachers extends StatelessWidget {
 
             // Show teachers grid
             return GridView.builder(
-              padding: AppPadding.appPadding.copyWith(top: 32),
+              padding: AppPadding.defaultScreen.copyWith(top: 32),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 28,

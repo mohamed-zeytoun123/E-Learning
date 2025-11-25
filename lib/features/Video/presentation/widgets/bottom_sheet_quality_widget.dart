@@ -1,8 +1,9 @@
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
 
 class BottomSheetQualityWidget extends StatefulWidget {
   final String initialQuality;
@@ -54,7 +55,6 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
               borderRadius: BorderRadius.circular(4),
             ),
           ),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -70,9 +70,7 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
               ),
             ],
           ),
-
-          SizedBox(height: 10.h),
-
+          10.sizedH,
           Column(
             children: qualities.map((quality) {
               bool isSelected = _selectedQuality == quality;
@@ -124,16 +122,11 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
               );
             }).toList(),
           ),
-
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20.h),
-            child: CustomButtonWidget(
+            child: CustomButton(
               title: "Apply",
-              titleStyle: AppTextStyles.s16w500.copyWith(
-                color: AppColors.titlePrimary,
-              ),
               buttonColor: AppColors.buttonPrimary,
-              borderColor: AppColors.borderPrimary,
               onTap: () {
                 widget.onQualitySelected(_selectedQuality);
                 Navigator.pop(context);

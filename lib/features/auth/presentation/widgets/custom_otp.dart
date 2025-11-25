@@ -1,4 +1,4 @@
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

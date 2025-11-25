@@ -1,12 +1,11 @@
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/network/api_general.dart';
-import 'package:e_learning/features/profile/data/model/data_college_model.dart';
-import 'package:e_learning/features/profile/data/model/data_course_saved_model.dart';
-import 'package:e_learning/features/profile/data/model/data_univarcity_response_model.dart';
-import 'package:e_learning/features/profile/data/model/data_year_response_model.dart';
-import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
-import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:e_learning/features/profile/data/models/data_college_model.dart';
+import 'package:e_learning/features/profile/data/models/data_course_saved_model.dart';
+import 'package:e_learning/features/profile/data/models/data_univarcity_response_model.dart';
+import 'package:e_learning/features/profile/data/models/data_year_response_model.dart';
+import 'package:e_learning/features/profile/data/models/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/models/user_data_info_model.dart';
 
 abstract class ProfileRemouteDataSource {
   Future<Either<Failure, ResponseInfoAppModel>> getPrivacyPolicyinfo();

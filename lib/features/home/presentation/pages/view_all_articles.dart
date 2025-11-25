@@ -1,7 +1,12 @@
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/style/app_padding.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/spacing.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/chips_bar.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/custom_error_widget.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_cubit.dart';
@@ -20,7 +25,7 @@ class ViewAllArticles extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          ArticleCubit(repo: appLocator<ArticleRepository>())..getArticles(),
+          ArticleCubit(repo: di<ArticleRepository>())..getArticles(),
       child: Scaffold(
         appBar: AppBar(
           title: Text("news".tr()),
@@ -45,9 +50,9 @@ class ViewAllArticles extends StatelessWidget {
         ),
         body: Column(
           children: [
-            SizedBox(height: 20.h),
+            20.sizedH,
             Padding(
-              padding: AppPadding.appPadding.copyWith(end: 0),
+              padding: AppPadding.defaultScreen.copyWith(end: 0),
               child: ChipsBar(
                 labels: [
                   "all".tr(),
@@ -60,7 +65,7 @@ class ViewAllArticles extends StatelessWidget {
                 },
               ),
             ),
-            SizedBox(height: 50.h),
+            50.sizedH,
             Expanded(
               child: BlocBuilder<ArticleCubit, ArticleState>(
                 builder: (context, state) {

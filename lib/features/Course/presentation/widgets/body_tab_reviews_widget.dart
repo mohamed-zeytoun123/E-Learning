@@ -1,12 +1,12 @@
-import 'dart:developer';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
+import 'package:e_learning/core/widgets/app_message.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/features/Course/presentation/widgets/cource_review_card_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/review_bottom_sheet_widget.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:flutter/material.dart';
@@ -42,22 +42,20 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
     }
 
     final nextPage = page + 1;
-    log("Fetching more reviews, page: $nextPage");
 
     cubit
         .getRatings(
-          courseId: "${widget.courseId}",
-          reset: false,
-          page: nextPage,
-        )
+      courseId: "${widget.courseId}",
+      reset: false,
+      page: nextPage,
+    )
         .then((_) {
-          if (cubit.state.loadratingsMoreStatus != ResponseStatusEnum.failure) {
-            page = nextPage;
-          }
-        })
-        .catchError((_) {
-          log("Fetch reviews failed, keep current page: $page");
-        });
+      if (cubit.state.loadratingsMoreStatus != ResponseStatusEnum.failure) {
+        page = nextPage;
+      }
+    }).catchError((_) {
+      // Error handled silently
+    });
   }
 
   @override
@@ -72,9 +70,9 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
 
     // جلب الصفحة الأولى عند الدخول
     context.read<CourseCubit>().getRatings(
-      courseId: "${widget.courseId}",
-      page: 1,
-    );
+          courseId: "${widget.courseId}",
+          page: 1,
+        );
   }
 
   @override
@@ -116,26 +114,21 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                             color: AppColors.iconError,
                             size: 40.sp,
                           ),
-                          SizedBox(height: 8.h),
+                          8.sizedH,
                           Text(
                             state.ratingsError ?? "Failed to load reviews",
                             style: TextStyle(color: AppColors.textRed),
                           ),
-                          SizedBox(height: 14.h),
-
-                          CustomButtonWidget(
+                          14.sizedH,
+                          CustomButton(
                             onTap: () {
                               context.read<CourseCubit>().getRatings(
-                                courseId: "${widget.courseId}",
-                                page: 1,
-                              );
+                                    courseId: "${widget.courseId}",
+                                    page: 1,
+                                  );
                             },
                             title: "Retry",
-                            titleStyle: AppTextStyles.s16w500.copyWith(
-                              color: AppColors.titlePrimary,
-                            ),
                             buttonColor: AppColors.buttonPrimary,
-                            borderColor: AppColors.borderPrimary,
                           ),
                         ],
                       ),
@@ -157,7 +150,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                               size: 60.sp,
                               color: AppColors.iconGrey.withOpacity(0.6),
                             ),
-                            SizedBox(height: 16.h),
+                            16.sizedH,
                             Text(
                               "No reviews yet",
                               textAlign: TextAlign.center,
@@ -165,7 +158,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                                 color: AppColors.textGrey,
                               ),
                             ),
-                            SizedBox(height: 8.h),
+                            8.sizedH,
                             Text(
                               "Be the first to write a review for this course!",
                               textAlign: TextAlign.center,
@@ -173,20 +166,16 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                                 color: AppColors.textGrey.withOpacity(0.7),
                               ),
                             ),
-                            SizedBox(height: 20.h),
-                            CustomButtonWidget(
+                            20.sizedH,
+                            CustomButton(
                               onTap: () {
                                 context.read<CourseCubit>().getRatings(
-                                  courseId: "${widget.courseId}",
-                                  page: 1,
-                                );
+                                      courseId: "${widget.courseId}",
+                                      page: 1,
+                                    );
                               },
                               title: "Rate",
-                              titleStyle: AppTextStyles.s18w600.copyWith(
-                                color: AppColors.titlePrimary,
-                              ),
                               buttonColor: AppColors.buttonPrimary,
-                              borderColor: AppColors.borderPrimary,
                             ),
                           ],
                         ),
@@ -236,18 +225,16 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                                 color: AppColors.iconError,
                                 size: 40.sp,
                               ),
-                              SizedBox(height: 8.h),
+                              8.sizedH,
                               Text(
                                 state.ratingsMoreError ??
                                     "Failed to load more reviews",
                                 style: TextStyle(color: AppColors.textRed),
                               ),
-                              CustomButtonWidget(
+                              CustomButton(
                                 title: "Retry",
                                 onTap: _handleFetchMore,
                                 buttonColor: AppColors.buttonPrimary,
-                                borderColor: AppColors.borderPrimary,
-                                titleStyle: AppTextStyles.s16w400.copyWith(),
                               ),
                             ],
                           ),
@@ -294,14 +281,14 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                       color: AppColors.textBlack,
                     ),
                   ),
-                  SizedBox(height: 5.h),
+                  5.sizedH,
                   Text(
                     "Write a Review And Let Us Know How Are You Feeling About This Course !",
                     style: AppTextStyles.s14w400.copyWith(
                       color: AppColors.textGrey,
                     ),
                   ),
-                  SizedBox(height: 10.h),
+                  10.sizedH,
                   BlocConsumer<CourseCubit, CourseState>(
                     listenWhen: (previous, current) =>
                         previous.addRatingStatus != current.addRatingStatus &&
@@ -311,26 +298,12 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                                 ResponseStatusEnum.failure),
                     listener: (context, state) {
                       if (state.addRatingStatus == ResponseStatusEnum.success) {
-                        AppMessage.showFlushbar(
-                          context: context,
-                          title: "Success",
-                          message: "Review added successfully ✅",
-                          backgroundColor: AppColors.messageSuccess,
-                          iconData: Icons.check_circle_outline,
-                          iconColor: AppColors.iconWhite,
-                        );
+                        AppMessage.showSuccess(
+                            context, "Review added successfully ✅");
                       } else if (state.addRatingStatus ==
                           ResponseStatusEnum.failure) {
-                        AppMessage.showFlushbar(
-                          context: context,
-                          title: "Message",
-                          isShowProgress: true,
-                          message:
-                              state.addRatingError ?? "Failed to add review ❌",
-                          backgroundColor: AppColors.messageError,
-                          iconData: Icons.error_outline,
-                          iconColor: AppColors.iconWhite,
-                        );
+                        AppMessage.showError(context,
+                            state.addRatingError ?? "Failed to add review ❌");
                       }
                     },
                     buildWhen: (previous, current) =>
@@ -338,17 +311,9 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                     builder: (context, state) {
                       final isLoading =
                           state.addRatingStatus == ResponseStatusEnum.loading;
-                      return CustomButtonWidget(
+                      return CustomButton(
                         title: isLoading ? "Sending..." : "Write Review",
-                        titleStyle: AppTextStyles.s16w500.copyWith(
-                          color: AppColors.textWhite,
-                        ),
                         buttonColor: AppColors.buttonPrimary,
-                        borderColor: AppColors.borderPrimary,
-                        icon: Icon(
-                          Icons.arrow_outward_outlined,
-                          color: AppColors.iconWhite,
-                        ),
                         onTap: isLoading
                             ? null
                             : () {
@@ -378,14 +343,11 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                                         result['review'] as String;
                                     final rating = result['rating'] as int;
 
-                                    log(
-                                      'Sending rating=$rating, review="$reviewText"',
-                                    );
                                     context.read<CourseCubit>().addRating(
-                                      rating: rating,
-                                      courseId: "${widget.courseId}",
-                                      comment: reviewText,
-                                    );
+                                          rating: rating,
+                                          courseId: "${widget.courseId}",
+                                          comment: reviewText,
+                                        );
 
                                     reviewController.clear();
                                   }

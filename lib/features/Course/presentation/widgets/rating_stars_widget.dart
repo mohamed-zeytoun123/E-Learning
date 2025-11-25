@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
 
 class RatingStarsWidget extends StatefulWidget {
   final int initialRating;

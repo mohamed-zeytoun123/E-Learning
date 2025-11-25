@@ -1,14 +1,18 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart' hide Colors;
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/app_logo.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:e_learning/features/auth/presentation/widgets/form_reset_password_widget.dart';
-import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/reset_password_button_widger.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,10 +63,10 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         final authCubit = context.read<AuthCubit>();
         authCubit.resetPassword(params);
       } catch (e) {
-        _showErrorMessage("An error occurred. Please try again.");
+        _showErrorMessage("An_error_occurred_Please_try_again".tr());
       }
     } else {
-      _showErrorMessage("Please fill in all required fields correctly.");
+      _showErrorMessage("Please_fill_in_all_required_fields_correctly".tr());
     }
   }
 
@@ -90,27 +94,15 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Debug: Print the received parameters
-    print('Reset Password Page - Phone: ${widget.phone}');
-    print('Reset Password Page - Reset Token: ${widget.resetToken}');
-
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
       body: BlocListener<AuthCubit, AuthState>(
         listenWhen: (previous, current) =>
             previous.resetPasswordState != current.resetPasswordState,
         listener: (context, state) {
-          print(
-            'BlocListener - Reset Password State: ${state.resetPasswordState}',
-          );
           switch (state.resetPasswordState) {
             case ResponseStatusEnum.success:
-              _showSuccessMessage(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("Password_reset_successfully") ??
-                    "Password reset successfully",
-              );
+              _showSuccessMessage("Password_reset_successfully".tr());
               // Navigate to login page after successful reset using Future.microtask
               // to avoid state emission conflicts
               Future.microtask(() {
@@ -121,11 +113,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               break;
             case ResponseStatusEnum.failure:
               _showErrorMessage(
-                state.resetPasswordError ??
-                    (AppLocalizations.of(
-                          context,
-                        )?.translate("Failed_to_reset_password") ??
-                        "Failed to reset password"),
+                state.resetPasswordError ?? "Failed_to_reset_password".tr(),
               );
               break;
             case ResponseStatusEnum.loading:
@@ -145,16 +133,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
             child: Center(
               child: Column(
                 children: [
-                  HeaderAuthPagesWidget(),
-                  SizedBox(height: 150.h),
+                  AppLogo(),
+                  150.sizedH,
                   Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("Set_A_New_Password") ??
-                        "Set A New Password",
+                    "Set_A_New_Password".tr(),
                     style: AppTextStyles.s16w600,
                   ),
-                  SizedBox(height: 48.h),
+                  48.sizedH,
                   Form(
                     key: _formKey,
                     child: FormResetPasswordWidget(
@@ -162,7 +147,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                       confirmPasswordController: confirmPasswordController,
                     ),
                   ),
-                  SizedBox(height: 12.h),
+                  12.sizedH,
                   BlocBuilder<AuthCubit, AuthState>(
                     buildWhen: (previous, current) =>
                         previous.resetPasswordState !=
@@ -173,8 +158,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                         buttonColor: AppColors.buttonPrimary,
                         textColor: AppColors.titlePrimary,
                         formKey: _formKey,
-                        isLoading:
-                            state.resetPasswordState ==
+                        isLoading: state.resetPasswordState ==
                             ResponseStatusEnum.loading,
                         onResetPassword: _handleResetPassword,
                       );

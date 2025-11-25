@@ -1,7 +1,7 @@
-import 'dart:developer';
 
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter/material.dart';
@@ -98,14 +98,14 @@ class _AboutUsPageState extends State<AboutUsPage> {
                               size: 64.sp,
                               color: context.colors.iconRed,
                             ),
-                            SizedBox(height: 16.h),
+                            16.sizedH,
                             Text(
                               'Error loading About us',
                               style: AppTextStyles.s16w500.copyWith(
                                 color: context.colors.textPrimary,
                               ),
                             ),
-                            SizedBox(height: 8.h),
+                            8.sizedH,
                             Text(
                               state.errorFetchAboutUs!.message,
                               style: AppTextStyles.s14w400.copyWith(

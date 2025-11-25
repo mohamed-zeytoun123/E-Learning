@@ -1,11 +1,12 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/message/app_message.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/app_message.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/filter_group_widget.dart';
@@ -34,7 +35,7 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
     final state = cubit.state;
 
     final cachedFilters =
-        state.coursefilters ?? appLocator<HiveService>().getCourseFiltersHive();
+        state.coursefilters ?? di<HiveService>().getCourseFiltersHive();
     tempCollege = cachedFilters?.collegeId;
     tempCategory = cachedFilters?.categoryId;
     tempYear = cachedFilters?.studyYear;
@@ -52,7 +53,7 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
         if (_hasApplied) {
           if (state.coursesStatus == ResponseStatusEnum.success) {
             // الحفظ بالكاش فقط بعد نجاح العملية
-            appLocator<HiveService>().saveCourseFiltersHive(
+            di<HiveService>().saveCourseFiltersHive(
               CourseFiltersModel(
                 collegeId: tempCollege,
                 categoryId: tempCategory,
@@ -62,16 +63,7 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
             if (Navigator.of(context).canPop()) Navigator.of(context).pop();
           } else if (state.coursesStatus == ResponseStatusEnum.failure) {
             // عرض رسالة خطأ فقط
-            AppMessage.showFlushbar(
-              context: context,
-              title: "Error",
-              message: "Failed to apply filters. Please try again.",
-              iconData: Icons.error,
-              backgroundColor: AppColors.messageError,
-              iconColor: AppColors.iconWhite,
-              isShowProgress: true,
-              duration: Duration(seconds: 5),
-            );
+            AppMessage.showError(context, "Failed to apply filters. Please try again.");
           }
         }
       },
@@ -83,16 +75,14 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
           previous.categoriesStatus != current.categoriesStatus ||
           previous.studyYearsStatus != current.studyYearsStatus,
       builder: (context, state) {
-        final isLoading =
-            (state.collegesStatus != ResponseStatusEnum.success &&
+        final isLoading = (state.collegesStatus != ResponseStatusEnum.success &&
                 state.collegesStatus != ResponseStatusEnum.failure) ||
             (state.categoriesStatus != ResponseStatusEnum.success &&
                 state.categoriesStatus != ResponseStatusEnum.failure) ||
             (state.studyYearsStatus != ResponseStatusEnum.success &&
                 state.studyYearsStatus != ResponseStatusEnum.failure);
 
-        final hasError =
-            state.collegesStatus == ResponseStatusEnum.failure ||
+        final hasError = state.collegesStatus == ResponseStatusEnum.failure ||
             state.categoriesStatus == ResponseStatusEnum.failure ||
             state.studyYearsStatus == ResponseStatusEnum.failure;
 
@@ -148,20 +138,16 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error, size: 50.sp, color: AppColors.textError),
-            SizedBox(height: 12.h),
+            12.sizedH,
             Text(
               errorMessages.isNotEmpty ? errorMessages : 'Something went wrong',
               textAlign: TextAlign.center,
               style: AppTextStyles.s16w500.copyWith(color: AppColors.textError),
             ),
-            SizedBox(height: 20.h),
-            CustomButtonWidget(
+            20.sizedH,
+            CustomButton(
               title: "Retry",
-              titleStyle: AppTextStyles.s16w500.copyWith(
-                color: AppColors.titlePrimary,
-              ),
               buttonColor: AppColors.buttonPrimary,
-              borderColor: AppColors.borderPrimary,
               onTap: () {
                 final cubit = context.read<CourseCubit>();
                 cubit.getColleges();
@@ -201,12 +187,12 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
               borderRadius: BorderRadius.circular(8.r),
             ),
           ),
-          SizedBox(height: 16.h),
+          16.sizedH,
           Text(
             "Filters",
             style: AppTextStyles.s18w600.copyWith(color: AppColors.textPrimary),
           ),
-          SizedBox(height: 16.h),
+          16.sizedH,
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
@@ -248,13 +234,9 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Expanded(
-                  child: CustomButtonWidget(
+                  child: CustomButton(
                     title: "Cancel",
-                    titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: AppColors.textPrimary,
-                    ),
                     buttonColor: AppColors.buttonWhite,
-                    borderColor: AppColors.borderPrimary,
                     onTap: () {
                       if (Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
@@ -263,13 +245,9 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                   ),
                 ),
                 Expanded(
-                  child: CustomButtonWidget(
+                  child: CustomButton(
                     title: "Apply",
-                    titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: AppColors.textWhite,
-                    ),
                     buttonColor: AppColors.buttonPrimary,
-                    borderColor: AppColors.borderPrimary,
                     onTap: () {
                       _hasApplied = true;
                       courseCubit.applyFiltersByIds(

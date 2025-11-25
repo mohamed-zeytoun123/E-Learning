@@ -1,5 +1,7 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_state.dart';
 import 'package:e_learning/features/home/presentation/widgets/steps_indicator.dart';
@@ -101,7 +103,7 @@ class _HomeBannersWidgetState extends State<HomeBannersWidget> {
                 },
               ),
             ),
-            SizedBox(height: 20.h),
+            20.sizedH,
             StepsDotsIndecator(
               stepsCount: banners.length,
               selectedIndex: activeIndex,

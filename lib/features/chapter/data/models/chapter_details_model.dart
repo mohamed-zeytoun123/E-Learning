@@ -1,11 +1,30 @@
-class ChapterDetailsModel {
-  final int id;
-  final int course;
-  final String courseTitle;
-  final String title;
-  final String description;
-  final DateTime createdAt;
+import 'package:e_learning/core/utils/json_converters.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'chapter_details_model.g.dart';
+
+@JsonSerializable()
+class ChapterDetailsModel {
+  @IntConverter()
+  final int id;
+  
+  @IntConverter()
+  final int course;
+  
+  @JsonKey(name: 'course_title')
+  @StringConverter()
+  final String courseTitle;
+  
+  @StringConverter()
+  final String title;
+  
+  @StringConverter()
+  final String description;
+  
+  @JsonKey(name: 'created_at')
+  @DateTimeConverter()
+  final DateTime createdAt;
+  
   ChapterDetailsModel({
     required this.id,
     required this.course,
@@ -15,18 +34,14 @@ class ChapterDetailsModel {
     required this.createdAt,
   });
 
-  factory ChapterDetailsModel.fromMap(Map<String, dynamic> map) {
-    return ChapterDetailsModel(
-      id: map['id'] ?? 0,
-      course: map['course'] ?? 0,
-      courseTitle: map['course_title'] ?? '',
-      title: map['title'] ?? '',
-      description: map['description'] ?? '',
-      createdAt: map['created_at'] != null
-          ? DateTime.parse(map['created_at'])
-          : DateTime.now(),
-    );
-  }
+  factory ChapterDetailsModel.fromJson(Map<String, dynamic> json) =>
+      _$ChapterDetailsModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChapterDetailsModelToJson(this);
+
+  // Keep fromMap for backward compatibility
+  factory ChapterDetailsModel.fromMap(Map<String, dynamic> map) =>
+      ChapterDetailsModel.fromJson(map);
 
   ChapterDetailsModel copyWith({
     int? id,

@@ -1,8 +1,10 @@
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/features/Course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
 
 class QuizInfoCardWidget extends StatelessWidget {
   final String title;
@@ -54,7 +56,7 @@ class QuizInfoCardWidget extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 8.h),
+          8.sizedH,
 
           Row(
             spacing: 7.w,

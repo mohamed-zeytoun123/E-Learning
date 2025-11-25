@@ -1,20 +1,16 @@
-import 'dart:developer';
-
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:e_learning/core/model/enums/app_state_enum.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/style/text_form_field_style.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/utils/validator/validator.dart';
-import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
-import 'package:e_learning/core/widgets/input_forms/input_name_widget.dart';
-import 'package:e_learning/core/widgets/input_forms/input_phone_widget.dart';
-import 'package:e_learning/features/profile/data/model/data_univarcity_response_model.dart';
-import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/widgets/custom_app_bar_widget.dart';
+import 'package:e_learning/core/widgets/input_name_widget.dart';
+import 'package:e_learning/core/widgets/input_phone_widget.dart';
+import 'package:e_learning/features/profile/data/models/data_univarcity_response_model.dart';
+import 'package:e_learning/features/profile/data/models/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
@@ -25,6 +21,7 @@ import 'package:e_learning/features/profile/presentation/widgets/modal_sheet_cus
 import 'package:e_learning/features/profile/presentation/widgets/profile_guest_header.dart';
 import 'package:e_learning/features/profile/presentation/widgets/profile_user_header.dart';
 import 'package:e_learning/features/profile/presentation/widgets/theme_bottom_sheet_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,13 +80,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                 },
               ),
-              SizedBox(height: 32.h),
+              32.sizedH,
               CustomSettingsItemWidget(
                 icon: Icons.bookmark_outline,
                 iconColor: colors.textBlue,
-                title:
-                    AppLocalizations.of(context)?.translate("Saved_Courses") ??
-                        "Saved Courses",
+                title: "Saved_Courses".tr(),
                 onTap: () {
                   context.push(
                     RouteNames.savedCourses,
@@ -100,8 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
               CustomSettingsItemWidget(
                 icon: Icons.download_outlined,
                 iconColor: context.colors.textBlue,
-                title: AppLocalizations.of(context)?.translate("Downloads") ??
-                    "Downloads",
+                title: "Downloads".tr(),
                 onTap: () {
                   context.push(RouteNames.downloads);
                 },
@@ -109,8 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
               CustomSettingsItemWidget(
                 icon: Icons.language_outlined,
                 iconColor: context.colors.textBlue,
-                title: AppLocalizations.of(context)?.translate("Languages") ??
-                    "Languages",
+                title: "Languages".tr(),
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
@@ -128,8 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
               CustomSettingsItemWidget(
                 icon: Icons.light_mode_outlined,
                 iconColor: colors.textBlue,
-                title: AppLocalizations.of(context)?.translate("Colors_Mode") ??
-                    "Colors Mode",
+                title: "Colors_Mode".tr(),
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
@@ -144,44 +136,42 @@ class _ProfilePageState extends State<ProfilePage> {
                   );
                 },
               ),
-              BlocBuilder<AppManagerCubit,AppManagerState>(
-                builder: (context,state) {
-                  if(state.appState==AppStateEnum.guest){
-                    return SizedBox.shrink();
-                  }
-                  return CustomSettingsItemWidget(
-                      icon: Icons.settings_applications_sharp,
-                      iconColor: context.colors.textBlue,
-                      title: 'Edit profile',
-                      onTap: () {
-                        showModalBottomSheet(
-                            context: context,
-                            backgroundColor: context.colors.background,
-                            isScrollControlled: true,
-                            builder: (context) =>
-                                BlocBuilder<ProfileCubit, ProfileState>(
-                                    builder: (context, state) {
-                                  return SingleChildScrollView(
-                                    child: EditDataProfileBottomSheetWidget(
-                                      dataUser: state.dataUserInfoProfile,
-                                      idUniversity:
-                                          state.dataUserInfoProfile.universityId,
-                                      phone: TextEditingController(
-                                          text: state.dataUserInfoProfile.phone),
-                                      userName: TextEditingController(
-                                          text: state.dataUserInfoProfile.fullName),
-                                    ),
-                                  );
-                                }));
-                      });
+              BlocBuilder<AppManagerCubit, AppManagerState>(
+                  builder: (context, state) {
+                if (state.appState == AppStateEnum.guest) {
+                  return SizedBox.shrink();
                 }
-              ),
+                return CustomSettingsItemWidget(
+                    icon: Icons.settings_applications_sharp,
+                    iconColor: context.colors.textBlue,
+                    title: 'Edit profile',
+                    onTap: () {
+                      showModalBottomSheet(
+                          context: context,
+                          backgroundColor: context.colors.background,
+                          isScrollControlled: true,
+                          builder: (context) =>
+                              BlocBuilder<ProfileCubit, ProfileState>(
+                                  builder: (context, state) {
+                                return SingleChildScrollView(
+                                  child: EditDataProfileBottomSheetWidget(
+                                    dataUser: state.dataUserInfoProfile,
+                                    idUniversity:
+                                        state.dataUserInfoProfile.universityId,
+                                    phone: TextEditingController(
+                                        text: state.dataUserInfoProfile.phone),
+                                    userName: TextEditingController(
+                                        text:
+                                            state.dataUserInfoProfile.fullName),
+                                  ),
+                                );
+                              }));
+                    });
+              }),
               CustomSettingsItemWidget(
                 icon: Icons.shield_outlined,
                 iconColor: colors.textBlue,
-                title:
-                    AppLocalizations.of(context)?.translate("Privacy_Policy") ??
-                        "Privacy Policy",
+                title: "Privacy_Policy".tr(),
                 onTap: () {
                   // BlocProvider.of<ProfileCubit>(
                   //   context,
@@ -195,12 +185,9 @@ class _ProfilePageState extends State<ProfilePage> {
               CustomSettingsItemWidget(
                 icon: Icons.newspaper_outlined,
                 iconColor: colors.textBlue,
-                title: AppLocalizations.of(
-                      context,
-                    )?.translate("Terms_&_Conditions") ??
-                    "Terms & Conditions",
+                title: "Terms_&_Conditions".tr(),
                 onTap: () {
-                  appLocator<ProfileRepository>().getTermsConditionsData();
+                  di<ProfileRepository>().getTermsConditionsData();
                   context.push(
                     RouteNames.term,
                     extra: context.read<ProfileCubit>(),
@@ -211,8 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
               CustomSettingsItemWidget(
                 icon: Icons.article_outlined,
                 iconColor: colors.textBlue,
-                title: AppLocalizations.of(context)?.translate("About_Us") ??
-                    "About Us",
+                title: "About_Us".tr(),
                 onTap: () {
                   context.push(
                     RouteNames.aboutUs,
@@ -227,8 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
               CustomSettingsItemWidget(
                 icon: Icons.logout_outlined,
                 iconColor: context.colors.iconRed,
-                title: AppLocalizations.of(context)?.translate("Log_Out") ??
-                    "Log Out",
+                title: "Log_Out".tr(),
                 titleColor: context.colors.textRed,
                 onTap: () {
                   showDialog(
@@ -248,7 +233,7 @@ class _ProfilePageState extends State<ProfilePage> {
 }
 
 class EditDataProfileBottomSheetWidget extends StatefulWidget {
-  EditDataProfileBottomSheetWidget(
+  const EditDataProfileBottomSheetWidget(
       {super.key,
       required this.phone,
       required this.userName,
@@ -267,7 +252,7 @@ class EditDataProfileBottomSheetWidget extends StatefulWidget {
 class _EditDataProfileBottomSheetWidgetState
     extends State<EditDataProfileBottomSheetWidget> {
   // final TextEditingController year = TextEditingController();
-  GlobalKey _form = GlobalKey();
+  final GlobalKey _form = GlobalKey();
   int? selectedUnivacity;
   int? selectedCollege;
   int? selectedYear;
@@ -285,6 +270,7 @@ class _EditDataProfileBottomSheetWidgetState
   @override
   Widget build(BuildContext context) {
     return ModalSheetCustomContainerWidget(
+      height: 700,
       child: Form(
         key: _form,
         child:
@@ -315,115 +301,117 @@ class _EditDataProfileBottomSheetWidgetState
                   Text(
                     'univarcity',
                   ),
-                       SizedBox(
-                height: 12.h,
-              ),
-              DropdownButtonFormField<int>(value: state.dataUserInfoProfile.universityId,
-                decoration: InputDecoration(
-                  suffixIcon: Icon(Icons.keyboard_arrow_down_outlined),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.r),
+                  SizedBox(
+                    height: 12.h,
                   ),
-                ),
-                items:
-                    (state.dataUnivarcity?.results ?? []).map((uniData value) {
-                  return DropdownMenuItem<int>(
-                    value: value.id,
-                    child: Text(value.name),
-                  );
-                }).toList(),
-                onChanged: (newValue) {
-                  selectedUnivacity = newValue;
-                  BlocProvider.of<ProfileCubit>(context)
-                      .getDataCollege(newValue!);
-                  // Do something with the new value
-                },
-              ),
+                  DropdownButtonFormField<int>(
+                    value: state.dataUserInfoProfile.universityId,
+                    decoration: InputDecoration(
+                      suffixIcon: Icon(Icons.keyboard_arrow_down_outlined),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                    ),
+                    items: (state.dataUnivarcity?.results ?? [])
+                        .map((UniData value) {
+                      return DropdownMenuItem<int>(
+                        value: value.id,
+                        child: Text(value.name),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      selectedUnivacity = newValue;
+                      BlocProvider.of<ProfileCubit>(context)
+                          .getDataCollege(newValue!);
+                      // Do something with the new value
+                    },
+                  ),
                 ],
               ),
-         
               SizedBox(
                 height: 12.h,
               ),
               Skeletonizer(
-                 enabled: state.isLoadingdataCollege == true,
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                enabled: state.isLoadingdataCollege == true,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'college',
                     ),
-                         SizedBox(
-                  height: 12.h,
-                ),
-                DropdownButtonFormField<int>(value: state.dataUserInfoProfile.collegeId,
-                  decoration: InputDecoration(
-                    suffixIcon: Icon(Icons.keyboard_arrow_down_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.r),
+                    SizedBox(
+                      height: 12.h,
                     ),
-                  ),
-                  items: (state.dataCollege?.results ?? []).map((value) {
-                    return DropdownMenuItem<int>(
-                      value: value.id,
-                      child: Text(value.name),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    selectedCollege = newValue;
-                    // Do something with the new value
-                  },
-                ),
+                    DropdownButtonFormField<int>(
+                      value: state.dataUserInfoProfile.collegeId,
+                      decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.keyboard_arrow_down_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                      ),
+                      items: (state.dataCollege?.results ?? []).map((value) {
+                        return DropdownMenuItem<int>(
+                          value: value.id,
+                          child: Text(value.name),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        selectedCollege = newValue;
+                        // Do something with the new value
+                      },
+                    ),
                   ],
                 ),
               ),
-         
               SizedBox(
                 height: 12.h,
               ),
               Skeletonizer(
                 enabled: state.isLoadingdataYearStudent == true,
-                child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'year',
                     ),
-                     SizedBox(
-                  height: 12.h,
-                ),
-                DropdownButtonFormField<int>(value: state.dataUserInfoProfile.studyYearId,
-                  decoration: InputDecoration(
-                    suffixIcon: Icon(Icons.keyboard_arrow_down_outlined),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.r),
+                    SizedBox(
+                      height: 12.h,
                     ),
-                  ),
-                  items: (state.dataYearStudent?.results ?? []).map((value) {
-                    return DropdownMenuItem<int>(
-                      value: value.id,
-                      child: Text(value.name),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    selectedYear = newValue;
-                    // Do something with the new value
-                  },
-                ),
+                    DropdownButtonFormField<int>(
+                      value: state.dataUserInfoProfile.studyYearId,
+                      decoration: InputDecoration(
+                        suffixIcon: Icon(Icons.keyboard_arrow_down_outlined),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                      ),
+                      items:
+                          (state.dataYearStudent?.results ?? []).map((value) {
+                        return DropdownMenuItem<int>(
+                          value: value.id,
+                          child: Text(value.name),
+                        );
+                      }).toList(),
+                      onChanged: (newValue) {
+                        selectedYear = newValue;
+                        // Do something with the new value
+                      },
+                    ),
                   ],
                 ),
               ),
-             
               SizedBox(
                 height: 24.h,
               ),
               GestureDetector(
                 onTap: () {
                   BlocProvider.of<ProfileCubit>(context).EditDataProfileStudent(
-                      widget.phone.text, widget.userName.text,selectedUnivacity!,selectedCollege!,selectedYear!);
-                
-
-                  log(selectedUnivacity.toString());
-                     log(selectedYear.toString());
-                        log(selectedCollege.toString());
+                      widget.phone.text,
+                      widget.userName.text,
+                      selectedUnivacity!,
+                      selectedCollege!,
+                      selectedYear!);
                 },
                 child: Container(
                   width: double.infinity,
@@ -444,8 +432,6 @@ class _EditDataProfileBottomSheetWidgetState
           );
         }),
       ),
-      height: 700,
     );
   }
-  
 }

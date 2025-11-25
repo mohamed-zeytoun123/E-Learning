@@ -1,9 +1,13 @@
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/asset/app_icons.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
 
 class QuizResultBottomSheet extends StatelessWidget {
   final String score;
@@ -25,13 +29,11 @@ class QuizResultBottomSheet extends StatelessWidget {
         ? Image(image: AssetImage(AppIcons.iconCheckDouble))
         : Image(image: AssetImage(AppIcons.iconErrorOutline));
 
-    final Color backgroundColor = isPassed
-        ? AppColors.secondary
-        : AppColors.backgroundLittelOrange;
+    final Color backgroundColor =
+        isPassed ? AppColors.secondary : AppColors.backgroundLittelOrange;
 
-    final String title = isPassed
-        ? 'Congratulations !'
-        : 'Sorry, You Didn’t Pass The Quiz';
+    final String title =
+        isPassed ? 'Congratulations !' : 'Sorry, You Didn’t Pass The Quiz';
 
     final String subtitle = isPassed
         ? 'You Have Passed The Quiz'
@@ -57,8 +59,7 @@ class QuizResultBottomSheet extends StatelessWidget {
               borderRadius: BorderRadius.circular(4.r),
             ),
           ),
-          SizedBox(height: 25.h),
-
+          25.sizedH,
           Container(
             width: 64.w,
             height: 64.h,
@@ -68,16 +69,12 @@ class QuizResultBottomSheet extends StatelessWidget {
             ),
             child: Center(child: icon),
           ),
-
-          SizedBox(height: 25.h),
-
+          25.sizedH,
           Text(
             '$score/$total Points',
             style: AppTextStyles.s16w400.copyWith(color: AppColors.textGrey),
           ),
-
-          SizedBox(height: 25.h),
-
+          25.sizedH,
           Text(
             title,
             textAlign: TextAlign.center,
@@ -88,16 +85,10 @@ class QuizResultBottomSheet extends StatelessWidget {
             textAlign: TextAlign.center,
             style: AppTextStyles.s16w400.copyWith(color: AppColors.textGrey),
           ),
-
-          SizedBox(height: 20.h),
-
-          CustomButtonWidget(
+          20.sizedH,
+          CustomButton(
             title: 'Done',
-            titleStyle: AppTextStyles.s16w500.copyWith(
-              color: AppColors.textWhite,
-            ),
             buttonColor: AppColors.buttonPrimary,
-            borderColor: AppColors.borderPrimary,
             onTap: onDone,
           ),
         ],

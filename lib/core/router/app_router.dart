@@ -1,13 +1,12 @@
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/network/api_general.dart';
+import 'package:e_learning/core/di/service_locator.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/Video/presentation/pages/video_playing_page.dart';
-import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
+import 'package:e_learning/features/auth/presentation/pages/selected_user_role_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
-import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/pages/cource_info_page.dart';
@@ -24,14 +23,13 @@ import 'package:e_learning/features/auth/presentation/pages/university_selection
 import 'package:e_learning/features/home/presentation/pages/article_details.dart';
 import 'package:e_learning/features/home/presentation/pages/main_home_page.dart';
 import 'package:e_learning/features/home/presentation/pages/search_page.dart';
-import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
+import 'package:e_learning/features/Teacher/data/models/teacher_model.dart';
 import 'package:e_learning/features/home/presentation/pages/teatcher_page.dart';
 import 'package:e_learning/features/home/presentation/pages/view_all_articles.dart';
 import 'package:e_learning/features/home/presentation/pages/view_all_teachers.dart';
 import 'package:e_learning/features/home/presentation/pages/view_all_courses.dart';
 import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
-import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/pages/about_us.dart';
@@ -47,29 +45,27 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class AppRouter {
-  static final GoRouter router = GoRouter(
-    initialLocation: RouteNames.mainHomePage,
+  static final GoRouter configs = GoRouter(
+    initialLocation: RouteNames.logIn,
     routes: [
       GoRoute(
         path: RouteNames.selectedMethodLogin,
         //?--------------------------------------------------------------------------
-        // builder: (context, state) => const SelectedMethodLogInPage(), //! base
-        builder: (context, state) => CoursesPage(),
+        builder: (context, state) => const SelecteUserRolePage(), //! base
+        // builder: (context, state) => CoursesPage(),
         //?--------------------------------------------------------------------------
       ),
       GoRoute(
         path: RouteNames.signUp,
         builder: (context, state) => BlocProvider(
-          create: (context) =>
-              AuthCubit(repository: appLocator<AuthRepository>()),
+          create: (context) => AuthCubit(repository: di<AuthRepository>()),
           child: SignUpPage(),
         ),
       ),
       GoRoute(
         path: RouteNames.logIn,
         builder: (context, state) => BlocProvider(
-          create: (context) =>
-              AuthCubit(repository: appLocator<AuthRepository>()),
+          create: (context) => AuthCubit(repository: di<AuthRepository>()),
           child: LogInPage(),
         ),
       ),
@@ -93,27 +89,6 @@ class AppRouter {
         },
       ),
 
-      // GoRoute(
-      //   path: RouteNames.cachedVideos,
-      //   builder: (context, state) {
-      //     final Map<String, dynamic>? args =
-      //         state.extra as Map<String, dynamic>?;
-      //     final chapterCubit = args != null
-      //         ? args["chapterCubit"] as ChapterCubit
-      //         : null;
-
-      //     if (chapterCubit != null) {
-      //       return BlocProvider.value(
-      //         value: chapterCubit,
-      //         child: const CachedVideosScreen(),
-      //       );
-      //     } else {
-      //       return const CachedVideosScreen();
-      //     }
-      //   },
-      // ),
-
-      //?-------------------------------------------------------------------
       GoRoute(
         path: RouteNames.universitySelection,
         builder: (context, state) {
@@ -146,8 +121,7 @@ class AppRouter {
       GoRoute(
         path: RouteNames.forgetPassword,
         builder: (context, state) => BlocProvider(
-          create: (context) =>
-              AuthCubit(repository: appLocator<AuthRepository>()),
+          create: (context) => AuthCubit(repository: di<AuthRepository>()),
           child: ForgetPasswordPage(),
         ),
       ),
@@ -164,8 +138,7 @@ class AppRouter {
               state.extra as Map<String, dynamic>?;
           final teacher = args?['teacher'] as TeacherModel?;
           return BlocProvider(
-            create: (context) =>
-                CourseCubit(repo: appLocator<CourceseRepository>()),
+            create: (context) => CourseCubit(repo: di<CourceseRepository>()),
             child: TeatcherPage(teacher: teacher),
           );
         },
@@ -188,9 +161,8 @@ class AppRouter {
             );
           }
           return BlocProvider(
-            create: (context) =>
-                ArticleCubit(repo: appLocator<ArticleRepository>())
-                  ..getArticleDetails(articleId: articleId),
+            create: (context) => ArticleCubit(repo: di<ArticleRepository>())
+              ..getArticleDetails(articleId: articleId),
             child: ArticleDetailsPage(articleId: articleId),
           );
         },
@@ -203,8 +175,7 @@ class AppRouter {
           final resetToken = args["resetToken"] as String;
 
           return BlocProvider<AuthCubit>(
-            create: (context) =>
-                AuthCubit(repository: appLocator<AuthRepository>()),
+            create: (context) => AuthCubit(repository: di<AuthRepository>()),
             child: ResetPasswordPage(phone: phone, resetToken: resetToken),
           );
         },
@@ -285,8 +256,8 @@ class AppRouter {
         builder: (context, state) => BlocProvider(
           create: (context) => ProfileCubit(
             ProfileRepository(
-              remote: appLocator<ProfileRemouteDataSource>(),
-              network: appLocator<NetworkInfoService>(),
+              remote: di<ProfileRemouteDataSource>(),
+              network: di<NetworkInfoService>(),
             )..getPrivacyPolicyRepo(),
           ),
           child: const ProfilePage(),
@@ -295,9 +266,9 @@ class AppRouter {
       GoRoute(
         path: RouteNames.savedCourses,
         builder: (context, state) {
-           final profileCubit = state.extra as ProfileCubit;
-         return BlocProvider.value(value: profileCubit,
-            child: const SavedCoursesPage());
+          final profileCubit = state.extra as ProfileCubit;
+          return BlocProvider.value(
+              value: profileCubit, child: const SavedCoursesPage());
         },
       ),
       GoRoute(
@@ -305,9 +276,8 @@ class AppRouter {
         builder: (context, state) {
           final Map<String, dynamic>? args =
               state.extra as Map<String, dynamic>?;
-          final chapterCubit = args != null
-              ? args["chapterCubit"] as ChapterCubit
-              : null;
+          final chapterCubit =
+              args != null ? args["chapterCubit"] as ChapterCubit : null;
 
           if (chapterCubit != null) {
             return BlocProvider.value(

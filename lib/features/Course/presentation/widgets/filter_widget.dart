@@ -1,11 +1,11 @@
-import 'dart:developer';
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
+import 'package:e_learning/core/widgets/app_message.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
@@ -37,18 +37,14 @@ class _FilterWidgetState extends State<FilterWidget> {
     }
 
     final nextPage = page1 + 1;
-    log("Fetching more data, page: $nextPage");
 
-    cubit
-        .getCourses(page: nextPage, reset: false)
-        .then((_) {
-          if (cubit.state.loadCoursesMoreStatus != ResponseStatusEnum.failure) {
-            page1 = nextPage;
-          }
-        })
-        .catchError((_) {
-          log("Fetch failed, keep current page: $page1");
-        });
+    cubit.getCourses(page: nextPage, reset: false).then((_) {
+      if (cubit.state.loadCoursesMoreStatus != ResponseStatusEnum.failure) {
+        page1 = nextPage;
+      }
+    }).catchError((_) {
+      // Error handled silently
+    });
   }
 
   @override
@@ -83,7 +79,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                   price: '',
                   isLoading: true,
                 ),
-                separatorBuilder: (_, __) => SizedBox(height: 15.h),
+                separatorBuilder: (_, __) => 15.sizedH,
               );
 
             case ResponseStatusEnum.failure:
@@ -96,7 +92,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                       color: AppColors.textRed,
                       size: 40.sp,
                     ),
-                    SizedBox(height: 10.h),
+                    10.sizedH,
                     Text(
                       state.coursesError ?? 'Something went wrong',
                       style: TextStyle(
@@ -104,7 +100,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                         color: AppColors.textRed,
                       ),
                     ),
-                    SizedBox(height: 15.h),
+                    15.sizedH,
                     ElevatedButton.icon(
                       onPressed: () {
                         context.read<CourseCubit>().getCourses(page: 1);
@@ -153,9 +149,8 @@ class _FilterWidgetState extends State<FilterWidget> {
                       },
                       onSave: () {
                         context.read<CourseCubit>().toggleFavorite(
-                          courseId: "${course.id}",
-                        );
-                        log("Course saved!");
+                              courseId: "${course.id}",
+                            );
                       },
                     );
                   }
@@ -177,7 +172,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                             color: AppColors.iconError,
                             size: 40.sp,
                           ),
-                          SizedBox(height: 8.h),
+                          8.sizedH,
                           Text(
                             state.coursesMoreError ??
                                 "Failed to load more courses",
@@ -186,15 +181,11 @@ class _FilterWidgetState extends State<FilterWidget> {
                               fontSize: 14.sp,
                             ),
                           ),
-                          SizedBox(height: 10.h),
-                          CustomButtonWidget(
+                          10.sizedH,
+                          CustomButton(
                             onTap: () => _handleFetchdata,
                             title: "Retry",
-                            titleStyle: AppTextStyles.s14w500.copyWith(
-                              color: AppColors.titlePrimary,
-                            ),
                             buttonColor: AppColors.buttonPrimary,
-                            borderColor: AppColors.borderPrimary,
                           ),
                         ],
                       ),
@@ -203,7 +194,7 @@ class _FilterWidgetState extends State<FilterWidget> {
 
                   return const SizedBox.shrink();
                 },
-                separatorBuilder: (_, __) => SizedBox(height: 15.h),
+                separatorBuilder: (_, __) => 15.sizedH,
               );
 
             default:
@@ -215,17 +206,7 @@ class _FilterWidgetState extends State<FilterWidget> {
         listener: (BuildContext context, CourseState state) {
           final message = state.isFavoriteError;
           if (message != null && message.isNotEmpty) {
-            AppMessage.showFlushbar(
-              title: "Error",
-              isShowProgress: true,
-              progressColor: AppColors.iconCircle,
-              context: context,
-              message: message,
-              backgroundColor: AppColors.messageError,
-              iconData: Icons.error,
-              sizeIcon: 30,
-              iconColor: AppColors.iconWhite,
-            );
+            AppMessage.showError(context, message);
           }
         },
       ),

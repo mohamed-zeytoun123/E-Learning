@@ -1,8 +1,8 @@
-import 'package:e_learning/core/style/app_text_styles.dart' hide Colors, TextStyle;
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart' hide Colors, TextStyle;
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
 
 class CourseTitleSubTitleWidget extends StatelessWidget {
   final String title;
@@ -32,7 +32,7 @@ class CourseTitleSubTitleWidget extends StatelessWidget {
             maxLines: 1, // سماح بسطرين كحد أقصى
             overflow: TextOverflow.ellipsis, // إذا زاد، بيحط ...
           ),
-          SizedBox(height: 4.h),
+          4.sizedH,
           Text(
             subtitle,
             style: AppTextStyles.s14w400.copyWith(color: colors.textGrey),

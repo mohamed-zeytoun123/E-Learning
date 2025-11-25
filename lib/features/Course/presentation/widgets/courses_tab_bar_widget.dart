@@ -1,6 +1,6 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_cubit.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
@@ -43,17 +43,17 @@ class _CoursesTabBarWidgetState extends State<CoursesTabBarWidget>
       providers: [
         BlocProvider<CourseCubit>(
           create: (context) => CourseCubit(
-            repo: appLocator<CourceseRepository>(),
+            repo: di<CourceseRepository>(),
           )..getCourses(page: 1, pageSize: 10),
         ),
         BlocProvider<TeacherCubit>(
           create: (context) => TeacherCubit(
-            repo: appLocator<TeacherRepository>(),
+            repo: di<TeacherRepository>(),
           )..getTeachers(page: 1, pageSize: 10),
         ),
         BlocProvider<ArticleCubit>(
           create: (context) => ArticleCubit(
-            repo: appLocator<ArticleRepository>(),
+            repo: di<ArticleRepository>(),
           )..getArticles(page: 1, pageSize: 10),
         ),
       ],

@@ -1,9 +1,14 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
+import 'package:e_learning/features/chapter/data/models/quiz_details_model.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/quiz_locked_widget.dart';
@@ -45,8 +50,8 @@ class _BodyTabQuizzesWidgetState extends State<BodyTabQuizzesWidget> {
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 30.h),
                   child: const QuizLockedWidget(
-                    // remainingVideos: 5
-                  ),
+                      // remainingVideos: 5
+                      ),
                 ),
               ),
             );
@@ -66,7 +71,7 @@ class _BodyTabQuizzesWidgetState extends State<BodyTabQuizzesWidget> {
                           size: 50,
                           color: AppColors.iconError,
                         ),
-                        SizedBox(height: 16.h),
+                        16.sizedH,
                         Text(
                           state.quizDetailsError ??
                               'An error occurred while loading the quizzes 😕',
@@ -76,19 +81,15 @@ class _BodyTabQuizzesWidgetState extends State<BodyTabQuizzesWidget> {
                             color: AppColors.textGrey,
                           ),
                         ),
-                        SizedBox(height: 10.h),
-                        CustomButtonWidget(
+                        10.sizedH,
+                        CustomButton(
                           onTap: () {
                             context.read<ChapterCubit>().getQuizDetails(
-                              chapterId: widget.chapterId,
-                            );
+                                  chapterId: widget.chapterId,
+                                );
                           },
                           title: "Retry",
-                          titleStyle: AppTextStyles.s16w500.copyWith(
-                            color: AppColors.titlePrimary,
-                          ),
                           buttonColor: AppColors.buttonPrimary,
-                          borderColor: AppColors.borderPrimary,
                         ),
                       ],
                     ),

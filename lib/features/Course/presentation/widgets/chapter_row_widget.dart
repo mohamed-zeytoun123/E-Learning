@@ -1,9 +1,10 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:e_learning/features/Course/presentation/widgets/icon_circle_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -88,7 +89,7 @@ class ChapterRowWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(width: 12.w),
+                  12.sizedW,
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -101,7 +102,7 @@ class ChapterRowWidget extends StatelessWidget {
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        SizedBox(height: 4.h),
+                        4.sizedH,
                         Row(
                           spacing: 5.w,
                           children: [

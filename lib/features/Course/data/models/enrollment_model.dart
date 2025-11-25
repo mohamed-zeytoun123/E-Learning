@@ -1,26 +1,82 @@
+import 'package:e_learning/core/utils/json_converters.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'enrollment_model.g.dart';
+
+@JsonSerializable()
 class EnrollmentModel {
+  @IntConverter()
   final int id;
-  final int student;
-  final String studentName;
+  
+  @NullableIntConverter()
+  final int? student;
+  
+  @JsonKey(name: 'student_name')
+  @NullableStringConverter()
+  final String? studentName;
+  
+  @IntConverter()
   final int course;
+  
+  @JsonKey(name: 'course_title')
+  @StringConverter()
   final String courseTitle;
+  
+  @JsonKey(name: 'course_image')
+  @NullableStringConverter()
   final String? courseImage;
+  
+  @JsonKey(name: 'teacher_name')
+  @StringConverter()
   final String teacherName;
+  
+  @JsonKey(name: 'enrolled_at')
+  @StringConverter()
   final String enrolledAt;
+  
+  @StringConverter()
   final String status;
+  
+  @JsonKey(name: 'status_display')
+  @StringConverter()
   final String statusDisplay;
+  
+  @JsonKey(name: 'payment_status')
+  @StringConverter()
   final String paymentStatus;
+  
+  @JsonKey(name: 'payment_status_display')
+  @StringConverter()
   final String paymentStatusDisplay;
+  
+  @JsonKey(name: 'is_paid')
+  @BoolConverter()
   final bool isPaid;
+  
+  @JsonKey(name: 'progress_percentage')
+  @IntConverter()
   final int progressPercentage;
+  
+  @JsonKey(name: 'is_completed')
+  @BoolConverter()
   final bool isCompleted;
+  
+  @JsonKey(name: 'completed_at')
+  @NullableStringConverter()
   final String? completedAt;
-  final String originalPrice;
+  
+  @JsonKey(name: 'original_price')
+  @NullableStringConverter()
+  final String? originalPrice;
+  
+  @JsonKey(name: 'is_favorite')
+  @BoolConverter()
+  final bool isFavorite;
 
   EnrollmentModel({
     required this.id,
-    required this.student,
-    required this.studentName,
+    this.student,
+    this.studentName,
     required this.course,
     required this.courseTitle,
     this.courseImage,
@@ -34,54 +90,12 @@ class EnrollmentModel {
     required this.progressPercentage,
     required this.isCompleted,
     this.completedAt,
-    required this.originalPrice,
+    this.originalPrice,
+    required this.isFavorite,
   });
 
-  //----------------------------
-  //* From JSON
-  factory EnrollmentModel.fromJson(Map<String, dynamic> json) {
-    return EnrollmentModel(
-      id: json['id'] as int,
-      student: json['student'] as int,
-      studentName: json['student_name'] as String,
-      course: json['course'] as int,
-      courseTitle: json['course_title'] as String,
-      courseImage: json['course_image'] as String?,
-      teacherName: json['teacher_name'] as String,
-      enrolledAt: json['enrolled_at'] as String,
-      status: json['status'] as String,
-      statusDisplay: json['status_display'] as String,
-      paymentStatus: json['payment_status'] as String,
-      paymentStatusDisplay: json['payment_status_display'] as String,
-      isPaid: json['is_paid'] as bool,
-      progressPercentage: json['progress_percentage'] as int,
-      isCompleted: json['is_completed'] as bool,
-      completedAt: json['completed_at'] as String?,
-      originalPrice: json['original_price'] as String,
-    );
-  }
+  factory EnrollmentModel.fromJson(Map<String, dynamic> json) =>
+      _$EnrollmentModelFromJson(json);
 
-  //----------------------------
-  //* To JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'student': student,
-      'student_name': studentName,
-      'course': course,
-      'course_title': courseTitle,
-      'course_image': courseImage,
-      'teacher_name': teacherName,
-      'enrolled_at': enrolledAt,
-      'status': status,
-      'status_display': statusDisplay,
-      'payment_status': paymentStatus,
-      'payment_status_display': paymentStatusDisplay,
-      'is_paid': isPaid,
-      'progress_percentage': progressPercentage,
-      'is_completed': isCompleted,
-      'completed_at': completedAt,
-      'original_price': originalPrice,
-    };
-  }
+  Map<String, dynamic> toJson() => _$EnrollmentModelToJson(this);
 }

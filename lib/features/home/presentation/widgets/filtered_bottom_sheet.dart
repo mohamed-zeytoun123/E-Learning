@@ -1,8 +1,12 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_cubit.dart';
@@ -39,7 +43,7 @@ void showFilterBottomSheet(
       } else {
         return BlocProvider<CourseCubit>(
           create: (context) => CourseCubit(
-            repo: appLocator(),
+            repo: di(),
           )
             ..getUniversities()
             ..getColleges()
@@ -97,7 +101,7 @@ class _FilterBottomSheetContentState extends State<_FilterBottomSheetContent> {
         studyYear: _selectedStudyYearId,
       );
       widget.searchCubit!.updateFilters(filters);
-      
+
       // Re-search if there's an active query
       final searchQuery = widget.searchCubit!.state.searchQuery;
       if (searchQuery != null && searchQuery.trim().isNotEmpty) {
@@ -156,24 +160,24 @@ class _FilterBottomSheetContentState extends State<_FilterBottomSheetContent> {
     return BlocBuilder<CourseCubit, CourseState>(
       builder: (context, state) {
         final isForCourses = widget.courseCubit != null;
-        
+
         final isLoading =
             (state.universitiesState != ResponseStatusEnum.success &&
-                state.universitiesState != ResponseStatusEnum.failure) ||
-            (isForCourses
-                ? (state.categoriesStatus != ResponseStatusEnum.success &&
-                    state.categoriesStatus != ResponseStatusEnum.failure)
-                : (state.collegesStatus != ResponseStatusEnum.success &&
-                    state.collegesStatus != ResponseStatusEnum.failure)) ||
-            (state.studyYearsStatus != ResponseStatusEnum.success &&
-                state.studyYearsStatus != ResponseStatusEnum.failure);
+                    state.universitiesState != ResponseStatusEnum.failure) ||
+                (isForCourses
+                    ? (state.categoriesStatus != ResponseStatusEnum.success &&
+                        state.categoriesStatus != ResponseStatusEnum.failure)
+                    : (state.collegesStatus != ResponseStatusEnum.success &&
+                        state.collegesStatus != ResponseStatusEnum.failure)) ||
+                (state.studyYearsStatus != ResponseStatusEnum.success &&
+                    state.studyYearsStatus != ResponseStatusEnum.failure);
 
         final hasError =
             state.universitiesState == ResponseStatusEnum.failure ||
-            (isForCourses
-                ? state.categoriesStatus == ResponseStatusEnum.failure
-                : state.collegesStatus == ResponseStatusEnum.failure) ||
-            state.studyYearsStatus == ResponseStatusEnum.failure;
+                (isForCourses
+                    ? state.categoriesStatus == ResponseStatusEnum.failure
+                    : state.collegesStatus == ResponseStatusEnum.failure) ||
+                state.studyYearsStatus == ResponseStatusEnum.failure;
 
         if (isLoading) {
           return Container(
@@ -198,7 +202,7 @@ class _FilterBottomSheetContentState extends State<_FilterBottomSheetContent> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.error, size: 50.sp, color: AppColors.textError),
-                  SizedBox(height: 12.h),
+                  12.sizedH,
                   Text(
                     'Error loading filters',
                     textAlign: TextAlign.center,
@@ -286,8 +290,9 @@ class _FilterBottomSheetContentState extends State<_FilterBottomSheetContent> {
                             });
                           },
                         ),
-                      if (isForCourses && categories.isNotEmpty) SizedBox(height: 16),
-                      
+                      if (isForCourses && categories.isNotEmpty)
+                        SizedBox(height: 16),
+
                       // Colleges (for search only)
                       if (!isForCourses && colleges.isNotEmpty)
                         _buildFilterSection(
@@ -306,7 +311,8 @@ class _FilterBottomSheetContentState extends State<_FilterBottomSheetContent> {
                             });
                           },
                         ),
-                      if (!isForCourses && colleges.isNotEmpty) SizedBox(height: 16),
+                      if (!isForCourses && colleges.isNotEmpty)
+                        SizedBox(height: 16),
 
                       // Study Years
                       if (studyYears.isNotEmpty)

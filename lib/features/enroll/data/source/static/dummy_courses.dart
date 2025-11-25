@@ -1,5 +1,5 @@
 // Temp dummy data for Enrolled Courses
-import 'package:e_learning/features/enroll/data/models/enums/course_state_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 
 final List<Map<String, dynamic>> courses = [
   {

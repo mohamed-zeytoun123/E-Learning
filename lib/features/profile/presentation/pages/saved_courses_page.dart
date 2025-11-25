@@ -1,9 +1,10 @@
 import 'dart:developer';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/di/service_locator.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/widgets/custom_app_bar_widget.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
@@ -31,7 +32,7 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
   @override
   void initState() {
     super.initState();
-    profileCubit = ProfileCubit(appLocator<ProfileRepository>());
+    profileCubit = ProfileCubit(di<ProfileRepository>());
     profileCubit.getDataSavedCourse();
     _scrollController.addListener(_onScroll);
   }
@@ -109,15 +110,13 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
           create: (context) => profileCubit,
         ),
         BlocProvider<CourseCubit>(
-          create: (context) =>
-              CourseCubit(repo: appLocator<CourceseRepository>()),
+          create: (context) => CourseCubit(repo: di<CourceseRepository>()),
         ),
       ],
       child: Scaffold(
         appBar: CustomAppBarWidget(title: 'saved_courses'.tr(), showBack: true),
         body: Padding(
-          padding:
-              EdgeInsetsGeometry.symmetric(horizontal: 16.w, vertical: 32.h),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 32.h),
           child: BlocBuilder<ProfileCubit, ProfileState>(
             bloc: profileCubit,
             buildWhen: (previous, current) =>
@@ -138,14 +137,14 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
                           size: 64.sp,
                           color: context.colors.iconRed,
                         ),
-                        SizedBox(height: 16.h),
+                        16.sizedH,
                         Text(
                           'Error loading saved courses',
                           style: AppTextStyles.s16w500.copyWith(
                             color: context.colors.textPrimary,
                           ),
                         ),
-                        SizedBox(height: 8.h),
+                        8.sizedH,
                         Text(
                           state.errorFetchdataSavedcourses!.message,
                           style: AppTextStyles.s14w400.copyWith(
@@ -162,9 +161,9 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
               return ListView.separated(
                 controller: _scrollController,
                 physics: const BouncingScrollPhysics(),
-                itemCount: state.dataSavedcourses.data.length,
+                itemCount: state.dataSavedcourses.results.length,
                 itemBuilder: (context, index) {
-                  var item = state.dataSavedcourses.data[index];
+                  var item = state.dataSavedcourses.results[index];
                   // log('😒 ${state.dataSavedcourses}------------------');
                   return CourseInfoCardWidget(
                     onTap: () {
@@ -189,7 +188,7 @@ class _SavedCoursesPageState extends State<SavedCoursesPage> {
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(height: 22.h);
+                  return 22.sizedH;
                 },
               );
             },

@@ -1,13 +1,13 @@
-import 'dart:developer';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/input_forms/input_review_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/input_review_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/rating_stars_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:go_router/go_router.dart';
 
 class ReviewBottomSheetWidget extends StatefulWidget {
@@ -30,12 +30,12 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
+    final colors = context.colors;
     return Container(
       height: 346.h,
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
       decoration: BoxDecoration(
-        color: colors.background ,
+        color: colors.background,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.r),
           topRight: Radius.circular(24.r),
@@ -55,66 +55,55 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
               ),
             ),
           ),
-          SizedBox(height: 10.h),
+          10.sizedH,
 
           // العنوان
           Center(
             child: Text(
-              AppLocalizations.of(context)?.translate("Rate_Your_Experience") ??
-                  "Rate Your Experience!",
+              "Rate_Your_Experience".tr(),
               style: AppTextStyles.s16w600.copyWith(color: colors.textPrimary),
             ),
           ),
-          SizedBox(height: 5.h),
+          5.sizedH,
 
           // النجوم
           RatingStarsWidget(
             initialRating: selectedRating,
             onRatingSelected: (value) {
-              log('User selected rating: $value');
               setState(() => selectedRating = value);
               widget.onRatingChanged?.call(value);
             },
           ),
 
-          SizedBox(height: 10.h),
+          10.sizedH,
 
           // عنوان النص
           Text(
-            AppLocalizations.of(context)?.translate("Write_Your_Review") ??
-                "Write Your Review",
+            "Write_Your_Review".tr(),
             style: AppTextStyles.s16w600.copyWith(color: colors.textPrimary),
           ),
-          SizedBox(height: 10.h),
+          10.sizedH,
 
           // حقل الكتابة
           InputReviewWidget(
             controller: widget.reviewController,
-            hint:
-                AppLocalizations.of(context)?.translate("yourOpinion") ??
-                "Your Opinion",
+            hint: "yourOpinion".tr(),
             hintKey: "yourOpinion",
           ),
 
-          SizedBox(height: 20.h),
+          20.sizedH,
 
           // زر الإرسال
           Center(
-            child: CustomButtonWidget(
+            child: CustomButton(
               onTap: () {
                 context.pop({
                   'rating': selectedRating,
                   'review': widget.reviewController.text.trim(),
                 });
               },
-              title:
-                  AppLocalizations.of(context)?.translate("Send_Review") ??
-                  "Send Review",
-              titleStyle: AppTextStyles.s16w500.copyWith(
-                color: AppColors.titlePrimary,
-              ),
+              title: "Send_Review".tr(),
               buttonColor: colors.textBlue,
-              borderColor: colors.textBlue,
             ),
           ),
         ],

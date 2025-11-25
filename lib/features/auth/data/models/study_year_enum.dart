@@ -1,5 +1,4 @@
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 enum SchoolYear { first, second, third, fourth, fifth, sixth, seventh }
 
@@ -23,29 +22,22 @@ extension SchoolYearExtension on SchoolYear {
     }
   }
 
-  String displayName(BuildContext context) {
+  String displayName() {
     switch (this) {
       case SchoolYear.first:
-        return AppLocalizations.of(context)?.translate("first_year") ??
-            "First Year";
+        return "first_year".tr();
       case SchoolYear.second:
-        return AppLocalizations.of(context)?.translate("second_year") ??
-            "Second Year";
+        return "second_year".tr();
       case SchoolYear.third:
-        return AppLocalizations.of(context)?.translate("third_year") ??
-            "Third Year";
+        return "third_year".tr();
       case SchoolYear.fourth:
-        return AppLocalizations.of(context)?.translate("fourth_year") ??
-            "Fourth Year";
+        return "fourth_year".tr();
       case SchoolYear.fifth:
-        return AppLocalizations.of(context)?.translate("fifth_year") ??
-            "Fifth Year";
+        return "fifth_year".tr();
       case SchoolYear.sixth:
-        return AppLocalizations.of(context)?.translate("sixth_year") ??
-            "Sixth Year";
+        return "sixth_year".tr();
       case SchoolYear.seventh:
-        return AppLocalizations.of(context)?.translate("seventh_year") ??
-            "Seventh Year";
+        return "seventh_year".tr();
     }
   }
 }

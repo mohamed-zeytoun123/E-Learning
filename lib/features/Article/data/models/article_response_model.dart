@@ -1,12 +1,33 @@
-import 'package:e_learning/features/Article/data/models/article_model/article_model.dart';
+import 'package:e_learning/core/utils/json_converters.dart';
+import 'package:e_learning/features/Article/data/models/article_model.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:netwoek/mapper/base_model.dart';
 
-class ArticleResponseModel {
+part 'article_response_model.g.dart';
+
+@JsonSerializable()
+class ArticleResponseModel extends Model {
+  @IntConverter()
   final int count;
+
+  @NullableStringConverter()
   final String? next;
+
+  @NullableStringConverter()
   final String? previous;
+
+  @JsonKey(name: 'total_pages')
+  @IntConverter()
   final int totalPages;
+
+  @JsonKey(name: 'current_page')
+  @IntConverter()
   final int currentPage;
+
+  @JsonKey(name: 'page_size')
+  @IntConverter()
   final int pageSize;
+
   final List<ArticleModel> results;
 
   ArticleResponseModel({
@@ -19,40 +40,19 @@ class ArticleResponseModel {
     required this.results,
   });
 
-  factory ArticleResponseModel.fromMap(Map<String, dynamic> map) {
-    final List<ArticleModel> resultsList = [];
-    if (map['results'] != null && map['results'] is List) {
-      for (var article in map['results']) {
-        if (article is Map<String, dynamic>) {
-          resultsList.add(ArticleModel.fromMap(article));
-        }
-      }
-    }
+  factory ArticleResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$ArticleResponseModelFromJson(json);
 
-    return ArticleResponseModel(
-      count: map['count'] ?? 0,
-      next: map['next'] as String?,
-      previous: map['previous'] as String?,
-      totalPages: map['total_pages'] ?? 1,
-      currentPage: map['current_page'] ?? 1,
-      pageSize: map['page_size'] ?? 10,
-      results: resultsList,
-    );
-  }
+  Map<String, dynamic> toJson() => _$ArticleResponseModelToJson(this);
 
-  Map<String, dynamic> toMap() {
-    return {
-      'count': count,
-      'next': next,
-      'previous': previous,
-      'total_pages': totalPages,
-      'current_page': currentPage,
-      'page_size': pageSize,
-      'results': results.map((article) => article.toMap()).toList(),
-    };
+  // Keep fromMap and toMap for backward compatibility
+  factory ArticleResponseModel.fromMap(Map<String, dynamic> map) =>
+      ArticleResponseModel.fromJson(map);
+
+  Map<String, dynamic> toMap() => toJson();
+
+  @override
+  Model fromJson(Map<String, dynamic> json) {
+    return ArticleResponseModel.fromJson(json);
   }
 }
-
-
-
-

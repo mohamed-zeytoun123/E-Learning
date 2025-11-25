@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
+import 'package:netwoek/failures/failures.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/Course/data/models/advertisement_response_model.dart';
 import 'package:e_learning/features/Course/data/source/local/advertisement_local_data_source.dart';
@@ -28,12 +28,9 @@ class AdvertisementRepositoryImpl implements AdvertisementRepository {
 
       return result.fold(
         (failure) {
-          print('❌ Repository: Remote call failed - ${failure.message}');
           return Left(failure);
         },
         (advertisementResponse) async {
-          print(
-              '📦 Repository: Received ${advertisementResponse.results.length} advertisements from remote');
           if (advertisementResponse.results.isNotEmpty) {
             await local.saveAdvertisementsInCache(
                 advertisementResponse.results);
@@ -45,8 +42,6 @@ class AdvertisementRepositoryImpl implements AdvertisementRepository {
       final cachedAdvertisements = local.getAdvertisementsInCache();
 
       if (cachedAdvertisements.isNotEmpty) {
-        print(
-            '📦 Repository: Loaded ${cachedAdvertisements.length} advertisements from cache');
         // Create a response model from cached data
         final cachedResponse = AdvertisementResponseModel(
           count: cachedAdvertisements.length,
@@ -57,8 +52,7 @@ class AdvertisementRepositoryImpl implements AdvertisementRepository {
         );
         return Right(cachedResponse);
       } else {
-        print('❌ Repository: No cached advertisements available');
-        return Left(FailureNoConnection());
+        return Left(Failure(message: 'No internet connection'));
       }
     }
   }

@@ -1,15 +1,13 @@
-import 'dart:developer';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/model/enums/app_state_enum.dart';
-import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/chapter_row_widget.dart';
@@ -50,13 +48,11 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
 
     // إذا عم يتم تحميل بيانات إضافية حالياً، ما نرسل طلب جديد
     if (state.loadchaptersMoreStatus == ResponseStatusEnum.loading) {
-      log("Already loading more chapters, skipping request.");
       return;
     }
 
     // إذا لا يوجد فصول أصلاً، نحمل الصفحة الأولى
     if (state.chapters == null || state.chapters!.chapters.isEmpty) {
-      log("Chapters empty, fetching first page.");
       cubit.getChapters(courseId: "${widget.courseId}", reset: true, page: 1);
       return;
     }
@@ -65,26 +61,20 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
     if (!(state.chapters?.hasNextPage ?? false)) return;
 
     final nextPage = page + 1;
-    log("Fetching more chapters, page: $nextPage");
 
     cubit
         .getChapters(
-          courseId: "${widget.courseId}",
-          reset: false,
-          page: nextPage,
-        )
+      courseId: "${widget.courseId}",
+      reset: false,
+      page: nextPage,
+    )
         .then((_) {
-          if (cubit.state.loadchaptersMoreStatus !=
-              ResponseStatusEnum.failure) {
-            page = nextPage; // تحديث رقم الصفحة بعد نجاح التحميل
-            log("Page $nextPage loaded successfully.");
-          } else {
-            log("Failed to load page $nextPage.");
-          }
-        })
-        .catchError((error) {
-          log("Fetch chapters failed: $error");
-        });
+      if (cubit.state.loadchaptersMoreStatus != ResponseStatusEnum.failure) {
+        page = nextPage; // تحديث رقم الصفحة بعد نجاح التحميل
+      }
+    }).catchError((error) {
+      // Error handled silently
+    });
   }
 
   @override
@@ -99,10 +89,10 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
 
     // تحميل الصفحة الأولى تلقائي عند init
     context.read<CourseCubit>().getChapters(
-      courseId: "${widget.courseId}",
-      reset: true,
-      page: 1,
-    );
+          courseId: "${widget.courseId}",
+          reset: true,
+          page: 1,
+        );
   }
 
   @override
@@ -142,7 +132,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                               color: AppColors.iconError,
                               size: 40.sp,
                             ),
-                            SizedBox(height: 8.h),
+                            8.sizedH,
                             Text(
                               state.chaptersError ?? "Something went wrong",
                               textAlign: TextAlign.center,
@@ -150,20 +140,16 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                                 color: AppColors.textError,
                               ),
                             ),
-                            SizedBox(height: 30.h),
-                            CustomButtonWidget(
+                            30.sizedH,
+                            CustomButton(
                               title: "Retry",
-                              titleStyle: AppTextStyles.s18w600.copyWith(
-                                color: AppColors.titlePrimary,
-                              ),
                               buttonColor: AppColors.buttonPrimary,
-                              borderColor: AppColors.borderPrimary,
                               onTap: () {
                                 context.read<CourseCubit>().getChapters(
-                                  courseId: "${widget.courseId}",
-                                  reset: true,
-                                  page: 1,
-                                );
+                                      courseId: "${widget.courseId}",
+                                      reset: true,
+                                      page: 1,
+                                    );
                               },
                             ),
                           ],
@@ -187,7 +173,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                                 size: 100.r,
                                 color: AppColors.iconOrange,
                               ),
-                              SizedBox(height: 20.h),
+                              20.sizedH,
                               Text(
                                 "No Chapters",
                                 textAlign: TextAlign.center,
@@ -195,7 +181,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                                   color: AppColors.textBlack,
                                 ),
                               ),
-                              SizedBox(height: 10.h),
+                              10.sizedH,
                               Text(
                                 "This course currently has no chapters available.",
                                 textAlign: TextAlign.center,
@@ -203,20 +189,16 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                                   color: AppColors.textGrey,
                                 ),
                               ),
-                              SizedBox(height: 30.h),
-                              CustomButtonWidget(
+                              30.sizedH,
+                              CustomButton(
                                 title: "Retry",
-                                titleStyle: AppTextStyles.s18w600.copyWith(
-                                  color: AppColors.titlePrimary,
-                                ),
                                 buttonColor: AppColors.buttonPrimary,
-                                borderColor: AppColors.borderPrimary,
                                 onTap: () {
                                   context.read<CourseCubit>().getChapters(
-                                    courseId: "${widget.courseId}",
-                                    reset: true,
-                                    page: 1,
-                                  );
+                                        courseId: "${widget.courseId}",
+                                        reset: true,
+                                        page: 1,
+                                      );
                                 },
                               ),
                             ],
@@ -231,9 +213,8 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                     children: [
                       Text(
                         "Chapters",
-                        style: AppTextStyles.s18w600.copyWith(
-                          color: context.colors.textPrimary
-                        ),
+                        style: AppTextStyles.s18w600
+                            .copyWith(color: context.colors.textPrimary),
                       ),
                       Expanded(
                         child: ListView.separated(
@@ -247,9 +228,8 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                               if (appState == AppStateEnum.guest) {
                                 isChapterEnabled = false;
                               } else if (appState == AppStateEnum.user) {
-                                isChapterEnabled = widget.isActive
-                                    ? true
-                                    : index < 1;
+                                isChapterEnabled =
+                                    widget.isActive ? true : index < 1;
                               }
 
                               return ChapterRowWidget(
@@ -262,13 +242,12 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                                     : ChapterStateEnum.locked,
                                 onTap: isChapterEnabled
                                     ? () {
-                                        log("Chapter $index pressed");
                                         context.push(
                                           RouteNames.chapterPage,
                                           extra: {
                                             "isActive": widget.isActive,
-                                            "courseSlug": widget.courseId
-                                                .toString(),
+                                            "courseSlug":
+                                                widget.courseId.toString(),
                                             "chapterId": chapters[index].id,
                                             "courseTitle": widget.courseTitle,
                                             "courseImage": widget.courseImage,
@@ -300,7 +279,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                                         color: AppColors.iconError,
                                         size: 40.sp,
                                       ),
-                                      SizedBox(height: 8.h),
+                                      8.sizedH,
                                       Text(
                                         state.chaptersMoreError ??
                                             "Failed to load more chapters",
@@ -309,16 +288,11 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                                           fontSize: 14.sp,
                                         ),
                                       ),
-                                      SizedBox(height: 10.h),
-                                      CustomButtonWidget(
+                                      10.sizedH,
+                                      CustomButton(
                                         onTap: _handleFetchChapters,
                                         title: "Retry",
-                                        titleStyle: AppTextStyles.s14w500
-                                            .copyWith(
-                                              color: AppColors.titlePrimary,
-                                            ),
                                         buttonColor: AppColors.buttonPrimary,
-                                        borderColor: AppColors.borderPrimary,
                                       ),
                                     ],
                                   ),

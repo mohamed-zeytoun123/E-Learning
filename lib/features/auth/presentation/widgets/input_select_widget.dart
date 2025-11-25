@@ -1,8 +1,12 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:e_learning/core/style/app_text_styles.dart' hide Colors;
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -111,8 +115,8 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
                         },
                       );
                     }).toList(),
-                    SizedBox(height: 10.h),
-                    CustomButtonWidget(
+                    10.sizedH,
+                    CustomButton(
                       onTap: () {
                         setState(() {
                           selectedValue = tempSelected;
@@ -122,19 +126,10 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
                         if (widget.onChanged != null) {
                           widget.onChanged!(selectedValue);
                         }
-                        Navigator.of(
-                          sheetContext,
-                        ).pop(); // ⚡ استخدم context الخاص بالبوتوم شيت
+                        Navigator.of(sheetContext).pop();
                       },
-                      title:
-                          AppLocalizations.of(context)?.translate("Done") ??
-                          "Done",
-                      titleStyle: AppTextStyles.s16w500.copyWith(
-                        fontFamily: AppTextStyles.fontGeist,
-                        color: AppColors.titlePrimary,
-                      ),
+                      title: "Done".tr(),
                       buttonColor: AppColors.buttonPrimary,
-                      borderColor: AppColors.borderPrimary,
                     ),
                   ],
                 ),

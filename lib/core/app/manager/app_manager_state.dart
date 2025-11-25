@@ -1,4 +1,4 @@
-import 'package:e_learning/core/model/enums/app_state_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:flutter/material.dart';
 
 class AppManagerState {

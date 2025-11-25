@@ -1,7 +1,8 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/price_text_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
@@ -101,7 +102,7 @@ class CourseInfoCardWidget extends StatelessWidget {
               ],
             ),
 
-            SizedBox(height: 8.h),
+            8.sizedH,
 
             //? Title & Subtitle
             isLoading

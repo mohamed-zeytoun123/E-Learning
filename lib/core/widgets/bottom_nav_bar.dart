@@ -1,5 +1,5 @@
-import 'package:e_learning/constant/assets.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/asset/app_images_svg.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,52 +19,52 @@ class CustomBottomNavigationBar extends StatelessWidget {
     final bottomNavItems = [
       BottomNavigationBarItem(
         activeIcon: SvgPicture.asset(
-          Assets.resourceImagesVectorsHome,
+          AppImagesSvg.home,
           colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
         ),
         label: 'home'.tr(),
         icon: SvgPicture.asset(
-          Assets.resourceImagesVectorsHome,
+          AppImagesSvg.home,
           colorFilter:
               const ColorFilter.mode(AppColors.titleGrey, BlendMode.srcIn),
         ),
       ),
       BottomNavigationBarItem(
         activeIcon: SvgPicture.asset(
-          Assets.resourceImagesVectorsSearch1,
+          AppImagesSvg.search1,
           colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
         ),
         label: 'search'.tr(),
-        icon: SvgPicture.asset(Assets.resourceImagesVectorsSearch1),
+        icon: SvgPicture.asset(AppImagesSvg.search1),
       ),
       BottomNavigationBarItem(
         activeIcon: SvgPicture.asset(
-          Assets.resourceImagesVectorsClipboardList,
+          AppImagesSvg.clipboardList,
           colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
         ),
         label: 'courses'.tr(),
         icon: SvgPicture.asset(
-          Assets.resourceImagesVectorsClipboardList,
+          AppImagesSvg.clipboardList,
         ),
       ),
       BottomNavigationBarItem(
         activeIcon: SvgPicture.asset(
-          Assets.resourceImagesVectorsClipboardList,
+          AppImagesSvg.clipboardList,
           colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
         ),
         label: 'enrolls'.tr(),
         icon: SvgPicture.asset(
-          Assets.resourceImagesVectorsClipboardList,
+          AppImagesSvg.clipboardList,
         ),
       ),
       BottomNavigationBarItem(
         activeIcon: SvgPicture.asset(
-          Assets.resourceImagesVectorsUserRound,
+          AppImagesSvg.userRound,
           colorFilter: ColorFilter.mode(Colors.black, BlendMode.srcIn),
         ),
         label: 'profile'.tr(),
         icon: SvgPicture.asset(
-          Assets.resourceImagesVectorsUserRound,
+          AppImagesSvg.userRound,
         ),
       ),
     ];

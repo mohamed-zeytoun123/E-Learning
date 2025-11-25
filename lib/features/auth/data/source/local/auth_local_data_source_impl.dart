@@ -1,4 +1,4 @@
-import 'package:e_learning/core/model/enums/app_role_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/services/storage/secure_storage/secure_storage_service.dart';
 import 'package:e_learning/core/services/storage/shared_preferances/shared_preferences_service.dart';
 import 'package:e_learning/core/services/token/token_service.dart';

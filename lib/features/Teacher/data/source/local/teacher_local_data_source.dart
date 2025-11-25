@@ -1,4 +1,4 @@
-import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
+import 'package:e_learning/features/Teacher/data/models/teacher_model.dart';
 
 abstract class TeacherLocalDataSource {
   //?----------------------------------------------------

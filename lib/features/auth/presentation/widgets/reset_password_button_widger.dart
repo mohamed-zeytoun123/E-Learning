@@ -1,7 +1,7 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ResetPasswordButtonWidget extends StatelessWidget {
@@ -24,17 +24,9 @@ class ResetPasswordButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomButtonWidget(
-      title: isLoading
-          ? (AppLocalizations.of(context)?.translate("Loading") ?? "Loading...")
-          : (AppLocalizations.of(context)?.translate("Reset_Password") ??
-                "Reset Password"),
-      titleStyle: AppTextStyles.s16w500.copyWith(
-        fontFamily: AppTextStyles.fontGeist,
-        color: textColor ?? AppColors.titleBlack,
-      ),
+    return CustomButton(
+      title: isLoading ? "Loading".tr() : "Reset_Password".tr(),
       buttonColor: buttonColor ?? AppColors.buttonSecondary,
-      borderColor: borderColor ?? AppColors.borderSecondary,
       onTap: isLoading ? null : onResetPassword,
     );
   }

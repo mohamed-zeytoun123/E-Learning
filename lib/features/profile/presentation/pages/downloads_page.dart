@@ -1,18 +1,12 @@
-import 'dart:io';
-import 'dart:developer';
-
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/core/widgets/message/app_message.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/download_item.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/widgets/custom_app_bar_widget.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
+import 'package:e_learning/core/widgets/app_message.dart';
+import 'package:e_learning/features/chapter/data/models/download_item.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
-import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
-import 'package:e_learning/features/chapter/presentation/widgets/video_row_widget.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,15 +29,7 @@ class DownloadsPage extends StatelessWidget {
             }
 
             if (snapshot.hasError) {
-              AppMessage.showFlushbar(
-                context: context,
-                title: "Error",
-                message: "Failed to load cached videos",
-                backgroundColor: AppColors.messageError,
-                iconData: Icons.error,
-                iconColor: AppColors.iconWhite,
-                isShowProgress: true,
-              );
+              AppMessage.showError(context, "Failed to load cached videos");
               return const Center(child: Text("Failed to load cached videos"));
             }
 
@@ -58,7 +44,7 @@ class DownloadsPage extends StatelessWidget {
                       size: 80.sp,
                       color: AppColors.iconGrey,
                     ),
-                    SizedBox(height: 20.h),
+                    20.sizedH,
                     Text(
                       "No downloaded videos yet",
                       style: TextStyle(
@@ -67,7 +53,7 @@ class DownloadsPage extends StatelessWidget {
                         color: AppColors.textGrey,
                       ),
                     ),
-                    SizedBox(height: 10.h),
+                    10.sizedH,
                     Text(
                       "Download videos from chapters to view them offline",
                       textAlign: TextAlign.center,
@@ -76,14 +62,10 @@ class DownloadsPage extends StatelessWidget {
                         color: AppColors.textGrey.withOpacity(0.7),
                       ),
                     ),
-                    SizedBox(height: 30.h),
-                    CustomButtonWidget(
+                    30.sizedH,
+                    CustomButton(
                       title: "Back to Learning",
-                      titleStyle: AppTextStyles.s14w600.copyWith(
-                        color: AppColors.titlePrimary,
-                      ),
                       buttonColor: AppColors.buttonPrimary,
-                      borderColor: AppColors.buttonPrimary,
                       onTap: () => context.pop(),
                     ),
                   ],
@@ -104,7 +86,7 @@ class DownloadsPage extends StatelessWidget {
                       color: AppColors.textBlack,
                     ),
                   ),
-                  SizedBox(height: 16.h),
+                  16.sizedH,
                   Expanded(
                     child: ListView.separated(
                       physics: const BouncingScrollPhysics(),
@@ -168,21 +150,14 @@ class DownloadsPage extends StatelessWidget {
                             onTap: () async {
                               final cubit = context.read<ChapterCubit>();
                               try {
-                                final videoFile = await cubit
-                                    .decryptVideoFromCache(
-                                      download.videoId,
-                                      download.fileName,
-                                    );
+                                final videoFile =
+                                    await cubit.decryptVideoFromCache(
+                                  download.videoId,
+                                  download.fileName,
+                                );
                                 if (videoFile == null) {
-                                  AppMessage.showFlushbar(
-                                    context: context,
-                                    title: "Error",
-                                    message: "Video file not found",
-                                    backgroundColor: AppColors.messageError,
-                                    iconData: Icons.error,
-                                    iconColor: AppColors.iconWhite,
-                                    isShowProgress: true,
-                                  );
+                                  AppMessage.showError(
+                                      context, "Video file not found");
                                   return;
                                 }
                                 context.push(
@@ -195,22 +170,15 @@ class DownloadsPage extends StatelessWidget {
                                 );
                               } catch (e) {
                                 debugPrint("Failed to decrypt video: $e");
-                                AppMessage.showFlushbar(
-                                  context: context,
-                                  title: "Error",
-                                  message: "Video file not found or corrupted",
-                                  backgroundColor: AppColors.messageError,
-                                  iconData: Icons.error,
-                                  iconColor: AppColors.iconWhite,
-                                  isShowProgress: true,
-                                );
+                                AppMessage.showError(context,
+                                    "Video file not found or corrupted");
                               }
                             },
                           ),
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) =>
-                          SizedBox(height: 12.h),
+                          12.sizedH,
                     ),
                   ),
                 ],

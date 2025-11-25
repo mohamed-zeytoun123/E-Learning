@@ -1,9 +1,25 @@
-class AdvertisementModel {
-  final int id;
-  final String imageUrl;
-  final bool isCurrentlyActive;
-  final DateTime createdAt;
+import 'package:e_learning/core/utils/json_converters.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'advertisment_model.g.dart';
+
+@JsonSerializable()
+class AdvertisementModel {
+  @IntConverter()
+  final int id;
+  
+  @StringConverter()
+  @JsonKey(name: 'image_url')
+  final String imageUrl;
+  
+  @BoolConverter()
+  @JsonKey(name: 'is_currently_active')
+  final bool isCurrentlyActive;
+  
+  @DateTimeConverter()
+  @JsonKey(name: 'created_at')
+  final DateTime createdAt;
+  
   AdvertisementModel({
     required this.id,
     required this.imageUrl,
@@ -25,24 +41,15 @@ class AdvertisementModel {
     );
   }
 
-  factory AdvertisementModel.fromMap(Map<String, dynamic> map) {
-    return AdvertisementModel(
-      id: map['id'] ?? 0,
-      imageUrl: map['image_url'] ?? '',
-      isCurrentlyActive: map['is_currently_active'] ?? false,
-      createdAt: map['created_at'] != null
-          ? DateTime.parse(map['created_at'])
-          : DateTime.now(),
-    );
-  }
+  factory AdvertisementModel.fromJson(Map<String, dynamic> json) =>
+      _$AdvertisementModelFromJson(json);
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'image_url': imageUrl,
-      'is_currently_active': isCurrentlyActive,
-      'created_at': createdAt.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toJson() => _$AdvertisementModelToJson(this);
+
+  // Keep fromMap and toMap for backward compatibility
+  factory AdvertisementModel.fromMap(Map<String, dynamic> map) =>
+      AdvertisementModel.fromJson(map);
+
+  Map<String, dynamic> toMap() => toJson();
 }
 

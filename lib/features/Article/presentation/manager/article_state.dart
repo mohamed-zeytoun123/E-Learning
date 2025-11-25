@@ -1,5 +1,5 @@
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/features/Article/data/models/article_model/article_model.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/features/Article/data/models/article_model.dart';
 
 class ArticleState {
   //?---------------------------------------------------------------

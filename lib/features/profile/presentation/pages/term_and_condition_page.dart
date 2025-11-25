@@ -1,14 +1,13 @@
 import 'dart:developer';
 
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_lorem/flutter_lorem.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class TermsAndConditionsPage extends StatefulWidget {
@@ -79,14 +78,14 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
                               size: 64.sp,
                               color: context.colors.iconRed,
                             ),
-                            SizedBox(height: 16.h),
+                            16.sizedH,
                             Text(
                               'Error loading Term & conditions',
                               style: AppTextStyles.s16w500.copyWith(
                                 color: context.colors.textPrimary,
                               ),
                             ),
-                            SizedBox(height: 8.h),
+                            8.sizedH,
                             Text(
                               state.errorFetchTermCondition!.message,
                               style: AppTextStyles.s14w400.copyWith(
@@ -149,7 +148,7 @@ class privacyPolicySectionWidget extends StatelessWidget {
             fontSize: 16,
           ),
         ),
-        SizedBox(height: 8.h),
+        8.sizedH,
         Text(
           text,
           style: TextStyle(
@@ -158,7 +157,7 @@ class privacyPolicySectionWidget extends StatelessWidget {
             fontSize: 14,
           ),
         ),
-        SizedBox(height: 24.h),
+        24.sizedH,
       ],
     );
   }

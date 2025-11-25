@@ -23,7 +23,7 @@
 [31m-      resizeToAvoidBottomInset: false,[m
 [31m-      appBar: CustomSearchAppbar(),[m
 [31m-      body: Padding([m
-[31m-        padding: AppPadding.appPadding,[m
+[31m-        padding: AppPadding.defaultScreen,[m
 [31m-        child: SingleChildScrollView([m
 [31m-          child: Column([m
 [31m-            crossAxisAlignment: CrossAxisAlignment.start,[m

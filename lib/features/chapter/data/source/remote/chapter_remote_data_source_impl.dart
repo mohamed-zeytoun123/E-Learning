@@ -1,21 +1,22 @@
-import 'dart:developer';
 import 'dart:typed_data';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/network/api_general.dart';
-import 'package:e_learning/core/network/api_request.dart';
-import 'package:e_learning/core/network/api_response.dart';
-import 'package:e_learning/core/network/app_url.dart';
-import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/core/api/api_parameters.dart';
+import 'package:e_learning/core/api/api_urls.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:netwoek/network.dart';
+import 'package:netwoek/network/api/api_request.dart';
+import 'package:netwoek/network/api/api_response.dart';
+import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/video_pagination_model.dart';
+import 'package:e_learning/features/chapter/data/models/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/submit_completed_model.dart';
+import 'package:e_learning/core/model/paginated_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_model.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -34,6 +35,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.getChapterById(courseSlug, chapterId.toString()),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
@@ -44,23 +46,25 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           final chapter = ChapterDetailsModel.fromMap(data);
           return Right(chapter);
         } else {
-          return Left(FailureServer());
+          return Left(Failure(message: 'Server error'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
+        return Left(Failure.fromException(exception));
       }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -73,6 +77,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.getChapterAttachments(chapterId),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
@@ -80,30 +85,32 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
-          final attachments = data
+        if (data is List<dynamic>) {
+          final attachments = (data as List<dynamic>)
               .map((e) => AttachmentModel.fromMap(e as Map<String, dynamic>))
               .toList();
 
           return Right(attachments);
         } else {
-          return Left(FailureServer());
+          return Left(Failure(message: 'Server error'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
+        return Left(Failure.fromException(exception));
       }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -116,18 +123,17 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.getQuizByChapter("$chapterId"),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
-
-      log("QUIZ RESPONSE: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = response.body;
 
         if (data is Map<String, dynamic> && data.containsKey("error")) {
           return Left(
-            Failure(message: data["error"].toString(), statusCode: 404),
+            Failure(message: data["error"].toString(), errorCode: 404),
           );
         }
 
@@ -136,22 +142,24 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           return Right(quiz);
         }
 
-        return Left(FailureServer());
+        return Left(Failure(message: 'Server error'));
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
+        return Left(Failure.fromException(exception));
       }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -162,11 +170,12 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     required int quizId,
   }) async {
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.startQuiz(quizId));
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.startQuiz(quizId),
+        headers: ApiRequestParameters.authHeaders,
+      );
 
       final ApiResponse response = await api.post(request);
-
-      log("START QUIZ RESPONSE: ${response.body}");
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         final data = response.body;
@@ -174,23 +183,25 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           final quiz = StartQuizModel.fromJson(data);
           return Right(quiz);
         } else {
-          return Left(FailureServer());
+          return Left(Failure(message: 'Server error'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['error'] != null)
+            ? body['error'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['error']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
+        return Left(Failure.fromException(exception));
       }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -209,11 +220,10 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           "question_id": questionId,
           "selected_choice_id": selectedChoiceId,
         },
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.post(request);
-
-      log("SUBMIT QUIZ ANSWER RESPONSE: ${response.body}");
 
       final data = response.body;
 
@@ -223,7 +233,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
             return Left(
               Failure(
                 message: data["error"].toString(),
-                statusCode: response.statusCode,
+                errorCode: response.statusCode,
               ),
             );
           } else {
@@ -231,28 +241,26 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
             return Right(answer);
           }
         } else {
-          return Left(FailureServer());
+          return Left(Failure(message: 'Server error'));
         }
       } else {
         if (data is Map<String, dynamic> && data.containsKey("error")) {
           return Left(
             Failure(
               message: data["error"].toString(),
-              statusCode: response.statusCode,
+              errorCode: response.statusCode,
             ),
           );
         }
         return Left(
-          Failure(message: "Unknown error", statusCode: response.statusCode),
+          Failure(message: "Unknown error", errorCode: response.statusCode),
         );
       }
     } catch (exception) {
-      log(exception.toString());
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
+        return Left(Failure.fromException(exception));
       }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -265,11 +273,10 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.submitCompletedQuiz(attemptId),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.post(request);
-
-      log("SUBMIT COMPLETED QUIZ RESPONSE: ${response.body}");
 
       final data = response.body;
 
@@ -279,7 +286,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
             return Left(
               Failure(
                 message: data["error"].toString(),
-                statusCode: response.statusCode,
+                errorCode: response.statusCode,
               ),
             );
           }
@@ -287,7 +294,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           final submit = SubmitCompletedModel.fromJson(data);
           return Right(submit);
         } else {
-          return Left(FailureServer());
+          return Left(Failure(message: 'Server error'));
         }
       }
 
@@ -295,36 +302,33 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         return Left(
           Failure(
             message: data["error"].toString(),
-            statusCode: response.statusCode,
+            errorCode: response.statusCode,
           ),
         );
       }
 
       return Left(
-        Failure(message: "Unknown error", statusCode: response.statusCode),
+        Failure(message: "Unknown error", errorCode: response.statusCode),
       );
     } catch (exception) {
-      log(exception.toString());
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
+        return Left(Failure.fromException(exception));
       }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
   //?----------------------------------------------------
   //* Get Videos by Chapter ID (pagination)
   @override
-  Future<Either<Failure, VideoPaginationModel>> getVideosByChapterRemote({
+  Future<Either<Failure, PaginationModel<VideoModel>>> getVideosByChapterRemote({
     required int chapterId,
     int page = 1,
   }) async {
     try {
-      log('Fetching videos for chapterId=$chapterId, page=$page');
-
       final ApiRequest request = ApiRequest(
         url: AppUrls.getVideos(chapterId: chapterId, page: page),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
@@ -333,26 +337,28 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         final data = response.body;
 
         if (data is Map<String, dynamic> && data['results'] is List) {
-          final paginatedVideos = VideoPaginationModel.fromMap(data);
+          final paginatedVideos = PaginationModel<VideoModel>.fromJson(data, (json) => VideoModel.fromJson(json as Map<String, dynamic>));
           return Right(paginatedVideos);
         } else {
           return Left(Failure(message: 'Invalid data format from server'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
+        return Left(Failure.fromException(exception));
       }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -365,11 +371,10 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.getSecureVideoUrl(videoId),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
-
-      log("SECURE VIDEO RESPONSE: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = response.body;
@@ -379,23 +384,25 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           final video = VideoStreamModel.fromJson(data);
           return Right(video);
         } else {
-          return Left(FailureServer());
+          return Left(Failure(message: 'Server error'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
+        return Left(Failure.fromException(exception));
       }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -408,8 +415,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.downloadVideo(videoId),
-        // مهم: لأنو الفيديو بيرجع binary
-        responseType: ResponseType.bytes,
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
@@ -418,26 +424,28 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         final data = response.body;
 
         if (data is Uint8List) {
-          return Right(data);
+          return Right(data as Uint8List);
         }
 
         if (data is List<int>) {
-          return Right(Uint8List.fromList(data));
+          return Right(Uint8List.fromList(data as List<int>));
+        }
+
+        if (data is List) {
+          final intList = (data as List).cast<int>();
+          return Right(Uint8List.fromList(intList));
         }
 
         return Left(Failure(message: "Invalid video data format"));
       } else {
         return Left(
-          Failure(message: "Download error", statusCode: response.statusCode),
+          Failure(message: "Download error", errorCode: response.statusCode),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
+        return Left(Failure.fromException(exception));
       }
-
       return Left(Failure(message: exception.toString()));
     }
   }
@@ -452,9 +460,9 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       final url = AppUrls.downloadVideo(videoId);
       final tempDir = await getTemporaryDirectory();
       final tempFile = File('${tempDir.path}/temp_video_$videoId.mp4');
-      
+
       // Use Dio's download method with progress callback
-      final response = await (api.dio as Dio).download(
+      final response = await api.dio.download(
         url,
         tempFile.path,
         onReceiveProgress: (received, total) {
@@ -476,16 +484,14 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
           await tempFile.delete();
         }
         return Left(
-          Failure(message: "Download error", statusCode: response.statusCode ?? 500),
+          Failure(
+              message: "Download error", errorCode: response.statusCode ?? 500),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-
       if (exception is DioException) {
-        return Left(Failure.handleError(exception));
+        return Left(Failure.fromException(exception));
       }
-
       return Left(Failure(message: exception.toString()));
     }
   }

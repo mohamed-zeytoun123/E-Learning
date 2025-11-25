@@ -1,8 +1,12 @@
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_padding.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/spacing.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/chips_bar.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
@@ -56,13 +60,13 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 130.h),
+            child: 130.sizedH,
           ),
           const SliverToBoxAdapter(
             child: HomeBannersWidget(),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 24.h),
+            child: 24.sizedH,
           ),
           SliverToBoxAdapter(
             child: SeeAllSeperator(
@@ -73,11 +77,11 @@ class HomePage extends StatelessWidget {
             ),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 24.h),
+            child: 24.sizedH,
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: AppPadding.appPadding.copyWith(end: 0),
+              padding: AppPadding.defaultScreen.copyWith(end: 0),
               child: BlocBuilder<CourseCubit, CourseState>(
                 builder: (context, state) {
                   return Skeletonizer(
@@ -103,7 +107,7 @@ class HomePage extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: AppPadding.appPadding.copyWith(end: 0),
+              padding: AppPadding.defaultScreen.copyWith(end: 0),
               child: const CourseSlider(),
             ),
           ),
@@ -123,7 +127,7 @@ class HomePage extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: AppPadding.appPadding.copyWith(end: 0),
+              padding: AppPadding.defaultScreen.copyWith(end: 0),
               child: const TeatchersSlider(maxItems: 3),
             ),
           ),
@@ -143,7 +147,7 @@ class HomePage extends StatelessWidget {
           ),
           const ArticlesSection(),
           SliverToBoxAdapter(
-            child: SizedBox(height: 24.h),
+            child: 24.sizedH,
           ),
         ],
       ),

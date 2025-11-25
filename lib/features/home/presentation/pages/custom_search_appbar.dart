@@ -1,4 +1,4 @@
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_state.dart';
 import 'package:e_learning/features/home/presentation/widgets/filtered_bottom_sheet.dart';

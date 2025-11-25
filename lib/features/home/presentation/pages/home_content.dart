@@ -1,4 +1,4 @@
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/di/service_locator.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_cubit.dart';
@@ -19,24 +19,21 @@ class HomeContent extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              CourseCubit(repo: appLocator<CourceseRepository>())
-                ..getCategories()
-                ..getCourses(pageSize: 5),
+          create: (context) => CourseCubit(repo: di<CourceseRepository>())
+            ..getCategories()
+            ..getCourses(pageSize: 5),
         ),
         BlocProvider(
           create: (context) =>
-              TeacherCubit(repo: appLocator<TeacherRepository>())
-                ..getTeachers(),
+              TeacherCubit(repo: di<TeacherRepository>())..getTeachers(),
+        ),
+        BlocProvider(
+          create: (context) => ArticleCubit(repo: di<ArticleRepository>())
+            ..getArticles(pageSize: 5),
         ),
         BlocProvider(
           create: (context) =>
-              ArticleCubit(repo: appLocator<ArticleRepository>())
-                ..getArticles(pageSize: 5),
-        ),
-        BlocProvider(
-          create: (context) =>
-              AdvertisementCubit(repo: appLocator<AdvertisementRepository>())
+              AdvertisementCubit(repo: di<AdvertisementRepository>())
                 ..getAdvertisements(),
         ),
       ],

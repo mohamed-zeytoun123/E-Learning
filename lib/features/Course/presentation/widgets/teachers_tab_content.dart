@@ -1,8 +1,9 @@
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/features/Teacher/data/models/teacher_model.dart';
 import 'package:e_learning/features/Teacher/presentation/manager/teacher_cubit.dart';
 import 'package:e_learning/features/Teacher/presentation/manager/teacher_state.dart';
 import 'package:e_learning/features/home/presentation/widgets/teatcher_card.dart';
@@ -165,7 +166,7 @@ class _TeachersTabContentState extends State<TeachersTabContent> {
                         size: 48.sp,
                         color: AppColors.textError,
                       ),
-                      SizedBox(height: 16.h),
+                      16.sizedH,
                       Text(
                         state.teachersError ?? 'something_went_wrong'.tr(),
                         style: AppTextStyles.s16w500.copyWith(
@@ -190,7 +191,7 @@ class _TeachersTabContentState extends State<TeachersTabContent> {
                         size: 64.sp,
                         color: AppColors.textGrey,
                       ),
-                      SizedBox(height: 16.h),
+                      16.sizedH,
                       Text(
                         'no_teachers_found'.tr(),
                         style: AppTextStyles.s18w600.copyWith(

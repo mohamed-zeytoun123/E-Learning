@@ -1,8 +1,9 @@
 import 'dart:developer';
 
-import 'package:e_learning/features/profile/data/model/data_course_saved_model.dart';
-import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
-import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
+import 'package:e_learning/core/model/paginated_model.dart';
+import 'package:e_learning/features/profile/data/models/data_course_saved_model.dart';
+import 'package:e_learning/features/profile/data/models/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/models/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,7 @@ class ProfileCubit extends Cubit<ProfileState> {
                 totalPages: 2,
                 currentPage: 1,
                 pageSize: 10,
-                data: []),
+                results: []),
             dataUserInfoProfile: UserDataInfoModel(
               id: 1,
               phone: '',
@@ -137,15 +138,25 @@ class ProfileCubit extends Cubit<ProfileState> {
         ));
       },
       (data) {
-        final updatedList = [...state.dataSavedcourses.data, ...data.data];
+        final updatedList = [
+          ...state.dataSavedcourses.results,
+          ...data.results
+        ];
 
         // 🔹 تحديث pagination
 
         int currentPage = state.dataSavedcourses.currentPage + 1;
 
         emit(state.copyWith(
-          dataSavedcourses:
-              data.copyWith(currentPage: currentPage, data: updatedList),
+          dataSavedcourses: PaginationModel<DataCourseSaved>(
+            count: data.count,
+            next: data.next,
+            previous: data.previous,
+            totalPages: data.totalPages,
+            currentPage: currentPage,
+            pageSize: data.pageSize,
+            results: updatedList,
+          ),
           isLoadingMore: false,
           isLoadingdataSavedcourses: false,
         ));
@@ -153,8 +164,6 @@ class ProfileCubit extends Cubit<ProfileState> {
         log('✅ page ${currentPage - 1} loaded, total pages ${state.dataSavedcourses.totalPages}');
       },
     );
-
-
   }
 
   // Future<void> getDataSavedCourse() async {
@@ -180,70 +189,71 @@ class ProfileCubit extends Cubit<ProfileState> {
   //     },
   //   );
   // }
-      void EditDataProfileStudent(String phone, String name,int universityId,int collegeId,int studyYearId) async {
-      var result = await repo.EditDataProfileStudent(phone, name,universityId,collegeId,studyYearId);
-      result.fold((error) {
-        //  emit(state.copyWith())
-      }, (dataRespose) {
-        emit(state.copyWith(dataUserInfoProfile: dataRespose));
-      });
-    }
+  void EditDataProfileStudent(String phone, String name, int universityId,
+      int collegeId, int studyYearId) async {
+    var result = await repo.EditDataProfileStudent(
+        phone, name, universityId, collegeId, studyYearId);
+    result.fold((error) {
+      //  emit(state.copyWith())
+    }, (dataRespose) {
+      emit(state.copyWith(dataUserInfoProfile: dataRespose));
+    });
+  }
 
-      void getDataUnivarsity() async {
-        emit(state.copyWith(isLoadingdataUnivarcity: true));
-        var result = await repo.getDataUnivarcityRepo();
-        result.fold(
-          (error) {
-            emit(state.copyWith(
-              errorFetchdataUnivarcity: error,
-              isLoadingdataUnivarcity: false,
-            ));
-          },
-          (data) {
-            emit(state.copyWith(
-              dataUnivarcity: data,
-              isLoadingdataUnivarcity: false,
-            ));
-          },
-        );
-      }
+  void getDataUnivarsity() async {
+    emit(state.copyWith(isLoadingdataUnivarcity: true));
+    var result = await repo.getDataUnivarcityRepo();
+    result.fold(
+      (error) {
+        emit(state.copyWith(
+          errorFetchdataUnivarcity: error,
+          isLoadingdataUnivarcity: false,
+        ));
+      },
+      (data) {
+        emit(state.copyWith(
+          dataUnivarcity: data,
+          isLoadingdataUnivarcity: false,
+        ));
+      },
+    );
+  }
 
+  void getDataCollege(int idUnivarcity) async {
+    emit(state.copyWith(isLoadingdataCollege: true));
+    var result = await repo.getCollegeDataRepo(idUnivarcity);
+    result.fold(
+      (error) {
+        emit(state.copyWith(
+          errorFetchdataCollege: error,
+          isLoadingdataCollege: false,
+        ));
+      },
+      (data) {
+        emit(state.copyWith(
+          dataCollege: data,
+          isLoadingdataCollege: false,
+        ));
+      },
+    );
+  }
 
-void getDataCollege(int idUnivarcity) async {
-        emit(state.copyWith(isLoadingdataCollege: true));
-        var result = await repo.getCollegeDataRepo(idUnivarcity);
-        result.fold(
-          (error) {
-            emit(state.copyWith(
-              errorFetchdataCollege: error,
-              isLoadingdataCollege: false,
-            ));
-          },
-          (data) {
-            emit(state.copyWith(
-              dataCollege: data,
-              isLoadingdataCollege: false,
-            ));
-          },
-        );
-      }
-
-void getYearDataStudent() async {
-        emit(state.copyWith(isLoadingdataYearStudent: true));
-        var result = await repo.getYearDataStudentRepo();
-        result.fold(
-          (error) {
-            emit(state.copyWith(
-              errorFetchdataYearStudent: error,
-              isLoadingdataYearStudent: false,
-            ));
-          },
-          (data) {
-            emit(state.copyWith(
-              dataYearStudent: data,
-              isLoadingdataYearStudent: false,
-            ));
-          },
-        );
-      }
+  void getYearDataStudent() async {
+    emit(state.copyWith(isLoadingdataYearStudent: true));
+    var result = await repo.getYearDataStudentRepo();
+    result.fold(
+      (error) {
+        emit(state.copyWith(
+          errorFetchdataYearStudent: error,
+          isLoadingdataYearStudent: false,
+        ));
+      },
+      (data) {
+        emit(state.copyWith(
+          dataYearStudent: data,
+          isLoadingdataYearStudent: false,
+        ));
+      },
+    );
+  }
 }

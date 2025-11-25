@@ -1,13 +1,17 @@
-import 'dart:developer';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/app_logo.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/custom_outlined_button.dart';
 import 'package:e_learning/features/auth/presentation/widgets/sign_up_form_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,12 +24,13 @@ class SignUpPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     return Scaffold(
-      appBar: AppBar(backgroundColor:colors.background ,
+      appBar: AppBar(
+        backgroundColor: colors.background,
         leading: IconButton(
           onPressed: () {
             BlocProvider.of<AppManagerCubit>(context).toggleTheme();
           },
-          icon: Icon(Icons.dark_mode,color:  colors.iconBlack,),
+          icon: Icon(Icons.dark_mode, color: colors.iconBlack),
         ),
       ),
       backgroundColor: colors.background,
@@ -41,46 +46,31 @@ class SignUpPage extends StatelessWidget {
           child: Center(
             child: Column(
               children: [
-                HeaderAuthPagesWidget(),
-                SizedBox(height: 60.h),
+                AppLogo(),
+                60.sizedH,
                 Text(
-                  AppLocalizations.of(
-                        context,
-                      )?.translate("Lets_make_your_account") ??
-                      "Let’s Make Your Account",
+                  "Lets_make_your_account".tr(),
                   style: AppTextStyles.s16w600.copyWith(
-                    color:  context.colors.textPrimary,
+                    color: context.colors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 30.h),
+                30.sizedH,
                 SignUpFormWidget(),
-                SizedBox(height: 40.h),
+                40.sizedH,
                 InkWell(
                   onTap: () {
-                    log("Don’t have an account?");
-                      //  context.go(RouteNames.);
+                    // Navigate to login if needed
                   },
                   child: Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("Already_have_an_account") ??
-                        "Already have an account?",
+                    "Already_have_an_account".tr(),
                     style: AppTextStyles.s14w400.copyWith(
                       color: colors.textPrimary,
                     ),
                   ),
                 ),
-                SizedBox(height: 10.h),
-                CustomButtonWidget(
-                  title:
-                      AppLocalizations.of(context)?.translate("Log_in") ??
-                      "Log In",
-                  titleStyle: AppTextStyles.s16w500.copyWith(
-                    fontFamily: AppTextStyles.fontGeist,
-                    color: colors.textPrimary,
-                  ),
-                  buttonColor:  Colors.transparent,
-                  borderColor: colors.textBlue,
+                10.sizedH,
+                CustomOutlinedButton(
+                  title: "Log_in".tr(),
                   onTap: () {
                     context.go(RouteNames.logIn);
                   },

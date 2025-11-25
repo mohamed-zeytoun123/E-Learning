@@ -1,13 +1,12 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/network/api_general.dart';
-import 'package:e_learning/core/network/api_request.dart';
-import 'package:e_learning/core/network/api_response.dart';
-import 'package:e_learning/core/network/app_url.dart';
-import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/core/api/api_parameters.dart';
+import 'package:e_learning/core/api/api_urls.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:netwoek/network.dart';
+import 'package:netwoek/network/api/api_request.dart';
+import 'package:netwoek/network/api/api_response.dart';
+import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
 import 'package:e_learning/features/Video/data/source/remote/video_remote_data_source.dart';
 
 class VideoRemoteDataSourceImpl implements VideoRemoteDataSource {
@@ -24,11 +23,10 @@ class VideoRemoteDataSourceImpl implements VideoRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.getSecureVideoUrl(videoId),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
-
-      log("SECURE VIDEO RESPONSE: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = response.body;
@@ -39,19 +37,25 @@ class VideoRemoteDataSourceImpl implements VideoRemoteDataSource {
           final video = VideoStreamModel.fromJson(data);
           return Right(video);
         } else {
-          return Left(FailureServer());
+          return Left(Failure(message: 'Server error'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 

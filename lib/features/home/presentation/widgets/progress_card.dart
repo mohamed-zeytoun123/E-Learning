@@ -1,8 +1,9 @@
-import 'package:e_learning/constant/assets.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart' hide Colors;
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,11 +27,10 @@ class ProgressCard extends StatelessWidget {
             ListTile(
               leading: ClipRRect(
                 borderRadius: BorderRadius.circular(12.r),
-                child: Image.asset(
-                  Assets.resourceImagesPngHomeeBg,
+                child: Container(
                   width: 60.w,
                   height: 60.h,
-                  fit: BoxFit.cover,
+                  color: Colors.black,
                 ),
               ),
               title: Column(
@@ -38,18 +38,18 @@ class ProgressCard extends StatelessWidget {
                 children: [
                   Text(
                     '${'continueLearning'.tr()}!',
-                    style: AppTextStyles.s14w400
-                        .copyWith(color: colors.textGrey),
+                    style:
+                        AppTextStyles.s14w400.copyWith(color: colors.textGrey),
                   ),
                   Text(
                     'The Full Course Title',
-                    style: AppTextStyles.s16w400
-                        .copyWith(color: colors.textBlue),
+                    style:
+                        AppTextStyles.s16w400.copyWith(color: colors.textBlue),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 24.h),
+            24.sizedH,
             LinearPercentIndicator(
               lineHeight: 12.h,
               barRadius: Radius.circular(16),
@@ -59,7 +59,7 @@ class ProgressCard extends StatelessWidget {
               animation: true,
               animationDuration: 800,
             ),
-            SizedBox(height: 12.h),
+            12.sizedH,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -67,18 +67,17 @@ class ProgressCard extends StatelessWidget {
                 Text("${25}% ${'completed'.tr()}"),
               ],
             ),
-            SizedBox(height: 24.h),
-            CustomButtonWidget(
+            24.sizedH,
+            CustomButton(
                 title: 'view_all'.tr(),
-                titleStyle: AppTextStyles.s16w400
-                    .copyWith(color: colors.textBlue),
-                buttonColor: colors.buttonTapNotSelected,
-                borderColor: Colors.transparent)
+                buttonColor: colors.buttonTapNotSelected)
           ],
         ),
       ),
       shape: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16), borderSide: BorderSide(color: context.colors.borderCard),),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: context.colors.borderCard),
+      ),
     );
   }
 }

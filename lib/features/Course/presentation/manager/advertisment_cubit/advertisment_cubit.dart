@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/features/Course/data/source/repo/advertisement_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

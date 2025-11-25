@@ -1,13 +1,13 @@
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/model/enums/app_role_enum.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
-import 'package:e_learning/core/model/response_model/auth_response_model.dart';
-import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/core/model/auth_response_model.dart';
+import 'package:e_learning/features/auth/data/models/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
-import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
-import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model.dart';
 import 'package:e_learning/features/auth/data/models/response/otp_verification_response.dart';
 import 'package:e_learning/features/auth/data/source/local/auth_local_data_source.dart';
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source.dart';
@@ -27,11 +27,11 @@ class AuthRepositoryImpl implements AuthRepository {
   //* LogIn
   @override
   Future<Either<Failure, AuthResponseModel>> loginRepo(
-    String numberPhone,
+    String email,
     String password,
   ) async {
     if (await network.isConnected) {
-      final result = await remote.loginRemote(numberPhone, password);
+      final result = await remote.loginRemote(email, password);
 
       return result.fold((failure) => Left(failure), (userData) async {
         await local.saveAllTokensLocal(
@@ -63,7 +63,7 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(userData);
       });
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -86,7 +86,7 @@ class AuthRepositoryImpl implements AuthRepository {
         },
       );
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -102,11 +102,11 @@ class AuthRepositoryImpl implements AuthRepository {
         if (universities.isNotEmpty) {
           return Right(universities);
         } else {
-          return Left(FailureNoData());
+          return Left(Failure(message: 'No data available'));
         }
       });
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -124,11 +124,11 @@ class AuthRepositoryImpl implements AuthRepository {
         if (colleges.isNotEmpty) {
           return Right(colleges);
         } else {
-          return Left(FailureNoData());
+          return Left(Failure(message: 'No data available'));
         }
       });
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -156,7 +156,7 @@ class AuthRepositoryImpl implements AuthRepository {
         },
       );
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -178,7 +178,7 @@ class AuthRepositoryImpl implements AuthRepository {
         },
       );
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -200,7 +200,7 @@ class AuthRepositoryImpl implements AuthRepository {
         },
       );
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -217,7 +217,7 @@ class AuthRepositoryImpl implements AuthRepository {
         },
       );
     } else {
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -233,12 +233,12 @@ class AuthRepositoryImpl implements AuthRepository {
         if (studyYears.isNotEmpty) {
           return Right(studyYears);
         } else {
-          return Left(FailureNoData());
+          return Left(Failure(message: 'No data available'));
         }
       });
     } else {
       // لو مافي انترنت، نرجع خطأ
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 

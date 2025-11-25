@@ -1,5 +1,5 @@
-import 'package:e_learning/core/widgets/input_forms/input_passowrd_widget.dart';
-import 'package:e_learning/core/widgets/input_forms/input_phone_widget.dart';
+import 'package:e_learning/core/widgets/input_passowrd_widget.dart';
+import 'package:e_learning/core/widgets/input_phone_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,8 +21,8 @@ class FormLogInWidget extends StatelessWidget {
         InputPhoneWidget(controller: phoneController),
         InputPasswordWidget(
           controller: passwordController,
-          hint: 'Password',
-          hintKey: 'Password',
+          hint: 'password',
+          hintKey: 'password',
         ),
       ],
     );

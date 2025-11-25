@@ -1,5 +1,6 @@
 {
   "welcome": "Welcome To",
+  "welcome_to_appname": "Welcome To AppName",
   "sign_up": "Sign Up",
   "log_in": "Log In",
   "view_all": "View All",
@@ -210,5 +211,7 @@
   "wrong": "Wrong",
   "login_successful": "Login successful",
   "select_university": "Select University",
-  "loading_dots": "Loading..."
+  "loading_dots": "Loading...",
+  "no_enrollments_found": "No enrollments found",
+  "no_enrollments_in_category": "No enrollments in this category"
 }

@@ -1,21 +1,21 @@
-import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/network/api_general.dart';
-import 'package:e_learning/core/network/api_request.dart';
-import 'package:e_learning/core/network/api_response.dart';
-import 'package:e_learning/core/network/app_url.dart';
-import 'package:e_learning/features/Course/data/models/Pag_courses/paginated_courses_model.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/core/api/api_parameters.dart';
+import 'package:e_learning/core/api/api_urls.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:netwoek/network.dart';
+import 'package:netwoek/network/api/api_request.dart';
+import 'package:netwoek/network/api/api_response.dart';
+import 'package:e_learning/core/model/paginated_model.dart';
+import 'package:e_learning/features/Course/data/models/course_model.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
-import 'package:e_learning/features/Course/data/models/rating_result/paginated_ratings_model.dart';
-import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
-import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
-import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
-import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
-import 'package:e_learning/features/chapter/data/models/pag_chapter_model/paginated_chapters_model.dart';
-import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_model.dart';
+import 'package:e_learning/features/auth/data/models/college_model.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model.dart';
 import 'package:e_learning/features/Course/data/models/course_details_model.dart';
 import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
 
@@ -30,7 +30,10 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   @override
   Future<Either<Failure, List<CategorieModel>>> getCategoriesRemote() async {
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.getCategories);
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getCategories,
+        headers: ApiRequestParameters.authHeaders,
+      );
 
       final ApiResponse response = await api.get(request);
       final List<CategorieModel> categories = [];
@@ -45,23 +48,29 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
         return Right(categories);
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
   //?----------------------------------------------------
   //* Get Courses
   @override
-  Future<Either<Failure, PaginatedCoursesModel>> getCoursesRemote({
+  Future<Either<Failure, PaginationModel<CourseModel>>> getCoursesRemote({
     CourseFiltersModel? filters,
     int? page,
     int? pageSize,
@@ -69,10 +78,6 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
     String? search,
   }) async {
     try {
-      log(
-        'Applying filters Remote : college=${filters?.collegeId}, studyYear=${filters?.studyYear}, category=${filters?.categoryId}, page=$page, page_size=$pageSize',
-      );
-
       //* تجهيز query parameters حسب القيم المرسلة
       final Map<String, dynamic> queryParameters = {
         if (filters?.collegeId != null)
@@ -89,6 +94,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
       final ApiRequest request = ApiRequest(
         url: AppUrls.getCourses(queryParameters: queryParameters),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
@@ -97,22 +103,28 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         final data = response.body;
 
         if (data is Map<String, dynamic>) {
-          final paginatedCourses = PaginatedCoursesModel.fromMap(data);
+          final paginatedCourses = PaginationModel<CourseModel>.fromJson(data, (json) => CourseModel.fromJson(json as Map<String, dynamic>));
           return Right(paginatedCourses);
         } else {
           return Left(Failure(message: 'Invalid data format from server'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -121,7 +133,10 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   @override
   Future<Either<Failure, List<CollegeModel>>> getCollegesRemote() async {
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.getColleges);
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getColleges,
+        headers: ApiRequestParameters.authHeaders,
+      );
 
       final ApiResponse response = await api.get(request);
       final List<CollegeModel> colleges = [];
@@ -137,16 +152,22 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
         return Right(colleges);
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -160,6 +181,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.courseDetails(courseSlug),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
@@ -170,19 +192,25 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
           final courseDetails = CourseDetailsModel.fromMap(data);
           return Right(courseDetails);
         } else {
-          return Left(FailureServer());
+          return Left(Failure(message: 'Server error'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -190,16 +218,12 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
   //* Get Chapters by Course (With Pagination)
   @override
-  Future<Either<Failure, PaginatedChaptersModel>> getChaptersRemote({
+  Future<Either<Failure, PaginationModel<ChapterModel>>> getChaptersRemote({
     required String courseId,
     int? page,
     int? pageSize,
   }) async {
     try {
-      log(
-        'Fetching chapters for course=$courseId, page=$page, page_size=$pageSize',
-      );
-
       // تجهيز query parameters
       final Map<String, dynamic> queryParameters = {
         if (page != null) 'page': page.toString(),
@@ -208,6 +232,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
       final ApiRequest request = ApiRequest(
         url: AppUrls.getChapters(courseId, queryParameters: queryParameters),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
@@ -216,22 +241,28 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         final data = response.body;
 
         if (data is Map<String, dynamic> && data['results'] is List) {
-          final paginatedChapters = PaginatedChaptersModel.fromMap(data);
+          final paginatedChapters = PaginationModel<ChapterModel>.fromJson(data, (json) => ChapterModel.fromJson(json as Map<String, dynamic>));
           return Right(paginatedChapters);
         } else {
           return Left(Failure(message: 'Invalid data format from server'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -239,17 +270,13 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
   //* Get Ratings by Course with Pagination
   @override
-  Future<Either<Failure, PaginatedRatingsModel>> getRatingsRemote({
+  Future<Either<Failure, PaginationModel<RatingModel>>> getRatingsRemote({
     required String courseId,
     int? page,
     int? pageSize,
     String? ordering,
   }) async {
     try {
-      log(
-        'Fetching ratings for course=$courseId, page=$page, page_size=$pageSize',
-      );
-
       final Map<String, dynamic> queryParameters = {
         if (page != null) 'page': page.toString(),
         if (pageSize != null) 'page_size': pageSize.toString(),
@@ -258,6 +285,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
       final ApiRequest request = ApiRequest(
         url: AppUrls.getRatings(courseId, queryParameters: queryParameters),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.get(request);
@@ -266,22 +294,28 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         final data = response.body;
 
         if (data is Map<String, dynamic> && data['results'] is List) {
-          final paginatedRatings = PaginatedRatingsModel.fromJson(data);
+          final paginatedRatings = PaginationModel<RatingModel>.fromJson(data, (json) => RatingModel.fromJson(json as Map<String, dynamic>));
           return Right(paginatedRatings);
         } else {
           return Left(Failure(message: 'Invalid data format from server'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -290,7 +324,10 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   @override
   Future<Either<Failure, List<UniversityModel>>> getUniversitiesRemote() async {
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.getUniversities);
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getUniversities,
+        headers: ApiRequestParameters.authHeaders,
+      );
       final ApiResponse response = await api.get(request);
 
       final List<UniversityModel> universities = [];
@@ -299,26 +336,35 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         final data = response.body;
 
         if (data is Map && data['results'] is List) {
-          for (var item in data['results']) {
+          final results = data['results'] as List;
+          for (var item in results) {
             universities.add(UniversityModel.fromMap(item));
           }
-        } else if (data is List) {
-          for (var item in data) {
+        } else if (data != null && data is List<dynamic>) {
+          final listData = data as List<dynamic>;
+          for (var item in listData) {
             universities.add(UniversityModel.fromMap(item));
           }
         }
 
         return Right(universities);
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -332,6 +378,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.favoriteCourse(courseSlug),
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.post(request);
@@ -344,16 +391,22 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
           return Left(Failure(message: 'Invalid data format from server'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -362,7 +415,10 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   @override
   Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRemote() async {
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.getStudyYears);
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getStudyYears,
+        headers: ApiRequestParameters.authHeaders,
+      );
       final ApiResponse response = await api.get(request);
       final List<StudyYearModel> studyYears = [];
 
@@ -378,15 +434,22 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
 
         return Right(studyYears);
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -405,6 +468,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
           'rating': rating,
           if (comment != null && comment.isNotEmpty) 'comment': comment,
         },
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.post(request);
@@ -419,16 +483,22 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
           return Left(Failure(message: "Invalid data format from server"));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 
@@ -442,6 +512,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       final ApiRequest request = ApiRequest(
         url: AppUrls.enrollCourse,
         body: {'course_id': courseId},
+        headers: ApiRequestParameters.authHeaders,
       );
 
       final ApiResponse response = await api.post(request);
@@ -455,16 +526,22 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
           return Left(Failure(message: 'Invalid data format from server'));
         }
       } else {
+        final body = response.body;
+        final errorMessage = (body is Map && body['message'] != null)
+            ? body['message'].toString()
+            : 'Unknown error';
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
+            message: errorMessage,
+            errorCode: response.statusCode,
           ),
         );
       }
     } catch (exception) {
-      log(exception.toString());
-      return Left(Failure.handleError(exception as DioException));
+      if (exception is DioException) {
+        return Left(Failure.fromException(exception));
+      }
+      return Left(Failure(message: exception.toString()));
     }
   }
 

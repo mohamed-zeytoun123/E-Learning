@@ -1,14 +1,17 @@
-import 'dart:developer';
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/app_logo.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
-import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/selected_information_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,9 +40,6 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(
-      'UniversitySelectionPage rebuilt ===========================>> ${widget.phone}',
-    );
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
       body: RefreshIndicator(
@@ -56,59 +56,42 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
           ),
           child: Column(
             children: [
-              HeaderAuthPagesWidget(),
-              SizedBox(height: 5.h),
+              AppLogo(),
+              5.sizedH,
               Text(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("Lets_make_your_account") ??
-                    "Let’s Make Your Account !",
+                "Lets_make_your_account".tr(),
                 style: AppTextStyles.s14w400.copyWith(
                   color: AppColors.textGrey,
                 ),
               ),
-              SizedBox(height: 40.h),
+              40.sizedH,
               Text(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("We_are_one_step_away") ??
-                    "We Are One Step Away !",
+                "We_are_one_step_away".tr(),
                 style: AppTextStyles.s16w600.copyWith(
                   color: AppColors.textBlack,
                 ),
               ),
-              SizedBox(height: 40.h),
+              40.sizedH,
               SelectedInformationWidget(),
-              SizedBox(height: 20.h),
+              20.sizedH,
               BlocSelector<AuthCubit, AuthState, SignUpRequestParams?>(
                 selector: (state) => state.signUpRequestParams,
                 builder: (context, signUpParams) {
                   final isAllFilled =
                       (signUpParams?.fullName.isNotEmpty ?? false) &&
-                      signUpParams?.universityId != null &&
-                      signUpParams?.collegeId != null &&
-                      signUpParams?.studyYear != null &&
-                      (signUpParams?.phone.isNotEmpty ?? false) &&
-                      (signUpParams?.password.isNotEmpty ?? false);
+                          signUpParams?.universityId != null &&
+                          signUpParams?.collegeId != null &&
+                          signUpParams?.studyYear != null &&
+                          (signUpParams?.phone.isNotEmpty ?? false) &&
+                          (signUpParams?.password.isNotEmpty ?? false);
 
-                  return CustomButtonWidget(
-                    title:
-                        AppLocalizations.of(context)?.translate("next") ??
-                        "Next",
-                    titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: isAllFilled
-                          ? AppColors.titlePrimary
-                          : AppColors.titleBlack,
-                      fontFamily: AppTextStyles.fontGeist,
-                    ),
+                  return CustomButton(
+                    title: "next".tr(),
                     buttonColor: isAllFilled
                         ? AppColors.buttonPrimary
                         : AppColors.buttonGreyF,
-                    borderColor: AppColors.borderBrand,
                     onTap: isAllFilled
                         ? () {
-                            log("dsfdfsf");
-
                             context.push(
                               RouteNames.otpScreen,
                               extra: {

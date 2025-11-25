@@ -1,9 +1,13 @@
-import 'dart:developer';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/file_row_widget.dart';
@@ -52,14 +56,14 @@ class _BodyTabFilesWidgetState extends State<BodyTabFilesWidget> {
                   size: 50.sp,
                   color: AppColors.textGrey.withOpacity(0.5),
                 ),
-                SizedBox(height: 12.h),
+                12.sizedH,
                 Text(
                   "No files available",
                   style: AppTextStyles.s16w600.copyWith(
                     color: AppColors.textGrey,
                   ),
                 ),
-                SizedBox(height: 6.h),
+                6.sizedH,
                 Text(
                   "This chapter does not contain any files",
                   style: AppTextStyles.s14w400.copyWith(
@@ -82,7 +86,7 @@ class _BodyTabFilesWidgetState extends State<BodyTabFilesWidget> {
                   size: 50.sp,
                   color: AppColors.iconError,
                 ),
-                SizedBox(height: 12.h),
+                12.sizedH,
                 Text(
                   state.attachmentsError ?? "Failed to load files",
                   textAlign: TextAlign.center,
@@ -90,20 +94,16 @@ class _BodyTabFilesWidgetState extends State<BodyTabFilesWidget> {
                     color: AppColors.textError,
                   ),
                 ),
-                SizedBox(height: 15.h),
-                CustomButtonWidget(
+                15.sizedH,
+                CustomButton(
                   title: "Retry",
-                  titleStyle: AppTextStyles.s14w500.copyWith(
-                    color: AppColors.textWhite,
-                  ),
                   buttonColor: AppColors.buttonPrimary,
-                  borderColor: AppColors.borderPrimary,
                   onTap: () {
                     final chapterId =
                         context.read<ChapterCubit>().state.chapter?.id ?? 0;
                     context.read<ChapterCubit>().getChapterAttachments(
-                      chapterId: chapterId,
-                    );
+                          chapterId: chapterId,
+                        );
                   },
                 ),
               ],
@@ -128,7 +128,6 @@ class _BodyTabFilesWidgetState extends State<BodyTabFilesWidget> {
                 onTap: widget.isActive
                     ? () {
                         if (widget.onFileTap != null) widget.onFileTap!(index);
-                        log("File ${file.id} pressed");
                       }
                     : null,
                 child: FileRowWidget(
@@ -142,7 +141,6 @@ class _BodyTabFilesWidgetState extends State<BodyTabFilesWidget> {
                           if (widget.onFileTap != null) {
                             widget.onFileTap!(index);
                           }
-                          log("File ${file.id} pressed");
                         }
                       : null,
                 ),

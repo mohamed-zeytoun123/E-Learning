@@ -1,17 +1,25 @@
-import 'dart:developer';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/spacing.dart';
+import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/widgets/app_loading_widget.dart';
+import 'package:e_learning/core/widgets/app_logo.dart';
+import 'package:e_learning/core/widgets/app_message.dart' show AppMessage;
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/custom_outlined_button.dart';
+import 'package:e_learning/features/auth/data/models/params/login_params.dart';
+import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
+import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:e_learning/features/auth/presentation/widgets/forgot_password_widget.dart';
-import 'package:e_learning/features/auth/presentation/widgets/form_log_in_widget.dart';
-import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
-import 'package:e_learning/features/auth/presentation/widgets/login_button_widget.dart';
+import 'package:e_learning/features/auth/presentation/widgets/login_form.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -21,111 +29,98 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  
-  final TextEditingController phoneController = TextEditingController();
-
-  final TextEditingController passwordController = TextEditingController();
-
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  @override
-  void dispose() {
-    phoneController.dispose();
-    passwordController.dispose();
-    super.dispose();
-  }
+  final LoginInputParams loginInputParams = LoginInputParams();
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Scaffold(
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: 100.h,
-            bottom: 50.h,
-            right: 15.w,
-            left: 15.w,
-          ),
-          child: Center(
+    return BlocConsumer<AuthCubit, AuthState>(
+      listenWhen: (previous, current) =>
+          previous.loginState != current.loginState,
+      listener: (context, state) {
+        if (state.loginState == ResponseStatusEnum.failure ||
+            state.loginError != null) {
+          AppMessage.showError(context, state.loginError ?? "wrong".tr());
+        } else if (state.loginState == ResponseStatusEnum.success) {
+          AppMessage.showSuccess(context, "login_successful".tr());
+          // Navigate to home after successful login
+          Future.delayed(const Duration(milliseconds: 500), () {
+            if (context.mounted) {
+              context.go(RouteNames.mainHomePage);
+            }
+          });
+        }
+      },
+      buildWhen: (previous, current) =>
+          previous.loginState != current.loginState,
+      builder: (context, state) {
+        return Scaffold(
+          body: Padding(
+            padding: AppPadding.defaultScreen,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                HeaderAuthPagesWidget(),
-                SizedBox(height: 150.h),
+                Spacer(),
+                const AppLogo(),
+                5.sizedH,
                 Text(
-                  AppLocalizations.of(
-                        context,
-                      )?.translate("Log_in_to_your_account") ??
-                      "Log In To Your Account",
+                  "log_in_to_your_account".tr(),
                   style: AppTextStyles.s16w600.copyWith(
-                    color: colors.textPrimary,
+                    color: colors.textBlue,
                   ),
                 ),
-                SizedBox(height: 20.h),
-                Form(
-                  key: _formKey,
-                  child: FormLogInWidget(
-                    phoneController: phoneController,
-                    passwordController: passwordController,
-                  ),
-                ),
+                48.sizedH,
+                Provider.value(
+                    value: loginInputParams,
+                    child: LoginForm(
+                      formKey: _formKey,
+                      loginInputParams: loginInputParams,
+                    )),
+                12.sizedH,
                 Align(
                   alignment: Alignment.centerRight,
                   child: ForgotPasswordWidget(
-                    onTap: () {
-                      context.push(RouteNames.forgetPassword);
-                    },
+                    onTap: () => context.push(RouteNames.forgetPassword),
                   ),
                 ),
-                SizedBox(height: 20.h),
-                LoginButtonWidget(
-                  borderColor: colors.textBlue,
-                  buttonColor: colors.textBlue,
-                  textColor: AppColors.titlePrimary,
-                  formKey: _formKey,
-                  phoneController: phoneController,
-                  passwordController: passwordController,
-                ),
-                SizedBox(height: 100.h),
-                InkWell(
-                  onTap: () {
-                    log("Don’t have an account?");
-                    
-                  },
-                  child: Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("Dont_have_an_account") ??
-                        "Don’t have an account?",
-                    style: AppTextStyles.s14w400.copyWith(
-                      color: colors.textPrimary,
-                    ),
+                24.sizedH,
+                AppLoadingWidget(
+                  isLoading: state.loginState == ResponseStatusEnum.loading,
+                  child: CustomButton(
+                    title: "log_in".tr(),
+                    buttonColor: colors.textBlue,
+                    textColor: AppColors.titlePrimary,
+                    onTap: state.loginState == ResponseStatusEnum.loading
+                        ? null
+                        : () {
+                            if (_formKey.currentState!.validate()) {
+                              context.read<AuthCubit>().login(
+                                    loginInputParams.email?.trim() ?? '',
+                                    loginInputParams.password?.trim() ?? '',
+                                  );
+                            }
+                          },
                   ),
                 ),
-                SizedBox(height: 20.h),
-                CustomButtonWidget(
-                  title:
-                      AppLocalizations.of(context)?.translate("Sign_up") ??
-                      "Sign Up",
-                  titleStyle: AppTextStyles.s16w500.copyWith(
-                    fontFamily: AppTextStyles.fontGeist,
-                    color: colors.textPrimary
+                72.sizedH,
+                Text(
+                  "dont_have_account".tr(),
+                  style: AppTextStyles.s14w400.copyWith(
+                    color: colors.textPrimary,
                   ),
-                  buttonColor: Colors.transparent,
-                  borderColor: colors.textBlue,
-                  onTap: () {
-                  context.go(RouteNames.signUp);
-                      // context.go(RouteNames.profile);
-                  },
                 ),
+                16.sizedH,
+                CustomOutlinedButton(
+                  title: "sign_up".tr(),
+                  onTap: () => context.go(RouteNames.signUp),
+                ),
+                Spacer(),
               ],
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
-
-

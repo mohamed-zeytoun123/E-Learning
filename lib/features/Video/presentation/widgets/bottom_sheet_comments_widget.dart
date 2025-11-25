@@ -1,10 +1,12 @@
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/input_forms/input_comment_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/input_comment_widget.dart';
 import 'package:e_learning/features/Video/presentation/widgets/comment_bubble_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
+
 import 'package:go_router/go_router.dart';
 
 class BottomSheetCommentsWidget extends StatelessWidget {
@@ -14,7 +16,6 @@ class BottomSheetCommentsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
-
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -30,7 +31,6 @@ class BottomSheetCommentsWidget extends StatelessWidget {
                 ),
               ),
             ),
-
             Text(
               "Comments",
               style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
@@ -39,9 +39,8 @@ class BottomSheetCommentsWidget extends StatelessWidget {
               "Write Your Questions In A Comment & The Teacher Will Respond As Soon As Possible",
               style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
             ),
-            SizedBox(height: 10.h),
+            10.sizedH,
             Divider(height: 1.h, color: AppColors.dividerGrey),
-
             SizedBox(
               height: 350.h,
               child: ListView.separated(
@@ -57,13 +56,12 @@ class BottomSheetCommentsWidget extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (BuildContext context, int index) {
-                  return SizedBox(height: 10.h);
+                  return 10.sizedH;
                 },
               ),
             ),
             Divider(height: 1.h, color: AppColors.dividerGrey),
-            SizedBox(height: 10.h),
-
+            10.sizedH,
             Column(
               spacing: 10.h,
               children: [
@@ -71,13 +69,9 @@ class BottomSheetCommentsWidget extends StatelessWidget {
                   controller: TextEditingController(),
                   hint: "Write Comment",
                 ),
-                CustomButtonWidget(
+                CustomButton(
                   title: "Send Comment",
-                  titleStyle: AppTextStyles.s16w600.copyWith(
-                    color: AppColors.titlePrimary,
-                  ),
                   buttonColor: AppColors.buttonPrimary,
-                  borderColor: AppColors.borderPrimary,
                   onTap: () {
                     context.pop();
                   },

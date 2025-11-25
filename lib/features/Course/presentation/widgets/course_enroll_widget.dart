@@ -1,9 +1,10 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
+import 'package:e_learning/core/widgets/app_message.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_enroll_bottom_sheet.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
@@ -36,22 +37,14 @@ class CourseEnrollWidget extends StatelessWidget {
           style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
           textAlign: TextAlign.center,
         ),
-        SizedBox(height: 20.h),
+        20.sizedH,
         BlocConsumer<CourseCubit, CourseState>(
           listenWhen: (previous, current) =>
               previous.enrollStatusB != current.enrollStatusB,
           listener: (context, state) async {
             if (state.enrollStatusB == ResponseStatusEnum.success) {
               // عرض فلاش رسالة نجاح
-              AppMessage.showFlushbar(
-                context: context,
-                title: "Success",
-                message: "Enrolled successfully!",
-                backgroundColor: Colors.green,
-                isShowProgress: true,
-                iconData: Icons.check_circle_outline,
-                iconColor: AppColors.iconWhite,
-              );
+              AppMessage.showSuccess(context, "Enrolled successfully!");
 
               final cubit = context.read<CourseCubit>();
               await showModalBottomSheet(
@@ -77,18 +70,7 @@ class CourseEnrollWidget extends StatelessWidget {
                 },
               );
             } else if (state.enrollStatusB == ResponseStatusEnum.failure) {
-              AppMessage.showFlushbar(
-                context: context,
-                title: "Warning",
-                duration: Duration(seconds: 3),
-                mainButtonText: "OK",
-                isShowProgress: true,
-                mainButtonOnPressed: () => context.pop(),
-                message: state.enrollError ?? "Failed to enroll",
-                backgroundColor: AppColors.messageWarning,
-                iconData: Icons.error_outline,
-                iconColor: AppColors.iconCircle,
-              );
+              AppMessage.showWarning(context, state.enrollError ?? "Failed to enroll");
 
               final cubit = context.read<CourseCubit>();
 
@@ -124,17 +106,9 @@ class CourseEnrollWidget extends StatelessWidget {
             if (isLoading) {
               return Center(child: AppLoading.circular(size: 30));
             } else {
-              return CustomButtonWidget(
+              return CustomButton(
                 title: "Enroll Now",
                 buttonColor: AppColors.buttonPrimary,
-                borderColor: AppColors.borderPrimary,
-                icon: Icon(
-                  Icons.arrow_outward_sharp,
-                  color: AppColors.iconWhite,
-                ),
-                titleStyle: AppTextStyles.s16w500.copyWith(
-                  color: AppColors.titlePrimary,
-                ),
                 onTap: () {
                   context.read<CourseCubit>().enrollCourse(courseId: courseId);
                 },

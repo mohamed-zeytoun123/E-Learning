@@ -1,8 +1,13 @@
-import 'package:e_learning/constant/assets.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/style/app_padding.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/asset/app_images_svg.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/spacing.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_state.dart';
@@ -20,12 +25,12 @@ class SearchPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<SearchCubit>(
       create: (context) => SearchCubit(
-        repository: appLocator<CourceseRepository>(),
+        repository: di<CourceseRepository>(),
       ),
       child: Builder(
         builder: (context) {
           final searchCubit = context.read<SearchCubit>();
-          
+
           return Scaffold(
             resizeToAvoidBottomInset: false,
             appBar: CustomSearchAppbar(searchCubit: searchCubit),
@@ -33,13 +38,16 @@ class SearchPage extends StatelessWidget {
               bloc: searchCubit,
               builder: (context, state) {
                 // Show tabbar when searching (has searched and not showing history)
-                if (state.hasSearched && !state.showHistory && state.searchQuery != null && state.searchQuery!.isNotEmpty) {
+                if (state.hasSearched &&
+                    !state.showHistory &&
+                    state.searchQuery != null &&
+                    state.searchQuery!.isNotEmpty) {
                   return SearchTabBarWidget(searchCubit: searchCubit);
                 }
-                
+
                 // Show search history when not searching
                 return Padding(
-                  padding: AppPadding.appPadding,
+                  padding: AppPadding.defaultScreen,
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,7 +87,8 @@ class SearchPage extends StatelessWidget {
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
-                                  final historyItem = state.searchHistory[index];
+                                  final historyItem =
+                                      state.searchHistory[index];
                                   return InkWell(
                                     onTap: () {
                                       searchCubit.setQueryInInput(historyItem);
@@ -88,7 +97,7 @@ class SearchPage extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         SvgPicture.asset(
-                                          Assets.resourceImagesVectorsSearchAd,
+                                          AppImagesSvg.searchAd,
                                         ),
                                         SizedBox(width: 12),
                                         Expanded(
@@ -99,7 +108,8 @@ class SearchPage extends StatelessWidget {
                                         ),
                                         IconButton(
                                           onPressed: () {
-                                            searchCubit.removeFromSearchHistory(index);
+                                            searchCubit
+                                                .removeFromSearchHistory(index);
                                           },
                                           icon: Icon(
                                             Icons.close,

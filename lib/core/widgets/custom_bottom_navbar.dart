@@ -1,7 +1,7 @@
-import 'package:e_learning/constant/assets.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/asset/app_images_svg.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -25,7 +25,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsHome3,
+              AppImagesSvg.home3,
               colorFilter:
                   ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
@@ -39,7 +39,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         icon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.resourceImagesVectorsHome3,color:colors.textGrey),
+            SvgPicture.asset(AppImagesSvg.home3,color:colors.textGrey),
             Text(
               'Home',
               style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
@@ -54,7 +54,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsSearch1,
+              AppImagesSvg.search1,
               colorFilter:
                   ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
@@ -68,7 +68,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         icon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.resourceImagesVectorsSearch1,color:colors.textGrey),
+            SvgPicture.asset(AppImagesSvg.search1,color:colors.textGrey),
             Text(
               'Search',
               style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
@@ -83,7 +83,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsClipboardList,color:colors.textGrey,
+              AppImagesSvg.clipboardList,color:colors.textGrey,
               colorFilter:
                   ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
@@ -97,7 +97,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         icon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.resourceImagesVectorsClipboardList,color:colors.textGrey),
+            SvgPicture.asset(AppImagesSvg.clipboardList,color:colors.textGrey),
             Text(
               'Courses',
               style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
@@ -112,7 +112,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsBookCheck,color:colors.textGrey,
+              AppImagesSvg.bookCheck,color:colors.textGrey,
               colorFilter:
                   ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
@@ -126,7 +126,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         icon: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SvgPicture.asset(Assets.resourceImagesVectorsBookCheck,color:colors.textGrey),
+            SvgPicture.asset(AppImagesSvg.bookCheck,color:colors.textGrey),
             Text(
               'Enrolls',
               style: AppTextStyles.s12w400.copyWith(color: colors.textGrey),
@@ -141,7 +141,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsPerson,color:colors.textGrey,
+              AppImagesSvg.person,color:colors.textGrey,
               colorFilter:
                   ColorFilter.mode(colors.textBlue, BlendMode.srcIn),
             ),
@@ -156,7 +156,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SvgPicture.asset(
-              Assets.resourceImagesVectorsPerson,color:colors.textGrey
+              AppImagesSvg.person,color:colors.textGrey
             ),
             Text(
               'Profile',

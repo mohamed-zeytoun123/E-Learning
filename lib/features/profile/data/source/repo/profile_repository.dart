@@ -1,14 +1,12 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
+import 'package:netwoek/failures/failures.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
-import 'package:e_learning/features/profile/data/model/data_college_model.dart';
-import 'package:e_learning/features/profile/data/model/data_course_saved_model.dart';
-import 'package:e_learning/features/profile/data/model/data_univarcity_response_model.dart';
-import 'package:e_learning/features/profile/data/model/data_year_response_model.dart';
-import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
-import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
+import 'package:e_learning/features/profile/data/models/data_college_model.dart';
+import 'package:e_learning/features/profile/data/models/data_course_saved_model.dart';
+import 'package:e_learning/features/profile/data/models/data_univarcity_response_model.dart';
+import 'package:e_learning/features/profile/data/models/data_year_response_model.dart';
+import 'package:e_learning/features/profile/data/models/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/models/user_data_info_model.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
 
 class ProfileRepository {
@@ -20,19 +18,16 @@ class ProfileRepository {
   Future<Either<Failure, ResponseInfoAppModel>> getPrivacyPolicyRepo() async {
     if (await network.isConnected) {
       final result = await remote.getPrivacyPolicyinfo();
-      //  print('hala');
       return result.fold(
         (error) {
           return left(error);
         },
         (dataResponse) {
-          log('success');
           return right(dataResponse);
         },
       );
     } else {
-      log(' error connected network (privacy policy)');
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -48,7 +43,7 @@ class ProfileRepository {
         },
       );
     } else {
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
     //  var response =await
   }
@@ -65,8 +60,7 @@ class ProfileRepository {
         },
       );
     } else {
-      log("error , no connected  🔥🔥🔥🔥🔥 ");
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -78,13 +72,11 @@ class ProfileRepository {
           return left(error);
         },
         (data) {
-          log(" ✅👌 success  ,get data user from remote  ");
           return right(data);
         },
       );
     } else {
-      log("error , no connected  🔥🔥🔥🔥🔥 ");
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -94,18 +86,14 @@ class ProfileRepository {
       var result = await remote.getDataCoursesSaved();
       return result.fold(
         (error) {
-          log(
-            ' error fetch data save course 🔥🔥🔥🔥🔥 ',
-          );
           return left(error);
         },
         (data) {
-          log(" ✅👌 success  ,get data save course from remote  ");
           return right(data);
         },
       );
     } else {
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -119,7 +107,7 @@ class ProfileRepository {
         return right(dataResponse);
       });
     } else {
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -128,18 +116,14 @@ class ProfileRepository {
       var result = await remote.getDataUnivarcity();
       return result.fold(
         (error) {
-          log(
-            ' error fetch data univarcity 🔥🔥🔥🔥🔥 ',
-          );
           return left(error);
         },
         (data) {
-          log(" ✅👌 success  ,get data univarcity from remote  ");
           return right(data);
         },
       );
     } else {
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -149,18 +133,14 @@ class ProfileRepository {
       var result = await remote.getCollegeData(idUnivarcity);
       return result.fold(
         (error) {
-          log(
-            ' error fetch data college 🔥🔥🔥🔥🔥 ',
-          );
           return left(error);
         },
         (data) {
-          log(" ✅👌 success  ,get data college from remote  ");
           return right(data);
         },
       );
     } else {
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 
@@ -169,18 +149,14 @@ class ProfileRepository {
       var result = await remote.getYearDataStudent();
       return result.fold(
         (error) {
-          log(
-            ' error fetch data year student 🔥🔥🔥🔥🔥 ',
-          );
           return left(error);
         },
         (data) {
-          log(" ✅👌 success  ,get data year student from remote  ");
           return right(data);
         },
       );
     } else {
-      return left(FailureNoConnection());
+      return left(Failure(message: 'No internet connection'));
     }
   }
 }

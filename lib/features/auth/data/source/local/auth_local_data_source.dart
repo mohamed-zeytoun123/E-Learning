@@ -1,4 +1,4 @@
-import 'package:e_learning/core/model/enums/app_role_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 
 abstract class AuthLocalDataSource {
   //? ---------------------- Save All Tokens ----------------------------

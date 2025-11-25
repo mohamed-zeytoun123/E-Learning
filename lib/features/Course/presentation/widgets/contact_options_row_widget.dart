@@ -11,7 +11,7 @@ class ContactOptionsRowWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         ContactIconWidget(
-          iconPath: AppIcons.iconWhatsApp,
+          iconPath: AppIcons.iconWhatsapp,
           onTap: () {
             //todo action
           },

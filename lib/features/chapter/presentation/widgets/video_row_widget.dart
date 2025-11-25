@@ -1,6 +1,8 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/download_item.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/features/chapter/data/models/download_item.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
@@ -134,7 +136,7 @@ class VideoRowWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(width: 12.w),
+                        12.sizedW,
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -151,7 +153,7 @@ class VideoRowWidget extends StatelessWidget {
                                   maxLines: 1,
                                 ),
                               ),
-                              SizedBox(height: 4.h),
+                              4.sizedH,
                               Text(
                                 '$durationSecond Mins',
                                 style: AppTextStyles.s14w400.copyWith(

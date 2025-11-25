@@ -1,6 +1,6 @@
 // import 'dart:io';
-// import 'package:e_learning/core/router/route_names.dart';
-// import 'package:e_learning/core/widgets/loading/app_loading.dart';
+// import 'package:e_learning/core/extensions/num_extenstion.dart';
+// import 'package:e_learning/core/extensions/num_extenstion.dart';
 // import 'package:e_learning/features/chapter/data/models/video_model/download_item.dart';
 // import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 // import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
@@ -32,7 +32,7 @@
 //           return ListView.separated(
 //             padding: EdgeInsets.all(12.w),
 //             itemCount: cachedVideos.length,
-//             separatorBuilder: (_, __) => SizedBox(height: 10.h),
+//             separatorBuilder: (_, __) => 10.sizedH,
 //             itemBuilder: (context, index) {
 //               final download = cachedVideos[index];
 //               final fileName = download.fileName;
@@ -101,7 +101,7 @@
 
 // // import 'dart:io';
 
-// // import 'package:e_learning/core/router/route_names.dart';
+// // import 'package:e_learning/core/extensions/num_extenstion.dart';
 // // import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 // // import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 // // import 'package:flutter/material.dart';
@@ -133,7 +133,7 @@
 // //           return ListView.separated(
 // //             padding: EdgeInsets.all(12.w),
 // //             itemCount: cachedVideos.length,
-// //             separatorBuilder: (_, __) => SizedBox(height: 10.h),
+// //             separatorBuilder: (_, __) => 10.sizedH,
 // //             itemBuilder: (context, index) {
 // //               final download = cachedVideos[index];
 // //               final fileName = download.fileName;

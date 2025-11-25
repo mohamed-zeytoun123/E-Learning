@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
+import 'package:netwoek/failures/failures.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
-import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
 import 'package:e_learning/features/Video/data/source/remote/video_remote_data_source.dart';
 import 'package:e_learning/features/Video/data/source/repo/video_repository.dart';
 
@@ -25,7 +25,7 @@ class VideoRepositoryImpl implements VideoRepository {
         (videoModel) => Right(videoModel), // نرجع الموديل كامل
       );
     } else {
-      return Left(FailureNoConnection());
+      return Left(Failure(message: 'No internet connection'));
     }
   }
 

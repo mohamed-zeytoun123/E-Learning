@@ -1,9 +1,10 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 import 'package:e_learning/features/home/presentation/widgets/filtered_bottom_sheet.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
@@ -27,8 +28,10 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
       builder: (context, state) {
         final selectedIndex = state.selectedIndex;
         final categories = state.categories ?? [];
-        final categoriesLoading = state.categoriesStatus == ResponseStatusEnum.loading;
-        final categoriesError = state.categoriesStatus == ResponseStatusEnum.failure;
+        final categoriesLoading =
+            state.categoriesStatus == ResponseStatusEnum.loading;
+        final categoriesError =
+            state.categoriesStatus == ResponseStatusEnum.failure;
 
         // Build tab bar widget
         Widget buildTabBar() {
@@ -154,7 +157,6 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                               ),
                             ),
                           ),
-
                         if (tabName.isNotEmpty)
                           Text(
                             tabName,
@@ -189,7 +191,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                 price: '',
                 isLoading: true,
               ),
-              separatorBuilder: (_, __) => SizedBox(height: 15.h),
+              separatorBuilder: (_, __) => 15.sizedH,
             );
           }
 
@@ -203,7 +205,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                     size: 50.sp,
                     color: AppColors.iconError,
                   ),
-                  SizedBox(height: 12.h),
+                  12.sizedH,
                   Text(
                     state.coursesError ?? 'Something went wrong',
                     style: AppTextStyles.s16w500.copyWith(
@@ -211,17 +213,13 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 20.h),
-                  CustomButtonWidget(
+                  20.sizedH,
+                  CustomButton(
                     onTap: () {
                       context.read<CourseCubit>().getCourses();
                     },
                     title: "Retry",
-                    titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: AppColors.titlePrimary,
-                    ),
                     buttonColor: AppColors.buttonPrimary,
-                    borderColor: AppColors.borderPrimary,
                   ),
                 ],
               ),
@@ -239,7 +237,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                     size: 50.sp,
                     color: AppColors.iconBlue,
                   ),
-                  SizedBox(height: 12.h),
+                  12.sizedH,
                   Text(
                     'No courses available',
                     style: TextStyle(
@@ -259,7 +257,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
         return Column(
           children: [
             buildTabBar(),
-            SizedBox(height: 8.h),
+            8.sizedH,
             Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
             Expanded(
               child: buildContent(),

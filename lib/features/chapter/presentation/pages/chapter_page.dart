@@ -1,7 +1,11 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
 import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
@@ -9,8 +13,10 @@ import 'package:e_learning/features/chapter/presentation/manager/chapter_state.d
 import 'package:e_learning/features/chapter/presentation/widgets/chapter_title_sub_title_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/chapters_tab_view_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,8 +43,8 @@ class ChapterPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<ChapterCubit>(
       create: (context) => ChapterCubit(
-        repo: appLocator<ChapterRepository>(),
-        local: appLocator<ChapterLocalDataSource>(),
+        repo: di<ChapterRepository>(),
+        local: di<ChapterLocalDataSource>(),
       )..getChapterById(courseSlug: courseSlug, chapterId: chapterId),
       child: BlocBuilder<ChapterCubit, ChapterState>(
         buildWhen: (pre, curr) => pre.chaptersStatus != curr.chaptersStatus,
@@ -69,21 +75,15 @@ class ChapterPage extends StatelessWidget {
                           color: AppColors.textError,
                         ),
                       ),
-                      SizedBox(height: 30.h),
-                      CustomButtonWidget(
+                      30.sizedH,
+                      CustomButton(
                         title: "Retry",
                         buttonColor: AppColors.buttonPrimary,
-                        borderColor: AppColors.borderPrimary,
-                        titleStyle: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w600,
-                          color: AppColors.titlePrimary,
-                        ),
                         onTap: () {
                           context.read<ChapterCubit>().getChapterById(
-                            courseSlug: courseSlug,
-                            chapterId: chapterId,
-                          );
+                                courseSlug: courseSlug,
+                                chapterId: chapterId,
+                              );
                         },
                       ),
                     ],

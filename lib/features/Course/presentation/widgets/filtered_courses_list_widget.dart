@@ -1,6 +1,7 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/features/Course/data/models/course_model.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/core/widgets/app_message.dart';
 
 class FilteredCoursesListWidget extends StatelessWidget {
   final List<CourseModel> courses;
@@ -28,7 +29,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
                 size: 60.sp,
                 color: AppColors.textError.withOpacity(0.7),
               ),
-              SizedBox(height: 16.h),
+              16.sizedH,
               Text(
                 "No courses available in this category",
                 textAlign: TextAlign.center,
@@ -36,7 +37,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
                   color: AppColors.textError,
                 ),
               ),
-              SizedBox(height: 8.h),
+              8.sizedH,
               Text(
                 "Please select another category or try again later.",
                 textAlign: TextAlign.center,
@@ -56,17 +57,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
       listener: (context, state) {
         final message = state.isFavoriteError;
         if (message != null && message.isNotEmpty) {
-          AppMessage.showFlushbar(
-            title: "Error",
-            context: context,
-            message: message,
-            backgroundColor: AppColors.messageError,
-            iconData: Icons.error,
-            isShowProgress: true,
-            progressColor: AppColors.iconCircle,
-            sizeIcon: 30,
-            iconColor: AppColors.iconWhite,
-          );
+          AppMessage.showError(context, message);
         }
       },
       child: ListView.separated(
@@ -108,7 +99,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
             },
           );
         },
-        separatorBuilder: (_, __) => SizedBox(height: 15.h),
+        separatorBuilder: (_, __) => 15.sizedH,
       ),
     );
   }

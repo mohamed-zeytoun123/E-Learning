@@ -1,9 +1,10 @@
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
 import 'package:e_learning/features/profile/presentation/widgets/user_info_row.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,43 +23,44 @@ class ProfileUserHeader extends StatelessWidget {
             width: 362.w,
             child: Center(child: CircularProgressIndicator()),
           );
-        } 
-        if(state.errorFetchDataUserInfoProfile!=null){
-          return SizedBox(height: 500.h,
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.wifi_tethering_error,
-                              size: 64.sp,
-                              color: context.colors.iconRed,
-                            ),
-                            SizedBox(height: 16.h),
-                            Text(
-                              'Error loading data User',
-                              style: AppTextStyles.s16w500.copyWith(
-                                color: context.colors.textPrimary,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              state.errorFetchDataUserInfoProfile?.message ?? 'Error loading data',
-                              style: AppTextStyles.s14w400.copyWith(
-                                color: context.colors.textPrimary,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+        }
+        if (state.errorFetchDataUserInfoProfile != null) {
+          return SizedBox(
+            height: 500.h,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.wifi_tethering_error,
+                    size: 64.sp,
+                    color: context.colors.iconRed,
+                  ),
+                  16.sizedH,
+                  Text(
+                    'Error loading data User',
+                    style: AppTextStyles.s16w500.copyWith(
+                      color: context.colors.textPrimary,
+                    ),
+                  ),
+                  8.sizedH,
+                  Text(
+                    state.errorFetchDataUserInfoProfile?.message ??
+                        'Error loading data',
+                    style: AppTextStyles.s14w400.copyWith(
+                      color: context.colors.textPrimary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ),
+          );
         }
 
         return SizedBox(
           height: 198.h,
           width: 362.w,
-          // var dataUser= state.dataUserInfoProfile;
           child: Card(
             color: colors.background,
             shape: RoundedRectangleBorder(
@@ -70,8 +72,6 @@ class ProfileUserHeader extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    // AppLocalizations.of(context)?.translate("User_Name") ??
-                    //     "University",
                     state.dataUserInfoProfile.username,
                     style: AppTextStyles.s16w600.copyWith(
                       color: colors.textPrimary,
@@ -84,27 +84,17 @@ class ProfileUserHeader extends StatelessWidget {
                   Column(
                     children: [
                       UserInfoRow(
-                        title:
-                            AppLocalizations.of(
-                              context,
-                            )?.translate("University") ??
-                            "University",
+                        title: "University".tr(),
                         value: state.dataUserInfoProfile.universityName,
                       ),
-                      SizedBox(height: 12.h),
+                      12.sizedH,
                       UserInfoRow(
-                        title:
-                            AppLocalizations.of(
-                              context,
-                            )?.translate("College") ??
-                            "College",
+                        title: "College".tr(),
                         value: state.dataUserInfoProfile.collegeName,
                       ),
-                      SizedBox(height: 12.h),
+                      12.sizedH,
                       UserInfoRow(
-                        title:
-                            AppLocalizations.of(context)?.translate("Year") ??
-                            "Year",
+                        title: "Year".tr(),
                         value: state.dataUserInfoProfile.studyYearName,
                       ),
                     ],

@@ -1,7 +1,10 @@
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/style/app_padding.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/spacing.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/chips_bar.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
@@ -18,7 +21,7 @@ class ViewAllCourses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CourseCubit>(
-      create: (context) => CourseCubit(repo: appLocator<CourceseRepository>())
+      create: (context) => CourseCubit(repo: di<CourceseRepository>())
         ..getCourses()
         ..getCategories(),
       child: Scaffold(
@@ -59,7 +62,7 @@ class ViewAllCourses extends StatelessWidget {
               children: [
                 SizedBox(height: 20),
                 Padding(
-                  padding: AppPadding.appPadding.copyWith(end: 0),
+                  padding: AppPadding.defaultScreen.copyWith(end: 0),
                   child: ChipsBar(
                     labels: labels,
                     onChipSelected: (value) {
@@ -74,7 +77,8 @@ class ViewAllCourses extends StatelessWidget {
                             orElse: () => categories.first,
                           );
                           context.read<CourseCubit>().getCourses(
-                                filters: CourseFiltersModel(categoryId: category.id),
+                                filters:
+                                    CourseFiltersModel(categoryId: category.id),
                               );
                         }
                       }

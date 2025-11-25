@@ -1,10 +1,10 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/features/Course/presentation/widgets/review_bottom_sheet_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/your_review_bottom_sheet_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class CompletedSectionWidget extends StatefulWidget {
@@ -28,16 +28,9 @@ class _CompletedSectionWidgetState extends State<CompletedSectionWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomButtonWidget(
-          title: widget.isRated
-              ? AppLocalizations.of(context)?.translate("View_Ratings") ??
-                    "View Rating"
-              : AppLocalizations.of(context)?.translate("Rate") ?? "Rate",
-          titleStyle: AppTextStyles.s16w500.copyWith(
-            color: AppColors.textWhite,
-          ),
+        CustomButton(
+          title: widget.isRated ? "View_Ratings".tr() : "Rate".tr(),
           buttonColor: context.colors.textBlue,
-          borderColor: context.colors.textBlue,
           onTap: () {
             widget.isRated
                 ? showModalBottomSheet(

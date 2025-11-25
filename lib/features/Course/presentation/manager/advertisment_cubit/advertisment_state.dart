@@ -1,4 +1,4 @@
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/features/Course/data/models/advertisment_model.dart';
 
 class AdvertisementState {

@@ -1,16 +1,16 @@
 import 'dart:developer';
 
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/features/profile/presentation/widgets/custom_radio_widget.dart';
 import 'package:e_learning/features/profile/presentation/widgets/modal_sheet_custom_container_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ThemeBottomSheetWidget extends StatelessWidget {
   const ThemeBottomSheetWidget({super.key});
@@ -30,7 +30,7 @@ class ThemeBottomSheetWidget extends StatelessWidget {
             'themes'.tr(),
             style: AppTextStyles.s16w600.copyWith(color: colors.textPrimary),
           ),
-          SizedBox(height: 24.h),
+          24.sizedH,
           ValueListenableBuilder<ThemeMode>(
             valueListenable: selectedThemeNotifier,
             builder: (context, selectedTheme, child) {
@@ -69,14 +69,10 @@ class ThemeBottomSheetWidget extends StatelessWidget {
                       }
                     },
                   ),
-                  SizedBox(height: 24.h),
-                  CustomButtonWidget(
+                  24.sizedH,
+                  CustomButton(
                     title: 'apply'.tr(),
-                    titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: AppColors.textWhite,
-                    ),
                     buttonColor: colors.textBlue,
-                    borderColor: colors.textBlue,
                     onTap: () {
                       context.read<AppManagerCubit>().setThemeMode(
                             selectedThemeNotifier.value,

@@ -1,13 +1,13 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/initial/app_init_dependencies.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/widgets/app_message.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,16 +28,16 @@ class showDialogLogOut extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthCubit(repository: appLocator<AuthRepository>()),
+      create: (context) => AuthCubit(repository: di<AuthRepository>()),
       child: Builder(
         builder: (context) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
-            title: Text('Confirm Logout'),
+            title: Text('Confirm_Logout'.tr()),
             content: Text(
-              'Are you sure you want to log out from your account?',
+              'Are_you_sure_you_want_to_log_out'.tr(),
             ),
             actions: [
               TextButton(
@@ -45,63 +45,46 @@ class showDialogLogOut extends StatelessWidget {
                   Navigator.of(context).pop(); // إغلاق الحوار
                 },
                 child: Text(
-                  'Cancel',
+                  'Cancel'.tr(),
                   style: TextStyle(color: context.colors.textPrimary),
                 ),
               ),
               BlocConsumer<AuthCubit, AuthState>(
                 listenWhen: (previous, current) =>
-                    previous.loginState != current.logoutStatus||previous.errorlogout != current.errorlogout,
-                    buildWhen: (previous, current) => previous.loginState != current.logoutStatus,
+                    previous.loginState != current.logoutStatus ||
+                    previous.errorlogout != current.errorlogout,
+                buildWhen: (previous, current) =>
+                    previous.loginState != current.logoutStatus,
                 listener: (context, state) {
                   if (state.logoutStatus == ResponseStatusEnum.failure) {
-                    AppMessage.showFlushbar(
-                      context: context,
-                      title:
-                          AppLocalizations.of(context)?.translate("wrrong") ??
-                          "Wrrong",
-                      mainButtonOnPressed: () {
-                        context.pop();
-                      },
-                      mainButtonText:
-                          AppLocalizations.of(context)?.translate("ok") ?? "Ok",
-                      iconData: Icons.error,
-                      backgroundColor: AppColors.messageError,
-                      message: state.errorlogout,
-                      isShowProgress: true,
-                    );
-                  }
-                  else if(state.logoutStatus == ResponseStatusEnum.success){
-                   context.go(RouteNames.selectedMethodLogin);
+                    AppMessage.showError(context, state.errorlogout ?? "wrrong".tr());
+                  } else if (state.logoutStatus == ResponseStatusEnum.success) {
+                    context.go(RouteNames.selectedMethodLogin);
                   }
                 },
                 builder: (context, state) {
-                  if (state.logoutStatus == ResponseStatusEnum.loading)
-                    return SizedBox(width: 40,
-                    height: 30,
+                  if (state.logoutStatus == ResponseStatusEnum.loading) {
+                    return SizedBox(
+                      width: 40,
+                      height: 30,
                       child: Center(
-                        child: SizedBox(height: 20.h,width: 20,
-                          child: CircularProgressIndicator()),
+                        child: SizedBox(
+                            height: 20.h,
+                            width: 20,
+                            child: CircularProgressIndicator()),
                       ),
                     );
+                  }
 
                   return ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                     ),
                     onPressed: () {
-                      //   appLocator<SharedPreferencesService>().removeAll();
-                      // BlocProvider.of<AuthCubit>(context).logout(state.loginError!);
-                                       context.go(RouteNames.selectedMethodLogin);
-
-
-                      // Navigator.of(context).pop(); // إغلاق الحوار
-                      // أضف هنا منطق تسجيل الخروج
-
-                      print('تم تسجيل الخروج');
+                      context.go(RouteNames.selectedMethodLogin);
                     },
                     child: Text(
-                      'Log Out',
+                      'Log_Out'.tr(),
                       style: TextStyle(color: Colors.white),
                     ),
                   );

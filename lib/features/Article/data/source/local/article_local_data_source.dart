@@ -1,4 +1,4 @@
-import 'package:e_learning/features/Article/data/models/article_model/article_model.dart';
+import 'package:e_learning/features/Article/data/models/article_model.dart';
 
 abstract class ArticleLocalDataSource {
   //?----------------------------------------------------

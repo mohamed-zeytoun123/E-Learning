@@ -1,4 +1,4 @@
-import 'package:e_learning/features/Article/data/models/article_model/article_model.dart';
+import 'package:e_learning/features/Article/data/models/article_model.dart';
 import 'package:e_learning/features/Article/data/source/local/article_local_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';

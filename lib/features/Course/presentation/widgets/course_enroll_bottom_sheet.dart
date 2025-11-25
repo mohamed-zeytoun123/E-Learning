@@ -1,7 +1,7 @@
-import 'package:e_learning/core/asset/app_icons.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/features/Course/presentation/widgets/contact_options_row_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,7 +35,7 @@ class CourseEnrollBottomSheet extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 25.h),
+          25.sizedH,
           Text(
             "Get Your Enrollment Code !",
             style: TextStyle(
@@ -44,7 +44,7 @@ class CourseEnrollBottomSheet extends StatelessWidget {
               color: AppColors.textBlack,
             ),
           ),
-          SizedBox(height: 8.h),
+          8.sizedH,
           Text(
             "Contact Us To Receive Payment Information & Enroll In This Course",
             textAlign: TextAlign.start,
@@ -63,7 +63,6 @@ class CourseEnrollBottomSheet extends StatelessWidget {
             thickness: 1,
             color: AppColors.dividerGrey.withOpacity(0.5),
           ),
-
           Padding(
             padding: EdgeInsets.only(top: 20.h),
             child: Column(
@@ -75,7 +74,6 @@ class CourseEnrollBottomSheet extends StatelessWidget {
                     color: AppColors.textBlack,
                   ),
                 ),
-
                 InkWell(
                   onTap: () {
                     //todo action
@@ -85,12 +83,12 @@ class CourseEnrollBottomSheet extends StatelessWidget {
                     child: Row(
                       spacing: 5.w,
                       children: [
-                        Image.asset(
-                          AppIcons.iconShamCach,
+                        Container(
                           width: 42.w,
                           height: 48.h,
+                          color: Colors.black,
                         ),
-                        SizedBox(width: 8.w),
+                        8.sizedW,
                         Text(
                           "Sham Cash",
                           style: AppTextStyles.s16w400.copyWith(
@@ -104,19 +102,14 @@ class CourseEnrollBottomSheet extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 10.h),
-
+          10.sizedH,
           Center(
-            child: CustomButtonWidget(
+            child: CustomButton(
               onTap: () {
                 context.pop();
               },
               title: "Cancel",
-              titleStyle: AppTextStyles.s16w400.copyWith(
-                color: AppColors.titlePrimary,
-              ),
               buttonColor: AppColors.buttonPrimary,
-              borderColor: AppColors.borderPrimary,
             ),
           ),
         ],

@@ -1,13 +1,13 @@
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/model/enums/app_state_enum.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/error/error_state_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/error_state_widget.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_enroll_widget.dart';
@@ -65,7 +65,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                         size: 100.r,
                         color: AppColors.iconOrange,
                       ),
-                      SizedBox(height: 20.h),
+                      20.sizedH,
                       Text(
                         "No Course Data",
                         textAlign: TextAlign.center,
@@ -73,7 +73,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                           color: AppColors.textBlack,
                         ),
                       ),
-                      SizedBox(height: 10.h),
+                      10.sizedH,
                       Text(
                         "There is currently no information available for this course.",
                         textAlign: TextAlign.center,
@@ -81,18 +81,14 @@ class BodyTabAboutWidget extends StatelessWidget {
                           color: AppColors.textGrey,
                         ),
                       ),
-                      SizedBox(height: 30.h),
-                      CustomButtonWidget(
+                      30.sizedH,
+                      CustomButton(
                         title: "Retry",
-                        titleStyle: AppTextStyles.s18w600.copyWith(
-                          color: AppColors.titlePrimary,
-                        ),
                         buttonColor: AppColors.buttonPrimary,
-                        borderColor: AppColors.borderPrimary,
                         onTap: () {
                           context.read<CourseCubit>().getCourseDetails(
-                            id: "$courseId",
-                          );
+                                id: "$courseId",
+                              );
                         },
                       ),
                     ],
@@ -124,7 +120,6 @@ class BodyTabAboutWidget extends StatelessWidget {
                       thickness: 1,
                       height: 0.h,
                     ),
-
                     Text(
                       "About The Course",
                       style: AppTextStyles.s18w600.copyWith(
@@ -137,15 +132,14 @@ class BodyTabAboutWidget extends StatelessWidget {
                         color: colors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: 8.h),
+                    8.sizedH,
                     Text(
                       details.description,
                       style: AppTextStyles.s16w400.copyWith(
-                        color:colors.textPrimary,
+                        color: colors.textPrimary,
                       ),
                     ),
-                    SizedBox(height: 16.h),
-
+                    16.sizedH,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -209,17 +203,14 @@ class BodyTabAboutWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    BlocSelector<
-                      AppManagerCubit,
-                      AppManagerState,
-                      AppStateEnum
-                    >(
+                    BlocSelector<AppManagerCubit, AppManagerState,
+                        AppStateEnum>(
                       selector: (state) => state.appState,
                       builder: (context, appState) {
                         if (!isActive && appState == AppStateEnum.user) {
                           return Column(
                             children: [
-                              SizedBox(height: 20.h),
+                              20.sizedH,
                               CourseEnrollWidget(
                                 courseId: courseId,
                                 price: price,

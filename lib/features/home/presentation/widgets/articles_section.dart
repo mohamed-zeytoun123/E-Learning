@@ -1,11 +1,18 @@
-import 'package:e_learning/constant/assets.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_padding.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
-import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/spacing.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/custom_error_widget.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_cubit.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_state.dart';
@@ -45,7 +52,7 @@ class ArticlesSection extends StatelessWidget {
         if (state.articlesStatus == ResponseStatusEnum.failure) {
           return SliverToBoxAdapter(
             child: Padding(
-              padding: AppPadding.appPadding,
+              padding: AppPadding.defaultScreen,
               child: const CustomErrorWidget(),
             ),
           );
@@ -58,7 +65,7 @@ class ArticlesSection extends StatelessWidget {
         if (displayArticles.isEmpty &&
             state.articlesStatus == ResponseStatusEnum.loading) {
           return SliverList.separated(
-            separatorBuilder: (context, index) => SizedBox(height: 12.h),
+            separatorBuilder: (context, index) => 12.sizedH,
             itemCount: 5,
             itemBuilder: (context, index) {
               return Skeletonizer(
@@ -67,11 +74,10 @@ class ArticlesSection extends StatelessWidget {
                   titleAlignment: ListTileTitleAlignment.top,
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(12.r),
-                    child: Image.asset(
-                      Assets.resourceImagesPngHomeeBg,
+                    child: Container(
                       width: 80.w,
                       height: 80.h,
-                      fit: BoxFit.cover,
+                      color: Colors.black,
                     ),
                   ),
                   title: Column(
@@ -81,7 +87,7 @@ class ArticlesSection extends StatelessWidget {
                         'Article Title',
                         style: AppTextStyles.s16w500,
                       ),
-                      SizedBox(height: 8.h),
+                      8.sizedH,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -92,7 +98,7 @@ class ArticlesSection extends StatelessWidget {
                                 Icons.remove_red_eye_outlined,
                                 color: AppColors.stars,
                               ),
-                              SizedBox(width: 4.w),
+                              4.sizedW,
                               Text(
                                 '1 min',
                                 style: AppTextStyles.s12w400
@@ -118,7 +124,7 @@ class ArticlesSection extends StatelessWidget {
         if (displayArticles.isEmpty) {
           return SliverToBoxAdapter(
             child: Padding(
-              padding: AppPadding.appPadding,
+              padding: AppPadding.defaultScreen,
               child: Center(
                 child: Text(
                   'no_articles_available'.tr(),
@@ -130,7 +136,7 @@ class ArticlesSection extends StatelessWidget {
         }
 
         return SliverList.separated(
-          separatorBuilder: (context, index) => SizedBox(height: 12.h),
+          separatorBuilder: (context, index) => 12.sizedH,
           itemCount: displayArticles.length,
           itemBuilder: (context, index) {
             final article = displayArticles[index];
@@ -152,11 +158,10 @@ class ArticlesSection extends StatelessWidget {
                           height: 80.h,
                           fit: BoxFit.cover,
                         )
-                      : Image.asset(
-                          Assets.resourceImagesPngHomeeBg,
+                      : Container(
                           width: 80.w,
                           height: 80.h,
-                          fit: BoxFit.cover,
+                          color: Colors.black,
                         ),
                 ),
                 title: Column(
@@ -164,11 +169,12 @@ class ArticlesSection extends StatelessWidget {
                   children: [
                     Text(
                       article.title,
-                      style: AppTextStyles.s16w500.copyWith(color: context.colors.textPrimary),
+                      style: AppTextStyles.s16w500
+                          .copyWith(color: context.colors.textPrimary),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 8.h),
+                    8.sizedH,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -180,7 +186,7 @@ class ArticlesSection extends StatelessWidget {
                               color: AppColors.stars,
                               size: 16.sp,
                             ),
-                            SizedBox(width: 4.w),
+                            4.sizedW,
                             Text(
                               article.readingTime,
                               style: AppTextStyles.s12w400

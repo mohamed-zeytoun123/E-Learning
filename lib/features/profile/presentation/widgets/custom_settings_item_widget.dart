@@ -1,6 +1,6 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,7 +34,7 @@ class CustomSettingsItemWidget extends StatelessWidget {
                   size: 28.sp,
                   color: iconColor ?? context.colors.iconBlack,
                 ),
-                SizedBox(width: 12.w),
+                12.sizedW,
                 Text(
                   title,
                   style: AppTextStyles.s14w400.copyWith(

@@ -1,7 +1,11 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_padding.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/spacing.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -11,9 +15,9 @@ class SeeAllSeperator extends StatelessWidget {
   final void Function() onTap;
   @override
   Widget build(BuildContext context) {
-    final colors =context.colors;
+    final colors = context.colors;
     return Padding(
-      padding: AppPadding.appPadding,
+      padding: AppPadding.defaultScreen,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -30,8 +34,7 @@ class SeeAllSeperator extends StatelessWidget {
               children: [
                 Text(
                   'see_all'.tr(),
-                  style: AppTextStyles.s14w400
-                      .copyWith(color:colors.textBlue),
+                  style: AppTextStyles.s14w400.copyWith(color: colors.textBlue),
                 ),
                 const SizedBox(width: 4),
                 Icon(

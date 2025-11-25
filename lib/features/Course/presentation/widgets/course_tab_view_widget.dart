@@ -1,6 +1,6 @@
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:e_learning/features/Course/presentation/widgets/body_tab_about_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/body_tab_chapter_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/body_tab_reviews_widget.dart';
@@ -45,7 +45,7 @@ class CourseTabViewWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.play_arrow, size: 20.sp),
-                    SizedBox(width: 4.w),
+                    4.sizedW,
                     Text("Chapter"),
                   ],
                 ),
@@ -55,7 +55,7 @@ class CourseTabViewWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.format_align_left_outlined, size: 20.sp),
-                    SizedBox(width: 4.w),
+                    4.sizedW,
                     Text("About"),
                   ],
                 ),
@@ -65,7 +65,7 @@ class CourseTabViewWidget extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.chat_outlined, size: 20.sp),
-                    SizedBox(width: 4.w),
+                    4.sizedW,
                     Text("Reviews"),
                   ],
                 ),

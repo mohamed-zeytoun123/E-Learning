@@ -1,12 +1,32 @@
+import 'package:e_learning/core/utils/json_converters.dart';
 import 'package:e_learning/features/Course/data/models/advertisment_model.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'advertisement_response_model.g.dart';
+
+@JsonSerializable()
 class AdvertisementResponseModel {
+  @IntConverter()
   final int count;
+  
+  @NullableStringConverter()
   final String? next;
+  
+  @NullableStringConverter()
   final String? previous;
+  
+  @JsonKey(name: 'total_pages')
+  @IntConverter()
   final int totalPages;
+  
+  @JsonKey(name: 'current_page')
+  @IntConverter()
   final int currentPage;
+  
+  @JsonKey(name: 'page_size')
+  @IntConverter()
   final int pageSize;
+  
   final List<AdvertisementModel> results;
 
   AdvertisementResponseModel({
@@ -19,37 +39,14 @@ class AdvertisementResponseModel {
     required this.results,
   });
 
-  factory AdvertisementResponseModel.fromMap(Map<String, dynamic> map) {
-    final List<AdvertisementModel> resultsList = [];
-    if (map['results'] != null && map['results'] is List) {
-      for (var advertisement in map['results']) {
-        if (advertisement is Map<String, dynamic>) {
-          resultsList.add(AdvertisementModel.fromMap(advertisement));
-        }
-      }
-    }
+  factory AdvertisementResponseModel.fromJson(Map<String, dynamic> json) =>
+      _$AdvertisementResponseModelFromJson(json);
 
-    return AdvertisementResponseModel(
-      count: map['count'] ?? 0,
-      next: map['next'] as String?,
-      previous: map['previous'] as String?,
-      totalPages: map['total_pages'] ?? 1,
-      currentPage: map['current_page'] ?? 1,
-      pageSize: map['page_size'] ?? 10,
-      results: resultsList,
-    );
-  }
+  Map<String, dynamic> toJson() => _$AdvertisementResponseModelToJson(this);
+  
+  // Keep fromMap and toMap for backward compatibility
+  factory AdvertisementResponseModel.fromMap(Map<String, dynamic> map) =>
+      AdvertisementResponseModel.fromJson(map);
 
-  Map<String, dynamic> toMap() {
-    return {
-      'count': count,
-      'next': next,
-      'previous': previous,
-      'total_pages': totalPages,
-      'current_page': currentPage,
-      'page_size': pageSize,
-      'results': results.map((advertisement) => advertisement.toMap()).toList(),
-    };
-  }
+  Map<String, dynamic> toMap() => toJson();
 }
-

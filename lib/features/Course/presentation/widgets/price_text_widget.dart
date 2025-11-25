@@ -1,6 +1,6 @@
-import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/theme/typography.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PriceTextWidget extends StatelessWidget {

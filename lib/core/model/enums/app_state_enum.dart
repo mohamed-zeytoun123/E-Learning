@@ -1,1 +1,0 @@
-enum AppStateEnum { user, guest }

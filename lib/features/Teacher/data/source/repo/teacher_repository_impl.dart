@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:e_learning/core/Error/failure.dart';
+import 'package:netwoek/failures/failures.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/Teacher/data/models/teacher_response_model.dart';
 import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source.dart';
@@ -35,12 +35,9 @@ class TeacherRepositoryImpl implements TeacherRepository {
 
       return result.fold(
         (failure) {
-          print('❌ Repository: Remote call failed - ${failure.message}');
           return Left(failure);
         },
         (teacherResponse) async {
-          print(
-              '📦 Repository: Received ${teacherResponse.results.length} teachers from remote');
           if (teacherResponse.results.isNotEmpty && page == null) {
             // Only cache when fetching first page without pagination
             await local.saveTeachersInCache(teacherResponse.results);
@@ -52,8 +49,6 @@ class TeacherRepositoryImpl implements TeacherRepository {
       final cachedTeachers = local.getTeachersInCache();
 
       if (cachedTeachers.isNotEmpty) {
-        print(
-            '📦 Repository: Loaded ${cachedTeachers.length} teachers from cache');
         // Create a response model from cached data
         final cachedResponse = TeacherResponseModel(
           count: cachedTeachers.length,
@@ -64,8 +59,7 @@ class TeacherRepositoryImpl implements TeacherRepository {
         );
         return Right(cachedResponse);
       } else {
-        print('❌ Repository: No cached teachers available');
-        return Left(FailureNoConnection());
+        return Left(Failure(message: 'No internet connection'));
       }
     }
   }

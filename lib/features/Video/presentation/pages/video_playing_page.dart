@@ -1,10 +1,13 @@
 import 'dart:io';
 import 'package:chewie/chewie.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/features/Video/data/functions/open_comments_sheet.dart';
 
-import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/download_item.dart';
-import 'package:e_learning/features/chapter/data/models/video_model/video_model.dart';
+import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
+import 'package:e_learning/features/chapter/data/models/download_item.dart';
+import 'package:e_learning/features/chapter/data/models/video_model.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +15,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bootom_sheet_settings_widget.dart';
 
-import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
 
 class VideoPlayingPage extends StatefulWidget {
   //?-----------------------------------------------------
@@ -246,7 +246,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-                                SizedBox(height: 2.h),
+                                2.sizedH,
                                 Text(
                                   selectedVideo?.storageType ?? "Course Name",
                                   style: AppTextStyles.s12w400.copyWith(
@@ -258,7 +258,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                               ],
                             ),
                           ),
-                          SizedBox(width: 8.h),
+                          8.sizedW,
 
                           //?------------------------------------------------------------
                           // Show download button only if not playing from cache
@@ -512,24 +512,24 @@ class VideoDetailsDialogWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 6.h),
+                  6.sizedH,
                   Row(
                     children: [
                       const Icon(Icons.timer, size: 18, color: Colors.black54),
-                      SizedBox(width: 6.w),
+                      6.sizedW,
                       Text(
                         _formatDuration(video.duration),
                         style: AppTextStyles.s14w400.copyWith(
                           color: AppColors.textGrey,
                         ),
                       ),
-                      SizedBox(width: 16.w),
+                      16.sizedW,
                       const Icon(
                         Icons.storage,
                         size: 18,
                         color: Colors.black54,
                       ),
-                      SizedBox(width: 6.w),
+                      6.sizedW,
                       Text(
                         video.storageType,
                         style: AppTextStyles.s14w400.copyWith(
@@ -539,7 +539,7 @@ class VideoDetailsDialogWidget extends StatelessWidget {
                     ],
                   ),
                   if (video.description.isNotEmpty) ...[
-                    SizedBox(height: 10.h),
+                    10.sizedH,
                     Text(
                       video.description,
                       maxLines: 3,
@@ -549,7 +549,7 @@ class VideoDetailsDialogWidget extends StatelessWidget {
                       ),
                     ),
                   ],
-                  SizedBox(height: 12.h),
+                  12.sizedH,
                   Row(
                     children: [
                       ElevatedButton.icon(

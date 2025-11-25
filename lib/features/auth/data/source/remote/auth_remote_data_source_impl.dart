@@ -1,24 +1,28 @@
-import 'dart:developer';
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
-import 'package:e_learning/core/Error/failure.dart';
-import 'package:e_learning/core/network/api_general.dart';
-import 'package:e_learning/core/network/api_request.dart';
-import 'package:e_learning/core/network/api_response.dart';
-import 'package:e_learning/core/network/app_url.dart';
-import 'package:e_learning/core/model/response_model/auth_response_model.dart';
-import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/core/api/api_parameters.dart';
+import 'package:e_learning/core/api/api_urls.dart';
+import 'package:netwoek/failures/failures.dart';
+import 'package:e_learning/core/model/auth_response_model.dart';
+import 'package:e_learning/features/auth/data/models/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
-import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
-import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/auth/data/models/response/otp_verification_response.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model.dart';
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source.dart';
+import 'package:dio/dio.dart';
+import 'package:netwoek/network.dart';
+import 'package:netwoek/network/api/api_call_manager.dart';
+import 'package:netwoek/network/api/api_request.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final API api;
+  final APICallManager apiCallManager;
 
-  AuthRemoteDataSourceImpl({required this.api});
+  AuthRemoteDataSourceImpl({
+    required this.api,
+    required this.apiCallManager,
+  });
   //? -------------------------------------------------------------------------------------
 
   //* LogIn
@@ -27,21 +31,46 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     String numberPhone,
     String password,
   ) async {
+    final request = ApiRequest(
+      url: AppUrls.login,
+      body: {"email": numberPhone, "password": password},
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
+
     try {
-      final response = await api.post(
-        ApiRequest(
-          url: AppUrls.login,
-          body: {"phone": numberPhone, "password": password},
-        ),
-      );
+      final response = await api.post(request);
       if (response.statusCode == 200 && response.body != null) {
-        final userData = AuthResponseModel.fromMap(response.body);
+        final data = response.body!['data'] ?? response.body;
+        final userData =
+            AuthResponseModel.fromMap(data as Map<String, dynamic>);
         return Right(userData);
+      } else {
+        // Extract error message from response body - check for detail, message, error, errors
+        final body = response.body;
+        String errorMessage = 'Login failed. Please try again.';
+        if (body is Map) {
+          if (body.containsKey('detail')) {
+            errorMessage = body['detail'].toString();
+          } else if (body.containsKey('message')) {
+            errorMessage = body['message'].toString();
+          } else if (body.containsKey('error')) {
+            errorMessage = body['error'].toString();
+          } else if (body.containsKey('errors')) {
+            errorMessage = body['errors'].toString();
+          }
+        }
+        return Left(
+          Failure(
+            message: errorMessage,
+            errorCode: response.statusCode,
+          ),
+        );
       }
-      return Left(FailureServer());
     } catch (e) {
-      log("error 🔥🔥🔥🔥🔥 :::$e");
-      return Left(Failure.handleError(e as Exception));
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -52,29 +81,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<Either<Failure, AuthResponseModel>> signUpRemote({
     required SignUpRequestParams params,
   }) async {
-    try {
-      final response = await api.post(
-        ApiRequest(
-          url: AppUrls.signUp,
-          body: {
-            "full_name": params.fullName,
-            "university_id": params.universityId,
-            "college_id": params.collegeId,
-            "study_year": params.studyYear,
-            "phone": params.phone,
-            "password": params.password,
-          },
-        ),
-      );
+    final request = ApiRequest(
+      url: AppUrls.signUp,
+      body: {
+        "full_name": params.fullName,
+        "university_id": params.universityId,
+        "college_id": params.collegeId,
+        "study_year": params.studyYear,
+        "phone": params.phone,
+        "password": params.password,
+      },
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
 
+    try {
+      final response = await api.post(request);
       if (response.statusCode == 200 && response.body != null) {
-        final userData = AuthResponseModel.fromMap(response.body);
+        final data = response.body!['data'] ?? response.body;
+        final userData =
+            AuthResponseModel.fromMap(data as Map<String, dynamic>);
         return Right(userData);
       }
-      return Left(FailureServer());
+      return Left(Failure(message: response.message));
     } catch (e) {
-      log("🔥🔥 Error in register: $e");
-      return Left(Failure.handleError(e as Exception));
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -83,32 +116,30 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   //* getUniversities
   @override
   Future<Either<Failure, List<UniversityModel>>> getUniversitiesRemote() async {
+    final request = ApiRequest(
+      url: AppUrls.getUniversities,
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
+
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.getUniversities);
-      final ApiResponse response = await api.get(request);
-
-      final List<UniversityModel> universities = [];
-
-      if (response.statusCode == 200) {
-        final data = response.body;
-
+      final response = await api.get(request);
+      if (response.statusCode == 200 && response.body != null) {
+        final data = response.body!['data'] ?? response.body;
+        final List<UniversityModel> universities = [];
         if (data is List) {
           for (var item in data) {
-            universities.add(UniversityModel.fromMap(item));
+            universities
+                .add(UniversityModel.fromMap(item as Map<String, dynamic>));
           }
         }
-
         return Right(universities);
-      } else {
-        return Left(
-          Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
-          ),
-        );
       }
-    } catch (exception) {
-      return Left(Failure.handleError(exception as DioException));
+      return Left(Failure(message: response.message));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
   //? -----------------------------------------------------------------
@@ -118,32 +149,29 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<Either<Failure, List<CollegeModel>>> getCollegesRemote({
     required int universityId,
   }) async {
+    final request = ApiRequest(
+      url: '${AppUrls.getColleges}?university=$universityId',
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
+
     try {
-      final ApiRequest request = ApiRequest(
-        url: '${AppUrls.getColleges}?university=$universityId',
-      );
-
-      final ApiResponse response = await api.get(request);
-      final List<CollegeModel> colleges = [];
-
-      if (response.statusCode == 200) {
-        final data = response.body;
+      final response = await api.get(request);
+      if (response.statusCode == 200 && response.body != null) {
+        final data = response.body!['data'] ?? response.body;
+        final List<CollegeModel> colleges = [];
         if (data is List) {
           for (var item in data) {
-            colleges.add(CollegeModel.fromMap(item));
+            colleges.add(CollegeModel.fromMap(item as Map<String, dynamic>));
           }
         }
         return Right(colleges);
-      } else {
-        return Left(
-          Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
-          ),
-        );
       }
-    } catch (exception) {
-      return Left(Failure.handleError(exception as DioException));
+      return Left(Failure(message: response.message));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
   //? -----------------------------------------------------------------
@@ -155,43 +183,35 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String code,
     required String purpose,
   }) async {
+    // Use different endpoints based on purpose
+    final url = purpose == 'reset'
+        ? AppUrls.verifyForgotPasswordOtp
+        : AppUrls.verifyOtp;
+
+    final request = ApiRequest(
+      url: url,
+      body: {"phone": phone, "code": code, "purpose": purpose},
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
+
     try {
-      // Use different endpoints based on purpose
-      String url;
-      Map<String, dynamic> body;
-
-      if (purpose == 'reset') {
-        // For password reset:
-        url = AppUrls.verifyForgotPasswordOtp;
-        body = {"phone": phone, "code": code, "purpose": purpose};
-      } else {
-        // For registration:
-        url = AppUrls.verifyOtp;
-        body = {"phone": phone, "code": code, "purpose": purpose};
-      }
-
-      log("🔍 OTP Verification URL: $url");
-      log("🔍 OTP Verification Body: $body");
-
-      final response = await api.post(ApiRequest(url: url, body: body));
-
+      final response = await api.post(request);
       if (response.statusCode == 200 && response.body != null) {
-        log("🔍 OTP Verification Response: ${response.body}");
-
-        // Parse the response based on purpose
+        final data = response.body!['data'] ?? response.body;
         if (purpose == 'reset') {
-          // For reset purpose, extract the reset_token
-          final otpResponse = OtpVerificationResponse.fromJson(response.body);
+          final otpResponse =
+              OtpVerificationResponse.fromJson(data as Map<String, dynamic>);
           return Right(otpResponse);
         } else {
-          // For registration purpose, return empty response
           return Right(OtpVerificationResponse());
         }
       }
-      return Left(FailureServer());
+      return Left(Failure(message: response.message));
     } catch (e) {
-      log("error 🔥🔥🔥🔥🔥 OTP Verification:::$e");
-      return Left(Failure.handleError(e as Exception));
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -202,17 +222,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<Either<Failure, bool>> forgetPasswordRemote({
     required String phone,
   }) async {
+    final request = ApiRequest(
+      url: AppUrls.forgetPassword,
+      body: {"phone": phone},
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
+
     try {
-      final response = await api.post(
-        ApiRequest(url: AppUrls.forgetPassword, body: {"phone": phone}),
-      );
+      final response = await api.post(request);
       if (response.statusCode == 200 && response.body != null) {
-        return Right(true);
+        return const Right(true);
       }
-      return Left(FailureServer());
+      return Left(Failure(message: 'Failed to send password reset'));
     } catch (e) {
-      log("error 🔥🔥🔥🔥🔥 :::$e");
-      return Left(Failure.handleError(e as Exception));
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -223,33 +249,45 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<Either<Failure, bool>> resetPasswordRemote({
     required ResetPasswordRequestParams params,
   }) async {
+    final request = ApiRequest(
+      url: AppUrls.resetPassword,
+      body: params.toMap(),
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
+
     try {
-      final response = await api.post(
-        ApiRequest(url: AppUrls.resetPassword, body: params.toMap()),
-      );
+      final response = await api.post(request);
       if (response.statusCode == 200 && response.body != null) {
-        return Right(true);
+        return const Right(true);
       }
-      return Left(FailureServer());
+      return Left(Failure(message: 'Failed to reset password'));
     } catch (e) {
-      log("error 🔥🔥🔥🔥🔥 Reset Password:::$e");
-      return Left(Failure.handleError(e as Exception));
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
 
   @override
   Future<Either<Failure, bool>> logOutRemote(String refreshToken) async {
+    final request = ApiRequest(
+      url: AppUrls.logOut,
+      body: {"refresh": refreshToken},
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
+
     try {
-      var response = await api.post(
-        ApiRequest(url: AppUrls.logOut, body: {"refresh": refreshToken}),
-      );
+      final response = await api.post(request);
       if (response.statusCode == 200 && response.body != null) {
-        log('📤 logout is success ');
-        return Right(true);
+        return const Right(true);
       }
-      return Left(FailureServer());
-    } catch (error) {
-      return left(Failure.handleError(error as DioException));
+      return Left(Failure(message: 'Failed to logout'));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
 
@@ -258,32 +296,35 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   //* getStudyYears
   @override
   Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRemote() async {
+    final request = ApiRequest(
+      url: AppUrls.getStudyYears,
+      headers: ApiRequestParameters.noAuthHeaders,
+    );
+
     try {
-      final ApiRequest request = ApiRequest(url: AppUrls.getStudyYears);
-      final ApiResponse response = await api.get(request);
-      final List<StudyYearModel> studyYears = [];
-
-      if (response.statusCode == 200) {
-        final data = response.body;
-
-        // نتأكد إن الـ data قائمة
+      final response = await api.get(request);
+      if (response.statusCode == 200 && response.body != null) {
+        final data = response.body!['data'] ?? response.body;
+        final List<StudyYearModel> studyYears = [];
         if (data is Map<String, dynamic> && data['results'] is List) {
           for (var item in data['results']) {
-            studyYears.add(StudyYearModel.fromJson(item));
+            studyYears
+                .add(StudyYearModel.fromJson(item as Map<String, dynamic>));
+          }
+        } else if (data is List) {
+          for (var item in data) {
+            studyYears
+                .add(StudyYearModel.fromJson(item as Map<String, dynamic>));
           }
         }
-
         return Right(studyYears);
-      } else {
-        return Left(
-          Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
-          ),
-        );
       }
-    } catch (exception) {
-      return Left(Failure.handleError(exception as DioException));
+      return Left(Failure(message: response.message));
+    } catch (e) {
+      if (e is DioException) {
+        return Left(Failure.fromException(e));
+      }
+      return Left(Failure(message: e.toString()));
     }
   }
 

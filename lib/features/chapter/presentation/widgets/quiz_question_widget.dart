@@ -1,9 +1,9 @@
-import 'dart:developer';
-
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/theme/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_text_styles.dart';
 
 class QuizQuestionWidget extends StatelessWidget {
   final String questionNumber;
@@ -34,7 +34,7 @@ class QuizQuestionWidget extends StatelessWidget {
               "${questionNumber.padLeft(2, '0')} - $questionTitle",
               style: AppTextStyles.s16w500.copyWith(color: AppColors.textBlack),
             ),
-            SizedBox(height: 12.h),
+            12.sizedH,
 
             Container(
               margin: EdgeInsets.only(bottom: 10.h),
@@ -53,7 +53,7 @@ class QuizQuestionWidget extends StatelessWidget {
                     color: AppColors.iconError,
                     size: 24.sp,
                   ),
-                  SizedBox(width: 10.w),
+                  10.sizedW,
                   Text(
                     "No options available for this question.",
                     style: AppTextStyles.s14w400.copyWith(
@@ -90,7 +90,7 @@ class QuizQuestionWidget extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 10.h),
+        10.sizedH,
         Column(
           children: List.generate(options.length, (index) {
             final option = options[index];
@@ -99,7 +99,6 @@ class QuizQuestionWidget extends StatelessWidget {
             return InkWell(
               onTap: () {
                 onOptionSelected(index);
-                log("$option 😊😊😊😊😊😊😊😊😊😊😊😊 $index");
               },
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 10.h),
@@ -119,7 +118,7 @@ class QuizQuestionWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    12.sizedW,
                     Expanded(
                       child: Text(
                         option,
