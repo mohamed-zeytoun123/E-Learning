@@ -949,6 +949,25 @@ class ChapterCubit extends Cubit<ChapterState> {
   }
 
   //?--------------------------------------------------------
+  //* Delete Cached Video
+  Future<void> deleteCachedVideo(String videoId) async {
+    try {
+      // Delete the video from local storage
+      await local.deleteCachedVideo(videoId);
+      
+      // Remove the video from the downloads list in state
+      final updatedDownloads = state.downloads
+          .where((download) => download.videoId != videoId)
+          .toList();
+      
+      emit(state.copyWith(downloads: updatedDownloads));
+    } catch (e) {
+      log('Failed to delete cached video: $e');
+      rethrow;
+    }
+  }
+
+  //?--------------------------------------------------------
 
   //* Step 4 : Submit Completed
   Future<void> submitAnswersList({

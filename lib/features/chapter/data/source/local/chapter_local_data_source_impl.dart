@@ -85,5 +85,39 @@ class ChapterLocalDataSourceImpl implements ChapterLocalDataSource {
     }
   }
 
+  @override
+  Future<void> deleteCachedVideo(String videoId) async {
+    // Delete the video file
+    final videoFile = File(await getVideoPath(videoId));
+    if (await videoFile.exists()) {
+      await videoFile.delete();
+    }
+
+    // Remove the video metadata from the index
+    final metaFile = await _getMetaFile();
+    if (!await metaFile.exists()) return;
+    
+    try {
+      final content = await metaFile.readAsString();
+      final data = json.decode(content) as List<dynamic>;
+      final updatedData = data
+          .where((e) => e is Map && e['videoId'] != videoId)
+          .toList();
+      
+      if (updatedData.isEmpty) {
+        // If no videos left, delete the meta file
+        await metaFile.delete();
+      } else {
+        // Otherwise, write the updated data back
+        await metaFile.writeAsString(json.encode(updatedData), flush: true);
+      }
+    } catch (_) {
+      // If there's an error reading/parsing, just delete the meta file
+      if (await metaFile.exists()) {
+        await metaFile.delete();
+      }
+    }
+  }
+
   //?--------------------------------------------------------
 }

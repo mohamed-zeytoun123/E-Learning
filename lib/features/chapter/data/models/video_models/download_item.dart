@@ -1,7 +1,7 @@
 class DownloadItem {
   final String videoId;
   final String fileName;
-  final double progress; // من 0 إلى 1.0
+  final double progress;
   final bool isDownloading;
   final bool isCompleted;
   final bool hasError;

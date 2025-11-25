@@ -12,17 +12,36 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class DownloadsPage extends StatelessWidget {
+class DownloadsPage extends StatefulWidget {
   const DownloadsPage({super.key});
+
+  @override
+  State<DownloadsPage> createState() => _DownloadsPageState();
+}
+
+class _DownloadsPageState extends State<DownloadsPage> {
+  late Future<List<DownloadItem>> _downloadsFuture;
+  late ChapterCubit cubit;
+
+  @override
+  void initState() {
+    super.initState();
+    cubit = context.read<ChapterCubit>();
+    _loadDownloads();
+  }
+
+  void _loadDownloads() {
+    _downloadsFuture = cubit.getCachedDownloads();
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: context.read<ChapterCubit>(),
+      value: cubit,
       child: Scaffold(
         appBar: CustomAppBarWidget(title: 'Downloads', showBack: true),
         body: FutureBuilder<List<DownloadItem>>(
-          future: context.read<ChapterCubit>().getCachedDownloads(),
+          future: _downloadsFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
               return Center(child: AppLoading.circular());
@@ -50,7 +69,7 @@ class DownloadsPage extends StatelessWidget {
                     Icon(
                       Icons.video_library_outlined,
                       size: 80.sp,
-                      color: AppColors.iconGrey,
+                      color: AppColors.iconGrey.withOpacity(0.5),
                     ),
                     SizedBox(height: 20.h),
                     Text(
@@ -154,13 +173,89 @@ class DownloadsPage extends StatelessWidget {
                                 color: AppColors.textGrey,
                               ),
                             ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 16.sp,
-                              color: AppColors.iconGrey,
+                            trailing: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: AppColors.iconRed,
+                                    size: 20.sp,
+                                  ),
+                                  onPressed: () async {
+                                    final shouldDelete = await showDialog<bool>(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Text('Confirm Delete'),
+                                          content: Text(
+                                            'Are you sure you want to delete "${download.fileName}"?',
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                              ).pop(false),
+                                              child: const Text('Cancel'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Navigator.of(
+                                                context,
+                                              ).pop(true),
+                                              child: const Text(
+                                                'Delete',
+                                                style: TextStyle(
+                                                  color: AppColors.iconRed,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+
+                                    if (shouldDelete == true) {
+                                      try {
+                                        await cubit.deleteCachedVideo(
+                                          download.videoId,
+                                        );
+                                        AppMessage.showFlushbar(
+                                          context: context,
+                                          title: "Success",
+                                          message: "Video deleted successfully",
+                                          backgroundColor:
+                                              AppColors.messageSuccess,
+                                          iconData: Icons.check_circle,
+                                          iconColor: AppColors.iconWhite,
+                                          isShowProgress: true,
+                                        );
+
+                                        setState(() {
+                                          _loadDownloads();
+                                        });
+                                      } catch (e) {
+                                        AppMessage.showFlushbar(
+                                          context: context,
+                                          title: "Error",
+                                          message: "Failed to delete video",
+                                          backgroundColor:
+                                              AppColors.messageError,
+                                          iconData: Icons.error,
+                                          iconColor: AppColors.iconWhite,
+                                          isShowProgress: true,
+                                        );
+                                      }
+                                    }
+                                  },
+                                ),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 16.sp,
+                                  color: AppColors.iconGrey,
+                                ),
+                              ],
                             ),
                             onTap: () async {
-                              final cubit = context.read<ChapterCubit>();
                               try {
                                 final videoFile = await cubit
                                     .decryptVideoFromCache(
