@@ -92,7 +92,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                     background: CustomCachedImageWidget(
                       appImage:
                           course.image ??
-                          'https://picsum.photos/361/180', //todo remove image dynamic
+                          '', //todo remove image dynamic
                       width: double.infinity,
                       fit: BoxFit.cover,
                       height: 262,

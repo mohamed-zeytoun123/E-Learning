@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
@@ -44,11 +43,6 @@ abstract class ChapterRemoteDataSource {
     required int quizId,
     required int questionId,
     required int selectedChoiceId,
-  });
-
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRemote({
-    required int attemptId,
   });
 
   //* Alternative Step 4 : Submit Completed Quiz with Answers (Final submit + grading)

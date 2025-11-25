@@ -86,7 +86,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
             builder: (context, isFavorite) {
               final course = courses[index];
               return CourseInfoCardWidget(
-                imageUrl: course.image ?? 'https://picsum.photos/361/180',
+                imageUrl: course.image ?? '',
                 title: course.title,
                 subtitle: course.collegeName,
                 rating: (course.averageRating ?? 0).toDouble(),

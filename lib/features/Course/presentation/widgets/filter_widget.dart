@@ -135,7 +135,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                   if (index < courses.length) {
                     final course = courses[index];
                     return CourseInfoCardWidget(
-                      imageUrl: course.image ?? 'https://picsum.photos/361/180',
+                      imageUrl: course.image ?? '',
                       title: course.title,
                       isFavorite: course.isFavorite,
                       subtitle: course.collegeName,

@@ -18,8 +18,6 @@ import 'package:e_learning/features/chapter/data/models/quize/submit/submit_comp
 import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_pagination_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -260,62 +258,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     }
   }
 
-  //?----------------------------------------------------
-  //* Submit Completed Quiz
-  @override
-  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRemote({
-    required int attemptId,
-  }) async {
-    try {
-      final ApiRequest request = ApiRequest(
-        url: AppUrls.submitCompletedQuiz(attemptId),
-      );
 
-      final ApiResponse response = await api.post(request);
-
-      log("SUBMIT COMPLETED QUIZ RESPONSE: ${response.body}");
-
-      final data = response.body;
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        if (data is Map<String, dynamic>) {
-          if (data.containsKey("error")) {
-            return Left(
-              Failure(
-                message: data["error"].toString(),
-                statusCode: response.statusCode,
-              ),
-            );
-          }
-
-          final submit = SubmitCompletedModel.fromJson(data);
-          return Right(submit);
-        } else {
-          return Left(FailureServer());
-        }
-      }
-
-      if (data is Map<String, dynamic> && data.containsKey("error")) {
-        return Left(
-          Failure(
-            message: data["error"].toString(),
-            statusCode: response.statusCode,
-          ),
-        );
-      }
-
-      return Left(
-        Failure(message: "Unknown error", statusCode: response.statusCode),
-      );
-    } catch (exception) {
-      log(exception.toString());
-      if (exception is DioException) {
-        return Left(Failure.handleError(exception));
-      } else {
-        return Left(Failure(message: exception.toString()));
-      }
-    }
-  }
 
   //?----------------------------------------------------
   //* Get Videos by Chapter ID (pagination)

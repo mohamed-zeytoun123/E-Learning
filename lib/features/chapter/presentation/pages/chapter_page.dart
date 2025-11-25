@@ -104,7 +104,7 @@ class ChapterPage extends StatelessWidget {
                     flexibleSpace: FlexibleSpaceBar(
                       background: CustomCachedImageWidget(
                         appImage:
-                            courseImage ?? "https://picsum.photos/300/200",
+                            courseImage ?? "",
                         width: double.infinity,
                         fit: BoxFit.cover,
                         height: 262,

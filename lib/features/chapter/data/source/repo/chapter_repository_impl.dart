@@ -12,7 +12,6 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_q
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
@@ -129,23 +128,6 @@ class ChapterRepositoryImpl implements ChapterRepository {
     }
   }
 
-  //?-----------
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  @override
-  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRepo({
-    required int attemptId,
-  }) async {
-    if (await network.isConnected) {
-      final result = await remote.submitCompletedQuizRemote(
-        attemptId: attemptId,
-      );
-
-      return result.fold((failure) => Left(failure), (submit) => Right(submit));
-    } else {
-      return Left(FailureNoConnection());
-    }
-  }
-
   //?--------------------------------------------------------
 
   //* Update Video Progress (Cubit)
@@ -154,7 +136,6 @@ class ChapterRepositoryImpl implements ChapterRepository {
     required int videoId,
     required int watchedSeconds,
   }) {
-    // استدعاء الريبو بدون انتظار أو التعامل مع النتيجة
     remote.updateVideoProgressRemote(
       videoId: videoId,
       watchedSeconds: watchedSeconds,

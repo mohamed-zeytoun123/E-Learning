@@ -45,11 +45,6 @@ class ChapterState {
   final String? answerError;
   final Map<int, int> selectedOptions;
 
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  final SubmitCompletedModel? submit;
-  final ResponseStatusEnum? submitStatus;
-  final String? submitError;
-
   //* Get Videos by Chapter with Pagination
   final VideosResultModel? videos;
   final ResponseStatusEnum? videosStatus;
@@ -114,11 +109,6 @@ class ChapterState {
     this.answerStatus = ResponseStatusEnum.initial,
     this.answerError,
     this.selectedOptions = const {},
-
-    //* Step 4 : Submit Completed Quiz (Final submit + grading)
-    this.submit,
-    this.submitStatus = ResponseStatusEnum.initial,
-    this.submitError,
 
     //* Get Videos by Chapter with Pagination
     this.videos,
@@ -186,11 +176,6 @@ class ChapterState {
     String? answerError,
     Map<int, int>? selectedOptions,
 
-    //* Step 4 : Submit Completed Quiz (Final submit + grading)
-    SubmitCompletedModel? submit,
-    ResponseStatusEnum? submitStatus,
-    String? submitError,
-
     //* Get Videos by Chapter with Pagination
     VideosResultModel? videos,
     ResponseStatusEnum? videosStatus,
@@ -254,11 +239,6 @@ class ChapterState {
       answerStatus: answerStatus ?? this.answerStatus,
       answerError: answerError,
       selectedOptions: selectedOptions ?? this.selectedOptions,
-
-      //* Step 4 : Submit Completed Quiz (Final submit + grading)
-      submit: submit ?? this.submit,
-      submitStatus: submitStatus ?? this.submitStatus,
-      submitError: submitError ?? this.submitError,
 
       //* Get Videos by Chapter with Pagination
       videos: videos ?? this.videos,

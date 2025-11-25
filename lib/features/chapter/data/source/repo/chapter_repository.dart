@@ -10,7 +10,6 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_q
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_models/video_progress_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 
 abstract class ChapterRepository {
@@ -44,10 +43,7 @@ abstract class ChapterRepository {
     required int selectedChoiceId,
   });
 
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRepo({
-    required int attemptId,
-  });
+
   //?--------------------------------------------------------
   //* Get Videos by Chapter with Pagination (Repository)
   Future<Either<Failure, VideosResultModel>> getVideosRepo({
