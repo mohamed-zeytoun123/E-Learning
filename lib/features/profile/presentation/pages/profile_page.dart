@@ -205,8 +205,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     extra: context.read<ProfileCubit>(),
                   );
                   // context.push(RouteNames.aboutUs);
-                  // appLocator<ProfileRemouteDataSource>().getAboutUpInfo();
-                  // appLocator<ProfileRepository>().getAboutUsRepo();
+                  // id<ProfileRemouteDataSource>().getAboutUpInfo();
+                  // id<ProfileRepository>().getAboutUsRepo();
                   // print('ghassan');
                 },
               ),

@@ -1,10 +1,9 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/features/Course/data/models/course_model.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_info_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,7 +28,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
                 size: 60.sp,
                 color: AppColors.textError.withOpacity(0.7),
               ),
-              16.sizedH,
+              SizedBox(height: 16.h),
               Text(
                 "No courses available in this category",
                 textAlign: TextAlign.center,
@@ -37,7 +36,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
                   color: AppColors.textError,
                 ),
               ),
-              8.sizedH,
+              SizedBox(height: 8.h),
               Text(
                 "Please select another category or try again later.",
                 textAlign: TextAlign.center,
@@ -77,7 +76,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
             builder: (context, isFavorite) {
               final course = courses[index];
               return CourseInfoCardWidget(
-                imageUrl: course.image ?? 'https://picsum.photos/361/180',
+                imageUrl: course.image ?? '',
                 title: course.title,
                 subtitle: course.collegeName,
                 rating: (course.averageRating ?? 0).toDouble(),
@@ -99,7 +98,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
             },
           );
         },
-        separatorBuilder: (_, __) => 15.sizedH,
+        separatorBuilder: (_, __) => SizedBox(height: 15.h),
       ),
     );
   }

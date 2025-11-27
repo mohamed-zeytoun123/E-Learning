@@ -1,19 +1,18 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/theme/theme_extensions.dart';
+import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
-import 'package:e_learning/core/widgets/error_state_widget.dart';
+import 'package:e_learning/core/widgets/error/error_state_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_enroll_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/icon_count_text_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/price_text_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/teacher_row_widget.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/course/presentation/widgets/icon_count_text_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/teacher_row_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,16 +23,19 @@ class BodyTabAboutWidget extends StatelessWidget {
     required this.isActive,
     required this.courseId,
     required this.price,
+    required this.countVideos,
+    required this.countChapter,
     required this.houresDurtion,
   });
   final bool isActive;
   final int courseId;
+  final int countVideos;
+  final int countChapter;
   final double houresDurtion;
   final String price;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     return BlocBuilder<CourseCubit, CourseState>(
       buildWhen: (previous, current) =>
           previous.courseDetailsStatus != current.courseDetailsStatus,
@@ -65,7 +67,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                         size: 100.r,
                         color: AppColors.iconOrange,
                       ),
-                      20.sizedH,
+                      SizedBox(height: 20.h),
                       Text(
                         "No Course Data",
                         textAlign: TextAlign.center,
@@ -73,7 +75,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                           color: AppColors.textBlack,
                         ),
                       ),
-                      10.sizedH,
+                      SizedBox(height: 10.h),
                       Text(
                         "There is currently no information available for this course.",
                         textAlign: TextAlign.center,
@@ -81,14 +83,18 @@ class BodyTabAboutWidget extends StatelessWidget {
                           color: AppColors.textGrey,
                         ),
                       ),
-                      30.sizedH,
+                      SizedBox(height: 30.h),
                       CustomButton(
                         title: "Retry",
+                        titleStyle: AppTextStyles.s18w600.copyWith(
+                          color: AppColors.titlePrimary,
+                        ),
                         buttonColor: AppColors.buttonPrimary,
+                        borderColor: AppColors.borderPrimary,
                         onTap: () {
                           context.read<CourseCubit>().getCourseDetails(
-                                id: "$courseId",
-                              );
+                            id: "$courseId",
+                          );
                         },
                       ),
                     ],
@@ -108,7 +114,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                     Text(
                       "Instructor",
                       style: AppTextStyles.s16w600.copyWith(
-                        color: colors.textPrimary,
+                        color: AppColors.textBlack,
                       ),
                     ),
                     TeacherRowWidget(
@@ -116,37 +122,39 @@ class BodyTabAboutWidget extends StatelessWidget {
                       teacherImageUrl: details.teacherAvatar ?? "",
                     ),
                     Divider(
-                      color: colors.dividerGrey,
+                      color: AppColors.dividerGrey,
                       thickness: 1,
                       height: 0.h,
                     ),
+
                     Text(
                       "About The Course",
                       style: AppTextStyles.s18w600.copyWith(
-                        color: colors.textPrimary,
+                        color: AppColors.textBlack,
                       ),
                     ),
                     Text(
                       details.title,
                       style: AppTextStyles.s18w600.copyWith(
-                        color: colors.textPrimary,
+                        color: AppColors.textBlack,
                       ),
                     ),
-                    8.sizedH,
+                    SizedBox(height: 8.h),
                     Text(
                       details.description,
                       style: AppTextStyles.s16w400.copyWith(
-                        color: colors.textPrimary,
+                        color: AppColors.textBlack,
                       ),
                     ),
-                    16.sizedH,
+                    SizedBox(height: 16.h),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
                           "Paid Price",
                           style: AppTextStyles.s16w600.copyWith(
-                            color: colors.textPrimary,
+                            color: AppColors.textBlack,
                           ),
                         ),
                         PriceTextWidget(price: details.price),
@@ -155,7 +163,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: Divider(
-                        color: colors.dividerGrey,
+                        color: AppColors.dividerGrey,
                         thickness: 1,
                         height: 0.h,
                       ),
@@ -163,7 +171,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                     Text(
                       "Content",
                       style: AppTextStyles.s18w600.copyWith(
-                        color: colors.textPrimary,
+                        color: AppColors.textBlack,
                       ),
                     ),
                     Row(
@@ -174,7 +182,10 @@ class BodyTabAboutWidget extends StatelessWidget {
                           children: [
                             IconCountTextWidget(
                               icon: Icons.videocam_outlined,
-                              count: 28.toString(),
+                              count: countVideos.toString(),
+
+                              // state.chapters?.chapters[courseId].videosCount
+                              // .toString()
                               text: 'Videos',
                             ),
                             IconCountTextWidget(
@@ -189,9 +200,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                           children: [
                             IconCountTextWidget(
                               icon: Icons.assignment_outlined,
-                              count: state.chapters != null
-                                  ? state.chapters!.chapters.length.toString()
-                                  : "0",
+                              count: countChapter.toString(),
                               text: 'Chapters',
                             ),
                             IconCountTextWidget(
@@ -203,14 +212,17 @@ class BodyTabAboutWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    BlocSelector<AppManagerCubit, AppManagerState,
-                        AppStateEnum>(
+                    BlocSelector<
+                      AppManagerCubit,
+                      AppManagerState,
+                      AppStateEnum
+                    >(
                       selector: (state) => state.appState,
                       builder: (context, appState) {
                         if (!isActive && appState == AppStateEnum.user) {
                           return Column(
                             children: [
-                              20.sizedH,
+                              SizedBox(height: 20.h),
                               CourseEnrollWidget(
                                 courseId: courseId,
                                 price: price,

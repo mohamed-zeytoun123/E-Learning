@@ -1,12 +1,7 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
@@ -51,10 +46,10 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
     cubit
         .getVideos(chapterId: widget.chapterId, reset: false, page: nextPage)
         .then((_) {
-      if (cubit.state.videosMoreStatus != ResponseStatusEnum.failure) {
-        page = nextPage;
-      }
-    });
+          if (cubit.state.videosMoreStatus != ResponseStatusEnum.failure) {
+            page = nextPage;
+          }
+        });
   }
 
   @override
@@ -68,10 +63,10 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
     });
 
     context.read<ChapterCubit>().getVideos(
-          chapterId: widget.chapterId,
-          reset: true,
-          page: 1,
-        );
+      chapterId: widget.chapterId,
+      reset: true,
+      page: 1,
+    );
   }
 
   @override
@@ -107,7 +102,7 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                     color: AppColors.iconGrey.withOpacity(0.5),
                     size: 50.sp,
                   ),
-                  12.sizedH,
+                  SizedBox(height: 12.h),
                   Text(
                     "No videos available",
                     textAlign: TextAlign.center,
@@ -115,7 +110,7 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                       color: AppColors.textGrey,
                     ),
                   ),
-                  15.sizedH,
+                  SizedBox(height: 15.h),
                   Text(
                     "There are currently no videos in this chapter",
                     textAlign: TextAlign.center,
@@ -174,7 +169,7 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                     color: AppColors.iconError,
                     size: 50.sp,
                   ),
-                  12.sizedH,
+                  SizedBox(height: 12.h),
                   Text(
                     state.videosError ?? "Failed to load videos",
                     textAlign: TextAlign.center,
@@ -182,16 +177,20 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                       color: AppColors.textError,
                     ),
                   ),
-                  15.sizedH,
+                  SizedBox(height: 15.h),
                   CustomButton(
                     title: "Retry",
+                    titleStyle: AppTextStyles.s14w500.copyWith(
+                      color: AppColors.textWhite,
+                    ),
                     buttonColor: AppColors.buttonPrimary,
+                    borderColor: AppColors.borderPrimary,
                     onTap: () {
                       context.read<ChapterCubit>().getVideos(
-                            chapterId: widget.chapterId,
-                            reset: true,
-                            page: 1,
-                          );
+                        chapterId: widget.chapterId,
+                        reset: true,
+                        page: 1,
+                      );
                     },
                   ),
                 ],
@@ -220,11 +219,10 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                       }
                     : null,
                 child: VideoRowWidget(
-                  videoId:
-                      video.id.toString(), // Pass videoId for download tracking
+                  videoId: video.id.toString(),
                   chapterTitle: video.title,
                   durationSecond: video.duration,
-                  completedVideos: video.progress,
+                  completedVideos: video.progressPercentage,
                   isLocked: !isVideoEnabled,
                   onTap: isVideoEnabled
                       ? () {
@@ -254,7 +252,7 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                             color: AppColors.textRed,
                             size: 40.sp,
                           ),
-                          8.sizedH,
+                          SizedBox(height: 8.h),
                           Text(
                             state.videosMoreError ??
                                 "Failed to load more videos",
@@ -262,16 +260,20 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                               color: AppColors.textError,
                             ),
                           ),
-                          10.sizedH,
+                          SizedBox(height: 10.h),
                           CustomButton(
                             title: "Retry",
+                            titleStyle: AppTextStyles.s16w600.copyWith(
+                              color: AppColors.titlePrimary,
+                            ),
                             buttonColor: AppColors.buttonPrimary,
+                            borderColor: AppColors.borderPrimary,
                             onTap: () {
                               context.read<ChapterCubit>().getVideos(
-                                    chapterId: widget.chapterId,
-                                    reset: false,
-                                    page: page + 1,
-                                  );
+                                chapterId: widget.chapterId,
+                                reset: false,
+                                page: page + 1,
+                              );
                             },
                           ),
                         ],

@@ -1,8 +1,6 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/features/chapter/data/models/download_item.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
@@ -65,78 +63,82 @@ class VideoRowWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(999.r),
                               ),
                               alignment: Alignment.center,
-                              child: isLocked 
-                                ? Icon(
-                                    Icons.lock,
-                                    color: AppColors.iconOrange,
-                                    size: 25.sp,
-                                  )
-                                : BlocBuilder<ChapterCubit, ChapterState>(
-                                    buildWhen: (previous, current) => 
-                                        previous.downloads != current.downloads,
-                                    builder: (context, state) {
-                                      // Find the download item for this video
-                                      final downloadItem = state.downloads.firstWhere(
-                                        (d) => d.videoId == videoId,
-                                        orElse: () => DownloadItem(
-                                          videoId: videoId,
-                                          fileName: "",
-                                          isDownloading: false,
-                                          progress: 0.0,
-                                        ),
-                                      );
-                                      
-                                      if (downloadItem.isDownloading) {
-                                        // Show progress percentage instead of just loading icon
-                                        return Stack(
-                                          alignment: Alignment.center,
-                                          children: [
-                                            CircularProgressIndicator(
-                                              value: downloadItem.progress,
-                                              strokeWidth: 3,
-                                              valueColor: const AlwaysStoppedAnimation<Color>(
-                                                AppColors.buttonPrimary,
+                              child: isLocked
+                                  ? Icon(
+                                      Icons.lock,
+                                      color: AppColors.iconOrange,
+                                      size: 25.sp,
+                                    )
+                                  : BlocBuilder<ChapterCubit, ChapterState>(
+                                      buildWhen: (previous, current) =>
+                                          previous.downloads !=
+                                          current.downloads,
+                                      builder: (context, state) {
+                                        // Find the download item for this video
+                                        final downloadItem = state.downloads
+                                            .firstWhere(
+                                              (d) => d.videoId == videoId,
+                                              orElse: () => DownloadItem(
+                                                videoId: videoId,
+                                                fileName: "",
+                                                isDownloading: false,
+                                                progress: 0.0,
                                               ),
-                                              backgroundColor: AppColors.dividerGrey,
-                                            ),
-                                            Text(
-                                              '${(downloadItem.progress * 100).toInt()}%',
-                                              style: TextStyle(
-                                                fontSize: 8.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.textPrimary,
+                                            );
+
+                                        if (downloadItem.isDownloading) {
+                                          // Show progress percentage instead of just loading icon
+                                          return Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              CircularProgressIndicator(
+                                                value: downloadItem.progress,
+                                                strokeWidth: 3,
+                                                valueColor:
+                                                    const AlwaysStoppedAnimation<
+                                                      Color
+                                                    >(AppColors.buttonPrimary),
+                                                backgroundColor:
+                                                    AppColors.dividerGrey,
                                               ),
-                                            ),
-                                          ],
-                                        );
-                                      } else if (downloadItem.isCompleted) {
-                                        // Show checkmark when completed
-                                        return Icon(
-                                          Icons.check,
-                                          color: Colors.green,
-                                          size: 25.sp,
-                                        );
-                                      } else if (downloadItem.hasError) {
-                                        // Show error icon
-                                        return Icon(
-                                          Icons.error,
-                                          color: Colors.red,
-                                          size: 25.sp,
-                                        );
-                                      } else {
-                                        // Show play icon when not downloading
-                                        return Icon(
-                                          Icons.play_arrow,
-                                          color: AppColors.iconBlue,
-                                          size: 25.sp,
-                                        );
-                                      }
-                                    },
-                                  ),
+                                              Text(
+                                                '${(downloadItem.progress * 100).toInt()}%',
+                                                style: TextStyle(
+                                                  fontSize: 8.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.textPrimary,
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        } else if (downloadItem.isCompleted) {
+                                          // Show checkmark when completed
+                                          return Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 25.sp,
+                                          );
+                                        } else if (downloadItem.hasError) {
+                                          // Show error icon
+                                          return Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                            size: 25.sp,
+                                          );
+                                        } else {
+                                          // Show play icon when not downloading
+                                          return Icon(
+                                            Icons.play_arrow,
+                                            color: AppColors.iconBlue,
+                                            size: 25.sp,
+                                          );
+                                        }
+                                      },
+                                    ),
                             ),
                           ],
                         ),
-                        12.sizedW,
+                        SizedBox(width: 12.w),
                         Expanded(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -153,7 +155,7 @@ class VideoRowWidget extends StatelessWidget {
                                   maxLines: 1,
                                 ),
                               ),
-                              4.sizedH,
+                              SizedBox(height: 4.h),
                               Text(
                                 '$durationSecond Mins',
                                 style: AppTextStyles.s14w400.copyWith(
@@ -178,8 +180,8 @@ class VideoRowWidget extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 10.h),
                         child: VideoProgressWidget(
-                          completedVideosSecond: completedVideos!,
-                          totalVideoSecond: durationSecond,
+                          completed: completedVideos!.toInt(),
+                          total: durationSecond,
                           hieghtProgress: 4,
                           showDetiels: false,
                         ),

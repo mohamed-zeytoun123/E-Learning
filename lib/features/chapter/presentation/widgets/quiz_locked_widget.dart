@@ -1,11 +1,10 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/asset/app_icons.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
 
 class QuizLockedWidget extends StatelessWidget {
   // final int remainingVideos;
@@ -26,21 +25,17 @@ class QuizLockedWidget extends StatelessWidget {
           child: CircleAvatar(
             radius: 44.r,
             backgroundColor: AppColors.backgroundLittelOrange,
-            child: Container(
-              width: 48.w,
-              height: 48.h,
-              color: Colors.black,
-            ),
+            child: Image.asset(AppIcons.iconErrorOutline),
           ),
         ),
-        20.sizedH,
+        SizedBox(height: 20.h),
         Text(
           context.read<ChapterCubit>().state.quizDetailsError ??
               'No quiz available !',
           textAlign: TextAlign.center,
           style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
         ),
-        // 6.sizedH,
+        // SizedBox(height: 6.h),
         // Text(
         //   "You Have $remainingVideos Videos Left to Unlock Your Quiz",
         //   style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),

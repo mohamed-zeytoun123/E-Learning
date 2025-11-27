@@ -1,9 +1,7 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/core/theme/theme_extensions.dart';
-import 'package:e_learning/features/Course/presentation/widgets/icon_circle_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +30,6 @@ class ChapterRowWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     if (isLoading) {
       // ✅ أثناء التحميل، منعرض شيمر Skeleton
       return Padding(
@@ -60,9 +57,8 @@ class ChapterRowWidget extends StatelessWidget {
               height: 88.h,
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               decoration: BoxDecoration(
-                color: colors.background,
+                color: AppColors.backgroundWhiteWidget,
                 borderRadius: BorderRadius.circular(12.r),
-                border: Border.all(color: colors.borderCard),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.03),
@@ -78,18 +74,18 @@ class ChapterRowWidget extends StatelessWidget {
                     width: 48.w,
                     height: 48.h,
                     decoration: BoxDecoration(
-                      color: colors.buttonTapNotSelected,
+                      color: AppColors.formSecondary,
                       borderRadius: BorderRadius.circular(999.r),
                     ),
                     alignment: Alignment.center,
                     child: Text(
                       chapterText,
                       style: AppTextStyles.s16w600.copyWith(
-                        color: colors.textBlue,
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ),
-                  12.sizedW,
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -98,25 +94,25 @@ class ChapterRowWidget extends StatelessWidget {
                         Text(
                           chapterTitle,
                           style: AppTextStyles.s16w600.copyWith(
-                            color: colors.textPrimary,
+                            color: AppColors.textBlack,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        4.sizedH,
+                        SizedBox(height: 4.h),
                         Row(
                           spacing: 5.w,
                           children: [
                             Text(
                               '$videoCount Videos',
                               style: AppTextStyles.s14w400.copyWith(
-                                color: colors.textGrey,
+                                color: AppColors.textGrey,
                               ),
                             ),
                             IconCircleWidget(),
                             Text(
                               '$durationMinutes Mins',
                               style: AppTextStyles.s14w400.copyWith(
-                                color: colors.textGrey,
+                                color: AppColors.textGrey,
                               ),
                             ),
                           ],

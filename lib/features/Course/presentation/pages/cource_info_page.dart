@@ -1,22 +1,20 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/core/theme/theme_extensions.dart';
-import 'package:e_learning/core/widgets/error_state_widget.dart';
-import 'package:e_learning/core/widgets/no_internet_widget.dart';
+import 'package:e_learning/core/widgets/error/error_state_widget.dart';
+import 'package:e_learning/core/widgets/error/no_internet_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_access_content_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_tab_view_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
-import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_access_content_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_tab_view_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_course_widget.dart';
+ import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 
 class CourceInfoPage extends StatefulWidget {
   const CourceInfoPage({super.key, required this.courseId});
@@ -36,13 +34,13 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
 
     Future.microtask(() {
       context.read<CourseCubit>().getCourseDetails(id: "${widget.courseId}");
-      // context.read<CourseCubit>().getChapters(courseId: "${widget.courseId}");
+      // Fetch chapters when loading course details
+      context.read<CourseCubit>().getChapters(courseId: "${widget.courseId}");
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
     return BlocBuilder<CourseCubit, CourseState>(
       buildWhen: (previous, current) =>
           previous.courseDetailsStatus != current.courseDetailsStatus,
@@ -77,11 +75,11 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
           isActive = course.isPaid;
 
           return Scaffold(
-            appBar: CustomAppBarWidget(
+            appBar: CustomAppBarCourseWidget(
               title: course.title,
               showBack: true,
             ),
-            backgroundColor: colors.background,
+            backgroundColor: AppColors.backgroundPage,
             body: CustomScrollView(
               slivers: [
                 SliverAppBar(
@@ -91,9 +89,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   automaticallyImplyLeading: false,
                   flexibleSpace: FlexibleSpaceBar(
                     background: CustomCachedImageWidget(
-                      appImage:
-                          course.image ??
-                          'https://picsum.photos/361/180', //todo remove image dynamic
+                      appImage: course.image ?? '',
                       width: double.infinity,
                       fit: BoxFit.cover,
                       height: 262,
@@ -102,8 +98,8 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 ),
                 SliverToBoxAdapter(
                   child: Container(
-                    decoration: BoxDecoration(border: Border(bottom: BorderSide(color: colors.borderCard)),
-                      color: colors.background,
+                    decoration: BoxDecoration(
+                      color: AppColors.formWhite,
                       borderRadius: BorderRadius.circular(24.r),
                       boxShadow: [
                         BoxShadow(
@@ -126,24 +122,24 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                               Expanded(
                                 child: CourseTitleSubTitleWidget(
                                   titleStyle: AppTextStyles.s18w600.copyWith(
-                                    color: colors.textPrimary,
+                                    color: AppColors.textBlack,
                                   ),
                                   title: course.title,
                                   subtitle: course.categoryDetail.name,
                                 ),
                               ),
                               RatingWidget(
-                                rating: course.totalRatings,
+                                rating: course.averageRating ?? 0.0,
                                 showIcon: false,
                               ),
                             ],
                           ),
-                          5.sizedH,
+                          SizedBox(height: 5.h),
                           CourseAccessContentWidget(
                             courseId: course.id,
-                            completedVideos: 30,
-                            totalVideos: 40,
-                            videoCount: 28,
+                            completedVideos: course.completedVideos,
+                            totalVideos: course.totalVideos,
+                            videoCount: course.totalVideos,
                             hoursCount: course.totalVideoDurationHours,
                             price: course.price,
                             isActive: isActive,
@@ -155,6 +151,9 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 ),
                 SliverFillRemaining(
                   child: CourseTabViewWidget(
+                    countChapter: 123456,
+                    //  course.totalChapters,
+                    countVideos: course.totalVideos,
                     houresDurtion: course.totalVideoDurationHours,
                     price: course.price,
                     courseId: course.id,

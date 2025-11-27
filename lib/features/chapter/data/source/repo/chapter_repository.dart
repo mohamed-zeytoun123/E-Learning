@@ -1,14 +1,16 @@
 import 'dart:typed_data';
 import 'package:dartz/dartz.dart';
 import 'package:netwoek/failures/failures.dart';
-import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/start_quiz_model.dart';
-import 'package:e_learning/features/chapter/data/models/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 
 abstract class ChapterRepository {
   //?--------------------------------------------------------
@@ -41,10 +43,7 @@ abstract class ChapterRepository {
     required int selectedChoiceId,
   });
 
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRepo({
-    required int attemptId,
-  });
+
   //?--------------------------------------------------------
   //* Get Videos by Chapter with Pagination (Repository)
   Future<Either<Failure, VideosResultModel>> getVideosRepo({
@@ -67,8 +66,29 @@ abstract class ChapterRepository {
     String url, {
     Function(double progress)? onProgress,
   });
-  
+
   //* Check if device is connected to the internet
   Future<bool> get isConnected;
+
+  //* Update Video Progress (Repository)
+  void updateVideoProgress({required int videoId, required int watchedSeconds});
+
+  //* Get Comments Repository
+  Future<Either<Failure, CommentsResultModel>> getCommentsRepo({
+    required int videoId,
+    int page = 1,
+  });
+
+  //* Add Comment Repository
+  Future<Either<Failure, CommentModel>> addVideoCommentRepo({
+    required String videoId,
+    required String content,
+  });
+
+  //* Submit quiz with all answers
+  Future<Either<Failure, SubmitCompletedModel>> submitQuizAnswersListRepo({
+    required int attemptId,
+    required List<Map<String, dynamic>> answers,
+  });
   //?--------------------------------------------------------
 }

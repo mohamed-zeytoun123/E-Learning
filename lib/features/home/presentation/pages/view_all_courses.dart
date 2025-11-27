@@ -4,7 +4,6 @@ import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/spacing.dart';
 import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/chips_bar.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';

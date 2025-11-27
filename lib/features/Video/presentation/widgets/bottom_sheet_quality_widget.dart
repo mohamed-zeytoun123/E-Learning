@@ -1,9 +1,8 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
 
 class BottomSheetQualityWidget extends StatefulWidget {
   final String initialQuality;
@@ -55,6 +54,7 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
               borderRadius: BorderRadius.circular(4),
             ),
           ),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -70,7 +70,9 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
               ),
             ],
           ),
-          10.sizedH,
+
+          SizedBox(height: 10.h),
+
           Column(
             children: qualities.map((quality) {
               bool isSelected = _selectedQuality == quality;
@@ -122,6 +124,7 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
               );
             }).toList(),
           ),
+
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20.h),
             child: CustomButton(

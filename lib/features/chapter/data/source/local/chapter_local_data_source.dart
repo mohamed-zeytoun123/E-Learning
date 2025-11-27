@@ -17,5 +17,7 @@ abstract class ChapterLocalDataSource {
   });
 
   Future<List<Map<String, String>>> getAllCachedVideosMeta();
+
+  Future<void> deleteCachedVideo(String videoId);
   //?--------------------------------------------------------
 }

@@ -1,16 +1,18 @@
 import 'package:dartz/dartz.dart';
 import 'package:netwoek/failures/failures.dart';
-import 'package:e_learning/core/model/paginated_model.dart';
-import 'package:e_learning/features/Course/data/models/course_model.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/paginated_courses_model.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
-import 'package:e_learning/features/Course/data/models/rating_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/paginated_ratings_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model.dart';
-import 'package:e_learning/features/auth/data/models/study_year_model.dart';
+
 import 'package:e_learning/features/auth/data/models/university_model.dart';
-import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
-import 'package:e_learning/features/Course/data/models/categorie_model.dart';
-import 'package:e_learning/features/Course/data/models/course_details_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/paginated_chapters_model.dart';
+import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/course/data/models/course_details_model.dart';
 
 abstract class CourceseRemoteDataSource {
   //?----------------------------------------------------
@@ -19,7 +21,7 @@ abstract class CourceseRemoteDataSource {
   Future<Either<Failure, List<CategorieModel>>> getCategoriesRemote();
 
   //* Get Courses
-  Future<Either<Failure, PaginationModel<CourseModel>>> getCoursesRemote({
+  Future<Either<Failure, PaginatedCoursesModel>> getCoursesRemote({
     CourseFiltersModel? filters,
     int? page,
     int? pageSize,
@@ -36,14 +38,14 @@ abstract class CourceseRemoteDataSource {
   });
 
   //* Get Chapters by Slug
-  Future<Either<Failure, PaginationModel<ChapterModel>>> getChaptersRemote({
+  Future<Either<Failure, PaginatedChaptersModel>> getChaptersRemote({
     required String courseId,
     int? page,
     int? pageSize,
   });
 
   //* Get Ratings by Id Course pagination
-  Future<Either<Failure, PaginationModel<RatingModel>>> getRatingsRemote({
+  Future<Either<Failure, PaginatedRatingsModel>> getRatingsRemote({
     required String courseId,
     int? page,
     int? pageSize,
@@ -72,5 +74,8 @@ abstract class CourceseRemoteDataSource {
   Future<Either<Failure, EnrollmentModel>> enrollCourseRemote({
     required int courseId,
   });
+
+  //* Get Channels
+  Future<Either<Failure, List<ChannelModel>>> getChannelsRemote();
   //?----------------------------------------------------
 }

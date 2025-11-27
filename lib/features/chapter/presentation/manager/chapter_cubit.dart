@@ -3,14 +3,13 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_download_state.dart';
-import 'package:e_learning/features/chapter/data/models/download_attachment_function.dart';
-import 'package:e_learning/features/chapter/data/models/download_item.dart';
-import 'package:e_learning/features/chapter/data/models/video_model.dart';
-import 'package:e_learning/features/chapter/data/models/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/download/download_attachment_function.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
-import 'package:e_learning/core/api/api_urls.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
@@ -29,10 +28,10 @@ class ChapterCubit extends Cubit<ChapterState> {
   //?--------------------------------------------------------
   //* Set Selected Answer
   void selectAnswer({required int questionIndex, required int choiceIndex}) {
-    final updated = Map<int, int>.from(state.selectedOptions);
-    updated[questionIndex] = choiceIndex;
+    final newOptions = Map<int, int>.from(state.selectedOptions);
+    newOptions[questionIndex] = choiceIndex;
 
-    emit(state.copyWith(selectedOptions: updated));
+    emit(state.copyWith(selectedOptions: newOptions));
   }
 
   //?--------------------------------------------------------
@@ -284,38 +283,7 @@ class ChapterCubit extends Cubit<ChapterState> {
     );
   }
 
-  //?--------------------------------------------------------
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  Future<void> submitCompletedQuiz({required int attemptId}) async {
-    emit(
-      state.copyWith(
-        submitStatus: ResponseStatusEnum.loading,
-        submitError: null,
-      ),
-    );
-
-    final result = await repo.submitCompletedQuizRepo(attemptId: attemptId);
-
-    result.fold(
-      (failure) {
-        emit(
-          state.copyWith(
-            submitStatus: ResponseStatusEnum.failure,
-            submitError: failure.message,
-          ),
-        );
-      },
-      (submit) {
-        emit(
-          state.copyWith(
-            submitStatus: ResponseStatusEnum.success,
-            submit: submit,
-          ),
-        );
-      },
-    );
-  }
-
+ 
   //?--------------------------------------------------------
   //* Get Videos by Chapter with Pagination
   Future<void> getVideos({
@@ -496,7 +464,7 @@ class ChapterCubit extends Cubit<ChapterState> {
             _updateDownloadProgress(videoId, progress);
           },
         );
-        
+
         await result.fold(
           (failure) async {
             log('Failed to download video: ${failure.message}');
@@ -506,14 +474,16 @@ class ChapterCubit extends Cubit<ChapterState> {
             // تحديث progress لـ 100% والحالة مكتمل
             _updateDownloadProgress(videoId, 1.0);
             _completeDownload(videoId);
-            
+
             // حفظ ميتاداتا الكاش لعرضها لاحقًا بعد إعادة التشغيل التطبيق
             await local.saveCachedVideoMeta(
               videoId: videoId,
               fileName: fileName,
             );
-            
-            log('Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes');
+
+            log(
+              'Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes',
+            );
           },
         );
       } else {
@@ -609,7 +579,7 @@ class ChapterCubit extends Cubit<ChapterState> {
     try {
       // استخدام طريقة الريبو موجود لتحميل و تشفير الفيديو
       final result = await repo.getEncryptedVideoRepo(videoId: videoId);
-      
+
       await result.fold(
         (failure) async {
           log('Failed to download video: ${failure.message}');
@@ -618,8 +588,10 @@ class ChapterCubit extends Cubit<ChapterState> {
         (encryptedBytes) async {
           // اكتمال التحميل
           _completeDownload(videoId);
-          
-          log('Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes');
+
+          log(
+            'Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes',
+          );
         },
       );
     } catch (e) {
@@ -627,31 +599,8 @@ class ChapterCubit extends Cubit<ChapterState> {
     }
   }
 
-  Uint8List _encryptVideoBytesSafe(Uint8List plainBytes, String videoId) {
-    final key = _getKeyFromVideoId(videoId);
-    final iv = Uint8List(16); // IV ثابت، ممكن تغييره لاحقًا
-
-    // استخدام PaddedBlockCipher مع PKCS7
-    final cipher =
-        PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()))
-          ..init(
-            true,
-            pc.PaddedBlockCipherParameters(
-              pc.ParametersWithIV(pc.KeyParameter(key), iv),
-              null,
-            ),
-          );
-
-    // لو الطول مش مضاعف 16، PaddedBlockCipherImpl يضيف padding PKCS7 تلقائي
-    return cipher.process(plainBytes);
-  }
-
-  //* فك تشفير الفيديو من الكاش
-
-  //* فك التشفير من الكاش وتحويله لملف مؤقت
   Future<File?> decryptVideoFromCache(String videoId, String fileName) async {
     try {
-      // تحقق إذا الفيديو موجود في الكاش
       final isCached = await local.isVideoCached(videoId);
       if (!isCached) {
         log('Video not cached: $videoId');
@@ -666,10 +615,11 @@ class ChapterCubit extends Cubit<ChapterState> {
       }
 
       final tempDir = await getTemporaryDirectory();
-      final safeName = 'video_$videoId';
-      final tempFile = File('${tempDir.path}/$safeName.mp4');
-      
-      // Always attempt to decrypt the video
+
+      final safeFileName = fileName.isNotEmpty
+          ? fileName
+          : 'video_$videoId.mp4';
+      final tempFile = File('${tempDir.path}/$safeFileName');
       try {
         final decryptedBytes = _decryptVideoBytesSafe(
           Uint8List.fromList(videoBytes),
@@ -712,6 +662,197 @@ class ChapterCubit extends Cubit<ChapterState> {
     final padded = videoId.padRight(16, '0');
     final keyStr = padded.substring(0, 16);
     return Uint8List.fromList(keyStr.codeUnits);
+  }
+
+  //?--------------------------------------------------------
+
+  //* Update Video Progress
+  Future<void> updateVideoProgress({
+    required int videoId,
+    required int watchedSeconds,
+  }) async {
+    final result = repo.updateVideoProgress(
+      videoId: videoId,
+      watchedSeconds: watchedSeconds,
+    );
+  }
+
+  Future<void> getComments({
+    required int videoId,
+    bool reset = true,
+    int page = 1,
+  }) async {
+    final currentState = state;
+    if (reset) {
+      emit(currentState.copyWith(commentsStatus: ResponseStatusEnum.loading));
+    } else {
+      emit(
+        currentState.copyWith(commentsMoreStatus: ResponseStatusEnum.loading),
+      );
+    }
+
+    final result = await repo.getCommentsRepo(videoId: videoId, page: page);
+
+    result.fold(
+      (failure) {
+        if (reset) {
+          emit(
+            currentState.copyWith(
+              commentsStatus: ResponseStatusEnum.failure,
+              commentsError: failure.message,
+            ),
+          );
+        } else {
+          emit(
+            currentState.copyWith(
+              commentsMoreStatus: ResponseStatusEnum.failure,
+              commentsMoreError: failure.message,
+            ),
+          );
+        }
+      },
+      (commentsResult) {
+        if (reset) {
+          emit(
+            currentState.copyWith(
+              commentsStatus: ResponseStatusEnum.success,
+              comments: commentsResult,
+            ),
+          );
+        } else {
+          final mergedComments = [
+            ...?currentState.comments?.comments,
+            ...?commentsResult.comments,
+          ];
+          emit(
+            currentState.copyWith(
+              commentsMoreStatus: ResponseStatusEnum.success,
+              comments: currentState.comments?.copyWith(
+                comments: mergedComments,
+                hasNextPage: commentsResult.hasNextPage,
+              ),
+            ),
+          );
+        }
+      },
+    );
+  }
+
+  //?--------------------------------------------------------
+  //* Add Comment to Video
+  Future<void> addComment({
+    required int videoId,
+    required String content,
+  }) async {
+    // 1️⃣ Emit loading state
+    emit(
+      state.copyWith(
+        commentStatus: ResponseStatusEnum.loading,
+        commentError: null,
+      ),
+    );
+
+    try {
+      // 2️⃣ Call repository method
+      final result = await repo.addVideoCommentRepo(
+        videoId: videoId.toString(),
+        content: content,
+      );
+
+      // 3️⃣ Handle result
+      result.fold(
+        (failure) {
+          emit(
+            state.copyWith(
+              commentStatus: ResponseStatusEnum.failure,
+              commentError: failure.message,
+            ),
+          );
+        },
+        (newComment) {
+          // دمج الكومنت الجديد مع الموجودين إذا أردت
+          // final updatedComments = [newComment, ...?state.comments?.comments];
+
+          emit(
+            state.copyWith(
+              commentStatus: ResponseStatusEnum.success,
+              comment: newComment,
+              // comments:
+              //     state.comments?.copyWith(comments: updatedComments) ??
+              //     CommentsResultModel(
+              //       comments: updatedComments,
+              //       hasNextPage: true,
+              //     ),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          commentStatus: ResponseStatusEnum.failure,
+          commentError: e.toString(),
+        ),
+      );
+    }
+  }
+
+  //?--------------------------------------------------------
+  //* Delete Cached Video
+  Future<void> deleteCachedVideo(String videoId) async {
+    try {
+      // Delete the video from local storage
+      await local.deleteCachedVideo(videoId);
+
+      // Remove the video from the downloads list in state
+      final updatedDownloads = state.downloads
+          .where((download) => download.videoId != videoId)
+          .toList();
+
+      emit(state.copyWith(downloads: updatedDownloads));
+    } catch (e) {
+      log('Failed to delete cached video: $e');
+      rethrow;
+    }
+  }
+
+  //?--------------------------------------------------------
+
+  //* Step 4 : Submit Completed
+  Future<void> submitAnswersList({
+    required int attemptId,
+    required List<Map<String, dynamic>> answers,
+  }) async {
+    emit(
+      state.copyWith(
+        submitAnswersListStatus: ResponseStatusEnum.loading,
+        submitAnswersListError: null,
+      ),
+    );
+
+    final result = await repo.submitQuizAnswersListRepo(
+      attemptId: attemptId,
+      answers: answers,
+    );
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            submitAnswersListStatus: ResponseStatusEnum.failure,
+            submitAnswersListError: failure.message,
+          ),
+        );
+      },
+      (submit) {
+        emit(
+          state.copyWith(
+            submitAnswersListStatus: ResponseStatusEnum.success,
+            submitAnswersList: submit,
+          ),
+        );
+      },
+    );
   }
 
   //?--------------------------------------------------------

@@ -3,14 +3,16 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:netwoek/failures/failures.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
-import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/start_quiz_model.dart';
-import 'package:e_learning/features/chapter/data/models/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 import 'package:e_learning/features/chapter/data/source/local/chapter_local_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/remote/chapter_remote_data_source.dart';
 import 'package:e_learning/features/chapter/data/source/repo/chapter_repository.dart';
@@ -49,7 +51,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
         (chapter) => Right(chapter),
       );
     } else {
-      return Left(Failure(message: 'No internet connection'));
+      return Left(FailureNoConnection());
     }
   }
 
@@ -69,7 +71,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
         (attachments) => Right(attachments),
       );
     } else {
-      return Left(Failure(message: 'No internet connection'));
+      return Left(FailureNoConnection());
     }
   }
 
@@ -86,7 +88,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold((failure) => Left(failure), (quiz) => Right(quiz));
     } else {
-      return Left(Failure(message: 'No internet connection'));
+      return Left(FailureNoConnection());
     }
   }
 
@@ -101,7 +103,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold((failure) => Left(failure), (quiz) => Right(quiz));
     } else {
-      return Left(Failure(message: 'No internet connection'));
+      return Left(FailureNoConnection());
     }
   }
 
@@ -122,37 +124,34 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold((failure) => Left(failure), (answer) => Right(answer));
     } else {
-      return Left(Failure(message: 'No internet connection'));
-    }
-  }
-
-  //?-----------
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  @override
-  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRepo({
-    required int attemptId,
-  }) async {
-    if (await network.isConnected) {
-      final result = await remote.submitCompletedQuizRemote(
-        attemptId: attemptId,
-      );
-
-      return result.fold((failure) => Left(failure), (submit) => Right(submit));
-    } else {
-      return Left(Failure(message: 'No internet connection'));
+      return Left(FailureNoConnection());
     }
   }
 
   //?--------------------------------------------------------
 
-  // Repository method
+  //* Update Video Progress (Cubit)
+  @override
+  void updateVideoProgress({
+    required int videoId,
+    required int watchedSeconds,
+  }) {
+    remote.updateVideoProgressRemote(
+      videoId: videoId,
+      watchedSeconds: watchedSeconds,
+    );
+  }
+
+  //?--------------------------------------------------------
+
+  //* Repository method
   @override
   Future<Either<Failure, VideosResultModel>> getVideosRepo({
     required int chapterId,
     int? page,
   }) async {
     if (!await network.isConnected) {
-      return Left(Failure(message: 'No internet connection'));
+      return Left(FailureNoConnection());
     }
 
     final result = await remote.getVideosByChapterRemote(
@@ -164,7 +163,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
       final videos = paginatedVideos.results;
 
       if (videos.isEmpty) {
-        return Left(Failure(message: 'No data available'));
+        return Left(FailureNoData());
       }
 
       return Right(
@@ -187,10 +186,10 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
       return result.fold(
         (failure) => Left(failure),
-        (videoModel) => Right(videoModel), // نرجع الموديل كامل
+        (videoModel) => Right(videoModel),
       );
     } else {
-      return Left(Failure(message: 'No internet connection'));
+      return Left(FailureNoConnection());
     }
   }
 
@@ -215,7 +214,9 @@ class ChapterRepositoryImpl implements ChapterRepository {
           onProgress: onProgress,
         );
 
-        return downloadResult.fold((failure) => Left(failure), (downloadedBytes) async {
+        return downloadResult.fold((failure) => Left(failure), (
+          downloadedBytes,
+        ) async {
           final encryptedForCache = _encryptForCache(downloadedBytes, videoId);
           await local.cacheEncryptedVideo(
             videoId: videoId,
@@ -226,12 +227,9 @@ class ChapterRepositoryImpl implements ChapterRepository {
       }
 
       // 5) لا كاش ولا إنترنت
-      return Left(Failure(message: 'No internet connection'));
+      return Left(FailureNoConnection());
     } catch (e) {
-      if (e is DioException) {
-        return Left(Failure.fromException(e));
-      }
-      return Left(Failure(message: e.toString()));
+      return Left(Failure.handleError(e as DioException));
     }
   }
 
@@ -258,7 +256,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
 
     return Uint8List.fromList(bytes);
   }
-  
+
   //?--------------------------------------------------------
   //* Check if device is connected to the internet
   @override
@@ -271,14 +269,15 @@ class ChapterRepositoryImpl implements ChapterRepository {
   Uint8List _encryptForCache(Uint8List plainBytes, String videoId) {
     final key = _getKeyFromVideoId(videoId);
     final iv = Uint8List(16);
-    final cipher = PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()))
-      ..init(
-        true,
-        pc.PaddedBlockCipherParameters(
-          pc.ParametersWithIV(pc.KeyParameter(key), iv),
-          null,
-        ),
-      );
+    final cipher =
+        PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()))
+          ..init(
+            true,
+            pc.PaddedBlockCipherParameters(
+              pc.ParametersWithIV(pc.KeyParameter(key), iv),
+              null,
+            ),
+          );
     return cipher.process(plainBytes);
   }
 
@@ -287,4 +286,66 @@ class ChapterRepositoryImpl implements ChapterRepository {
     final keyStr = padded.substring(0, 16);
     return Uint8List.fromList(keyStr.codeUnits);
   }
+
+  //?--------------------------------------------------------
+  //* Get Comments Repository
+  @override
+  Future<Either<Failure, CommentsResultModel>> getCommentsRepo({
+    required int videoId,
+    int page = 1,
+  }) async {
+    if (!await network.isConnected) {
+      return Left(FailureNoConnection());
+    }
+
+    final result = await remote.getCommentsRemote(
+      chapterId: videoId,
+      page: page,
+    );
+
+    return result.fold(
+      (failure) => Left(failure),
+      (commentsResult) => Right(commentsResult),
+    );
+  }
+
+  //?--------------------------------------------------------
+  //* Add Comment Repository
+  @override
+  Future<Either<Failure, CommentModel>> addVideoCommentRepo({
+    required String videoId,
+    required String content,
+  }) async {
+    if (!await network.isConnected) {
+      return Left(FailureNoConnection());
+    }
+
+    final result = await remote.addVideoCommentRemote(
+      videoId: videoId,
+      content: content,
+    );
+
+    return result.fold((failure) => Left(failure), (comment) => Right(comment));
+  }
+
+  //?--------------------------------------------------------
+  //* Submit quiz with all answers
+  @override
+  Future<Either<Failure, SubmitCompletedModel>> submitQuizAnswersListRepo({
+    required int attemptId,
+    required List<Map<String, dynamic>> answers,
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.submitQuizFinalRemote(
+        attemptId: attemptId,
+        answers: answers,
+      );
+
+      return result.fold((failure) => Left(failure), (submit) => Right(submit));
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //?--------------------------------------------------------
 }

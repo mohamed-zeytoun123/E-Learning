@@ -39,7 +39,9 @@ class CourseSuspendedNoticeWidget extends StatelessWidget {
             ),
             CustomButton(
               title: "Contact Us",
+            
               buttonColor: AppColors.buttonPrimary,
+          
               onTap: onContactPressed,
             ),
           ],

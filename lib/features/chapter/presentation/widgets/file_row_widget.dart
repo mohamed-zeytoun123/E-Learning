@@ -1,6 +1,4 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -104,7 +102,7 @@ class FileRowWidget extends StatelessWidget {
                         ),
                     ],
                   ),
-                  12.sizedW,
+                  SizedBox(width: 12.w),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +115,7 @@ class FileRowWidget extends StatelessWidget {
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
-                        4.sizedH,
+                        SizedBox(height: 4.h),
                         Text(
                           '$sizeFile MB',
                           style: AppTextStyles.s14w400.copyWith(

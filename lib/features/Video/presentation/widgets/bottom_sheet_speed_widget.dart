@@ -1,9 +1,11 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
+import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/theme/typography.dart';
 
 class BottomSheetSpeedWidget extends StatefulWidget {
   final double initialSpeed;
@@ -66,7 +68,7 @@ class _BottomSheetSpeedWidgetState extends State<BottomSheetSpeedWidget> {
             ],
           ),
 
-          10.sizedH,
+          SizedBox(height: 10.h),
 
           // خيارات السرعة (Radio buttons)
           Column(

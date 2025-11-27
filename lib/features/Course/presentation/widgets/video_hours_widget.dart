@@ -1,6 +1,5 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/theme/typography.dart' hide Colors, TextStyle;
+import 'package:e_learning/core/theme/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -33,7 +32,7 @@ class VideoHoursWidget extends StatelessWidget {
                 color: AppColors.iconBlue,
                 size: 20.sp,
               ),
-              8.sizedW,
+              SizedBox(width: 8.w),
               Text(
                 '$videoCount',
                 style: AppTextStyles.s14w500.copyWith(
@@ -41,7 +40,7 @@ class VideoHoursWidget extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
-              4.sizedW,
+              SizedBox(width: 4.w),
               Text(
                 'Videos',
                 style: AppTextStyles.s14w500.copyWith(
@@ -60,7 +59,7 @@ class VideoHoursWidget extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.access_time, color: AppColors.iconBlue, size: 20.sp),
-              8.sizedW,
+              SizedBox(width: 8.w),
               Text(
                 '$hoursCount',
                 style: AppTextStyles.s14w500.copyWith(
@@ -68,7 +67,7 @@ class VideoHoursWidget extends StatelessWidget {
                   color: AppColors.textPrimary,
                 ),
               ),
-              4.sizedW,
+              SizedBox(width: 4.w),
               Text(
                 'Hours',
                 style: AppTextStyles.s14w500.copyWith(

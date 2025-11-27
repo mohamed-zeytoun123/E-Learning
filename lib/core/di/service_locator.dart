@@ -53,12 +53,6 @@ import 'package:e_learning/features/Article/data/source/remote/article_remote_da
 import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository_impl.dart';
 
-import 'package:e_learning/features/Course/data/source/local/advertisement_local_data_source.dart';
-import 'package:e_learning/features/Course/data/source/local/advertisement_local_data_source_impl.dart';
-import 'package:e_learning/features/Course/data/source/remote/advertisement_remote_data_source.dart';
-import 'package:e_learning/features/Course/data/source/remote/advertisement_remote_data_source_impl.dart';
-import 'package:e_learning/features/Course/data/source/repo/advertisement_repository.dart';
-import 'package:e_learning/features/Course/data/source/repo/advertisement_repository_impl.dart';
 
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';

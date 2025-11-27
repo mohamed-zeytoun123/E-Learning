@@ -6,7 +6,7 @@ import 'package:e_learning/features/auth/presentation/pages/selected_user_role_p
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
-import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/pages/cource_info_page.dart';

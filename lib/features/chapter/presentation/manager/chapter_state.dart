@@ -1,15 +1,17 @@
 import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_download_state.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/start_quiz_model.dart';
-import 'package:e_learning/features/chapter/data/models/submit_completed_model.dart';
-import 'package:e_learning/features/chapter/data/models/download_item.dart';
-import 'package:e_learning/features/chapter/data/models/video_model.dart';
-import 'package:e_learning/features/chapter/data/models/videos_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
 
 class ChapterState {
   //?--------------------------------------------------------
@@ -22,7 +24,7 @@ class ChapterState {
   final List<AttachmentModel>? attachments;
   final ResponseStatusEnum attachmentsStatus;
   final String? attachmentsError;
-    
+
   //* Attachment Downloads Map (attachmentId -> download state)
   final Map<int, AttachmentDownloadState> attachmentDownloads;
 
@@ -43,11 +45,6 @@ class ChapterState {
   final String? answerError;
   final Map<int, int> selectedOptions;
 
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  final SubmitCompletedModel? submit;
-  final ResponseStatusEnum? submitStatus;
-  final String? submitError;
-
   //* Get Videos by Chapter with Pagination
   final VideosResultModel? videos;
   final ResponseStatusEnum? videosStatus;
@@ -64,6 +61,23 @@ class ChapterState {
   //* Video Downloads (progress + state)
   final List<DownloadItem> downloads;
 
+  //* Get Comments
+  final CommentsResultModel? comments;
+  final ResponseStatusEnum? commentsStatus;
+  final String? commentsError;
+  final String? commentsMoreError;
+  final ResponseStatusEnum? commentsMoreStatus;
+
+  //* Add Comment Repository
+  final CommentModel? comment;
+  final ResponseStatusEnum commentStatus;
+  final String? commentError;
+
+  //* Step 4 : Submit Completed
+  final SubmitCompletedModel? submitAnswersList;
+  final ResponseStatusEnum submitAnswersListStatus;
+  final String? submitAnswersListError;
+
   //?----------------------------------------------------------
   ChapterState({
     //* Get Chapter Details
@@ -75,7 +89,7 @@ class ChapterState {
     this.attachments,
     this.attachmentsStatus = ResponseStatusEnum.initial,
     this.attachmentsError,
-    
+
     //* Attachment Downloads
     this.attachmentDownloads = const {},
 
@@ -96,11 +110,6 @@ class ChapterState {
     this.answerError,
     this.selectedOptions = const {},
 
-    //* Step 4 : Submit Completed Quiz (Final submit + grading)
-    this.submit,
-    this.submitStatus = ResponseStatusEnum.initial,
-    this.submitError,
-
     //* Get Videos by Chapter with Pagination
     this.videos,
     this.videosStatus = ResponseStatusEnum.initial,
@@ -116,6 +125,23 @@ class ChapterState {
 
     //* Download Video
     this.downloads = const [],
+
+    //* Get Comments
+    this.comments,
+    this.commentsStatus = ResponseStatusEnum.initial,
+    this.commentsError,
+    this.commentsMoreError,
+    this.commentsMoreStatus,
+
+    //* Add Comment Repository
+    this.comment,
+    this.commentStatus = ResponseStatusEnum.initial,
+    this.commentError,
+
+    //* Step 4 : Submit Completed
+    this.submitAnswersList,
+    this.submitAnswersListStatus = ResponseStatusEnum.initial,
+    this.submitAnswersListError,
   });
 
   //?--------------------------------------------------------
@@ -129,7 +155,7 @@ class ChapterState {
     List<AttachmentModel>? attachments,
     ResponseStatusEnum? attachmentsStatus,
     String? attachmentsError,
-    
+
     //* Attachment Downloads
     Map<int, AttachmentDownloadState>? attachmentDownloads,
 
@@ -150,11 +176,6 @@ class ChapterState {
     String? answerError,
     Map<int, int>? selectedOptions,
 
-    //* Step 4 : Submit Completed Quiz (Final submit + grading)
-    SubmitCompletedModel? submit,
-    ResponseStatusEnum? submitStatus,
-    String? submitError,
-
     //* Get Videos by Chapter with Pagination
     VideosResultModel? videos,
     ResponseStatusEnum? videosStatus,
@@ -170,6 +191,23 @@ class ChapterState {
 
     //* Video Downloads (progress + state)
     List<DownloadItem>? downloads,
+
+    //* Get Comments
+    CommentsResultModel? comments,
+    ResponseStatusEnum? commentsStatus,
+    String? commentsError,
+    String? commentsMoreError,
+    ResponseStatusEnum? commentsMoreStatus,
+
+    //* Add Comment Repository
+    CommentModel? comment,
+    ResponseStatusEnum? commentStatus,
+    String? commentError,
+
+    //* Step 4 : Submit Completed
+    SubmitCompletedModel? submitAnswersList,
+    ResponseStatusEnum? submitAnswersListStatus,
+    String? submitAnswersListError,
   }) {
     return ChapterState(
       //* Get Chapter Details
@@ -181,7 +219,7 @@ class ChapterState {
       attachments: attachments ?? this.attachments,
       attachmentsStatus: attachmentsStatus ?? this.attachmentsStatus,
       attachmentsError: attachmentsError,
-      
+
       //* Attachment Downloads
       attachmentDownloads: attachmentDownloads ?? this.attachmentDownloads,
 
@@ -202,11 +240,6 @@ class ChapterState {
       answerError: answerError,
       selectedOptions: selectedOptions ?? this.selectedOptions,
 
-      //* Step 4 : Submit Completed Quiz (Final submit + grading)
-      submit: submit ?? this.submit,
-      submitStatus: submitStatus ?? this.submitStatus,
-      submitError: submitError ?? this.submitError,
-
       //* Get Videos by Chapter with Pagination
       videos: videos ?? this.videos,
       videosStatus: videosStatus ?? this.videosStatus,
@@ -222,6 +255,24 @@ class ChapterState {
 
       //* Video Downloads (progress + state)
       downloads: downloads ?? this.downloads,
+
+      //* Get Comments
+      comments: comments ?? this.comments,
+      commentsStatus: commentsStatus ?? this.commentsStatus,
+      commentsError: commentsError,
+      commentsMoreError: commentsMoreError,
+      commentsMoreStatus: commentsMoreStatus ?? this.commentsMoreStatus,
+
+      //* Add Comment Repository
+      comment: comment ?? this.comment,
+      commentStatus: commentStatus ?? this.commentStatus,
+      commentError: commentError,
+
+      //* Step 4 : Submit Completed
+      submitAnswersList: submitAnswersList ?? this.submitAnswersList,
+      submitAnswersListStatus:
+          submitAnswersListStatus ?? this.submitAnswersListStatus,
+      submitAnswersListError: submitAnswersListError,
     );
   }
 }

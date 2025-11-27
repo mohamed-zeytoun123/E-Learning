@@ -8,6 +8,8 @@ class CustomButton extends StatelessWidget {
   final String title;
   final Color? buttonColor;
   final Color? textColor;
+  final Color? borderColor;
+  final TextStyle? titleStyle;
   final VoidCallback? onTap;
 
   const CustomButton({
@@ -15,6 +17,8 @@ class CustomButton extends StatelessWidget {
     required this.title,
     this.buttonColor,
     this.textColor,
+    this.borderColor,
+    this.titleStyle,
     this.onTap,
   });
 
@@ -28,13 +32,17 @@ class CustomButton extends StatelessWidget {
         backgroundColor: buttonColor ?? context.colors.textBlue,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
+          side: borderColor != null
+              ? BorderSide(color: borderColor!)
+              : BorderSide.none,
         ),
       ),
       child: Text(
         title,
-        style: AppTextStyles.s16w500.copyWith(
-          color: textColor ?? AppColors.textWhite,
-        ),
+        style: titleStyle ??
+            AppTextStyles.s16w500.copyWith(
+              color: textColor ?? AppColors.textWhite,
+            ),
       ),
     );
   }

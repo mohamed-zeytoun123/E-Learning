@@ -1,16 +1,10 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/asset/app_icons.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/app_message.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
@@ -43,20 +37,25 @@ class QuizReadyWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(24.r),
           ),
           child: Center(
-            child: Container(
+            child: Image.asset(
+              AppIcons.iconQuizzeReady,
               width: 48.w,
               height: 48.h,
-              color: Colors.black,
+              fit: BoxFit.contain,
             ),
           ),
         ),
-        25.sizedH,
+
+        SizedBox(height: 25.h),
+
         Text(
           'Your Quiz Is Ready !',
           textAlign: TextAlign.center,
           style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
         ),
-        6.sizedH,
+
+        SizedBox(height: 6.h),
+
         Row(
           spacing: 5.w,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -72,7 +71,8 @@ class QuizReadyWidget extends StatelessWidget {
             ),
           ],
         ),
-        25.sizedH,
+
+        SizedBox(height: 25.h),
         BlocConsumer<ChapterCubit, ChapterState>(
           listenWhen: (previous, current) =>
               previous.statrtQuizStatus != current.statrtQuizStatus,
@@ -100,7 +100,13 @@ class QuizReadyWidget extends StatelessWidget {
             } else {
               return CustomButton(
                 title: "Start Quiz",
+               
                 buttonColor: AppColors.buttonPrimary,
+                
+                icon: Icon(
+                  Icons.arrow_outward_sharp,
+                  color: AppColors.iconWhite,
+                ),
                 onTap: () {
                   final quizId =
                       context.read<ChapterCubit>().state.quizDetails?.id ?? 0;

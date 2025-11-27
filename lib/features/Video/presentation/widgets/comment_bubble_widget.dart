@@ -1,4 +1,3 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bubble_arrow_painter_widget.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +50,7 @@ class CommentBubbleWidget extends StatelessWidget {
             comment,
             style: TextStyle(color: textColor, fontSize: 14.sp),
           ),
-          4.sizedH,
+          SizedBox(height: 4.h),
           Align(
             alignment: Alignment.bottomRight,
             child: Text(
@@ -81,7 +80,7 @@ class CommentBubbleWidget extends StatelessWidget {
     );
 
     return arrowAlignment == Alignment.bottomLeft
-        ? [arrow, 4.sizedW, bubble]
-        : [bubble, 4.sizedW, arrow];
+        ? [arrow, SizedBox(width: 4.w), bubble]
+        : [bubble, SizedBox(width: 4.w), arrow];
   }
 }

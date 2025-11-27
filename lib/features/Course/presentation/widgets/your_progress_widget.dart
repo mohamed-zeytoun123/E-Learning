@@ -1,8 +1,6 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/core/theme/theme_extensions.dart';
-import 'package:e_learning/features/Course/presentation/widgets/video_progress_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,14 +21,11 @@ class YourProgressWidget extends StatelessWidget {
         Divider(color: AppColors.dividerGrey, thickness: 1, height: 16.h),
         Text(
           "Your Progress",
-          style: AppTextStyles.s16w400.copyWith(color: context.colors.textBlue),
+          style: AppTextStyles.s16w400.copyWith(color: AppColors.textPrimary),
         ),
-        5.sizedH,
-        VideoProgressWidget(
-          completedVideosSecond: completedVideos.toDouble(),
-          totalVideoSecond: videoCount,
-        ),
-        16.sizedH,
+        SizedBox(height: 5.h),
+        VideoProgressWidget(completed: completedVideos, total: videoCount),
+        SizedBox(height: 16.h),
       ],
     );
   }

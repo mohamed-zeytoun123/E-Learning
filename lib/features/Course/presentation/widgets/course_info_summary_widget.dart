@@ -1,18 +1,18 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/core/widgets/app_message.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_enroll_bottom_sheet.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/Course/presentation/widgets/price_text_widget.dart';
-import 'package:e_learning/features/Course/presentation/widgets/video_hours_widget.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
+import 'package:e_learning/features/course/presentation/widgets/video_hours_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class CourseInfoSummaryWidget extends StatefulWidget {
   final int videoCount;
@@ -59,11 +59,11 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
               "Price",
               style: AppTextStyles.s16w400.copyWith(color: AppColors.textGrey),
             ),
-            5.sizedW,
+            SizedBox(width: 5.w),
             PriceTextWidget(price: widget.price),
           ],
         ),
-        10.sizedH,
+        SizedBox(height: 10.h),
         BlocConsumer<CourseCubit, CourseState>(
           listenWhen: (prev, curr) => prev.enrollStatus != curr.enrollStatus,
           listener: (context, state) async {
@@ -71,9 +71,27 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
                 state.enrollStatus == ResponseStatusEnum.failure) {
               // 1️⃣ عرض الرسالة المناسبة أولًا
               if (state.enrollStatus == ResponseStatusEnum.success) {
-                AppMessage.showSuccess(context, "Enrolled successfully!");
+                AppMessage.showFlushbar(
+                  context: context,
+                  title: "Success",
+                  message: "Enrolled successfully!",
+                  backgroundColor: AppColors.messageSuccess,
+                  isShowProgress: true,
+                  iconData: Icons.check_circle_outline,
+                  iconColor: AppColors.iconWhite,
+                );
               } else {
-                AppMessage.showWarning(context, state.enrollError ?? "Failed to enroll");
+                AppMessage.showFlushbar(
+                  context: context,
+                  title: "Warning",
+                  message: state.enrollError ?? "Failed to enroll",
+                  duration: Duration(seconds: 3),
+                  mainButtonText: "OK",
+                  mainButtonOnPressed: () => context.pop(),
+                  backgroundColor: AppColors.messageWarning,
+                  iconData: Icons.error_outline,
+                  iconColor: AppColors.iconCircle,
+                );
               }
 
               // 2️⃣ نضيف delay قصير قبل فتح البوتوم شيت
@@ -90,7 +108,7 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
                 enableDrag: true,
                 builder: (bottomSheetContext) {
                   return BlocProvider.value(
-                    value: context.read<CourseCubit>(), // استخدام نفس الـ cubit
+                    value: context.read<CourseCubit>(),
                     child: Padding(
                       padding: EdgeInsets.only(
                         bottom: MediaQuery.of(
@@ -112,9 +130,14 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
             return CustomButton(
               title: "Enroll Now",
               buttonColor: AppColors.buttonPrimary,
+              borderColor: AppColors.borderPrimary,
+              icon: Icon(Icons.arrow_outward_sharp, color: AppColors.iconWhite),
+              titleStyle: AppTextStyles.s16w500.copyWith(
+                color: AppColors.titlePrimary,
+              ),
               onTap: () => context.read<CourseCubit>().enrollCourse(
-                    courseId: widget.courseId,
-                  ),
+                courseId: widget.courseId,
+              ),
             );
           },
         ),

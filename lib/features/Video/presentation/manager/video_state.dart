@@ -1,5 +1,5 @@
 import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 
 class VideoState {
   //* Get Video Streaming

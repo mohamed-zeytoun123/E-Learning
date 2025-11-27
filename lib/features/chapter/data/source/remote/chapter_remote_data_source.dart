@@ -1,16 +1,16 @@
 import 'dart:typed_data';
-
 import 'package:dartz/dartz.dart';
 import 'package:netwoek/failures/failures.dart';
-import 'package:e_learning/features/Video/data/models/video_stream_model.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quiz_details_model.dart';
-import 'package:e_learning/features/chapter/data/models/start_quiz_model.dart';
-import 'package:e_learning/features/chapter/data/models/submit_completed_model.dart';
-import 'package:e_learning/core/model/paginated_model.dart';
-import 'package:e_learning/features/chapter/data/models/video_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/video_pagination_model.dart';
 
 abstract class ChapterRemoteDataSource {
   //?--------------------------------------------------------
@@ -45,15 +45,16 @@ abstract class ChapterRemoteDataSource {
     required int selectedChoiceId,
   });
 
-  //* Step 4 : Submit Completed Quiz (Final submit + grading)
-  Future<Either<Failure, SubmitCompletedModel>> submitCompletedQuizRemote({
+  //* Alternative Step 4 : Submit Completed Quiz with Answers (Final submit + grading)
+  Future<Either<Failure, SubmitCompletedModel>> submitQuizFinalRemote({
     required int attemptId,
+    required List<Map<String, dynamic>> answers,
   });
 
   //?--------------------------------------------------------
 
   //* Get Videos by Chapter ID (with pagination)
-  Future<Either<Failure, PaginationModel<VideoModel>>> getVideosByChapterRemote({
+  Future<Either<Failure, VideoPaginationModel>> getVideosByChapterRemote({
     required int chapterId,
     int page = 1,
   });
@@ -72,6 +73,24 @@ abstract class ChapterRemoteDataSource {
   Future<Either<Failure, Uint8List>> downloadVideoRemoteWithProgress({
     required String videoId,
     Function(double progress)? onProgress,
+  });
+
+  //* Update Video Progress
+  Future<void> updateVideoProgressRemote({
+    required int videoId,
+    required int watchedSeconds,
+  });
+
+  //* Get Comments for a Video (Pagenations)
+  Future<Either<Failure, CommentsResultModel>> getCommentsRemote({
+    required int chapterId,
+    int page = 1,
+  });
+
+  //* Add Comment to Video
+  Future<Either<Failure, CommentModel>> addVideoCommentRemote({
+    required String videoId,
+    required String content,
   });
 
   //?--------------------------------------------------------

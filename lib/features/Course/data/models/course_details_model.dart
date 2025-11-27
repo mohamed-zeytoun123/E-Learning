@@ -1,100 +1,39 @@
-import 'package:e_learning/core/utils/json_converters.dart';
-import 'package:e_learning/features/auth/data/models/study_year_model.dart';
-import 'package:e_learning/features/Course/data/models/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/Course/data/models/college_detail_model.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/course/data/models/university_detail_model.dart';
 
-part 'course_details_model.g.dart';
-
-@JsonSerializable()
 class CourseDetailsModel {
-  @IntConverter()
   final int id;
-  
-  @StringConverter()
   final String title;
-  
-  @StringConverter()
-  final String slug;
-  
-  @StringConverter()
   final String description;
-  
-  @NullableStringConverter()
   final String? image;
-  
-  @IntConverter()
   final int teacher;
-  
-  @JsonKey(name: 'teacher_name')
-  @StringConverter()
   final String teacherName;
-  
-  @JsonKey(name: 'teacher_avatar')
-  @NullableStringConverter()
   final String? teacherAvatar;
-  
-  @IntConverter()
   final int category;
-  
-  @JsonKey(name: 'category_detail')
   final CategorieModel categoryDetail;
-  
-  @IntConverter()
   final int college;
-  
-  @JsonKey(name: 'college_detail')
   final CollegeDetailModel collegeDetail;
-  
-  @JsonKey(name: 'study_year')
-  @IntConverter()
   final int studyYear;
-  
-  @JsonKey(name: 'study_year_detail')
   final StudyYearModel studyYearDetail;
-  
-  @StringConverter()
   final String price;
-  
-  @StringConverter()
   final String status;
-  
-  @JsonKey(name: 'total_video_duration_hours')
-  @DoubleConverter()
   final double totalVideoDurationHours;
-  
-  @JsonKey(name: 'total_quizzes_count')
-  @IntConverter()
   final int totalQuizzesCount;
-  
-  @JsonKey(name: 'average_rating')
-  @NullableDoubleConverter()
   final double? averageRating;
-  
-  @JsonKey(name: 'total_ratings')
-  @DoubleConverter()
-  final double totalRatings;
-  
-  @JsonKey(name: 'is_favorite')
-  @BoolConverter()
+  final int totalRatings;
   final bool isFavorite;
-  
-  @JsonKey(name: 'is_paid')
-  @BoolConverter()
   final bool isPaid;
-  
-  @JsonKey(name: 'created_at')
-  @DateTimeConverter()
+  final int totalVideos;
+  final int completedVideos;
   final DateTime createdAt;
-  
-  @JsonKey(name: 'updated_at')
-  @DateTimeConverter()
   final DateTime updatedAt;
 
   CourseDetailsModel({
     required this.id,
     required this.title,
-    required this.slug,
     required this.description,
     this.image,
     required this.teacher,
@@ -114,27 +53,96 @@ class CourseDetailsModel {
     required this.totalRatings,
     required this.isFavorite,
     required this.isPaid,
+    required this.totalVideos,
+    required this.completedVideos,
     required this.createdAt,
     required this.updatedAt,
   });
 
-  factory CourseDetailsModel.fromJson(Map<String, dynamic> json) =>
-      _$CourseDetailsModelFromJson(json);
+  //* From Map
+  factory CourseDetailsModel.fromMap(Map<String, dynamic> map) {
+    double parseDouble(dynamic value) {
+      if (value == null) return 0.0;
+      if (value is int) return value.toDouble();
+      if (value is double) return value;
+      return double.tryParse(value.toString()) ?? 0.0;
+    }
 
-  Map<String, dynamic> toJson() => _$CourseDetailsModelToJson(this);
-  
-  // Keep fromMap and toMap for backward compatibility
-  factory CourseDetailsModel.fromMap(Map<String, dynamic> map) =>
-      CourseDetailsModel.fromJson(map);
+    return CourseDetailsModel(
+      id: map['id'] ?? 0,
+      title: map['title'] ?? '',
+      description: map['description'] ?? '',
+      image: map['image']?.toString(),
+      teacher: map['teacher'] ?? 0,
+      teacherName: map['teacher_name'] ?? '',
+      teacherAvatar: map['teacher_avatar']?.toString(),
+      category: map['category'] ?? 0,
+      categoryDetail: map['category_detail'] != null
+          ? CategorieModel.fromMap(map['category_detail'])
+          : CategorieModel(id: 0, name: '', slug: ''),
+      college: map['college'] ?? 0,
+      collegeDetail: map['college_detail'] != null
+          ? CollegeDetailModel.fromMap(map['college_detail'])
+          : CollegeDetailModel(
+              id: 0,
+              name: '',
+              university: UniversityDetailModel(id: 0, name: ''),
+            ),
+      studyYear: map['study_year'] ?? 0,
+      studyYearDetail: map['study_year_detail'] != null
+          ? StudyYearModel.fromJson(map['study_year_detail'])
+          : StudyYearModel(
+              id: 0,
+              yearNumber: 0,
+              name: '',
+              description: '',
+              isActive: false,
+            ),
+      price: map['price']?.toString() ?? '0.00',
+      status: map['status'] ?? '',
+      totalVideoDurationHours: parseDouble(map['total_video_duration_hours']),
+      totalQuizzesCount: map['total_quizzes_count'] ?? 0,
+      averageRating: map['average_rating'] != null
+          ? parseDouble(map['average_rating'])
+          : null,
+      totalRatings: map['total_ratings'] ?? 0,
+      isFavorite: map['is_favorite'] ?? false,
+      isPaid: map['is_paid'] ?? false,
+      totalVideos: map['total_videos'] ?? 0,
+      completedVideos: map['completed_videos'] ?? 0,
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt: DateTime.parse(map['updated_at']),
+    );
+  }
 
-  Map<String, dynamic> toMap() => toJson();
-  
-  static CategorieModel _categorieFromJson(dynamic json) => CategorieModel.fromJson(json as Map<String, dynamic>);
-  static Object _categorieToJson(CategorieModel object) => object.toJson();
-  
-  static CollegeDetailModel _collegeDetailFromJson(dynamic json) => CollegeDetailModel.fromJson(json as Map<String, dynamic>);
-  static Object _collegeDetailToJson(CollegeDetailModel object) => object.toJson();
-  
-  static StudyYearModel _studyYearFromJson(dynamic json) => StudyYearModel.fromJson(json as Map<String, dynamic>);
-  static Object _studyYearToJson(StudyYearModel object) => object.toJson();
+  //* To Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'image': image,
+      'teacher': teacher,
+      'teacher_name': teacherName,
+      'teacher_avatar': teacherAvatar,
+      'category': category,
+      'category_detail': categoryDetail.toMap(),
+      'college': college,
+      'college_detail': collegeDetail.toMap(),
+      'study_year': studyYear,
+      'study_year_detail': studyYearDetail.toJson(),
+      'price': price,
+      'status': status,
+      'total_video_duration_hours': totalVideoDurationHours,
+      'total_quizzes_count': totalQuizzesCount,
+      'average_rating': averageRating,
+      'total_ratings': totalRatings,
+      'is_favorite': isFavorite,
+      'is_paid': isPaid,
+      'total_videos': totalVideos,
+      'completed_videos': completedVideos,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+    };
+  }
 }

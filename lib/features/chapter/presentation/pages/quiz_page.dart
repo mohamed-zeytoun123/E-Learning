@@ -1,21 +1,10 @@
-import 'dart:developer';
-
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/theme/typography.dart';
-
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/widgets/custom_app_bar_widget.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/widgets/app_message.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
@@ -38,22 +27,31 @@ class _QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChapterCubit, ChapterState>(
-      listenWhen: (pre, curr) => pre.answerStatus != curr.answerStatus,
+      listenWhen: (pre, curr) =>
+          pre.submitAnswersListStatus != curr.submitAnswersListStatus,
       listener: (context, state) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (state.answerStatus == ResponseStatusEnum.success &&
-              state.answer?.message != null) {
-            AppMessage.showSuccess(context, state.answer!.message!);
+          if (state.submitAnswersListStatus == ResponseStatusEnum.success &&
+              state.submitAnswersList?.message != null) {
+            AppMessage.showFlushbar(
+              context: context,
+              message: state.submitAnswersList!.message!,
+              backgroundColor: AppColors.messageInfo,
+              title: "Saved",
+              isShowProgress: true,
+            );
           }
 
-          if (state.answerStatus == ResponseStatusEnum.failure) {
-            AppMessage.showError(context, state.answerError ?? "Error");
+          if (state.submitAnswersListStatus == ResponseStatusEnum.failure) {
+            AppMessage.showError(context, state.submitAnswersListError ?? "Unknown error");
           }
         });
       },
+
       buildWhen: (pre, curr) =>
-          pre.submitStatus != curr.submitStatus ||
+          pre.submitAnswersListStatus != curr.submitAnswersListStatus ||
           pre.selectedOptions != curr.selectedOptions,
+
       builder: (context, state) {
         final startQuiz = state.statrtQuiz;
         final quizDetails = state.quizDetails;
@@ -73,7 +71,9 @@ class _QuizPageState extends State<QuizPage> {
                   points: quizDetails?.totalPoints ?? 0,
                   quiz: quizDetails?.title ?? "Quiz Title",
                 ),
-                20.sizedH,
+                SizedBox(height: 20.h),
+
+                /// Questions List
                 if (startQuiz != null)
                   ListView.builder(
                     shrinkWrap: true,
@@ -96,21 +96,12 @@ class _QuizPageState extends State<QuizPage> {
                                   .toList(),
                               selectedOptionIndex:
                                   state.selectedOptions[index] ?? -1,
+
                               onOptionSelected: (choiceIndex) {
                                 context.read<ChapterCubit>().selectAnswer(
-                                      questionIndex: index,
-                                      choiceIndex: choiceIndex,
-                                    );
-
-                                if (question.choices.isNotEmpty) {
-                                  final selectedChoiceId =
-                                      question.choices[choiceIndex].id;
-                                  context.read<ChapterCubit>().submitAnswer(
-                                        quizId: startQuiz.id,
-                                        questionId: question.id,
-                                        selectedChoiceId: selectedChoiceId,
-                                      );
-                                }
+                                  questionIndex: index,
+                                  choiceIndex: choiceIndex,
+                                );
                               },
                             ),
                             Divider(height: 1.h, color: AppColors.dividerGrey),
@@ -119,14 +110,19 @@ class _QuizPageState extends State<QuizPage> {
                       );
                     },
                   ),
-                20.sizedH,
+
+                SizedBox(height: 20.h),
+
+                /// Submit Button System
                 BlocBuilder<ChapterCubit, ChapterState>(
                   buildWhen: (previous, current) =>
-                      previous.submitStatus != current.submitStatus,
+                      previous.submitAnswersListStatus !=
+                      current.submitAnswersListStatus,
                   builder: (context, state) {
-                    switch (state.submitStatus) {
+                    switch (state.submitAnswersListStatus) {
                       case ResponseStatusEnum.loading:
                         return Center(child: AppLoading.circular());
+
                       case ResponseStatusEnum.failure:
                         return Column(
                           children: [
@@ -135,24 +131,51 @@ class _QuizPageState extends State<QuizPage> {
                               size: 40.sp,
                               color: AppColors.iconError,
                             ),
-                            10.sizedH,
+                            SizedBox(height: 10.h),
                             Text(
-                              state.submitError ?? "Unknown error",
+                              state.submitAnswersListError ?? "Unknown error",
                               textAlign: TextAlign.center,
                               style: AppTextStyles.s16w400.copyWith(
                                 color: AppColors.textError,
                               ),
                             ),
-                            15.sizedH,
+                            SizedBox(height: 15.h),
+
+                            /// Retry Button
                             CustomButton(
                               title: "Retry",
+                              titleStyle: AppTextStyles.s16w500.copyWith(
+                                color: AppColors.textWhite,
+                              ),
                               buttonColor: AppColors.buttonPrimary,
+                              borderColor: AppColors.borderPrimary,
                               onTap: () {
-                                context
+                                final questions = startQuiz?.questions ?? [];
+                                final selected = context
                                     .read<ChapterCubit>()
-                                    .submitCompletedQuiz(
-                                      attemptId: startQuiz?.id ?? 0,
-                                    );
+                                    .state
+                                    .selectedOptions;
+
+                                final answersList = <Map<String, dynamic>>[];
+
+                                for (int i = 0; i < questions.length; i++) {
+                                  final q = questions[i];
+                                  final selectedIndex = selected[i];
+
+                                  if (selectedIndex != null &&
+                                      selectedIndex >= 0) {
+                                    answersList.add({
+                                      "question_id": q.id,
+                                      "selected_choice_id":
+                                          q.choices[selectedIndex].id,
+                                    });
+                                  }
+                                }
+
+                                context.read<ChapterCubit>().submitAnswersList(
+                                  attemptId: startQuiz?.id ?? 0,
+                                  answers: answersList,
+                                );
                               },
                             ),
                           ],
@@ -161,17 +184,42 @@ class _QuizPageState extends State<QuizPage> {
                       case ResponseStatusEnum.initial:
                         return CustomButton(
                           title: "Submit Answers",
+                          titleStyle: AppTextStyles.s16w500.copyWith(
+                            color: AppColors.titlePrimary,
+                          ),
                           buttonColor: AppColors.buttonPrimary,
+                          borderColor: AppColors.borderPrimary,
                           onTap: () {
-                            log("${startQuiz?.id}");
-                            context.read<ChapterCubit>().submitCompletedQuiz(
-                                  attemptId: startQuiz?.id ?? 0,
-                                );
+                            final questions = startQuiz?.questions ?? [];
+                            final selected = context
+                                .read<ChapterCubit>()
+                                .state
+                                .selectedOptions;
+
+                            final answersList = <Map<String, dynamic>>[];
+
+                            for (int i = 0; i < questions.length; i++) {
+                              final q = questions[i];
+                              final selectedIndex = selected[i];
+
+                              if (selectedIndex != null && selectedIndex >= 0) {
+                                answersList.add({
+                                  "question_id": q.id,
+                                  "selected_choice_id":
+                                      q.choices[selectedIndex].id,
+                                });
+                              }
+                            }
+
+                            context.read<ChapterCubit>().submitAnswersList(
+                              attemptId: startQuiz?.id ?? 0,
+                              answers: answersList,
+                            );
                           },
                         );
 
                       case ResponseStatusEnum.success:
-                        final result = state.submit;
+                        final result = state.submitAnswersList;
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           showModalBottomSheet(
                             context: context,
@@ -196,9 +244,7 @@ class _QuizPageState extends State<QuizPage> {
                             ),
                           );
                         });
-                        return SizedBox.shrink();
-                      case null:
-                        throw UnimplementedError();
+                        return const SizedBox.shrink();
                     }
                   },
                 ),

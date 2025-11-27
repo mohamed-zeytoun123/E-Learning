@@ -1,38 +1,13 @@
-import 'package:e_learning/core/utils/json_converters.dart';
-import 'package:json_annotation/json_annotation.dart';
-
-part 'attachment_model.g.dart';
-
-@JsonSerializable()
 class AttachmentModel {
-  @IntConverter()
   final int id;
-  
-  @JsonKey(name: 'file_name')
-  @StringConverter()
   final String fileName;
-  
-  @StringConverter()
   final String extension;
-  
-  @JsonKey(name: 'file_size_mb')
-  @StringConverter()
   final String fileSizeMb;
-  
-  @NullableStringConverter()
   final String? description;
-  
-  @NullableStringConverter()
   final String? tag;
-  
-  @JsonKey(name: 'uploaded_at')
-  @StringConverter()
   final String uploadedAt;
-  
-  @JsonKey(name: 'file_url')
-  @StringConverter()
   final String fileUrl;
-  
+
   AttachmentModel({
     required this.id,
     required this.fileName,
@@ -44,12 +19,16 @@ class AttachmentModel {
     required this.fileUrl,
   });
 
-  factory AttachmentModel.fromJson(Map<String, dynamic> json) =>
-      _$AttachmentModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$AttachmentModelToJson(this);
-
-  // Keep fromMap for backward compatibility
-  factory AttachmentModel.fromMap(Map<String, dynamic> map) =>
-      AttachmentModel.fromJson(map);
+  factory AttachmentModel.fromMap(Map<String, dynamic> map) {
+    return AttachmentModel(
+      id: map['id'] ?? 0,
+      fileName: map['file_name'] ?? '',
+      extension: map['extension'] ?? '',
+      fileSizeMb: map['file_size_mb'] ?? '',
+      description: map['description'],
+      tag: map['tag'],
+      uploadedAt: map['uploaded_at'] ?? '',
+      fileUrl: map['file_url'] ?? '',
+    );
+  }
 }

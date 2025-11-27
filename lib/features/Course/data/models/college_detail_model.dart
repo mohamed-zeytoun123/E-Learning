@@ -1,19 +1,10 @@
-import 'package:e_learning/core/utils/json_converters.dart';
-import 'package:e_learning/features/Course/data/models/university_detail_model.dart';
-import 'package:json_annotation/json_annotation.dart';
+import 'package:e_learning/features/course/data/models/university_detail_model.dart';
 
-part 'college_detail_model.g.dart';
-
-@JsonSerializable()
 class CollegeDetailModel {
-  @IntConverter()
   final int id;
-  
-  @StringConverter()
   final String name;
-  
   final UniversityDetailModel university;
-  
+
   CollegeDetailModel({
     required this.id,
     required this.name,
@@ -32,14 +23,23 @@ class CollegeDetailModel {
         university: university ?? this.university,
       );
 
-  factory CollegeDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$CollegeDetailModelFromJson(json);
+  //* From Map
+  factory CollegeDetailModel.fromMap(Map<String, dynamic> map) {
+    return CollegeDetailModel(
+      id: map['id'] ?? 0,
+      name: map['name'] ?? '',
+      university: map['university'] != null
+          ? UniversityDetailModel.fromMap(map['university'])
+          : UniversityDetailModel(id: 0, name: ''),
+    );
+  }
 
-  Map<String, dynamic> toJson() => _$CollegeDetailModelToJson(this);
-
-  // Keep fromMap and toMap for backward compatibility
-  factory CollegeDetailModel.fromMap(Map<String, dynamic> map) =>
-      CollegeDetailModel.fromJson(map);
-
-  Map<String, dynamic> toMap() => toJson();
+  //* To Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'university': university.toMap(),
+    };
+  }
 }

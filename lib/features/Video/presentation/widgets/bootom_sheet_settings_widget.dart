@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bottom_sheet_quality_widget.dart';
@@ -100,9 +99,8 @@ class BootomSheetSettingsWidget extends StatelessWidget {
                     ),
                     builder: (context) {
                       return BottomSheetSpeedWidget(
-                        initialSpeed: currentSpeed, // ✅ آخر قيمة
-                        onSpeedSelected:
-                            onSpeedSelected, // ✅ تمرير التعديل للصفحة الأساسية
+                        initialSpeed: currentSpeed,
+                        onSpeedSelected: onSpeedSelected,
                       );
                     },
                   );

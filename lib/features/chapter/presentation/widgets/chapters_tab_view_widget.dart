@@ -1,13 +1,8 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
+import 'package:e_learning/core/widgets/app_message.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/body_tab_files_widget.dart';
@@ -16,6 +11,7 @@ import 'package:e_learning/features/chapter/presentation/widgets/body_tab_vedio_
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:go_router/go_router.dart';
 
 class ChaptersTabViewWidget extends StatelessWidget {
@@ -60,7 +56,7 @@ class ChaptersTabViewWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.play_arrow, size: 20.sp),
-                        4.sizedW,
+                        SizedBox(width: 4.w),
                         Text("Videos"),
                       ],
                     ),
@@ -70,7 +66,7 @@ class ChaptersTabViewWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.insert_drive_file_outlined, size: 20.sp),
-                        4.sizedW,
+                        SizedBox(width: 4.w),
                         Row(
                           children: [
                             Text("Files"),
@@ -93,7 +89,7 @@ class ChaptersTabViewWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.edit_note, size: 20.sp),
-                        4.sizedW,
+                        SizedBox(width: 4.w),
                         Row(
                           children: [
                             Text("Quizzes"),
@@ -121,7 +117,8 @@ class ChaptersTabViewWidget extends StatelessWidget {
                   children: [
                     BlocConsumer<ChapterCubit, ChapterState>(
                       listenWhen: (previous, current) =>
-                          previous.videoStreamingStatus != current.videoStreamingStatus ||
+                          previous.videoStreamingStatus !=
+                              current.videoStreamingStatus ||
                           previous.videoStreaming != current.videoStreaming,
                       buildWhen: (previous, current) =>
                           previous.videos != current.videos ||
@@ -136,6 +133,7 @@ class ChaptersTabViewWidget extends StatelessWidget {
                               extra: {
                                 "chapterCubit": context.read<ChapterCubit>(),
                                 "videoModel": state.videoStreaming,
+                                "videoId": state.selectVideo?.id,
                               },
                             );
 
@@ -145,14 +143,7 @@ class ChaptersTabViewWidget extends StatelessWidget {
                           });
                         } else if (state.videoStreamingStatus ==
                             ResponseStatusEnum.failure) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                state.videoStreamingError ??
-                                    "Failed to load video",
-                              ),
-                            ),
-                          );
+                          AppMessage.showError(context, state.videoStreamingError ?? "Failed to load video");
                         }
                       },
                       builder: (context, state) {
@@ -176,7 +167,6 @@ class ChaptersTabViewWidget extends StatelessWidget {
                       },
                     ),
 
-                    // الملفات
                     BodyTabFilesWidget(
                       onFileTap: (index) async {
                         if (isActive) {
@@ -187,12 +177,17 @@ class ChaptersTabViewWidget extends StatelessWidget {
 
                           if (attachment != null) {
                             try {
-                              await context.read<ChapterCubit>().downloadAttachmentWithProgress(
-                                attachmentId: attachment.id,
-                                token: context.read<AppManagerCubit>().state.token,
-                                fileName: attachment.fileName,
-                                fileUrl: attachment.fileUrl,
-                              );
+                              await context
+                                  .read<ChapterCubit>()
+                                  .downloadAttachmentWithProgress(
+                                    attachmentId: attachment.id,
+                                    token: context
+                                        .read<AppManagerCubit>()
+                                        .state
+                                        .token,
+                                    fileName: attachment.fileName,
+                                    fileUrl: attachment.fileUrl,
+                                  );
                             } catch (e) {
                               if (context.mounted) {
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -222,145 +217,3 @@ class ChaptersTabViewWidget extends StatelessWidget {
     );
   }
 }
-
-// class ChaptersTabViewWidget extends StatelessWidget {
-//   final bool isActive;
-//   final int unlockedVideos;
-//   final int chapterId;
-
-//   const ChaptersTabViewWidget({
-//     super.key,
-//     required this.isActive,
-//     required this.chapterId,
-//     this.unlockedVideos = 3,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return DefaultTabController(
-//       length: 3,
-//       child: Builder(
-//         builder: (context) {
-//           final tabController = DefaultTabController.of(context);
-
-//           return Column(
-//             children: [
-//               TabBar(
-//                 controller: tabController,
-//                 dividerColor: AppColors.dividerGrey,
-//                 indicatorSize: TabBarIndicatorSize.tab,
-//                 indicatorColor: AppColors.textPrimary,
-//                 indicatorWeight: 2.h,
-//                 labelColor: AppColors.textPrimary,
-//                 unselectedLabelColor: AppColors.textGrey,
-//                 labelStyle: AppTextStyles.s14w600,
-//                 onTap: (index) {
-//                   if (!isActive && index != 0) {
-//                     tabController.index = 0;
-//                   }
-//                 },
-//                 tabs: [
-//                   Tab(
-//                     child: Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       children: [
-//                         Icon(Icons.play_arrow, size: 20.sp),
-//                         4.sizedW,
-//                         Text("Videos"),
-//                       ],
-//                     ),
-//                   ),
-//                   Tab(
-//                     child: Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       children: [
-//                         Icon(Icons.insert_drive_file_outlined, size: 20.sp),
-//                         4.sizedW,
-//                         Row(
-//                           children: [
-//                             Text("Files"),
-//                             if (!isActive)
-//                               Padding(
-//                                 padding: EdgeInsets.only(left: 4.w),
-//                                 child: Icon(
-//                                   Icons.lock,
-//                                   size: 16.sp,
-//                                   color: AppColors.textGrey,
-//                                 ),
-//                               ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                   Tab(
-//                     child: Row(
-//                       mainAxisSize: MainAxisSize.min,
-//                       children: [
-//                         Icon(Icons.edit_note, size: 20.sp),
-//                         4.sizedW,
-//                         Row(
-//                           children: [
-//                             Text("Quizzes"),
-//                             if (!isActive)
-//                               Padding(
-//                                 padding: EdgeInsets.only(left: 4.w),
-//                                 child: Icon(
-//                                   Icons.lock,
-//                                   size: 16.sp,
-//                                   color: AppColors.textGrey,
-//                                 ),
-//                               ),
-//                           ],
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//               Expanded(
-//                 child: TabBarView(
-//                   physics: isActive
-//                       ? null
-//                       : const NeverScrollableScrollPhysics(),
-//                   children: [
-//                     BodyTabVedioWidget(
-//                       isActive: isActive,
-//                       onVideoTap: (index) {
-//                         if (isActive || index < unlockedVideos) {
-//                           // context.push("/chapter/video/$index");
-//                         }
-//                       },
-//                       chapterId: chapterId,
-//                     ),
-//                     BodyTabFilesWidget(
-//                       onFileTap: (index) {
-//                         if (isActive) {
-//                           final attachment = context
-//                               .read<ChapterCubit>()
-//                               .state
-//                               .attachments?[index];
-
-//                           downloadAttachment(
-//                             attachmentId: context
-//                                 .read<ChapterCubit>()
-//                                 .state
-//                                 .attachments![index]
-//                                 .id,
-//                             token: context.read<AppManagerCubit>().state.token,
-//                           );
-//                           // context.push("/chapter/file/$index");
-//                         }
-//                       },
-//                     ),
-//                     BodyTabQuizzesWidget(chapterId: chapterId),
-//                   ],
-//                 ),
-//               ),
-//             ],
-//           );
-//         },
-//       ),
-//     );
-//   }
-// }

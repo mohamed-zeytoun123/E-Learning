@@ -1,15 +1,14 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/di/service_locator.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
 import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/core/widgets/app_message.dart';
-import 'package:e_learning/features/Course/data/models/course_filters_model.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/Course/presentation/widgets/filter_group_widget.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/course/presentation/widgets/filter_group_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,7 +51,6 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
       listener: (context, state) {
         if (_hasApplied) {
           if (state.coursesStatus == ResponseStatusEnum.success) {
-            // الحفظ بالكاش فقط بعد نجاح العملية
             di<HiveService>().saveCourseFiltersHive(
               CourseFiltersModel(
                 collegeId: tempCollege,
@@ -75,14 +73,16 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
           previous.categoriesStatus != current.categoriesStatus ||
           previous.studyYearsStatus != current.studyYearsStatus,
       builder: (context, state) {
-        final isLoading = (state.collegesStatus != ResponseStatusEnum.success &&
+        final isLoading =
+            (state.collegesStatus != ResponseStatusEnum.success &&
                 state.collegesStatus != ResponseStatusEnum.failure) ||
             (state.categoriesStatus != ResponseStatusEnum.success &&
                 state.categoriesStatus != ResponseStatusEnum.failure) ||
             (state.studyYearsStatus != ResponseStatusEnum.success &&
                 state.studyYearsStatus != ResponseStatusEnum.failure);
 
-        final hasError = state.collegesStatus == ResponseStatusEnum.failure ||
+        final hasError =
+            state.collegesStatus == ResponseStatusEnum.failure ||
             state.categoriesStatus == ResponseStatusEnum.failure ||
             state.studyYearsStatus == ResponseStatusEnum.failure;
 
@@ -138,13 +138,13 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error, size: 50.sp, color: AppColors.textError),
-            12.sizedH,
+            SizedBox(height: 12.h),
             Text(
               errorMessages.isNotEmpty ? errorMessages : 'Something went wrong',
               textAlign: TextAlign.center,
               style: AppTextStyles.s16w500.copyWith(color: AppColors.textError),
             ),
-            20.sizedH,
+            SizedBox(height: 20.h),
             CustomButton(
               title: "Retry",
               buttonColor: AppColors.buttonPrimary,
@@ -187,12 +187,12 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
               borderRadius: BorderRadius.circular(8.r),
             ),
           ),
-          16.sizedH,
+          SizedBox(height: 16.h),
           Text(
             "Filters",
             style: AppTextStyles.s18w600.copyWith(color: AppColors.textPrimary),
           ),
-          16.sizedH,
+          SizedBox(height: 16.h),
           Expanded(
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),

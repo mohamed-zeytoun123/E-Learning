@@ -1,14 +1,14 @@
-import 'package:e_learning/core/extensions/num_extenstion.dart';
-import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/core/router/route_names.dart';
+import 'dart:developer';
 import 'package:e_learning/core/theme/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/theme/typography.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/core/widgets/app_message.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/course/presentation/widgets/course_info_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,13 +37,14 @@ class _FilterWidgetState extends State<FilterWidget> {
     }
 
     final nextPage = page1 + 1;
+    log("Fetching more data, page: $nextPage");
 
     cubit.getCourses(page: nextPage, reset: false).then((_) {
       if (cubit.state.loadCoursesMoreStatus != ResponseStatusEnum.failure) {
         page1 = nextPage;
       }
     }).catchError((_) {
-      // Error handled silently
+      log("Fetch failed, keep current page: $page1");
     });
   }
 
@@ -79,7 +80,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                   price: '',
                   isLoading: true,
                 ),
-                separatorBuilder: (_, __) => 15.sizedH,
+                separatorBuilder: (_, __) => SizedBox(height: 15.h),
               );
 
             case ResponseStatusEnum.failure:
@@ -92,7 +93,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                       color: AppColors.textRed,
                       size: 40.sp,
                     ),
-                    10.sizedH,
+                    SizedBox(height: 10.h),
                     Text(
                       state.coursesError ?? 'Something went wrong',
                       style: TextStyle(
@@ -100,7 +101,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                         color: AppColors.textRed,
                       ),
                     ),
-                    15.sizedH,
+                    SizedBox(height: 15.h),
                     ElevatedButton.icon(
                       onPressed: () {
                         context.read<CourseCubit>().getCourses(page: 1);
@@ -131,7 +132,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                   if (index < courses.length) {
                     final course = courses[index];
                     return CourseInfoCardWidget(
-                      imageUrl: course.image ?? 'https://picsum.photos/361/180',
+                      imageUrl: course.image ?? '',
                       title: course.title,
                       isFavorite: course.isFavorite,
                       subtitle: course.collegeName,
@@ -151,6 +152,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                         context.read<CourseCubit>().toggleFavorite(
                               courseId: "${course.id}",
                             );
+                        log("Course saved!");
                       },
                     );
                   }
@@ -172,7 +174,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                             color: AppColors.iconError,
                             size: 40.sp,
                           ),
-                          8.sizedH,
+                          SizedBox(height: 8.h),
                           Text(
                             state.coursesMoreError ??
                                 "Failed to load more courses",
@@ -181,7 +183,7 @@ class _FilterWidgetState extends State<FilterWidget> {
                               fontSize: 14.sp,
                             ),
                           ),
-                          10.sizedH,
+                          SizedBox(height: 10.h),
                           CustomButton(
                             onTap: () => _handleFetchdata,
                             title: "Retry",
@@ -194,7 +196,7 @@ class _FilterWidgetState extends State<FilterWidget> {
 
                   return const SizedBox.shrink();
                 },
-                separatorBuilder: (_, __) => 15.sizedH,
+                separatorBuilder: (_, __) => SizedBox(height: 15.h),
               );
 
             default:
