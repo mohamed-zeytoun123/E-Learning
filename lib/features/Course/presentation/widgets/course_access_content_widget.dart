@@ -1,6 +1,6 @@
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
-import 'package:e_learning/core/model/enums/app_state_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_suspended_bottom_sheet.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_suspended_notice_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_info_summary_widget.dart';

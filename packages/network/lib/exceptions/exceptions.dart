@@ -1,4 +1,4 @@
-import 'package:netwoek/enums/app_enums.dart';
+import 'package:network/enums/app_enums.dart';
   import 'package:equatable/equatable.dart';
 
 

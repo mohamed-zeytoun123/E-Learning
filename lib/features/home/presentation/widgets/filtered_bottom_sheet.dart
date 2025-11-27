@@ -8,6 +8,8 @@ import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_cubit.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/home/presentation/widgets/filter_wrap.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -94,18 +96,18 @@ class _FilterBottomSheetContentState extends State<_FilterBottomSheetContent> {
   void _applyFilters() {
     if (widget.searchCubit != null) {
       // For search: use colleges
-      final filters = CourseFiltersModel(
+      final updatedFilters = CourseFiltersModel().copyWith(
         collegeId: _selectedCollegeId,
         studyYear: _selectedStudyYearId,
       );
-      widget.searchCubit!.updateFilters(filters);
+      widget.searchCubit!.updateFilters(updatedFilters);
 
       // Re-search if there's an active query
       final searchQuery = widget.searchCubit!.state.searchQuery;
       if (searchQuery != null && searchQuery.trim().isNotEmpty) {
         widget.searchCubit!.searchCourses(
           searchQuery: searchQuery,
-          filters: filters,
+          filters: updatedFilters,
           ordering: '-price',
           page: 1,
           pageSize: 5,

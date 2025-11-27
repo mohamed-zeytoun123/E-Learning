@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/api_response.dart';
@@ -51,7 +51,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: response.body?['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
@@ -83,18 +83,21 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         final data = response.body;
 
         if (data is List) {
-          final attachments = data
+          final List<AttachmentModel> attachments = (data as List)
               .map((e) => AttachmentModel.fromMap(e as Map<String, dynamic>))
               .toList();
 
           return Right(attachments);
+        } else if (data is Map<String, dynamic>) {
+          // Handle case where API returns empty map instead of empty list
+          return Right([]);
         } else {
           return Left(FailureServer());
         }
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: response.body?['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
@@ -142,7 +145,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: response.body?['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
@@ -181,7 +184,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       } else {
         return Left(
           Failure(
-            message: response.body['error']?.toString() ?? 'Unknown error',
+            message: response.body?['error']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
@@ -258,8 +261,6 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     }
   }
 
-
-
   //?----------------------------------------------------
   //* Get Videos by Chapter ID (pagination)
   @override
@@ -288,7 +289,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: response.body?['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
@@ -324,7 +325,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       if (!(response.statusCode == 200 || response.statusCode == 201)) {
         final data = response.body;
         log(
-          "Error updating video progress: ${data['message'] ?? "Unknown error"}",
+          "Error updating video progress: ${data?['message'] ?? "Unknown error"}",
         );
       }
     } catch (exception) {
@@ -361,7 +362,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: response.body?['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
@@ -386,23 +387,38 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       final ApiRequest request = ApiRequest(
         url: AppUrls.downloadVideo(videoId),
         // مهم: لأنو الفيديو بيرجع binary
-        responseType: ResponseType.bytes,
       );
 
       final ApiResponse response = await api.get(request);
 
       if (response.statusCode == 200) {
-        final data = response.body;
+        final dynamic data = response.body;
+
+        if (data == null) {
+          return Left(Failure(message: "No video data received"));
+        }
 
         if (data is Uint8List) {
-          return Right(data);
+          return Right(data as Uint8List);
         }
 
         if (data is List<int>) {
-          return Right(Uint8List.fromList(data));
+          return Right(Uint8List.fromList(data as List<int>));
         }
 
-        return Left(Failure(message: "Invalid video data format"));
+        if (data is List) {
+          // Handle case where data is generic List
+          try {
+            final intList = List<int>.from(data as List);
+            return Right(Uint8List.fromList(intList));
+          } catch (e) {
+            return Left(Failure(message: "Invalid video data format: $e"));
+          }
+        }
+
+        // If it's a Map or anything else, it's an error
+        return Left(
+            Failure(message: "Video data not available or wrong format"));
       } else {
         return Left(
           Failure(message: "Download error", statusCode: response.statusCode),
@@ -505,7 +521,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: response.body?['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
@@ -530,7 +546,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
   }) async {
     try {
       final ApiRequest request = ApiRequest(
-        url: AppUrls.addVideoComment(videoId),
+        url: AppUrls.addVideoComment(int.parse(videoId)),
         body: {"content": content},
       );
 
@@ -549,7 +565,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: response.body?['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );

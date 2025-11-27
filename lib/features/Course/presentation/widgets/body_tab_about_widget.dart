@@ -1,11 +1,11 @@
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/model/enums/app_state_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
-import 'package:e_learning/core/widgets/error/error_state_widget.dart';
+import 'package:e_learning/core/widgets/error_state_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_enroll_widget.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';

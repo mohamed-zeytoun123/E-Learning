@@ -1,11 +1,11 @@
 
-import 'package:netwoek/enums/app_enums.dart';
-import 'package:netwoek/exceptions/exceptions.dart';
-import 'package:netwoek/extensions/exception_extension.dart';
-import 'package:netwoek/extensions/string_extension.dart';
-import 'package:netwoek/logger/log.dart';
-import 'package:netwoek/mapper/base_model.dart';
-import 'package:netwoek/network/api/paginated_api_response.dart';
+import 'package:network/enums/app_enums.dart';
+import 'package:network/exceptions/exceptions.dart';
+import 'package:network/extensions/exception_extension.dart';
+import 'package:network/extensions/string_extension.dart';
+import 'package:network/logger/log.dart';
+import 'package:network/mapper/base_model.dart';
+import 'package:network/network/api/paginated_api_response.dart';
 
 
 abstract class _Mapper {

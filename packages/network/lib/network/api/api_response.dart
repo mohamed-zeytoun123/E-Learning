@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:netwoek/enums/app_enums.dart';
-import 'package:netwoek/extensions/exception_extension.dart';
+import 'package:network/enums/app_enums.dart';
+import 'package:network/extensions/exception_extension.dart';
 
 class ApiResponse {
   final Map? body;

@@ -1,7 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
-import 'package:netwoek/network.dart';
+import 'package:network/network.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:e_learning/core/services/network/network_info_service.dart';
@@ -53,7 +53,6 @@ import 'package:e_learning/features/Article/data/source/remote/article_remote_da
 import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository_impl.dart';
 
-
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
 import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
 import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
@@ -85,7 +84,8 @@ Future<void> initDependencyInjection() async {
 
   _initArticleDependecies();
 
-  _initAdvertisementDependecies();
+  // TODO: Advertisement feature not implemented yet
+  // _initAdvertisementDependecies();
 
   _initProfileDependecies();
 
@@ -236,25 +236,26 @@ _initArticleDependecies() {
   );
 }
 
-_initAdvertisementDependecies() {
-  di.registerLazySingleton<AdvertisementLocalDataSource>(
-    () => AdvertisementLocalDataSourceImpl(
-      sharedPreferences: di<SharedPreferences>(),
-    ),
-  );
-
-  di.registerLazySingleton<AdvertisementRemoteDataSource>(
-    () => AdvertisementRemoteDataSourceImpl(api: di<API>()),
-  );
-
-  di.registerLazySingleton<AdvertisementRepository>(
-    () => AdvertisementRepositoryImpl(
-      remote: di<AdvertisementRemoteDataSource>(),
-      local: di<AdvertisementLocalDataSource>(),
-      network: di<NetworkInfoService>(),
-    ),
-  );
-}
+// TODO: Advertisement feature not implemented yet
+// _initAdvertisementDependecies() {
+//   di.registerLazySingleton<AdvertisementLocalDataSource>(
+//     () => AdvertisementLocalDataSourceImpl(
+//       sharedPreferences: di<SharedPreferences>(),
+//     ),
+//   );
+//
+//   di.registerLazySingleton<AdvertisementRemoteDataSource>(
+//     () => AdvertisementRemoteDataSourceImpl(api: di<API>()),
+//   );
+//
+//   di.registerLazySingleton<AdvertisementRepository>(
+//     () => AdvertisementRepositoryImpl(
+//       remote: di<AdvertisementRemoteDataSource>(),
+//       local: di<AdvertisementLocalDataSource>(),
+//       network: di<NetworkInfoService>(),
+//     ),
+//   );
+// }
 
 _initProfileDependecies() {
   di.registerLazySingleton<ProfileRemouteDataSource>(

@@ -249,8 +249,8 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                   listener: (context, state) {
                     if (state.commentStatus == ResponseStatusEnum.failure) {
                       AppMessage.showError(
-                        context: context,
-                        message: state.commentError ?? "Failed to send comment",
+                        context,
+                        state.commentError ?? "Failed to send comment",
                       );
                     } else if (state.commentStatus ==
                         ResponseStatusEnum.success) {

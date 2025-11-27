@@ -1,9 +1,9 @@
 import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_cubit.dart';
-import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_state.dart';
+// TODO: Advertisement feature not implemented yet
+// import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_cubit.dart';
+// import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_state.dart';
 import 'package:e_learning/features/home/presentation/widgets/steps_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +24,9 @@ class _HomeBannersWidgetState extends State<HomeBannersWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Advertisement feature not implemented yet
+    return const SizedBox.shrink();
+    /* 
     return BlocBuilder<AdvertisementCubit, AdvertisementState>(
       builder: (context, state) {
         if (state.status == ResponseStatusEnum.loading) {
@@ -111,6 +114,7 @@ class _HomeBannersWidgetState extends State<HomeBannersWidget> {
           ],
         );
       },
-    );
+    ); 
+    */
   }
 }

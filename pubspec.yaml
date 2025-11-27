@@ -47,7 +47,7 @@ dependencies:
   open_filex: ^4.7.0
   permission_handler: ^12.0.1
   device_preview: ^1.2.0
-  netwoek:
+  network:
     path: packages/network
   json_annotation: ^4.9.0
 

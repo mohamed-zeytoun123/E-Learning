@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 import 'package:e_learning/core/model/auth_response_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';

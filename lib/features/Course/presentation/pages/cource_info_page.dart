@@ -1,7 +1,7 @@
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/core/widgets/error/error_state_widget.dart';
-import 'package:e_learning/core/widgets/error/no_internet_widget.dart';
+import 'package:e_learning/core/widgets/error_state_widget.dart';
+import 'package:e_learning/core/widgets/no_internet_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/course/presentation/manager/course_state.dart';

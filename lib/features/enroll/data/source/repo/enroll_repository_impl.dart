@@ -9,7 +9,7 @@ import 'package:e_learning/features/enroll/data/models/params/get_course_ratings
 import 'package:e_learning/features/enroll/data/source/local/enroll_local_data_source.dart';
 import 'package:e_learning/features/enroll/data/source/remote/enroll_remote_data_source.dart';
 import 'package:e_learning/features/enroll/data/source/repo/enroll_repository.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 
 class EnrollRepositoryImpl implements EnrollRepository {
   final EnrollRemoteDataSource remoteDataSource;

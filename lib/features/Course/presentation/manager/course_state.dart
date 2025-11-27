@@ -10,13 +10,10 @@ import 'package:e_learning/features/Course/data/models/course_filters_model/cour
 import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model.dart';
-import 'package:e_learning/features/auth/data/models/college_model.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
 import 'package:e_learning/features/auth/data/models/university_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapters_result/chapters_result_model.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/course_details_model.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/course_details_model.dart';
 
 class CourseState {
   //?---------------------------------------------------------------
@@ -252,7 +249,8 @@ class CourseState {
     );
   }
 
-  factory CourseState.fromMap(Map<String, dynamic> map) {
+  // Serialization not needed for Cubit state - commented out to fix errors
+  /*factory CourseState.fromMap(Map<String, dynamic> map) {
     return CourseState(
       selectedIndex: map['selectedIndex'] as int,
       categories: map['categories'] != null ? List<CategorieModel>.from((map['categories'] as List<int>).map<CategorieModel?>((x) => CategorieModel.fromMap(x as Map<String,dynamic>),),) : null,
@@ -298,11 +296,12 @@ class CourseState {
       channelsStatus: ResponseStatusEnum.fromMap(map['channelsStatus'] as Map<String,dynamic>),
       channelsError: map['channelsError'] != null ? map['channelsError'] as String : null,
     );
-  }
+  } */
 
-  String toJson() => json.encode(toMap());
+  // Serialization not needed for Cubit state
+  // String toJson() => json.encode(toMap());
 
-  factory CourseState.fromJson(String source) => CourseState.fromMap(json.decode(source) as Map<String, dynamic>);
+  // factory CourseState.fromJson(String source) => CourseState.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {

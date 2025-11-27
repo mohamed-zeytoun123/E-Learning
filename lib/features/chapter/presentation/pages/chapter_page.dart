@@ -8,7 +8,7 @@ import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.d
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/chapter_title_sub_title_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/chapters_tab_view_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_course_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';

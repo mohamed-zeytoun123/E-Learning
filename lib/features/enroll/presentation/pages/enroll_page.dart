@@ -135,9 +135,9 @@ class _EnrollPageContent extends StatelessWidget {
                                 courseTitle: enrollment.courseTitle,
                                 courseState: CourseStateEnum.active,
                                 stateSectionWidget: VideoProgressWidget(
-                                  completedVideosSecond:
-                                      enrollment.progressPercentage.toDouble(),
-                                  totalVideoSecond: 100,
+                                  completed:
+                                      enrollment.progressPercentage.toInt(),
+                                  total: 100,
                                 ),
                                 height: 203,
                               );

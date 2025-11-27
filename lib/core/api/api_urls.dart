@@ -122,6 +122,15 @@ class AppUrls {
   static String downloadVideo(String videoId) =>
       "$baseURl/videos/$videoId/download/";
 
+  static String updateVideoProgress(int videoId) =>
+      "$baseURl/videos/$videoId/progress/";
+
+  static String getVideoComments(int videoId, {int page = 1}) =>
+      "$baseURl/videos/$videoId/comments/?page=$page";
+
+  static String addVideoComment(int videoId) =>
+      "$baseURl/videos/$videoId/comments/";
+
   static final String getTeachers = "$baseURl/teachers/";
 
   static final String getArticles = "$baseURl/articles/";
@@ -139,4 +148,6 @@ class AppUrls {
   static final String saveCourses = "$baseURl/my-favorites/";
 
   static final String getAdvertisements = "$baseURl/advertisements/";
+
+  static final String getChannels = "$baseURl/channels/";
 }

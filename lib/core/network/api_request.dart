@@ -1,2 +1,2 @@
-export 'package:netwoek/network/api/api_request.dart';
+export 'package:network/network/api/api_request.dart';
 

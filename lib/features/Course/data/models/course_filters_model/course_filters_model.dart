@@ -14,4 +14,16 @@ class CourseFiltersModel extends HiveObject {
   final int? categoryId;
 
   CourseFiltersModel({this.collegeId, this.studyYear, this.categoryId});
+
+  CourseFiltersModel copyWith({
+    int? collegeId,
+    int? studyYear,
+    int? categoryId,
+  }) {
+    return CourseFiltersModel(
+      collegeId: collegeId ?? this.collegeId,
+      studyYear: studyYear ?? this.studyYear,
+      categoryId: categoryId ?? this.categoryId,
+    );
+  }
 }

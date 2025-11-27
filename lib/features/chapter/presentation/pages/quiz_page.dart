@@ -2,7 +2,7 @@ import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/core/model/enums/app_enums.dart';
-import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
+import 'package:e_learning/core/widgets/custom_app_bar_widget.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/core/widgets/app_message.dart';

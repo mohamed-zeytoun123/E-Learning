@@ -5,7 +5,7 @@ import 'package:e_learning/features/enroll/data/models/course_rating_model.dart'
 import 'package:e_learning/features/enroll/data/models/course_rating_response.dart';
 import 'package:e_learning/features/enroll/data/models/params/create_rating_params.dart';
 import 'package:e_learning/features/enroll/data/models/params/get_course_ratings_params.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 
 abstract class EnrollRemoteDataSource {
   /// Get user's enrolled courses

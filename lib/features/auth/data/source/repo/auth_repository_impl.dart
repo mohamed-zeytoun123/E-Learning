@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/core/model/auth_response_model.dart';

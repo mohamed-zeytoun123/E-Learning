@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 
 abstract class VideoRepository {

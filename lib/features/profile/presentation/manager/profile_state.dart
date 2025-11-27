@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 import 'package:e_learning/features/profile/data/models/data_college_model.dart';
 import 'package:e_learning/features/profile/data/models/data_course_saved_model.dart';
 import 'package:e_learning/features/profile/data/models/data_univarcity_response_model.dart';

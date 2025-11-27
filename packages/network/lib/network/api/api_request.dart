@@ -1,6 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dio/dio.dart';
-import 'package:netwoek/network/api/media_option.dart';
+import 'package:network/network/api/media_option.dart';
 
 class ApiRequest {
   final String url;

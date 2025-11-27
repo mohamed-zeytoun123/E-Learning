@@ -1,10 +1,10 @@
-import 'package:netwoek/durations/duration_manager.dart';
-import 'package:netwoek/enums/app_enums.dart';
-import 'package:netwoek/extensions/request_type_extesion.dart';
-import 'package:netwoek/logger/log.dart';
+import 'package:network/durations/duration_manager.dart';
+import 'package:network/enums/app_enums.dart';
+import 'package:network/extensions/request_type_extesion.dart';
+import 'package:network/logger/log.dart';
 import 'package:dio/dio.dart';
-import 'package:netwoek/network/api/api_request.dart';
-import 'package:netwoek/network/api/api_response.dart';
+import 'package:network/network/api/api_request.dart';
+import 'package:network/network/api/api_response.dart';
 
 abstract class API {
   final Dio dio;

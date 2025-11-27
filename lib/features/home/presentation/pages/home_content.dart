@@ -1,8 +1,9 @@
 import 'package:e_learning/core/di/service_locator.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_cubit.dart';
-import 'package:e_learning/features/Course/data/source/repo/advertisement_repository.dart';
+// TODO: Advertisement feature not implemented yet
+// import 'package:e_learning/features/Course/presentation/manager/advertisment_cubit/advertisment_cubit.dart';
+// import 'package:e_learning/features/Course/data/source/repo/advertisement_repository.dart';
 import 'package:e_learning/features/Teacher/presentation/manager/teacher_cubit.dart';
 import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_cubit.dart';
@@ -31,11 +32,12 @@ class HomeContent extends StatelessWidget {
           create: (context) => ArticleCubit(repo: di<ArticleRepository>())
             ..getArticles(pageSize: 5),
         ),
-        BlocProvider(
-          create: (context) =>
-              AdvertisementCubit(repo: di<AdvertisementRepository>())
-                ..getAdvertisements(),
-        ),
+        // TODO: Advertisement feature not implemented yet
+        // BlocProvider(
+        //   create: (context) =>
+        //       AdvertisementCubit(repo: di<AdvertisementRepository>())
+        //         ..getAdvertisements(),
+        // ),
       ],
       child: const HomePage(),
     );

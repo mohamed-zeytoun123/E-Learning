@@ -1,8 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
-import 'package:netwoek/network/api/api_request.dart';
-import 'package:netwoek/network/api/api_response.dart';
+import 'package:network/network/api/api_request.dart';
+import 'package:network/network/api/api_response.dart';
 
 class Logger {
   static void logProcess({

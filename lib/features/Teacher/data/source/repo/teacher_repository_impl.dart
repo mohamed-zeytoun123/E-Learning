@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/Teacher/data/models/teacher_response_model.dart';
 import 'package:e_learning/features/Teacher/data/source/local/teacher_local_data_source.dart';

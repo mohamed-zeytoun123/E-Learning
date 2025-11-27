@@ -4,10 +4,10 @@ import 'package:e_learning/core/api/api_parameters.dart';
 import 'package:e_learning/core/api/api_urls.dart';
 import 'package:e_learning/features/Teacher/data/models/teacher_response_model.dart';
 import 'package:e_learning/features/Teacher/data/source/remote/teacher_remote_data_source.dart';
-import 'package:netwoek/failures/failures.dart';
-import 'package:netwoek/network.dart';
-import 'package:netwoek/network/api/api_request.dart';
-import 'package:netwoek/network/api/api_response.dart';
+import 'package:network/failures/failures.dart';
+import 'package:network/network.dart';
+import 'package:network/network/api/api_request.dart';
+import 'package:network/network/api/api_response.dart';
 
 class TeacherRemoteDataSourceImpl implements TeacherRemoteDataSource {
   final API api;

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:netwoek/base_code_template.dart';
+import 'package:network/base_code_template.dart';
 
 void main() {
   test('adds one to input values', () {

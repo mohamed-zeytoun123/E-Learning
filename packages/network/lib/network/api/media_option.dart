@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:netwoek/enums/app_enums.dart';
+import 'package:network/enums/app_enums.dart';
 
 class MediaOption{
   final List<File> files;

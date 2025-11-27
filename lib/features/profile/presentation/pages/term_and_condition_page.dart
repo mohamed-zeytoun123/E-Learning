@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:e_learning/core/extensions/num_extenstion.dart';
 import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/core/theme/theme_extensions.dart';
-import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
+import 'package:e_learning/core/widgets/custom_app_bar_widget.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
 import 'package:e_learning/features/profile/presentation/manager/profile_state.dart';
 import 'package:flutter/material.dart';

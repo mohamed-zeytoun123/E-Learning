@@ -40,7 +40,12 @@ class StudyYearModel extends HiveObject {
   factory StudyYearModel.fromJson(Map<String, dynamic> json) =>
       _$StudyYearModelFromJson(json);
 
+  factory StudyYearModel.fromMap(Map<String, dynamic> map) =>
+      StudyYearModel.fromJson(map);
+
   Map<String, dynamic> toJson() => _$StudyYearModelToJson(this);
+  
+  Map<String, dynamic> toMap() => toJson();
 }
 
 // موديل للصفحة الكاملة

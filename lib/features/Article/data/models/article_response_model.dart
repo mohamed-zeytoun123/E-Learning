@@ -1,7 +1,7 @@
 import 'package:e_learning/core/utils/json_converters.dart';
 import 'package:e_learning/features/Article/data/models/article_model.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:netwoek/mapper/base_model.dart';
+import 'package:network/mapper/base_model.dart';
 
 part 'article_response_model.g.dart';
 

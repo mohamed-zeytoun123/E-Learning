@@ -128,10 +128,7 @@ class CourseEnrollWidget extends StatelessWidget {
                 title: "Enroll Now",
                 buttonColor: AppColors.buttonPrimary,
                 borderColor: AppColors.borderPrimary,
-                icon: Icon(
-                  Icons.arrow_outward_sharp,
-                  color: AppColors.iconWhite,
-                ),
+                // TODO: Add icon support to CustomButton if needed
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   color: AppColors.titlePrimary,
                 ),

@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/api/api_parameters.dart';
 import 'package:e_learning/core/api/api_urls.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 import 'package:e_learning/core/model/auth_response_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
@@ -11,9 +11,9 @@ import 'package:e_learning/features/auth/data/models/study_year_model.dart';
 import 'package:e_learning/features/auth/data/models/university_model.dart';
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source.dart';
 import 'package:dio/dio.dart';
-import 'package:netwoek/network.dart';
-import 'package:netwoek/network/api/api_call_manager.dart';
-import 'package:netwoek/network/api/api_request.dart';
+import 'package:network/network.dart';
+import 'package:network/network/api/api_call_manager.dart';
+import 'package:network/network/api/api_request.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final API api;

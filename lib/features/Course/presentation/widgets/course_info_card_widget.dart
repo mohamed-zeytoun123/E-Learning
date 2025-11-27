@@ -1,9 +1,9 @@
 import 'package:e_learning/core/theme/app_colors.dart';
  import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/price_text_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -1,5 +1,5 @@
 
-import 'package:netwoek/network.dart';
+import 'package:network/network.dart';
 
 
 class Manager {

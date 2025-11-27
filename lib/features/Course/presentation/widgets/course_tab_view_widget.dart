@@ -1,8 +1,8 @@
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/features/course/presentation/widgets/body_tab_about_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/body_tab_chapter_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/body_tab_reviews_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/body_tab_about_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/body_tab_chapter_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/body_tab_reviews_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -11,9 +11,9 @@ import 'package:e_learning/features/enroll/data/models/course_rating_response.da
 import 'package:e_learning/features/enroll/data/models/params/create_rating_params.dart';
 import 'package:e_learning/features/enroll/data/models/params/get_course_ratings_params.dart';
 import 'package:e_learning/features/enroll/data/source/remote/enroll_remote_data_source.dart';
-import 'package:netwoek/failures/failures.dart';
-import 'package:netwoek/network.dart';
-import 'package:netwoek/network/api/api_request.dart';
+import 'package:network/failures/failures.dart';
+import 'package:network/network.dart';
+import 'package:network/network/api/api_request.dart';
 
 class EnrollRemoteDataSourceImpl implements EnrollRemoteDataSource {
   final API api;

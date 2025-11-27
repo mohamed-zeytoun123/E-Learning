@@ -1,7 +1,7 @@
 import 'package:e_learning/core/theme/app_colors.dart';
 import 'package:e_learning/core/theme/typography.dart';
-import 'package:e_learning/features/course/presentation/widgets/rating_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/show_image_teacher_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/show_image_teacher_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

@@ -12,11 +12,18 @@ abstract class AppMessageService {
 class AppMessageServiceImpl implements AppMessageService {
   Flushbar<dynamic>? _currentFlushbar;
 
-  void _showFlushbar({
+  void showFlushbar({
     required BuildContext context,
     required String message,
     Color? backgroundColor,
     IconData? icon,
+    IconData? iconData,
+    Color? iconColor,
+    String? title,
+    bool isShowProgress = false,
+    Duration? duration,
+    String? mainButtonText,
+    VoidCallback? mainButtonOnPressed,
   }) {
     // Prevent multiple flushbars
     if (_currentFlushbar != null) return;
@@ -49,7 +56,7 @@ class AppMessageServiceImpl implements AppMessageService {
 
   @override
   void showError(BuildContext context, String message) {
-    _showFlushbar(
+    showFlushbar(
       context: context,
       message: message,
       backgroundColor: AppColors.messageError,
@@ -59,7 +66,7 @@ class AppMessageServiceImpl implements AppMessageService {
 
   @override
   void showSuccess(BuildContext context, String message) {
-    _showFlushbar(
+    showFlushbar(
       context: context,
       message: message,
       backgroundColor: AppColors.messageSuccess,
@@ -69,7 +76,7 @@ class AppMessageServiceImpl implements AppMessageService {
 
   @override
   void showWarning(BuildContext context, String message) {
-    _showFlushbar(
+    showFlushbar(
       context: context,
       message: message,
       backgroundColor: AppColors.messageWarning,

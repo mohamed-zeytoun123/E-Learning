@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/core/widgets/input_review_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/rating_stars_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/rating_stars_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

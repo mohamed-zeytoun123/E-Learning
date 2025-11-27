@@ -1,5 +1,5 @@
 import 'package:e_learning/core/theme/app_colors.dart';
-import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
+import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';

@@ -7,13 +7,13 @@ import 'package:e_learning/features/Course/data/models/rating_result/rating_mode
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapters_result/chapters_result_model.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
-import 'package:netwoek/failures/failures.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:network/failures/failures.dart';
 
 class CourseCubit extends Cubit<CourseState> {
   CourseCubit({required this.repo}) : super(CourseState());
@@ -464,7 +464,7 @@ class CourseCubit extends Cubit<CourseState> {
             studyYears: years,
           ),
         );
-        log('Fetched study years: ${years.map((y) => y.name).toList()}');
+        log('Fetched study years: ${years?.map((y) => y.name).toList()}');
       },
     );
   }

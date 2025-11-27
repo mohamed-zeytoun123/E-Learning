@@ -4,9 +4,9 @@ import 'package:e_learning/core/api/api_parameters.dart';
 import 'package:e_learning/core/api/api_urls.dart';
 import 'package:e_learning/core/app/source/remote/app_manager_remote_data_source.dart';
 import 'package:e_learning/core/services/token/token_service.dart';
-import 'package:netwoek/failures/failures.dart';
-import 'package:netwoek/network.dart';
-import 'package:netwoek/network/api/api_request.dart';
+import 'package:network/failures/failures.dart';
+import 'package:network/network.dart';
+import 'package:network/network/api/api_request.dart';
 
 class AppManagerRemoteDataSourceImpl implements AppManagerRemoteDataSource {
   final API api;

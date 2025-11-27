@@ -1,7 +1,7 @@
-import 'package:netwoek/enums/app_enums.dart';
-import 'package:netwoek/exceptions/exceptions.dart';
-import 'package:netwoek/failures/failures.dart';
-import 'package:netwoek/logger/log.dart';
+import 'package:network/enums/app_enums.dart';
+import 'package:network/exceptions/exceptions.dart';
+import 'package:network/failures/failures.dart';
+import 'package:network/logger/log.dart';
 import 'package:dio/dio.dart';
 
 extension ExceptionToFailure on Exception {

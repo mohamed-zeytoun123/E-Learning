@@ -8,7 +8,7 @@ import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/core/widgets/app_message.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
-import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,17 +45,13 @@ class QuizReadyWidget extends StatelessWidget {
             ),
           ),
         ),
-
         SizedBox(height: 25.h),
-
         Text(
           'Your Quiz Is Ready !',
           textAlign: TextAlign.center,
           style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
         ),
-
         SizedBox(height: 6.h),
-
         Row(
           spacing: 5.w,
           mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +67,6 @@ class QuizReadyWidget extends StatelessWidget {
             ),
           ],
         ),
-
         SizedBox(height: 25.h),
         BlocConsumer<ChapterCubit, ChapterState>(
           listenWhen: (previous, current) =>
@@ -83,7 +78,8 @@ class QuizReadyWidget extends StatelessWidget {
                 extra: {"chapterCubit": context.read<ChapterCubit>()},
               );
             } else if (state.statrtQuizStatus == ResponseStatusEnum.failure) {
-              AppMessage.showError(context, state.statrtQuizError ?? "Something went wrong");
+              AppMessage.showError(
+                  context, state.statrtQuizError ?? "Something went wrong");
             }
           },
           buildWhen: (previous, current) =>
@@ -100,13 +96,9 @@ class QuizReadyWidget extends StatelessWidget {
             } else {
               return CustomButton(
                 title: "Start Quiz",
-               
+
                 buttonColor: AppColors.buttonPrimary,
-                
-                icon: Icon(
-                  Icons.arrow_outward_sharp,
-                  color: AppColors.iconWhite,
-                ),
+                // TODO: Add icon support to CustomButton if needed
                 onTap: () {
                   final quizId =
                       context.read<ChapterCubit>().state.quizDetails?.id ?? 0;

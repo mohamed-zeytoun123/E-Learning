@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:netwoek/failures/failures.dart';
+import 'package:network/failures/failures.dart';
 
 abstract class AppManagerRemoteDataSource {
   //?----------------------------------------------------------------------
