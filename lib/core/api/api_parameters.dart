@@ -8,6 +8,6 @@ class ApiRequestParameters {
   static const Map<String, String> authHeaders = {
     "Content-Type": Headers.jsonContentType,
     "Authorization":
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyNjYzOTk5NzY3LCJpYXQiOjE3NjM5OTk3NjcsImp0aSI6ImFiMTg4OGE1MzkzYjQ1N2ZhN2RlZjdkMWVlZTY0MDUxIiwidXNlcl9pZCI6IjciLCJyb2xlIjoiU1RVREVOVCJ9.myKDHkXVXxAcwoxKbx3xKRJ_iOxGLeuCsLkOpjAdssA",
+        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyNjY0MjY2NzU4LCJpYXQiOjE3NjQyNjY3NTgsImp0aSI6IjdmODUwMWJmYmE1MDQ2MDZhZDMwYWU5OGE4YjMyOTQwIiwidXNlcl9pZCI6IjM1Iiwicm9sZSI6IlNUVURFTlQifQ.FnV_4zEBih0Y8Xf1GBX_9TLEKVsIJw8SMBTdmmJIhwQ",
   };
 }

@@ -1,6 +1,6 @@
 class AppUrls {
   static const String _ip =
-      "192.168.1.240"; // Change this to your computer's actual IP
+      "192.168.1.22"; // Change this to your computer's actual IP
 
   static const String baseURl = 'http://$_ip:8100/api/v1';
 

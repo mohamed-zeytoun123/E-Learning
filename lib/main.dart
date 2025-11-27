@@ -21,7 +21,8 @@ void main() async {
     DevicePreview(
       enabled: !kReleaseMode,
       builder: (context) => EasyLocalization(
-        supportedLocales: [Locale('en', ''), Locale('ar', '')],
+        // supportedLocales: [Locale('en', ''), Locale('ar', '')],
+        supportedLocales: [ Locale('en', '')],
         path:
             'assets/translations', // <-- change the path of the translation files
         fallbackLocale: Locale('en', ''),

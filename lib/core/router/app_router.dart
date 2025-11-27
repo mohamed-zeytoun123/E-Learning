@@ -46,7 +46,7 @@ import 'package:flutter/material.dart';
 
 class AppRouter {
   static final GoRouter configs = GoRouter(
-    initialLocation: RouteNames.logIn,
+    initialLocation: RouteNames.courses,
     routes: [
       GoRoute(
         path: RouteNames.selectedMethodLogin,

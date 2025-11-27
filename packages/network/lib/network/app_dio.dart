@@ -4,14 +4,13 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
-
 class AppDio {
   static late Dio dio;
 
   AppDio() {
     dio = Dio();
     initDio();
-  //  addLogger();
+    addLogger();
   }
 
   Dio get instance => dio;
@@ -20,6 +19,8 @@ class AppDio {
     dio.options.headers = {
       "Accept": "application/json",
     };
+    addTokenToHeader(
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyNjY0MjY2NzU4LCJpYXQiOjE3NjQyNjY3NTgsImp0aSI6IjdmODUwMWJmYmE1MDQ2MDZhZDMwYWU5OGE4YjMyOTQwIiwidXNlcl9pZCI6IjM1Iiwicm9sZSI6IlNUVURFTlQifQ.FnV_4zEBih0Y8Xf1GBX_9TLEKVsIJw8SMBTdmmJIhwQ");
   }
 
   addFieldToHeader(Map<String, dynamic> data) {
@@ -29,7 +30,6 @@ class AppDio {
   addTokenToHeader(String userToken) {
     log('save to token');
 
-    
     dio.options.headers.addAll({
       'Authorization': 'Bearer $userToken',
     });
