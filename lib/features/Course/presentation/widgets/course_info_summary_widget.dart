@@ -4,7 +4,10 @@ import 'package:e_learning/core/model/enums/app_enums.dart';
 import 'package:e_learning/core/widgets/custom_button.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
 import 'package:e_learning/core/widgets/app_message.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_enroll_bottom_sheet.dart';
+import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
+
 import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/video_hours_widget.dart';
 import 'package:flutter/material.dart';
@@ -134,8 +137,8 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
                 color: AppColors.titlePrimary,
               ),
               onTap: () => context.read<CourseCubit>().enrollCourse(
-                courseId: widget.courseId,
-              ),
+                    courseId: widget.courseId,
+                  ),
             );
           },
         ),

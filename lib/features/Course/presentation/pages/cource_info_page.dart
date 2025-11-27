@@ -3,13 +3,13 @@ import 'package:e_learning/core/theme/typography.dart';
 import 'package:e_learning/core/widgets/error_state_widget.dart';
 import 'package:e_learning/core/widgets/no_internet_widget.dart';
 import 'package:e_learning/core/widgets/app_loading.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_access_content_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_tab_view_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_title_sub_title_widget.dart';
 import 'package:e_learning/features/course/presentation/widgets/custom_app_bar_course_widget.dart';
- import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
+import 'package:e_learning/core/widgets/custom_cached_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -52,21 +52,20 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
           return NoInternetWidget(
             onRetry: () {
               context.read<CourseCubit>().getCourseDetails(
-                id: "${widget.courseId}",
-              );
+                    id: "${widget.courseId}",
+                  );
             },
           );
         }
         if (state.courseDetailsStatus == ResponseStatusEnum.failure) {
           return ErrorStateWidget(
             title: "Error",
-            message:
-                state.courseDetailsError ??
+            message: state.courseDetailsError ??
                 "Something went wrong. Please try again.",
             onRetry: () {
               context.read<CourseCubit>().getCourseDetails(
-                id: "${widget.courseId}",
-              );
+                    id: "${widget.courseId}",
+                  );
             },
           );
         } else if (state.courseDetailsStatus == ResponseStatusEnum.success &&
@@ -173,8 +172,8 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
               "Something went wrong on the server. Please try again later.",
           onRetry: () {
             context.read<CourseCubit>().getCourseDetails(
-              id: "${widget.courseId}",
-            );
+                  id: "${widget.courseId}",
+                );
           },
         );
       },
