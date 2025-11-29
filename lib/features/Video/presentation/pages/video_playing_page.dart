@@ -109,6 +109,9 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
         zoomAndPan: false,
         allowMuting: true,
         allowPlaybackSpeedChanging: true,
+        customControls: MaterialControls(
+          showPlayButton: false, // <= هذا يمنعها تمامًا في full-screen
+        ),
         materialProgressColors: ChewieProgressColors(
           playedColor: Colors.blueAccent,
           handleColor: Colors.blue,
@@ -156,7 +159,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
       if (qualities.isNotEmpty) {
         setState(() {
           widget.videoModel!.qualities?.addAll(qualities);
-          // أو لو كانت null:
+
           widget.videoModel?.qualities ??= qualities;
         });
       }
@@ -292,7 +295,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                           horizontal: 12.w,
                           vertical: 8.h,
                         ),
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.transparent,
                         child: Row(
                           children: [
                             IconButton(

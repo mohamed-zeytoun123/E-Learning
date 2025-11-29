@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bottom_sheet_quality_widget.dart';
@@ -9,8 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class BootomSheetSettingsWidget extends StatefulWidget {
   final double currentSpeed;
   final Function(double) onSpeedSelected;
-  final Map<String, String> qualities; // { "AUTO": "...", "854x480": "...", ... }
-  final Function(String) onQualitySelected; // ترجع رابط الفيديو المختار
+  final Map<String, String> qualities;
+  final Function(String) onQualitySelected;
 
   const BootomSheetSettingsWidget({
     super.key,
@@ -80,8 +79,9 @@ class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
                         setState(() {
                           selectedQuality = widget.qualities.entries
                               .firstWhere(
-                                  (entry) => entry.value == url,
-                                  orElse: () => MapEntry("AUTO", url))
+                                (entry) => entry.value == url,
+                                orElse: () => MapEntry("AUTO", url),
+                              )
                               .key;
                         });
                         widget.onQualitySelected(url); // رابط الفيديو المختار
