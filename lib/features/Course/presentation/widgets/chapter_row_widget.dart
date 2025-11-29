@@ -10,7 +10,7 @@ class ChapterRowWidget extends StatelessWidget {
   final int chapterNumber;
   final String chapterTitle;
   final int videoCount;
-  final int durationMinutes;
+  final double durationMinutes;
   final VoidCallback? onTap;
   final ChapterStateEnum chapterState;
   final int id;

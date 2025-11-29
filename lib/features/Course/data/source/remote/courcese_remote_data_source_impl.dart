@@ -8,6 +8,7 @@ import 'package:e_learning/core/network/api_response.dart';
 import 'package:e_learning/core/network/app_url.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/paginated_courses_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/paginated_ratings_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
@@ -450,6 +451,39 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         } else {
           return Left(Failure(message: 'Invalid data format from server'));
         }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Get Channels
+  @override
+  Future<Either<Failure, List<ChannelModel>>> getChannelsRemote() async {
+    try {
+      final ApiRequest request = ApiRequest(url: AppUrls.getChannels);
+      final ApiResponse response = await api.get(request);
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        final List<ChannelModel> channels = [];
+        if (data['results'] is List) {
+          for (var item in data['results']) {
+            channels.add(ChannelModel.fromMap(item));
+          }
+        }
+
+        return Right(channels);
       } else {
         return Left(
           Failure(

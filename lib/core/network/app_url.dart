@@ -2,7 +2,7 @@ class AppUrls {
   //?---------------------------------------------------------------
 
   static const String _ip = "192.168.1.22";
-  // static const String _ip = "192.168.1.103";
+  // static const String _ip = "192.168.1.101";
 
   //?---------------------------------------------------------------
 
@@ -30,7 +30,8 @@ class AppUrls {
 
   //?------------------- Universities & Colleges -------------------
   //* Get University
-  static final String getUniversities = "$baseURl/universities/";
+  static final String getUniversities =
+      "$baseURl/universities/?page=1&page_size=10000";
 
   //* Get Colleges
   static final String getColleges = "$baseURl/colleges/";
@@ -39,10 +40,6 @@ class AppUrls {
   static final String getCategories = "$baseURl/categories/";
 
   //?------------------- Courses -------------------
-
-  //* Get Courses
-  // static final String getCourses =
-  //     "$_baseURl/courses/?college=&study_year=&category=&teacher=&search=&ordering=-created_at";
 
   //* Get Courses as function to accept query params
   static String getCourses({Map<String, dynamic>? queryParameters}) {
@@ -57,7 +54,8 @@ class AppUrls {
   }
 
   //* Get Study Years
-  static final String getStudyYears = "$baseURl/study-years/";
+  static final String getStudyYears =
+      "$baseURl/study-years/?page=1&page_size=10000";
 
   //* Get Course Details by Slug
   static String courseDetails(String courseSlug) =>
@@ -154,6 +152,10 @@ class AppUrls {
   //* Add Comment to Video
   static String addVideoComment(String videoId) =>
       "$baseURl/videos/$videoId/comments/";
+
+  //?------------------- Channels -------------------
+  //* Get All Channels
+  static final String getChannels = "$baseURl/channels/";
 
   //?---------------------------------------------------------------
 }

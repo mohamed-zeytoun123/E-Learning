@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/paginated_courses_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/paginated_ratings_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
@@ -72,5 +73,8 @@ abstract class CourceseRemoteDataSource {
   Future<Either<Failure, EnrollmentModel>> enrollCourseRemote({
     required int courseId,
   });
+
+  //* Get Channels
+  Future<Either<Failure, List<ChannelModel>>> getChannelsRemote();
   //?----------------------------------------------------
 }

@@ -1,10 +1,8 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/error/error_state_widget.dart';
 import 'package:e_learning/core/widgets/error/no_internet_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/Course/data/models/course_details_model.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_access_content_widget.dart';
@@ -36,7 +34,8 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
 
     Future.microtask(() {
       context.read<CourseCubit>().getCourseDetails(id: "${widget.courseId}");
-      // context.read<CourseCubit>().getChapters(courseId: "${widget.courseId}");
+      // Fetch chapters when loading course details
+      context.read<CourseCubit>().getChapters(courseId: "${widget.courseId}");
     });
   }
 
@@ -90,9 +89,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                   automaticallyImplyLeading: false,
                   flexibleSpace: FlexibleSpaceBar(
                     background: CustomCachedImageWidget(
-                      appImage:
-                          course.image ??
-                          '', //todo remove image dynamic
+                      appImage: course.image ?? '',
                       width: double.infinity,
                       fit: BoxFit.cover,
                       height: 262,
@@ -154,7 +151,7 @@ class _CourceInfoPageState extends State<CourceInfoPage> {
                 ),
                 SliverFillRemaining(
                   child: CourseTabViewWidget(
-                    countChapter: 123456,
+                    countChapter: course.chaptersCount,
                     //  course.totalChapters,
                     countVideos: course.totalVideos,
                     houresDurtion: course.totalVideoDurationHours,

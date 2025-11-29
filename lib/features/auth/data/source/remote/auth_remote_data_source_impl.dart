@@ -79,7 +79,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   //? -----------------------------------------------------------------
-
   //* getUniversities
   @override
   Future<Either<Failure, List<UniversityModel>>> getUniversitiesRemote() async {
@@ -87,19 +86,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final ApiRequest request = ApiRequest(url: AppUrls.getUniversities);
       final ApiResponse response = await api.get(request);
 
-      final List<UniversityModel> universities = [];
-
-      if (response.statusCode == 200) {
-        final data = response.body;
-
-        if (data is List) {
-          for (var item in data) {
-            universities.add(UniversityModel.fromMap(item));
-          }
-        }
-
-        return Right(universities);
-      } else {
+      if (response.statusCode != 200) {
         return Left(
           Failure(
             message: response.body['message']?.toString() ?? 'Unknown error',
@@ -107,45 +94,79 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           ),
         );
       }
+
+      final data = response.body;
+      final List<UniversityModel> universities = [];
+
+      // 🟢 الحالة الأساسية: response.body = Map وفيه key اسمه "results"
+      if (data is Map<String, dynamic>) {
+        final results = data['results'];
+        if (results is List) {
+          for (final item in results) {
+            universities.add(UniversityModel.fromMap(item));
+          }
+        }
+      }
+      // 🟡 حالة احتياط: لو رجع List بدون Pagination
+      else if (data is List) {
+        for (final item in data) {
+          universities.add(UniversityModel.fromMap(item));
+        }
+      }
+
+      return Right(universities);
     } catch (exception) {
       return Left(Failure.handleError(exception as DioException));
     }
   }
-  //? -----------------------------------------------------------------
 
+  //? -----------------------------------------------------------------
+  //* getColleges
   //* getColleges
   @override
   Future<Either<Failure, List<CollegeModel>>> getCollegesRemote({
     required int universityId,
   }) async {
     try {
-      final ApiRequest request = ApiRequest(
-        url: '${AppUrls.getColleges}?university=$universityId',
-      );
+      final String url =
+          '${AppUrls.getColleges}?page=1&page_size=10000&university=$universityId';
+
+      final ApiRequest request = ApiRequest(url: url);
 
       final ApiResponse response = await api.get(request);
       final List<CollegeModel> colleges = [];
 
       if (response.statusCode == 200) {
         final data = response.body;
-        if (data is List) {
-          for (var item in data) {
-            colleges.add(CollegeModel.fromMap(item));
-          }
+
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          colleges.addAll(
+            (data['results'] as List)
+                .map((item) => CollegeModel.fromMap(item))
+                .toList(),
+          );
+        } else if (data is List) {
+          colleges.addAll(data.map((item) => CollegeModel.fromMap(item)));
         }
+
         return Right(colleges);
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: (response.body is Map && response.body['message'] != null)
+                ? response.body['message'].toString()
+                : 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
       }
-    } catch (exception) {
-      return Left(Failure.handleError(exception as DioException));
+    } on DioException catch (e) {
+      return Left(Failure.handleError(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
     }
   }
+
   //? -----------------------------------------------------------------
 
   //* otp verfication
@@ -238,7 +259,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   //? -----------------------------------------------------------------
-
   //* getStudyYears
   @override
   Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRemote() async {
@@ -250,9 +270,15 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        // نتأكد إن الـ data قائمة
+        // 🟢 الحالة الأساسية: response.body = Map وفيه key اسمه "results"
         if (data is Map<String, dynamic> && data['results'] is List) {
-          for (var item in data['results']) {
+          for (final item in data['results']) {
+            studyYears.add(StudyYearModel.fromJson(item));
+          }
+        }
+        // 🟡 حالة احتياط: لو رجع List مباشرة
+        else if (data is List) {
+          for (final item in data) {
             studyYears.add(StudyYearModel.fromJson(item));
           }
         }

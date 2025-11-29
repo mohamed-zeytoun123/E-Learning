@@ -6,15 +6,27 @@ import 'package:e_learning/features/Video/presentation/widgets/bottom_sheet_spee
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class BootomSheetSettingsWidget extends StatelessWidget {
+class BootomSheetSettingsWidget extends StatefulWidget {
   final double currentSpeed;
   final Function(double) onSpeedSelected;
+  final Map<String, String> qualities; // { "AUTO": "...", "854x480": "...", ... }
+  final Function(String) onQualitySelected; // ترجع رابط الفيديو المختار
 
   const BootomSheetSettingsWidget({
     super.key,
     required this.currentSpeed,
     required this.onSpeedSelected,
+    required this.qualities,
+    required this.onQualitySelected,
   });
+
+  @override
+  State<BootomSheetSettingsWidget> createState() =>
+      _BootomSheetSettingsWidgetState();
+}
+
+class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
+  String selectedQuality = "AUTO";
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +65,6 @@ class BootomSheetSettingsWidget extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
-                  log("Open Quality BottomSheet");
                   showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.white,
@@ -63,13 +73,20 @@ class BootomSheetSettingsWidget extends StatelessWidget {
                         top: Radius.circular(16),
                       ),
                     ),
-                    builder: (context) {
-                      return BottomSheetQualityWidget(
-                        onQualitySelected: (String p1) {
-                          log("Selected Quality: $p1");
-                        },
-                      );
-                    },
+                    builder: (_) => BottomSheetQualityWidget(
+                      initialQuality: selectedQuality,
+                      qualities: widget.qualities,
+                      onQualitySelected: (url) {
+                        setState(() {
+                          selectedQuality = widget.qualities.entries
+                              .firstWhere(
+                                  (entry) => entry.value == url,
+                                  orElse: () => MapEntry("AUTO", url))
+                              .key;
+                        });
+                        widget.onQualitySelected(url); // رابط الفيديو المختار
+                      },
+                    ),
                   );
                 },
               ),
@@ -86,9 +103,7 @@ class BootomSheetSettingsWidget extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context); // Close Settings
-
-                  // Open Speed BottomSheet
+                  Navigator.pop(context);
                   showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.white,
@@ -99,8 +114,8 @@ class BootomSheetSettingsWidget extends StatelessWidget {
                     ),
                     builder: (context) {
                       return BottomSheetSpeedWidget(
-                        initialSpeed: currentSpeed,
-                        onSpeedSelected: onSpeedSelected,
+                        initialSpeed: widget.currentSpeed,
+                        onSpeedSelected: widget.onSpeedSelected,
                       );
                     },
                   );

@@ -106,11 +106,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                     prev.commentsMoreStatus != curr.commentsMoreStatus ||
                     prev.commentsStatus != curr.commentsStatus,
                 builder: (context, state) {
-                  final comments =
-                      state.comments?.comments
-                          ?.where((comment) => comment.isPublic)
-                          .toList() ??
-                      [];
+                  final comments = state.comments?.comments;
+                  //     ?.where((comment) => comment.isPublic)
+                  //     .toList() ??
+                  // [];
 
                   if (state.commentsStatus == ResponseStatusEnum.loading &&
                       page == 1) {
@@ -152,7 +151,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         ],
                       ),
                     );
-                  } else if (comments.isEmpty) {
+                  } else if (comments!.isEmpty) {
                     return Center(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -108,7 +108,7 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
                 enableDrag: true,
                 builder: (bottomSheetContext) {
                   return BlocProvider.value(
-                    value: context.read<CourseCubit>(), // استخدام نفس الـ cubit
+                    value: context.read<CourseCubit>(),
                     child: Padding(
                       padding: EdgeInsets.only(
                         bottom: MediaQuery.of(

@@ -8,6 +8,7 @@ import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
@@ -370,6 +371,24 @@ class CourceseRepositoryImpl implements CourceseRepository {
         return Left(Failure.handleError(e as DioException));
       }
     } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Get Channels Repository
+  @override
+  Future<Either<Failure, List<ChannelModel>>> getChannelsRepo() async {
+    if (await network.isConnected) {
+      final result = await remote.getChannelsRemote();
+
+      return result.fold((failure) => Left(failure), (channels) async {
+        if (channels.isEmpty) return Left(FailureNoData());
+        // إذا حابب ممكن تعمل caching بعدين
+        return Right(channels);
+      });
+    } else {
+      // لو بدك ممكن تضيف caching هنا بعدين
       return Left(FailureNoConnection());
     }
   }

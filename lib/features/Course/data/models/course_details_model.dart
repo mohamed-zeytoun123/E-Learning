@@ -27,6 +27,7 @@ class CourseDetailsModel {
   final bool isPaid;
   final int totalVideos;
   final int completedVideos;
+  final int chaptersCount; // 👈 تمت الإضافة
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -54,6 +55,7 @@ class CourseDetailsModel {
     required this.isPaid,
     required this.totalVideos,
     required this.completedVideos,
+    required this.chaptersCount,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -109,6 +111,7 @@ class CourseDetailsModel {
       isPaid: map['is_paid'] ?? false,
       totalVideos: map['total_videos'] ?? 0,
       completedVideos: map['completed_videos'] ?? 0,
+      chaptersCount: map['chapters_count'] ?? 0,
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
     );
@@ -140,6 +143,7 @@ class CourseDetailsModel {
       'is_paid': isPaid,
       'total_videos': totalVideos,
       'completed_videos': completedVideos,
+      'chapters_count': chaptersCount, // 👈 تمت الإضافة
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
     };

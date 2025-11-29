@@ -2,7 +2,6 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
-import 'package:e_learning/features/auth/data/models/study_year_enum.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:e_learning/features/auth/presentation/widgets/input_select_widget.dart';
@@ -100,6 +99,7 @@ class SelectedInformationWidget extends StatelessWidget {
                 );
 
               case ResponseStatusEnum.success:
+                context.read<AuthCubit>().getStudyYears();
                 if (state.colleges.isEmpty) {
                   return Text(
                     AppLocalizations.of(
@@ -138,44 +138,76 @@ class SelectedInformationWidget extends StatelessWidget {
             }
           },
         ),
-
         //?--------------------------- Study Year --------------------------
         BlocBuilder<AuthCubit, AuthState>(
           buildWhen: (pre, cur) =>
+              pre.getStudyYearsState != cur.getStudyYearsState ||
               pre.signUpRequestParams?.studyYear !=
-              cur.signUpRequestParams?.studyYear,
+                  cur.signUpRequestParams?.studyYear,
           builder: (context, state) {
-            return InputSelectWidget(
-              hint: "Choose Study Year",
-              hintKey: "choose_study_year",
-              options: SchoolYear.values
-                  .map((e) => e.displayName(context))
-                  .toList(),
-              value: state.signUpRequestParams?.studyYear != null
-                  ? SchoolYear.values
-                        .firstWhere(
-                          (e) =>
-                              e.number == state.signUpRequestParams!.studyYear,
-                        )
-                        .displayName(context)
-                  : null,
-              onChanged: (value) {
-                final selectedYear = SchoolYear.values.firstWhere(
-                  (e) => e.displayName(context) == value,
+            // ما نعرض السنة إذا ما اختيرت الجامعة أو الكلية
+            if (state.signUpRequestParams?.universityId == null ||
+                state.signUpRequestParams?.collegeId == null) {
+              return Text(
+                AppLocalizations.of(
+                      context,
+                    )?.translate("select_university_and_college") ??
+                    "Select university and college first",
+                style: TextStyle(color: AppColors.textGrey),
+              );
+            }
+
+            switch (state.getStudyYearsState) {
+              case ResponseStatusEnum.loading:
+                return AppLoading.linear();
+
+              case ResponseStatusEnum.failure:
+                return Text(
+                  state.studyYearsError ??
+                      AppLocalizations.of(
+                        context,
+                      )?.translate("failed_to_load_study_years") ??
+                      "Failed to load study years",
+                  style: TextStyle(color: AppColors.textError),
                 );
 
-                final oldParams = context
-                    .read<AuthCubit>()
-                    .state
-                    .signUpRequestParams;
+              case ResponseStatusEnum.success:
+                if (state.studyYears!.isEmpty) {
+                  return Text(
+                    AppLocalizations.of(
+                          context,
+                        )?.translate("no_study_years_available") ??
+                        "No study years available",
+                    style: TextStyle(color: AppColors.textGrey),
+                  );
+                }
 
-                context.read<AuthCubit>().updateSignUpParams(
-                  universityId: oldParams?.universityId,
-                  collegeId: oldParams?.collegeId,
-                  studyYear: selectedYear.number,
+                return InputSelectWidget(
+                  hint: "Choose Study Year",
+                  hintKey: "choose_study_year",
+                  options: state.studyYears!.map((sy) => sy.name).toList(),
+                  value: state.signUpRequestParams?.studyYear != null
+                      ? state.studyYears
+                            ?.firstWhere(
+                              (sy) =>
+                                  sy.id == state.signUpRequestParams!.studyYear,
+                            )
+                            .name
+                      : null,
+                  onChanged: (value) {
+                    final selectedYear = state.studyYears?.firstWhere(
+                      (sy) => sy.name == value,
+                    );
+
+                    context.read<AuthCubit>().updateSignUpParams(
+                      studyYear: selectedYear?.id,
+                    );
+                  },
                 );
-              },
-            );
+
+              default:
+                return const SizedBox.shrink();
+            }
           },
         ),
       ],

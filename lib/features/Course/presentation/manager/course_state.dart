@@ -1,6 +1,7 @@
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
@@ -81,6 +82,11 @@ class CourseState {
   //* Enroll Cource B
   final ResponseStatusEnum enrollStatusB;
 
+  //* Get Channels
+  final List<ChannelModel>? channels;
+  final ResponseStatusEnum channelsStatus;
+  final String? channelsError;
+
   //?----------------------------------------------------------------
   CourseState({
     //* Get Chapters by Course
@@ -153,6 +159,11 @@ class CourseState {
 
     //* Enroll Cource B
     this.enrollStatusB = ResponseStatusEnum.initial,
+
+    //* Get Channels
+    this.channels,
+    this.channelsStatus = ResponseStatusEnum.initial,
+    this.channelsError,
   });
 
   //?------------------------------------------------------------------
@@ -227,6 +238,11 @@ class CourseState {
 
     //* Enroll Cource B
     ResponseStatusEnum? enrollStatusB,
+
+    //* Get Channels
+    List<ChannelModel>? channels,
+    ResponseStatusEnum? channelsStatus,
+    String? channelsError,
   }) {
     return CourseState(
       //* Get Chapters by Course
@@ -302,6 +318,11 @@ class CourseState {
 
       //* Enroll Cource
       enrollStatusB: enrollStatusB ?? this.enrollStatusB,
+
+      //* Get Channels
+      channels: channels ?? this.channels,
+      channelsStatus: channelsStatus ?? this.channelsStatus,
+      channelsError: channelsError,
     );
   }
 }
