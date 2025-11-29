@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:chewie/chewie.dart';
+import 'package:e_learning/features/Video/data/functions/get_hls_qualities.dart';
 import 'package:e_learning/features/Video/data/functions/open_comments_sheet.dart';
 import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
-import 'package:e_learning/features/Video/presentation/pages/ddd.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
