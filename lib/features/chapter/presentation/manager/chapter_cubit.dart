@@ -23,13 +23,13 @@ import 'package:pointycastle/paddings/pkcs7.dart';
 class ChapterCubit extends Cubit<ChapterState> {
   ChapterCubit({required this.repo, required this.local})
     : super(ChapterState()) {
-    // Load cached videos when cubit initializes
+    
     _loadCachedVideos();
   }
   final ChapterRepository repo;
   final ChapterLocalDataSource local;
   
-  // Load cached videos and add them to downloads list
+  
   Future<void> _loadCachedVideos() async {
     try {
       final cachedVideos = await getCachedDownloads();
@@ -37,8 +37,7 @@ class ChapterCubit extends Cubit<ChapterState> {
         emit(state.copyWith(downloads: [...state.downloads, ...cachedVideos]));
       }
     } catch (e) {
-      // Ignore errors during cache loading
-      print('Error loading cached videos: $e');
+      log('Error loading cached videos: $e');
     }
   }
 
