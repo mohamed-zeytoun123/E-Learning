@@ -83,22 +83,25 @@ class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
                 onTap: () {
                   // Close the settings bottom sheet before opening quality sheet
                   Navigator.pop(context);
-                  showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16),
+                  // Add a small delay to ensure the first sheet is fully closed
+                  Future.microtask(() {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                       ),
-                    ),
-                    builder: (_) => BottomSheetQualityWidget(
-                      initialQuality: selectedQuality,
-                      qualities: widget.qualities,
-                      onQualitySelected: (url) {
-                        widget.onQualitySelected(url);
-                      },
-                    ),
-                  );
+                      builder: (_) => BottomSheetQualityWidget(
+                        initialQuality: selectedQuality,
+                        qualities: widget.qualities,
+                        onQualitySelected: (url) {
+                          widget.onQualitySelected(url);
+                        },
+                      ),
+                    );
+                  });
                 },
               ),
 
@@ -116,21 +119,24 @@ class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16),
+                  // Add a small delay to ensure the first sheet is fully closed
+                  Future.microtask(() {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                       ),
-                    ),
-                    builder: (context) {
-                      return BottomSheetSpeedWidget(
-                        initialSpeed: widget.currentSpeed,
-                        onSpeedSelected: widget.onSpeedSelected,
-                      );
-                    },
-                  );
+                      builder: (context) {
+                        return BottomSheetSpeedWidget(
+                          initialSpeed: widget.currentSpeed,
+                          onSpeedSelected: widget.onSpeedSelected,
+                        );
+                      },
+                    );
+                  });
                 },
               ),
             ],
