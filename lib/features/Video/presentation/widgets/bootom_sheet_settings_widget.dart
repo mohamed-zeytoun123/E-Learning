@@ -81,9 +81,7 @@ class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
                   ),
                 ),
                 onTap: () {
-                  // Close the settings bottom sheet before opening quality sheet
                   Navigator.pop(context);
-                  // Add a small delay to ensure the first sheet is fully closed
                   Future.microtask(() {
                     showModalBottomSheet(
                       context: context,

@@ -67,6 +67,7 @@ dependencies:
   open_filex: ^4.7.0
   intl: ^0.20.2
   url_launcher: ^6.3.2
+  typed_data: ^1.4.0
 
 dev_dependencies:
   flutter_test:

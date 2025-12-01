@@ -86,6 +86,11 @@ class VideoRowWidget extends StatelessWidget {
                                               ),
                                             );
 
+                                        // Check if video is cached on device
+                                        final isCachedOnDevice = state.downloads.any(
+                                          (d) => d.videoId == videoId && d.isCompleted,
+                                        );
+
                                         if (downloadItem.isDownloading) {
                                           // Show progress percentage instead of just loading icon
                                           return Stack(
@@ -111,8 +116,8 @@ class VideoRowWidget extends StatelessWidget {
                                               ),
                                             ],
                                           );
-                                        } else if (downloadItem.isCompleted) {
-                                          // Show checkmark when completed
+                                        } else if (downloadItem.isCompleted || isCachedOnDevice) {
+                                          // Show checkmark when completed or cached
                                           return Icon(
                                             Icons.check,
                                             color: Colors.green,
