@@ -81,6 +81,8 @@ class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
                   ),
                 ),
                 onTap: () {
+                  // Close the settings bottom sheet before opening quality sheet
+                  Navigator.pop(context);
                   showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.white,
@@ -93,14 +95,6 @@ class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
                       initialQuality: selectedQuality,
                       qualities: widget.qualities,
                       onQualitySelected: (url) {
-                        setState(() {
-                          selectedQuality = widget.qualities.entries
-                              .firstWhere(
-                                (entry) => entry.value == url,
-                                orElse: () => MapEntry("AUTO", url),
-                              )
-                              .key;
-                        });
                         widget.onQualitySelected(url);
                       },
                     ),

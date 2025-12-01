@@ -45,7 +45,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
   late ChewieController _chewieController;
   double _currentSpeed = 1.0;
   bool _videoError = false;
-  String _currentQuality = "AUTO"; // Track current quality
+  String _currentQuality = "AUTO";
 
   @override
   void initState() {
