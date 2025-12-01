@@ -61,6 +61,17 @@ class _DownloadsPageState extends State<DownloadsPage> {
             }
 
             final cachedVideos = snapshot.data ?? [];
+
+            cachedVideos.sort((a, b) {
+              final dateA = a.downloadDate != null && a.downloadDate!.isNotEmpty
+                  ? DateTime.parse(a.downloadDate!)
+                  : DateTime.fromMillisecondsSinceEpoch(0);
+              final dateB = b.downloadDate != null && b.downloadDate!.isNotEmpty
+                  ? DateTime.parse(b.downloadDate!)
+                  : DateTime.fromMillisecondsSinceEpoch(0);
+              return dateB.compareTo(dateA);
+            });
+
             if (cachedVideos.isEmpty) {
               return Center(
                 child: Column(

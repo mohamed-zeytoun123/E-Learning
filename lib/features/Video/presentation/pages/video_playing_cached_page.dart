@@ -56,16 +56,15 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
   }
 
   Future<void> _initializeVideo() async {
-    try {
-      File? videoFileToPlay;
+    File? videoFileToPlay;
 
-      // If we already have a video file, use it directly
+    try {
+      // 1️⃣ استخدام الفيديو إذا موجود
       if (widget.videoFile != null) {
         videoFileToPlay = widget.videoFile;
       }
-      // If we have encrypted bytes, decrypt them first
+      // 2️⃣ فك التشفير إذا عندنا بايتات مشفرة
       else if (widget.encryptedBytes.isNotEmpty) {
-        // 1️⃣ فك التشفير أولاً
         videoFileToPlay = await _decryptAndWriteTempFile(
           widget.encryptedBytes,
           widget.videoId,
@@ -81,16 +80,19 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
         return;
       }
 
-      // 2️⃣ إنشاء VideoPlayerController
-      _videoController = VideoPlayerController.file(
-        videoFileToPlay,
-        videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: false),
-      );
+      // 3️⃣ إنشاء VideoPlayerController
+      _videoController = VideoPlayerController.file(videoFileToPlay);
 
+      // 4️⃣ تحقق قبل الinitialize لتجنب Future already completed
+      if (!_videoController.value.isInitialized) {
+        await _videoController.initialize();
+      }
+
+      // 5️⃣ إنشاء ChewieController بعد التأكد من initialize
       _chewieController = ChewieController(
         videoPlayerController: _videoController,
         autoPlay: true,
-        autoInitialize: false,
+        autoInitialize: true,
         looping: false,
         allowFullScreen: true,
         showControls: true,
@@ -106,13 +108,13 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
         ),
       );
 
-      await _videoController.initialize();
+      // 6️⃣ إضافة Listener لتحديث الواجهة
+      _videoController.addListener(() => setState(() {}));
 
+      // 7️⃣ تحديث حالة الصفحة
       setState(() {
         _isInitializing = false;
       });
-
-      _videoController.addListener(() => setState(() {}));
     } catch (e) {
       debugPrint("Video init failed: $e");
       setState(() {
