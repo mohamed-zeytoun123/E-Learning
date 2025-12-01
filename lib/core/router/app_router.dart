@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/features/Video/presentation/pages/video_playing_cached_page.dart';
 import 'package:e_learning/features/Video/presentation/pages/video_playing_page.dart';
 import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
@@ -59,16 +62,21 @@ class AppRouter {
           final chapterCubit = args["chapterCubit"] as ChapterCubit;
           final videoModel = args["videoModel"] as VideoStreamModel?;
           final videoId = args["videoId"] as int?;
-          final videoFile = args["videoFile"] as dynamic;
 
           return BlocProvider.value(
             value: chapterCubit,
-            child: VideoPlayingPage(
-              videoId: videoId,
-              videoModel: videoModel,
-              videoFile: videoFile,
-            ),
+            child: VideoPlayingPage(videoId: videoId, videoModel: videoModel!),
           );
+        },
+      ),
+
+      GoRoute(
+        path: RouteNames.videoPageCached,
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final videoFile = args["videoFile"] as File;
+
+          return VideoPlayingCachedPage(videoFile: videoFile);
         },
       ),
 

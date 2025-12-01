@@ -20,21 +20,16 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 
 class VideoPlayingPage extends StatefulWidget {
-  final VideoStreamModel? videoModel;
+  final VideoStreamModel videoModel;
   final void Function(Duration)? onPositionChanged;
-  final File? videoFile;
   final int? videoId;
 
   const VideoPlayingPage({
     super.key,
+    required this.videoModel,
     this.onPositionChanged,
     this.videoId,
-    this.videoModel,
-    this.videoFile,
-  }) : assert(
-         videoModel != null || videoFile != null,
-         "Either videoModel or videoFile must be provided",
-       );
+  });
 
   @override
   State<VideoPlayingPage> createState() => _VideoPlayingPageState();
@@ -58,51 +53,21 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
     ]);
 
     try {
-      if (widget.videoFile != null) {
-        _videoController = VideoPlayerController.file(
-          widget.videoFile!,
-          videoPlayerOptions: VideoPlayerOptions(
-            allowBackgroundPlayback: false,
-          ),
-        );
-      } else if (widget.videoModel != null) {
-        _videoController =
-            VideoPlayerController.networkUrl(
-                Uri.parse(widget.videoModel!.secureStreamingUrl),
-                videoPlayerOptions: VideoPlayerOptions(
-                  allowBackgroundPlayback: false,
-                  mixWithOthers: false,
-                ),
-                formatHint: VideoFormat.hls,
-              )
-              ..setLooping(false)
-              ..setVolume(1.0)
-              ..setPlaybackSpeed(_currentSpeed);
+      _videoController =
+          VideoPlayerController.networkUrl(
+              Uri.parse(widget.videoModel.secureStreamingUrl),
+              videoPlayerOptions: VideoPlayerOptions(
+                allowBackgroundPlayback: false,
+                mixWithOthers: false,
+              ),
+              formatHint: VideoFormat.hls,
+            )
+            ..setLooping(false)
+            ..setVolume(1.0)
+            ..setPlaybackSpeed(_currentSpeed);
 
-        // -----------------------------
-        // تحميل الدقات المتوفرة للفيديو HLS
-        // -----------------------------
-        loadVideoQualities();
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          AppMessage.showFlushbar(
-            context: context,
-            title: "Error",
-            message: "Video file not found",
-            backgroundColor: AppColors.messageError,
-            iconData: Icons.error_outline,
-            iconColor: AppColors.iconWhite,
-            isShowProgress: true,
-          );
-          Navigator.pop(context);
-        });
-        _videoError = true;
-        return;
-      }
+      loadVideoQualities();
 
-      // -----------------------------
-      // Chewie Controller
-      // -----------------------------
       _chewieController = ChewieController(
         videoPlayerController: _videoController,
         autoPlay: true,
@@ -121,10 +86,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
           bufferedColor: Colors.white54,
         ),
       );
-
-      // _videoController.initialize().then((_) {
-      //   setState(() {});
-      // });
 
       _videoController.addListener(() {
         if (widget.onPositionChanged != null) {
@@ -155,18 +116,15 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
   }
 
   Future<void> loadVideoQualities() async {
-    if (widget.videoModel == null) return;
-
     try {
       final qualities = await getHLSQualities(
-        widget.videoModel!.secureStreamingUrl,
+        widget.videoModel.secureStreamingUrl,
       );
 
       if (qualities.isNotEmpty) {
         setState(() {
-          widget.videoModel!.qualities?.addAll(qualities);
-
-          widget.videoModel?.qualities ??= qualities;
+          widget.videoModel.qualities?.addAll(qualities);
+          widget.videoModel.qualities ??= qualities;
         });
       }
     } catch (e) {
@@ -185,8 +143,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
   }
 
   void openSettingsSheet() {
-    if (widget.videoModel == null) return;
-
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -196,16 +152,15 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
       builder: (context) {
         return BootomSheetSettingsWidget(
           currentSpeed: _currentSpeed,
-          initialQuality: _currentQuality, // Pass current quality
+          initialQuality: _currentQuality,
           qualities:
-              widget.videoModel!.qualities ??
-              {"AUTO": widget.videoModel!.secureStreamingUrl},
+              widget.videoModel.qualities ??
+              {"AUTO": widget.videoModel.secureStreamingUrl},
           onQualitySelected: (url) async {
             if (!_videoError) {
               final currentPosition = _videoController.value.position;
 
               try {
-                // استبدال رابط الفيديو مع الحفاظ على الوقت الحالي
                 await _videoController.pause();
                 await _videoController.dispose();
 
@@ -222,10 +177,9 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                 await _videoController.seekTo(currentPosition);
                 await _videoController.setPlaybackSpeed(_currentSpeed);
 
-                // Update current quality
                 setState(() {
                   _currentQuality =
-                      widget.videoModel!.qualities?.entries
+                      widget.videoModel.qualities?.entries
                           .firstWhere(
                             (entry) => entry.value == url,
                             orElse: () => MapEntry("AUTO", url),
@@ -234,7 +188,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                       "AUTO";
                 });
 
-                setState(() {}); // إعادة بناء الواجهة
                 _chewieController.dispose();
 
                 _chewieController = ChewieController(
@@ -285,11 +238,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
     final selectedVideo = chapterState.selectVideo;
 
     VideoModel? displayVideo = selectedVideo;
-
-    bool isPlayingCachedVideo =
-        widget.videoFile != null && selectedVideo == null;
-
-    bool shouldHideUIIcons = isPlayingCachedVideo;
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -344,18 +292,12 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                 }
                               },
                             ),
-
-                            // العنوان والاسم
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    selectedVideo?.title ??
-                                        widget.videoFile?.path
-                                            .split('/')
-                                            .last ??
-                                        "Video Full Title",
+                                    selectedVideo?.title ?? "Video Full Title",
                                     style: AppTextStyles.s16w600.copyWith(
                                       color: AppColors.textWhite,
                                     ),
@@ -376,45 +318,50 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                               ),
                             ),
                             SizedBox(width: 8.h),
-
-                            // تحميل – تعليقات – إعدادات
-                            if (!shouldHideUIIcons) ...[
-                              BlocBuilder<ChapterCubit, ChapterState>(
+                            BlocListener<ChapterCubit, ChapterState>(
+                              listenWhen: (previous, current) =>
+                                  previous.downloads != current.downloads,
+                              listener: (context, state) {
+                                for (var d in state.downloads) {
+                                  if (d.hasError) {
+                                    AppMessage.showFlushbar(
+                                      context: context,
+                                      title: "Error",
+                                      message:
+                                          // "Failed to download ${d.fileName}",
+                                          d.errorMessage ?? "Download failed",
+                                      backgroundColor: AppColors.messageError,
+                                      iconData: Icons.error_outline,
+                                      iconColor: AppColors.iconWhite,
+                                      isShowProgress: true,
+                                    );
+                                  }
+                                }
+                              },
+                              child: BlocBuilder<ChapterCubit, ChapterState>(
                                 buildWhen: (previous, current) =>
                                     previous.downloads != current.downloads,
                                 builder: (context, state) {
                                   final video =
                                       state.selectVideo ?? displayVideo;
 
-                                  DownloadItem downloadItem;
-                                  bool isCached = false;
+                                  DownloadItem downloadItem = state.downloads
+                                      .firstWhere(
+                                        (d) =>
+                                            d.videoId == video?.id.toString(),
+                                        orElse: () => DownloadItem(
+                                          videoId: video?.id.toString() ?? "",
+                                          fileName: "",
+                                          isDownloading: false,
+                                          progress: 0.0,
+                                        ),
+                                      );
 
-                                  if (video != null) {
-                                    downloadItem = state.downloads.firstWhere(
-                                      (d) => d.videoId == video.id.toString(),
-                                      orElse: () => DownloadItem(
-                                        videoId: video.id.toString(),
-                                        fileName: "",
-                                        isDownloading: false,
-                                        progress: 0.0,
-                                      ),
-                                    );
-
-                                    isCached = state.downloads.any(
-                                      (d) =>
-                                          d.videoId == video.id.toString() &&
-                                          d.isCompleted,
-                                    );
-                                  } else {
-                                    downloadItem = DownloadItem(
-                                      videoId: "",
-                                      fileName: "",
-                                      isDownloading: false,
-                                      isCompleted: isPlayingCachedVideo,
-                                      progress: 1.0,
-                                    );
-                                    isCached = isPlayingCachedVideo;
-                                  }
+                                  bool isCached = state.downloads.any(
+                                    (d) =>
+                                        d.videoId == video?.id.toString() &&
+                                        d.isCompleted,
+                                  );
 
                                   if (isCached) {
                                     return const Icon(
@@ -447,6 +394,29 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                           ),
                                         ],
                                       ),
+                                    );
+                                  }
+
+                                  // Show red download icon if hasError
+                                  if (downloadItem.hasError) {
+                                    return IconButton(
+                                      icon: const Icon(
+                                        Icons.download,
+                                        color: Colors.red,
+                                      ),
+                                      tooltip: "Download failed. Tap to retry.",
+                                      onPressed: () async {
+                                        if (video != null) {
+                                          final cubit = context
+                                              .read<ChapterCubit>();
+                                          final vid = video.id.toString();
+                                          cubit.downloadVideo(
+                                            videoId: vid,
+                                            fileName:
+                                                "${video.title.replaceAll(' ', '_')}.mp4",
+                                          );
+                                        }
+                                      },
                                     );
                                   }
 
@@ -490,25 +460,117 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                   );
                                 },
                               ),
+                            ),
 
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.messenger_outline,
-                                  color: Colors.white,
-                                ),
-                                onPressed: () => openCommentsSheet(
-                                  context,
-                                  widget.videoId ?? 0,
-                                ),
+                            // BlocBuilder<ChapterCubit, ChapterState>(
+                            //   buildWhen: (previous, current) =>
+                            //       previous.downloads != current.downloads,
+                            //   builder: (context, state) {
+                            //     final video = state.selectVideo ?? displayVideo;
+
+                            //     DownloadItem downloadItem = state.downloads
+                            //         .firstWhere(
+                            //           (d) => d.videoId == video?.id.toString(),
+                            //           orElse: () => DownloadItem(
+                            //             videoId: video?.id.toString() ?? "",
+                            //             fileName: "",
+                            //             isDownloading: false,
+                            //             progress: 0.0,
+                            //           ),
+                            //         );
+
+                            //     bool isCached = state.downloads.any(
+                            //       (d) =>
+                            //           d.videoId == video?.id.toString() &&
+                            //           d.isCompleted,
+                            //     );
+
+                            //     if (isCached) {
+                            //       return const Icon(
+                            //         Icons.check_circle,
+                            //         color: Colors.green,
+                            //         size: 28,
+                            //       );
+                            //     }
+
+                            //     if (downloadItem.isDownloading) {
+                            //       return SizedBox(
+                            //         width: 40,
+                            //         height: 40,
+                            //         child: Stack(
+                            //           alignment: Alignment.center,
+                            //           children: [
+                            //             CircularProgressIndicator(
+                            //               value: downloadItem.progress == 0.0
+                            //                   ? null
+                            //                   : downloadItem.progress,
+                            //               color: Colors.blueAccent,
+                            //             ),
+                            //             Text(
+                            //               '${(downloadItem.progress * 100).toInt()}%',
+                            //               style: AppTextStyles.s12w400.copyWith(
+                            //                 color: AppColors.textWhite,
+                            //                 fontWeight: FontWeight.bold,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       );
+                            //     }
+
+                            //     return IconButton(
+                            //       icon: const Icon(
+                            //         Icons.download,
+                            //         color: Colors.white,
+                            //       ),
+                            //       onPressed: () async {
+                            //         if (video != null) {
+                            //           final cubit = context
+                            //               .read<ChapterCubit>();
+                            //           final vid = video.id.toString();
+
+                            //           if (await cubit.isVideoCachedById(vid)) {
+                            //             AppMessage.showFlushbar(
+                            //               context: context,
+                            //               title: "Info",
+                            //               message: 'Video already downloaded',
+                            //               backgroundColor:
+                            //                   AppColors.messageInfo,
+                            //               iconData: Icons.check_circle,
+                            //               iconColor: AppColors.iconWhite,
+                            //               isShowProgress: true,
+                            //               duration: const Duration(seconds: 4),
+                            //             );
+                            //             return;
+                            //           }
+
+                            //           cubit.downloadVideo(
+                            //             videoId: vid,
+                            //             fileName:
+                            //                 "${video.title.replaceAll(' ', '_')}.mp4",
+                            //           );
+                            //         }
+                            //       },
+                            //     );
+                            //   },
+                            // ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.messenger_outline,
+                                color: Colors.white,
                               ),
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.settings,
-                                  color: Colors.white,
-                                ),
-                                onPressed: openSettingsSheet,
+                              onPressed: () => openCommentsSheet(
+                                context,
+                                widget.videoId ?? 0,
                               ),
-                            ],
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.settings,
+                                color: Colors.white,
+                              ),
+                              onPressed: openSettingsSheet,
+                            ),
                           ],
                         ),
                       ),

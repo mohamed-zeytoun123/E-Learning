@@ -275,14 +275,19 @@ class _DownloadsPageState extends State<DownloadsPage> {
                                   return;
                                 }
                                 context.push(
-                                  RouteNames.viedioPage,
-                                  extra: {
-                                    "chapterCubit": cubit,
-                                    "videoModel": null,
-                                    "videoFile": videoFile,
-                                    "videoId": null,
-                                  },
+                                  RouteNames.videoPageCached,
+                                  extra: {"videoFile": videoFile},
                                 );
+
+                                // context.push(
+                                //   RouteNames.viedioPage,
+                                //   extra: {
+                                //     "chapterCubit": cubit,
+                                //     "videoModel": null,
+                                //     "videoFile": videoFile,
+                                //     "videoId": null,
+                                //   },
+                                // );
                               } catch (e) {
                                 debugPrint("Failed to decrypt video: $e");
                                 AppMessage.showFlushbar(

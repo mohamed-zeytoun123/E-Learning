@@ -5,6 +5,7 @@ class DownloadItem {
   final bool isDownloading;
   final bool isCompleted;
   final bool hasError;
+  final String? errorMessage; // <--- جديد
 
   DownloadItem({
     required this.videoId,
@@ -13,6 +14,7 @@ class DownloadItem {
     this.isDownloading = false,
     this.isCompleted = false,
     this.hasError = false,
+    this.errorMessage,
   });
 
   DownloadItem copyWith({
@@ -22,6 +24,7 @@ class DownloadItem {
     bool? isDownloading,
     bool? isCompleted,
     bool? hasError,
+    String? errorMessage, // <--- جديد
   }) {
     return DownloadItem(
       videoId: videoId ?? this.videoId,
@@ -30,6 +33,7 @@ class DownloadItem {
       isDownloading: isDownloading ?? this.isDownloading,
       isCompleted: isCompleted ?? this.isCompleted,
       hasError: hasError ?? this.hasError,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }

@@ -404,8 +404,21 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
 
         return Left(Failure(message: "Invalid video data format"));
       } else {
+        // Extract error message from response if available
+        String errorMessage = "Download error";
+        if (response.body is Map<String, dynamic>) {
+          final data = response.body as Map<String, dynamic>;
+          if (data.containsKey('detail')) {
+            errorMessage = data['detail'].toString();
+          } else if (data.containsKey('message')) {
+            errorMessage = data['message'].toString();
+          } else if (data.containsKey('error')) {
+            errorMessage = data['error'].toString();
+          }
+        }
+        
         return Left(
-          Failure(message: "Download error", statusCode: response.statusCode),
+          Failure(message: errorMessage, statusCode: response.statusCode),
         );
       }
     } catch (exception) {
@@ -452,9 +465,23 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         if (await tempFile.exists()) {
           await tempFile.delete();
         }
+        
+        // Extract error message from response if available
+        String errorMessage = "Download error";
+        if (response.data is Map<String, dynamic>) {
+          final data = response.data as Map<String, dynamic>;
+          if (data.containsKey('detail')) {
+            errorMessage = data['detail'].toString();
+          } else if (data.containsKey('message')) {
+            errorMessage = data['message'].toString();
+          } else if (data.containsKey('error')) {
+            errorMessage = data['error'].toString();
+          }
+        }
+        
         return Left(
           Failure(
-            message: "Download error",
+            message: errorMessage,
             statusCode: response.statusCode ?? 500,
           ),
         );

@@ -468,7 +468,7 @@ class ChapterCubit extends Cubit<ChapterState> {
         await result.fold(
           (failure) async {
             log('Failed to download video: ${failure.message}');
-            _setDownloadError(videoId);
+            _setDownloadError(videoId, errorMessage: failure.message);
           },
           (encryptedBytes) async {
             // تحديث progress لـ 100% والحالة مكتمل
@@ -487,13 +487,15 @@ class ChapterCubit extends Cubit<ChapterState> {
           },
         );
       } else {
-        // 5️⃣ لا كاش ولا إنترنت
         log('No internet connection and video not cached');
-        _setDownloadError(videoId);
+        _setDownloadError(
+          videoId,
+          errorMessage: "No internet connection and video not cached",
+        );
       }
     } catch (e) {
       log('Download error: $e');
-      _setDownloadError(videoId);
+      _setDownloadError(videoId, errorMessage: e.toString());
     }
   }
 
@@ -521,14 +523,17 @@ class ChapterCubit extends Cubit<ChapterState> {
     }
   }
 
-  void _setDownloadError(String videoId) {
+  void _setDownloadError(String videoId, {String? errorMessage}) {
     final index = state.downloads.indexWhere((d) => d.videoId == videoId);
     if (index != -1) {
-      final downloads = List<DownloadItem>.from(state.downloads);
-      downloads[index] = downloads[index].copyWith(
+      final updated = state.downloads[index].copyWith(
         isDownloading: false,
         hasError: true,
+        progress: 0.0,
+        errorMessage: errorMessage, // <-- الرسالة تظهر صح
       );
+      final downloads = List<DownloadItem>.from(state.downloads);
+      downloads[index] = updated;
       emit(state.copyWith(downloads: downloads));
     }
   }
@@ -583,7 +588,7 @@ class ChapterCubit extends Cubit<ChapterState> {
       await result.fold(
         (failure) async {
           log('Failed to download video: ${failure.message}');
-          _setDownloadError(videoId);
+          _setDownloadError(videoId, errorMessage: failure.message);
         },
         (encryptedBytes) async {
           // اكتمال التحميل
@@ -595,7 +600,7 @@ class ChapterCubit extends Cubit<ChapterState> {
         },
       );
     } catch (e) {
-      _setDownloadError(videoId);
+      _setDownloadError(videoId, errorMessage: e.toString());
     }
   }
 
