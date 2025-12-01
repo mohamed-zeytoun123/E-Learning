@@ -434,7 +434,6 @@ class ChapterCubit extends Cubit<ChapterState> {
       );
       emit(state.copyWith(downloads: [...state.downloads, newItem]));
     } else {
-      // لو موجود، تحديث الحالة
       final updated = state.downloads[existing].copyWith(
         isDownloading: true,
         progress: 0.0,
@@ -548,6 +547,7 @@ class ChapterCubit extends Cubit<ChapterState> {
     for (final m in metas) {
       final vid = m['videoId'] ?? '';
       final name = m['fileName'] ?? '';
+      final downloadDate = m['downloadDate'] ?? ''; // <-- Get download date
       if (vid.isEmpty) continue;
       if (await local.isVideoCached(vid)) {
         items.add(
@@ -557,6 +557,7 @@ class ChapterCubit extends Cubit<ChapterState> {
             isDownloading: false,
             isCompleted: true,
             progress: 1.0,
+            downloadDate: downloadDate, // <-- Add download date to DownloadItem
           ),
         );
       }
@@ -776,7 +777,7 @@ class ChapterCubit extends Cubit<ChapterState> {
           );
         },
         (newComment) {
-          // دمج الكومنت الجديد مع الموجودين إذا أردت
+          // دمج الكومنت الجديد مع الموجودة إذا أردت
           final updatedComments = [newComment, ...?state.comments?.comments];
 
           emit(

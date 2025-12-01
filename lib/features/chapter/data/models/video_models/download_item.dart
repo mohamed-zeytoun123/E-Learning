@@ -6,6 +6,7 @@ class DownloadItem {
   final bool isCompleted;
   final bool hasError;
   final String? errorMessage; // <--- جديد
+  final String? downloadDate; // <--- إضافة تاريخ التحميل
 
   DownloadItem({
     required this.videoId,
@@ -15,6 +16,7 @@ class DownloadItem {
     this.isCompleted = false,
     this.hasError = false,
     this.errorMessage,
+    this.downloadDate, // <--- إضافة تاريخ التحميل
   });
 
   DownloadItem copyWith({
@@ -25,6 +27,7 @@ class DownloadItem {
     bool? isCompleted,
     bool? hasError,
     String? errorMessage, // <--- جديد
+    String? downloadDate, // <--- إضافة تاريخ التحميل
   }) {
     return DownloadItem(
       videoId: videoId ?? this.videoId,
@@ -34,6 +37,7 @@ class DownloadItem {
       isCompleted: isCompleted ?? this.isCompleted,
       hasError: hasError ?? this.hasError,
       errorMessage: errorMessage ?? this.errorMessage,
+      downloadDate: downloadDate ?? this.downloadDate, // <--- إضافة تاريخ التحميل
     );
   }
 }

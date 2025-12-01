@@ -62,7 +62,11 @@ class ChapterLocalDataSourceImpl implements ChapterLocalDataSource {
     }
     // remove duplicates
     items = items.where((e) => e is Map && e['videoId'] != videoId).toList();
-    items.add({'videoId': videoId, 'fileName': fileName});
+    items.add({
+      'videoId': videoId, 
+      'fileName': fileName,
+      'downloadDate': DateTime.now().toIso8601String(), // <-- Save download date
+    });
     await metaFile.writeAsString(json.encode(items), flush: true);
   }
 
@@ -78,6 +82,7 @@ class ChapterLocalDataSourceImpl implements ChapterLocalDataSource {
           .map((e) => {
                 'videoId': e['videoId']?.toString() ?? '',
                 'fileName': e['fileName']?.toString() ?? '',
+                'downloadDate': e['downloadDate']?.toString() ?? '', // <-- Retrieve download date
               })
           .toList();
     } catch (_) {

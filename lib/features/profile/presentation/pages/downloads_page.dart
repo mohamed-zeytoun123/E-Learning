@@ -167,7 +167,9 @@ class _DownloadsPageState extends State<DownloadsPage> {
                               ),
                             ),
                             subtitle: Text(
-                              "Video ID: ${download.videoId}",
+                              download.downloadDate != null && download.downloadDate!.isNotEmpty
+                                ? "Downloaded: ${_formatDate(download.downloadDate!)}"
+                                : "Video ID: ${download.videoId}",
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: AppColors.textGrey,
@@ -315,5 +317,16 @@ class _DownloadsPageState extends State<DownloadsPage> {
         ),
       ),
     );
+  }
+
+  // Helper method to format the date
+  String _formatDate(String isoDateString) {
+    try {
+      final DateTime dateTime = DateTime.parse(isoDateString);
+      return "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+    } catch (e) {
+      // If parsing fails, return the original string
+      return isoDateString;
+    }
   }
 }
