@@ -71,7 +71,7 @@ class FilteredCoursesListWidget extends StatelessWidget {
       },
       child: ListView.separated(
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+        padding: EdgeInsets.only(right: 1.w, left: 1.w, top: 5.h, bottom: 10.h),
         itemCount: courses.length,
         itemBuilder: (context, index) {
           final courseSlug = courses[index].id;

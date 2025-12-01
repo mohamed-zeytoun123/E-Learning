@@ -69,6 +69,7 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
           listener: (context, state) async {
             if (state.enrollStatus == ResponseStatusEnum.success ||
                 state.enrollStatus == ResponseStatusEnum.failure) {
+              final courseCubit = context.read<CourseCubit>();
               // 1️⃣ عرض الرسالة المناسبة أولًا
               if (state.enrollStatus == ResponseStatusEnum.success) {
                 AppMessage.showFlushbar(
@@ -115,7 +116,7 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
                           bottomSheetContext,
                         ).viewInsets.bottom,
                       ),
-                      child: CourseEnrollBottomSheet(),
+                      child: CourseEnrollBottomSheet(cubit: courseCubit),
                     ),
                   );
                 },

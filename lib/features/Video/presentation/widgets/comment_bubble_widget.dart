@@ -6,11 +6,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CommentBubbleWidget extends StatelessWidget {
   final String comment;
   final String time;
+  final String authorName;
   final bool isMine;
 
   const CommentBubbleWidget({
     super.key,
     required this.comment,
+    required this.authorName,
     required this.time,
     required this.isMine,
   });
@@ -53,12 +55,24 @@ class CommentBubbleWidget extends StatelessWidget {
           SizedBox(height: 4.h),
           Align(
             alignment: Alignment.bottomRight,
-            child: Text(
-              time,
-              style: TextStyle(
-                color: textColor.withOpacity(0.7),
-                fontSize: 10.sp,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  authorName,
+                  style: TextStyle(
+                    color: textColor.withOpacity(0.7),
+                    fontSize: 10.sp,
+                  ),
+                ),
+                Text(
+                  time,
+                  style: TextStyle(
+                    color: textColor.withOpacity(0.7),
+                    fontSize: 10.sp,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

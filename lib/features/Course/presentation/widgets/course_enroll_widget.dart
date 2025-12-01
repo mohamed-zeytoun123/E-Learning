@@ -42,6 +42,7 @@ class CourseEnrollWidget extends StatelessWidget {
               previous.enrollStatusB != current.enrollStatusB,
           listener: (context, state) async {
             if (state.enrollStatusB == ResponseStatusEnum.success) {
+              final courseCubit = context.read<CourseCubit>();
               // عرض فلاش رسالة نجاح
               AppMessage.showFlushbar(
                 context: context,
@@ -71,12 +72,15 @@ class CourseEnrollWidget extends StatelessWidget {
                           bottomSheetContext,
                         ).viewInsets.bottom,
                       ),
-                      child: CourseEnrollBottomSheet(), // المحتوى اللي عندك
+                      child: CourseEnrollBottomSheet(
+                        cubit: courseCubit,
+                      ), // المحتوى اللي عندك
                     ),
                   );
                 },
               );
             } else if (state.enrollStatusB == ResponseStatusEnum.failure) {
+              final courseCubit = context.read<CourseCubit>();
               AppMessage.showFlushbar(
                 context: context,
                 title: "Warning",
@@ -109,7 +113,9 @@ class CourseEnrollWidget extends StatelessWidget {
                           bottomSheetContext,
                         ).viewInsets.bottom,
                       ),
-                      child: CourseEnrollBottomSheet(), // المحتوى اللي عندك
+                      child: CourseEnrollBottomSheet(
+                        cubit: courseCubit,
+                      ), // المحتوى اللي عندك
                     ),
                   );
                 },

@@ -246,16 +246,16 @@ class CourseState {
   }) {
     return CourseState(
       //* Get Chapters by Course
-      ratings: ratings ?? this.ratings,
-      ratingsStatus: ratingsStatus ?? this.ratingsStatus,
+      chapters: chapters ?? this.chapters,
+      chaptersStatus: chaptersStatus ?? this.chaptersStatus,
       loadchaptersMoreStatus:
           loadchaptersMoreStatus ?? this.loadchaptersMoreStatus,
       chaptersError: chaptersError,
       chaptersMoreError: chaptersMoreError,
 
       //* Get Ratings
-      chapters: chapters ?? this.chapters,
-      chaptersStatus: chaptersStatus ?? this.chaptersStatus,
+      ratings: ratings ?? this.ratings,
+      ratingsStatus: ratingsStatus ?? this.ratingsStatus,
       loadratingsMoreStatus:
           loadratingsMoreStatus ?? this.loadratingsMoreStatus,
       ratingsError: ratingsError,

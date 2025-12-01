@@ -22,12 +22,28 @@ class VideoModel {
   });
 
   factory VideoModel.fromJson(Map<String, dynamic> json) {
+    double parseDurationInMinutes(dynamic value) {
+      if (value == null) return 0.0;
+      double seconds = 0.0;
+      if (value is int) {
+        seconds = value.toDouble();
+      } else if (value is double) {
+        seconds = value;
+      } else {
+        seconds = double.tryParse(value.toString()) ?? 0.0;
+      }
+      // تحويل الثواني إلى دقائق مع تقريب لرقمين بعد الفاصلة
+      return double.parse((seconds / 60).toStringAsFixed(2));
+    }
+
     return VideoModel(
       id: json['id'] ?? 0,
       title: json['title'] ?? '',
       description: json['description'] ?? '',
       order: json['order'] ?? 0,
-      duration: json['duration'] ?? 0,
+      duration: parseDurationInMinutes(
+        json['duration'],
+      ).toInt(), // إذا تريد int بالدقائق
       chapter: json['chapter'] ?? 0,
       chapterName: json['chapter_name'] ?? '',
       progressPercentage: json['progress_percentage'] != null
@@ -35,19 +51,5 @@ class VideoModel {
           : null,
       uploadedAt: json['uploaded_at'] ?? '',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'order': order,
-      'duration': duration,
-      'chapter': chapter,
-      'chapter_name': chapterName,
-      'progress_percentage': progressPercentage,
-      'uploaded_at': uploadedAt,
-    };
   }
 }

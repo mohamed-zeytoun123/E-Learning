@@ -323,11 +323,13 @@ class CourseCubit extends Cubit<CourseState> {
     int pageSize = 10,
   }) async {
     // Prevent duplicate requests if already loading
-    if (state.chaptersStatus == ResponseStatusEnum.loading && page == 1 && reset) {
+    if (state.chaptersStatus == ResponseStatusEnum.loading &&
+        page == 1 &&
+        reset) {
       log("Chapters already loading, skipping duplicate request");
       return;
     }
-    
+
     // Prevent duplicate requests for pagination
     if (state.loadchaptersMoreStatus == ResponseStatusEnum.loading && !reset) {
       log("Chapters pagination already loading, skipping duplicate request");

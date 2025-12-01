@@ -66,6 +66,7 @@ dependencies:
   encrypt: ^5.0.3
   open_filex: ^4.7.0
   intl: ^0.20.2
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:chewie/chewie.dart';
+import 'package:e_learning/core/asset/app_icons.dart';
 import 'package:e_learning/features/Video/data/functions/get_hls_qualities.dart';
 import 'package:e_learning/features/Video/data/functions/open_comments_sheet.dart';
 import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
@@ -56,9 +57,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
     ]);
 
     try {
-      // -----------------------------
-      // ضبط الفيديو HLS أو ملف محلي
-      // -----------------------------
       if (widget.videoFile != null) {
         _videoController = VideoPlayerController.file(
           widget.videoFile!,
@@ -74,7 +72,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                   allowBackgroundPlayback: false,
                   mixWithOthers: false,
                 ),
-                formatHint: VideoFormat.hls, // مهم لفيديو HLS
+                formatHint: VideoFormat.hls,
               )
               ..setLooping(false)
               ..setVolume(1.0)
@@ -86,9 +84,15 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
         loadVideoQualities();
       } else {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(const SnackBar(content: Text("Video file not found")));
+          AppMessage.showFlushbar(
+            context: context,
+            title: "Error",
+            message: "Video file not found",
+            backgroundColor: AppColors.messageError,
+            iconData: Icons.error_outline,
+            iconColor: AppColors.iconWhite,
+            isShowProgress: true,
+          );
           Navigator.pop(context);
         });
         _videoError = true;
@@ -101,7 +105,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
       _chewieController = ChewieController(
         videoPlayerController: _videoController,
         autoPlay: false,
-        autoInitialize: false, // نعمل Initialize يدويًا
+        autoInitialize: false,
         looping: false,
         allowFullScreen: true,
         showControls: true,
@@ -109,9 +113,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
         zoomAndPan: false,
         allowMuting: true,
         allowPlaybackSpeedChanging: true,
-        customControls: MaterialControls(
-          showPlayButton: false, // <= هذا يمنعها تمامًا في full-screen
-        ),
         materialProgressColors: ChewieProgressColors(
           playedColor: Colors.blueAccent,
           handleColor: Colors.blue,
@@ -120,11 +121,8 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
         ),
       );
 
-      // -----------------------------
-      // Initialize يدويًا لتجنب Future already completed
-      // -----------------------------
       _videoController.initialize().then((_) {
-        setState(() {}); // إعادة بناء الواجهة بعد التحميل
+        setState(() {});
       });
 
       _videoController.addListener(() {
@@ -140,9 +138,16 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
       _videoError = true;
 
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Video file not found")));
+        AppMessage.showFlushbar(
+          context: context,
+          title: "Error",
+          message: "Video file not found",
+          backgroundColor: AppColors.messageError,
+          iconData: Icons.error_outline,
+          iconColor: AppColors.iconWhite,
+          isShowProgress: true,
+        );
+
         Navigator.pop(context);
       });
     }
@@ -240,7 +245,10 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                   context: context,
                   title: "Error",
                   message: "Cannot change video quality",
-                  backgroundColor: Colors.red,
+                  backgroundColor: AppColors.messageError,
+                  iconData: Icons.error_outline,
+                  iconColor: AppColors.iconWhite,
+                  isShowProgress: true,
                 );
               }
             }

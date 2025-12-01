@@ -39,25 +39,39 @@ class CourceseRepositoryImpl implements CourceseRepository {
   });
 
   //? -----------------------------------------------------------------
-  //* Get Filter Categories
+  // //* Get Filter Categories
+  // @override
+  // Future<Either<Failure, List<CategorieModel>>> getCategoriesRepo() async {
+  //   if (await network.isConnected) {
+  //     final result = await remote.getCategoriesRemote();
+
+  //     return result.fold((failure) => Left(failure), (categories) async {
+  //       if (categories.isEmpty) return Left(FailureNoData());
+  //       await local.saveCategoriesInCash(categories);
+  //       return Right(categories);
+  //     });
+  //   } else {
+  //     final cachedCategories = local.getCategoriesInCach();
+
+  //     if (cachedCategories.isNotEmpty) {
+  //       return Right(cachedCategories);
+  //     } else {
+  //       return Left(FailureNoConnection());
+  //     }
+  //   }
+  // }
+
   @override
   Future<Either<Failure, List<CategorieModel>>> getCategoriesRepo() async {
     if (await network.isConnected) {
       final result = await remote.getCategoriesRemote();
 
-      return result.fold((failure) => Left(failure), (categories) async {
+      return result.fold((failure) => Left(failure), (categories) {
         if (categories.isEmpty) return Left(FailureNoData());
-        await local.saveCategoriesInCash(categories);
         return Right(categories);
       });
     } else {
-      final cachedCategories = local.getCategoriesInCach();
-
-      if (cachedCategories.isNotEmpty) {
-        return Right(cachedCategories);
-      } else {
-        return Left(FailureNoConnection());
-      }
+      return Left(FailureNoConnection());
     }
   }
 
@@ -296,24 +310,37 @@ class CourceseRepositoryImpl implements CourceseRepository {
 
   //?----------------------------------------------------
 
-  //* Get Study Years
+  // //* Get Study Years
+  // @override
+  // Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRepo() async {
+  //   if (await network.isConnected) {
+  //     final result = await remote.getStudyYearsRemote();
+
+  //     return result.fold((failure) => Left(failure), (years) async {
+  //       if (years.isEmpty) return Left(FailureNoData());
+  //       await local.saveStudyYearsInCache(years);
+  //       return Right(years);
+  //     });
+  //   } else {
+  //     final cachedYears = local.getStudyYearsInCache();
+  //     if (cachedYears.isNotEmpty) {
+  //       return Right(cachedYears);
+  //     } else {
+  //       return Left(FailureNoConnection());
+  //     }
+  //   }
+  // }
   @override
   Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRepo() async {
     if (await network.isConnected) {
       final result = await remote.getStudyYearsRemote();
 
-      return result.fold((failure) => Left(failure), (years) async {
+      return result.fold((failure) => Left(failure), (years) {
         if (years.isEmpty) return Left(FailureNoData());
-        await local.saveStudyYearsInCache(years);
         return Right(years);
       });
     } else {
-      final cachedYears = local.getStudyYearsInCache();
-      if (cachedYears.isNotEmpty) {
-        return Right(cachedYears);
-      } else {
-        return Left(FailureNoConnection());
-      }
+      return Left(FailureNoConnection());
     }
   }
 

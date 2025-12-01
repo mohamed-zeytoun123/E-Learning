@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_download_state.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/download/download_attachment_function.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/videos_result_model.dart';
@@ -283,7 +284,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     );
   }
 
- 
   //?--------------------------------------------------------
   //* Get Videos by Chapter with Pagination
   Future<void> getVideos({
@@ -676,6 +676,7 @@ class ChapterCubit extends Cubit<ChapterState> {
       watchedSeconds: watchedSeconds,
     );
   }
+  //?--------------------------------------------------------
 
   Future<void> getComments({
     required int videoId,
@@ -771,18 +772,18 @@ class ChapterCubit extends Cubit<ChapterState> {
         },
         (newComment) {
           // دمج الكومنت الجديد مع الموجودين إذا أردت
-          // final updatedComments = [newComment, ...?state.comments?.comments];
+          final updatedComments = [newComment, ...?state.comments?.comments];
 
           emit(
             state.copyWith(
               commentStatus: ResponseStatusEnum.success,
               comment: newComment,
-              // comments:
-              //     state.comments?.copyWith(comments: updatedComments) ??
-              //     CommentsResultModel(
-              //       comments: updatedComments,
-              //       hasNextPage: true,
-              //     ),
+              comments:
+                  state.comments?.copyWith(comments: updatedComments) ??
+                  CommentsResultModel(
+                    comments: updatedComments,
+                    hasNextPage: true,
+                  ),
             ),
           );
         },

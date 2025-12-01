@@ -10,6 +10,7 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_enroll_widget.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/chapter_row_widget.dart';
@@ -250,7 +251,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
     );
   }
 
-  Widget _buildChapterList(CourseState state, List chapters, AppStateEnum appState) {
+  Widget _buildChapterList(CourseState state, List<ChapterModel> chapters, AppStateEnum appState) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

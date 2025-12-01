@@ -181,15 +181,18 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                     itemBuilder: (context, index) {
                       if (index < comments.length) {
                         final comment = comments[index];
+                        final createdAt = DateTime.tryParse(comment.createdAt);
                         return CommentBubbleWidget(
                           comment: comment.content,
-                          time: DateFormat(
-                            'MMM d, yyyy hh:mm a',
-                          ).format(DateTime.parse(comment.createdAt)),
+                          time: createdAt != null
+                              ? DateFormat(
+                                  'MMM d, yyyy hh:mm a',
+                                ).format(createdAt)
+                              : "Just now",
                           isMine: comment.authorType == "Student",
+                          authorName: comment.authorName,
                         );
                       } else {
-                        // Loader أو رسالة نهاية التعليقات
                         if (state.commentsMoreStatus ==
                             ResponseStatusEnum.loading) {
                           return Padding(
@@ -244,7 +247,6 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                   controller: _commentController,
                   hint: "Write Comment",
                 ),
-
                 BlocConsumer<ChapterCubit, ChapterState>(
                   listenWhen: (previous, current) =>
                       previous.commentStatus != current.commentStatus,
@@ -265,7 +267,6 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         Navigator.of(context).pop();
                       }
 
-                      // بعد الغلق، نعرض رسالة النجاح
                       AppMessage.showFlushbar(
                         context: context,
                         message: "Comment sent successfully",
@@ -276,7 +277,6 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         iconColor: AppColors.iconWhite,
                       );
 
-                      // ننظف الـ text field
                       _commentController.clear();
                     }
                   },

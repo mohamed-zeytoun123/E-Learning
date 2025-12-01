@@ -6,6 +6,7 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/features/Course/presentation/widgets/filters_bottom_sheet_widget.dart';
 import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/course_info_card_widget.dart';
@@ -65,7 +66,7 @@ class _FilterWidgetState extends State<FilterWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 20.h),
+      padding: EdgeInsets.only(right: 1.w, left: 1.w, top: 5.h, bottom: 10.h),
       child: BlocConsumer<CourseCubit, CourseState>(
         buildWhen: (previous, current) => previous.courses != current.courses,
         builder: (context, state) {
@@ -105,12 +106,27 @@ class _FilterWidgetState extends State<FilterWidget> {
                       ),
                     ),
                     SizedBox(height: 15.h),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        context.read<CourseCubit>().getCourses(page: 1);
+                    CustomButtonWidget(
+                      onTap: () {
+                        final cubit = context.read<CourseCubit>();
+                        cubit.getCategories();
+                        cubit.getStudyYears();
+
+                        showModalBottomSheet(
+                          isScrollControlled: true,
+                          context: context,
+                          builder: (_) => BlocProvider.value(
+                            value: cubit,
+                            child: const FiltersBottomSheetWidget(),
+                          ),
+                        );
                       },
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Retry'),
+                      title: "Edit Filters",
+                      titleStyle: AppTextStyles.s14w500.copyWith(
+                        color: AppColors.titlePrimary,
+                      ),
+                      buttonColor: AppColors.buttonPrimary,
+                      borderColor: AppColors.borderPrimary,
                     ),
                   ],
                 ),
@@ -129,7 +145,12 @@ class _FilterWidgetState extends State<FilterWidget> {
               return ListView.separated(
                 controller: _scrollController,
                 physics: const BouncingScrollPhysics(),
-                padding: EdgeInsets.only(bottom: 60.h),
+                padding: EdgeInsets.only(
+                  right: 1.w,
+                  left: 1.w,
+                  top: 5.h,
+                  bottom: 10.h,
+                ),
                 itemCount: courses.length + 1,
                 itemBuilder: (context, index) {
                   if (index < courses.length) {

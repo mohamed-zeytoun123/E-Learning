@@ -13,6 +13,254 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+// class CustomCategoryTabBarWidget extends StatelessWidget {
+//   const CustomCategoryTabBarWidget({super.key});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<CourseCubit, CourseState>(
+//       buildWhen: (pre, curr) {
+//         return pre.collegesStatus != curr.collegesStatus ||
+//             pre.coursesStatus != curr.coursesStatus ||
+//             pre.selectedIndex != curr.selectedIndex;
+//       },
+//       builder: (context, state) {
+//         final selectedIndex = state.selectedIndex;
+
+//         if (state.collegesStatus == ResponseStatusEnum.loading ||
+//             state.coursesStatus == ResponseStatusEnum.loading) {
+//           return Column(
+//             children: [
+//               SingleChildScrollView(
+//                 scrollDirection: Axis.horizontal,
+//                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+//                 child: Row(
+//                   children: List.generate(
+//                     5,
+//                     (_) => AppLoading.skeleton(width: 80, height: 35),
+//                   ),
+//                 ),
+//               ),
+//               SizedBox(height: 8.h),
+//               Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+//               Expanded(
+//                 child: ListView.separated(
+//                   physics: const BouncingScrollPhysics(),
+//                   itemCount: 3,
+//                   itemBuilder: (context, index) => const CourseInfoCardWidget(
+//                     title: '',
+//                     subtitle: '',
+//                     rating: 0,
+//                     price: '',
+//                     isLoading: true,
+//                   ),
+//                   separatorBuilder: (_, __) => SizedBox(height: 15.h),
+//                 ),
+//               ),
+//             ],
+//           );
+//         }
+
+//         if (state.collegesStatus == ResponseStatusEnum.failure) {
+//           return Center(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               crossAxisAlignment: CrossAxisAlignment.center,
+//               children: [
+//                 Icon(
+//                   Icons.error_outline,
+//                   size: 50.sp,
+//                   color: AppColors.iconError,
+//                 ),
+//                 SizedBox(height: 12.h),
+//                 Text(
+//                   state.collegesError ?? 'Something went wrong',
+//                   style: AppTextStyles.s16w500.copyWith(
+//                     color: AppColors.textError,
+//                   ),
+//                   textAlign: TextAlign.center,
+//                 ),
+//                 SizedBox(height: 20.h),
+//                 CustomButtonWidget(
+//                   onTap: () {
+//                     context.read<CourseCubit>().getColleges();
+//                     context.read<CourseCubit>().getCourses();
+//                   },
+//                   title: "Retry",
+//                   titleStyle: AppTextStyles.s16w500.copyWith(
+//                     color: AppColors.titlePrimary,
+//                   ),
+//                   buttonColor: AppColors.buttonPrimary,
+//                   borderColor: AppColors.borderPrimary,
+//                 ),
+//               ],
+//             ),
+//           );
+//         }
+
+//         final college = state.colleges ?? [];
+//         final courses = state.courses?.courses ?? [];
+//         if (courses.isNotEmpty) {
+//           return Column(
+//             children: [
+//               SingleChildScrollView(
+//                 physics: const BouncingScrollPhysics(),
+//                 scrollDirection: Axis.horizontal,
+//                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+//                 child: Row(
+//                   children: List.generate(college.length + 1, (index) {
+//                     final bool isSelected = index == selectedIndex;
+//                     final tabName = index == 0 ? '' : college[index - 1].name;
+
+//                     return GestureDetector(
+//                       onTap: () {
+//                         context.read<CourseCubit>().changeSelectedIndex(index);
+//                       },
+//                       child: AnimatedContainer(
+//                         duration: const Duration(milliseconds: 250),
+//                         curve: Curves.easeInOut,
+//                         margin: EdgeInsets.symmetric(horizontal: 8.w),
+//                         padding: EdgeInsets.symmetric(
+//                           horizontal: 16.w,
+//                           vertical: 8.h,
+//                         ),
+//                         decoration: BoxDecoration(
+//                           color: isSelected
+//                               ? AppColors.buttonTapSelected
+//                               : AppColors.buttonTapNotSelected,
+//                           borderRadius: BorderRadius.circular(20.r),
+//                         ),
+//                         child: Row(
+//                           children: [
+//                             if (index == 0)
+//                               GestureDetector(
+//                                 onTap: () {
+//                                   context
+//                                       .read<CourseCubit>()
+//                                       .changeSelectedIndex(0);
+//                                 },
+//                                 onLongPress: () {
+//                                   final cubit = context.read<CourseCubit>();
+//                                   cubit.getCategories();
+//                                   cubit.getStudyYears();
+//                                   showModalBottomSheet(
+//                                     isScrollControlled: true,
+//                                     context: context,
+//                                     builder: (_) => BlocProvider.value(
+//                                       value: cubit,
+//                                       child: const FiltersBottomSheetWidget(),
+//                                     ),
+//                                   );
+//                                 },
+//                                 child: Padding(
+//                                   padding: EdgeInsets.only(right: 8.w),
+//                                   child: Icon(
+//                                     Icons.tune,
+//                                     size: 20.sp,
+//                                     color: isSelected
+//                                         ? AppColors.iconWhite
+//                                         : AppColors.iconBlue,
+//                                   ),
+//                                 ),
+//                               ),
+
+//                             if (tabName.isNotEmpty)
+//                               Text(
+//                                 tabName,
+//                                 style: AppTextStyles.s14w400.copyWith(
+//                                   color: isSelected
+//                                       ? AppColors.textWhite
+//                                       : AppColors.textPrimary,
+//                                   fontWeight: isSelected
+//                                       ? FontWeight.w600
+//                                       : FontWeight.w400,
+//                                 ),
+//                               ),
+//                           ],
+//                         ),
+//                       ),
+//                     );
+//                   }),
+//                 ),
+//               ),
+//               SizedBox(height: 8.h),
+//               Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+//               Expanded(
+//                 child: selectedIndex == 0
+//                     ? const FilterWidget()
+//                     : FilteredCoursesListWidget(
+//                         courses: (selectedIndex == 0)
+//                             ? state.courses?.courses ?? []
+//                             : (state.courses?.courses ?? [])
+//                                   .where(
+//                                     (course) =>
+//                                         course.college ==
+//                                         (state
+//                                                 .colleges?[selectedIndex - 1]
+//                                                 .id ??
+//                                             0),
+//                                   )
+//                                   .map(
+//                                     (course) =>
+//                                         state.courses?.courses?.firstWhere(
+//                                           (c) => c.id == course.id,
+//                                           orElse: () => course,
+//                                         ) ??
+//                                         course,
+//                                   )
+//                                   .toList(),
+//                       ),
+//               ),
+//             ],
+//           );
+//         } else {
+//           return Center(
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Icon(
+//                   Icons.menu_book_outlined,
+//                   size: 50.sp,
+//                   color: AppColors.iconBlue,
+//                 ),
+//                 SizedBox(height: 12.h),
+//                 Text(
+//                   'No courses available',
+//                   style: TextStyle(
+//                     fontSize: 16.sp,
+//                     fontWeight: FontWeight.w500,
+//                     color: AppColors.textPrimary,
+//                   ),
+//                 ),
+//                 SizedBox(height: 15.h),
+//                 CustomButtonWidget(
+//                   onTap: () {
+//                     final cubit = context.read<CourseCubit>();
+//                     showModalBottomSheet(
+//                       isScrollControlled: true,
+//                       context: context,
+//                       builder: (_) => BlocProvider.value(
+//                         value: cubit,
+//                         child: const FiltersBottomSheetWidget(),
+//                       ),
+//                     );
+//                   },
+//                   title: "Edite Fillter",
+//                   titleStyle: AppTextStyles.s16w500.copyWith(
+//                     color: AppColors.titlePrimary,
+//                   ),
+//                   buttonColor: AppColors.buttonPrimary,
+//                   borderColor: AppColors.borderPrimary,
+//                 ),
+//               ],
+//             ),
+//           );
+//         }
+//       },
+//     );
+//   }
+// }
+
 class CustomCategoryTabBarWidget extends StatelessWidget {
   const CustomCategoryTabBarWidget({super.key});
 
@@ -27,6 +275,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
       builder: (context, state) {
         final selectedIndex = state.selectedIndex;
 
+        // ------------------ Loading State ------------------
         if (state.collegesStatus == ResponseStatusEnum.loading ||
             state.coursesStatus == ResponseStatusEnum.loading) {
           return Column(
@@ -61,11 +310,11 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
           );
         }
 
+        // ------------------ Failure State ------------------
         if (state.collegesStatus == ResponseStatusEnum.failure) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(
                   Icons.error_outline,
@@ -98,144 +347,22 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
           );
         }
 
-        final college = state.colleges ?? [];
+        // ------------------ Loaded Successfully ------------------
+        final colleges = state.colleges ?? [];
         final courses = state.courses?.courses ?? [];
-        if (courses.isNotEmpty) {
-          return Column(
-            children: [
-              SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
-                child: Row(
-                  children: List.generate(college.length + 1, (index) {
-                    final bool isSelected = index == selectedIndex;
-                    final tabName = index == 0 ? '' : college[index - 1].name;
 
-                    return GestureDetector(
-                      onTap: () {
-                        context.read<CourseCubit>().changeSelectedIndex(index);
-                      },
-                      child: AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-                        curve: Curves.easeInOut,
-                        margin: EdgeInsets.symmetric(horizontal: 8.w),
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 16.w,
-                          vertical: 8.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.buttonTapSelected
-                              : AppColors.buttonTapNotSelected,
-                          borderRadius: BorderRadius.circular(20.r),
-                        ),
-                        child: Row(
-                          children: [
-                            if (index == 0)
-                              GestureDetector(
-                                onTap: () {
-                                  context
-                                      .read<CourseCubit>()
-                                      .changeSelectedIndex(0);
-                                },
-                                onLongPress: () {
-                                  final cubit = context.read<CourseCubit>();
-                                  cubit.getCategories();
-                                  cubit.getStudyYears();
-                                  showModalBottomSheet(
-                                    isScrollControlled: true,
-                                    context: context,
-                                    builder: (_) => BlocProvider.value(
-                                      value: cubit,
-                                      child: const FiltersBottomSheetWidget(),
-                                    ),
-                                  );
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.only(right: 8.w),
-                                  child: Icon(
-                                    Icons.tune,
-                                    size: 20.sp,
-                                    color: isSelected
-                                        ? AppColors.iconWhite
-                                        : AppColors.iconBlue,
-                                  ),
-                                ),
-                              ),
-
-                            if (tabName.isNotEmpty)
-                              Text(
-                                tabName,
-                                style: AppTextStyles.s14w400.copyWith(
-                                  color: isSelected
-                                      ? AppColors.textWhite
-                                      : AppColors.textPrimary,
-                                  fontWeight: isSelected
-                                      ? FontWeight.w600
-                                      : FontWeight.w400,
-                                ),
-                              ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
-              Expanded(
-                child: selectedIndex == 0
-                    ? const FilterWidget()
-                    : FilteredCoursesListWidget(
-                        courses: (selectedIndex == 0)
-                            ? state.courses?.courses ?? []
-                            : (state.courses?.courses ?? [])
-                                  .where(
-                                    (course) =>
-                                        course.college ==
-                                        (state
-                                                .colleges?[selectedIndex - 1]
-                                                .id ??
-                                            0),
-                                  )
-                                  .map(
-                                    (course) =>
-                                        state.courses?.courses?.firstWhere(
-                                          (c) => c.id == course.id,
-                                          orElse: () => course,
-                                        ) ??
-                                        course,
-                                  )
-                                  .toList(),
-                      ),
-              ),
-            ],
-          );
-        } else {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+        return Column(
+          children: [
+            // ----------- Icon + Tabs Row -----------
+            Row(
               children: [
-                Icon(
-                  Icons.menu_book_outlined,
-                  size: 50.sp,
-                  color: AppColors.iconBlue,
-                ),
-                SizedBox(height: 12.h),
-                Text(
-                  'No courses available',
-                  style: TextStyle(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-                SizedBox(height: 15.h),
-                CustomButtonWidget(
+                // ---------------- Filter Icon ----------------
+                GestureDetector(
                   onTap: () {
                     final cubit = context.read<CourseCubit>();
+                    cubit.getCategories();
+                    cubit.getStudyYears();
+
                     showModalBottomSheet(
                       isScrollControlled: true,
                       context: context,
@@ -245,17 +372,99 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                       ),
                     );
                   },
-                  title: "Edite Fillter",
-                  titleStyle: AppTextStyles.s16w500.copyWith(
-                    color: AppColors.titlePrimary,
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8.w),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16.w,
+                      vertical: 8.h,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.buttonTapNotSelected,
+                      borderRadius: BorderRadius.circular(20.r),
+                    ),
+                    child: Icon(
+                      Icons.tune,
+                      size: 20.sp,
+                      color: AppColors.iconBlue,
+                    ),
                   ),
-                  buttonColor: AppColors.buttonPrimary,
-                  borderColor: AppColors.borderPrimary,
+                ),
+
+                // ---------------- Tabs ----------------
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 8.w,
+                      vertical: 6.h,
+                    ),
+                    child: Row(
+                      children: List.generate(colleges.length + 1, (index) {
+                        final bool isSelected = index == selectedIndex;
+
+                        final String tabName = index == 0
+                            ? "All"
+                            : colleges[index - 1].name;
+
+                        return GestureDetector(
+                          onTap: () {
+                            context.read<CourseCubit>().changeSelectedIndex(
+                              index,
+                            );
+                          },
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeInOut,
+                            margin: EdgeInsets.symmetric(horizontal: 8.w),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 16.w,
+                              vertical: 8.h,
+                            ),
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? AppColors.buttonTapSelected
+                                  : AppColors.buttonTapNotSelected,
+                              borderRadius: BorderRadius.circular(20.r),
+                            ),
+                            child: Text(
+                              tabName,
+                              style: AppTextStyles.s14w400.copyWith(
+                                color: isSelected
+                                    ? AppColors.textWhite
+                                    : AppColors.textPrimary,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
                 ),
               ],
             ),
-          );
-        }
+
+            SizedBox(height: 8.h),
+            Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+
+            // ---------------- Tabs Content ----------------
+            Expanded(
+              child: selectedIndex == 0
+                  ? const FilterWidget()
+                  : FilteredCoursesListWidget(
+                      courses: courses
+                          .where(
+                            (c) =>
+                                c.college == (colleges[selectedIndex - 1].id),
+                          )
+                          .toList(),
+                    ),
+            ),
+          ],
+        );
       },
     );
   }
