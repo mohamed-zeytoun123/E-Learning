@@ -45,6 +45,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
   late ChewieController _chewieController;
   double _currentSpeed = 1.0;
   bool _videoError = false;
+  String _currentQuality = "AUTO"; // Track current quality
 
   @override
   void initState() {
@@ -104,7 +105,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
       // -----------------------------
       _chewieController = ChewieController(
         videoPlayerController: _videoController,
-        autoPlay: false,
+        autoPlay: true,
         autoInitialize: false,
         looping: false,
         allowFullScreen: true,
@@ -112,7 +113,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
         showOptions: false,
         zoomAndPan: false,
         allowMuting: true,
-        allowPlaybackSpeedChanging: true,
+        allowPlaybackSpeedChanging: false,
         materialProgressColors: ChewieProgressColors(
           playedColor: Colors.blueAccent,
           handleColor: Colors.blue,
@@ -195,6 +196,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
       builder: (context) {
         return BootomSheetSettingsWidget(
           currentSpeed: _currentSpeed,
+          initialQuality: _currentQuality, // Pass current quality
           qualities:
               widget.videoModel!.qualities ??
               {"AUTO": widget.videoModel!.secureStreamingUrl},
@@ -219,6 +221,18 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                 await _videoController.initialize();
                 await _videoController.seekTo(currentPosition);
                 await _videoController.setPlaybackSpeed(_currentSpeed);
+
+                // Update current quality
+                setState(() {
+                  _currentQuality =
+                      widget.videoModel!.qualities?.entries
+                          .firstWhere(
+                            (entry) => entry.value == url,
+                            orElse: () => MapEntry("AUTO", url),
+                          )
+                          .key ??
+                      "AUTO";
+                });
 
                 setState(() {}); // إعادة بناء الواجهة
                 _chewieController.dispose();

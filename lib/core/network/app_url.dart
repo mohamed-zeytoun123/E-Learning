@@ -2,8 +2,8 @@ class AppUrls {
   //?---------------------------------------------------------------
 
   // static const String _ip = "";
-  // static const String _ip = "192.168.1.22";
-  static const String _ip = "192.168.1.103";
+  static const String _ip = "192.168.1.22";
+  // static const String _ip = "192.168.1.103";
 
   //?---------------------------------------------------------------
 

@@ -7,7 +7,8 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 class BottomSheetQualityWidget extends StatefulWidget {
   final String initialQuality; // مثال: "AUTO" أو "854x480"
   final Function(String) onQualitySelected; // ترجع الرابط المختار
-  final Map<String, String> qualities; // { "AUTO": "...", "854x480": "...", "1280x720": "..." }
+  final Map<String, String>
+  qualities; // { "AUTO": "...", "854x480": "...", "1280x720": "..." }
 
   const BottomSheetQualityWidget({
     super.key,
@@ -22,8 +23,6 @@ class BottomSheetQualityWidget extends StatefulWidget {
 }
 
 class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
-
-  
   late String _selectedQuality;
 
   @override
@@ -76,7 +75,6 @@ class _BottomSheetQualityWidgetState extends State<BottomSheetQualityWidget> {
 
           SizedBox(height: 10.h),
 
-          /// قائمة الدقات ديناميكي
           Column(
             children: widget.qualities.keys.map((quality) {
               bool isSelected = _selectedQuality == quality;

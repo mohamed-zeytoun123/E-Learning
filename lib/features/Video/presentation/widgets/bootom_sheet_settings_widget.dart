@@ -10,6 +10,7 @@ class BootomSheetSettingsWidget extends StatefulWidget {
   final Function(double) onSpeedSelected;
   final Map<String, String> qualities;
   final Function(String) onQualitySelected;
+  final String initialQuality; // Add initial quality parameter
 
   const BootomSheetSettingsWidget({
     super.key,
@@ -17,6 +18,7 @@ class BootomSheetSettingsWidget extends StatefulWidget {
     required this.onSpeedSelected,
     required this.qualities,
     required this.onQualitySelected,
+    this.initialQuality = "AUTO", // Default to AUTO
   });
 
   @override
@@ -25,7 +27,22 @@ class BootomSheetSettingsWidget extends StatefulWidget {
 }
 
 class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
-  String selectedQuality = "AUTO";
+  late String selectedQuality;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedQuality = widget.initialQuality;
+  }
+
+  @override
+  void didUpdateWidget(covariant BootomSheetSettingsWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update selectedQuality if initialQuality changes
+    if (oldWidget.initialQuality != widget.initialQuality) {
+      selectedQuality = widget.initialQuality;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +101,13 @@ class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
                               )
                               .key;
                         });
-                        widget.onQualitySelected(url); // رابط الفيديو المختار
+                        widget.onQualitySelected(url);
                       },
                     ),
                   );
                 },
               ),
+
               //* Playback Speed
               ListTile(
                 leading: Icon(
