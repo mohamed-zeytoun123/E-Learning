@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
@@ -74,31 +75,29 @@ class AppRouter {
         path: RouteNames.videoPageCached,
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
-          final videoFile = args["videoFile"] as File;
 
-          return VideoPlayingCachedPage(videoFile: videoFile);
+          if (args.containsKey("videoFile")) {
+            final File videoFile = args["videoFile"] as File;
+
+            return VideoPlayingCachedPage(
+              videoId: "cached",
+              fileName: videoFile.path.split('/').last,
+              encryptedBytes: Uint8List(0),
+              videoFile: videoFile,
+            );
+          }
+
+          final String videoId = args["videoId"] as String;
+          final String fileName = args["fileName"] as String;
+          final Uint8List encryptedBytes = args["encryptedBytes"] as Uint8List;
+
+          return VideoPlayingCachedPage(
+            videoId: videoId,
+            fileName: fileName,
+            encryptedBytes: encryptedBytes,
+          );
         },
       ),
-
-      // GoRoute(
-      //   path: RouteNames.cachedVideos,
-      //   builder: (context, state) {
-      //     final Map<String, dynamic>? args =
-      //         state.extra as Map<String, dynamic>?;
-      //     final chapterCubit = args != null
-      //         ? args["chapterCubit"] as ChapterCubit
-      //         : null;
-
-      //     if (chapterCubit != null) {
-      //       return BlocProvider.value(
-      //         value: chapterCubit,
-      //         child: const CachedVideosScreen(),
-      //       );
-      //     } else {
-      //       return const CachedVideosScreen();
-      //     }
-      //   },
-      // ),
 
       //?-------------------------------------------------------------------
       GoRoute(

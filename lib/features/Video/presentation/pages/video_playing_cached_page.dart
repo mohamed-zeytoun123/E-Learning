@@ -1,6 +1,6 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:chewie/chewie.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bottom_sheet_speed_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,11 +8,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:video_player/video_player.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pointycastle/block/aes.dart';
+import 'package:pointycastle/block/modes/cbc.dart';
+import 'package:pointycastle/padded_block_cipher/padded_block_cipher_impl.dart';
+import 'package:pointycastle/paddings/pkcs7.dart';
+import 'package:pointycastle/api.dart' as pc;
 
 class VideoPlayingCachedPage extends StatefulWidget {
-  final File videoFile;
+  final String videoId;
+  final String fileName;
+  final Uint8List encryptedBytes;
+  final File? videoFile;
 
-  const VideoPlayingCachedPage({super.key, required this.videoFile});
+  const VideoPlayingCachedPage({
+    super.key,
+    required this.videoId,
+    required this.fileName,
+    required this.encryptedBytes,
+    this.videoFile,
+  });
 
   @override
   State<VideoPlayingCachedPage> createState() => _VideoPlayingCachedPageState();
@@ -41,8 +57,33 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
 
   Future<void> _initializeVideo() async {
     try {
+      File? videoFileToPlay;
+
+      // If we already have a video file, use it directly
+      if (widget.videoFile != null) {
+        videoFileToPlay = widget.videoFile;
+      }
+      // If we have encrypted bytes, decrypt them first
+      else if (widget.encryptedBytes.isNotEmpty) {
+        // 1️⃣ فك التشفير أولاً
+        videoFileToPlay = await _decryptAndWriteTempFile(
+          widget.encryptedBytes,
+          widget.videoId,
+          widget.fileName,
+        );
+      }
+
+      if (videoFileToPlay == null) {
+        setState(() {
+          _videoError = true;
+          _isInitializing = false;
+        });
+        return;
+      }
+
+      // 2️⃣ إنشاء VideoPlayerController
       _videoController = VideoPlayerController.file(
-        widget.videoFile,
+        videoFileToPlay,
         videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: false),
       );
 
@@ -66,6 +107,7 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
       );
 
       await _videoController.initialize();
+
       setState(() {
         _isInitializing = false;
       });
@@ -78,6 +120,50 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
         _isInitializing = false;
       });
     }
+  }
+
+  Future<File?> _decryptAndWriteTempFile(
+    Uint8List encryptedBytes,
+    String videoId,
+    String fileName,
+  ) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final safeFileName = fileName.isNotEmpty
+          ? fileName
+          : 'video_$videoId.mp4';
+      final tempFile = File('${tempDir.path}/$safeFileName');
+
+      final decryptedBytes = _decryptVideoBytes(encryptedBytes, videoId);
+      await tempFile.writeAsBytes(decryptedBytes);
+      return tempFile;
+    } catch (e) {
+      debugPrint("Decryption failed: $e");
+      return null;
+    }
+  }
+
+  Uint8List _decryptVideoBytes(Uint8List encryptedBytes, String videoId) {
+    final key = _getKeyFromVideoId(videoId);
+    final iv = Uint8List(16);
+
+    final cipher =
+        PaddedBlockCipherImpl(PKCS7Padding(), CBCBlockCipher(AESEngine()))
+          ..init(
+            false,
+            pc.PaddedBlockCipherParameters(
+              pc.ParametersWithIV(pc.KeyParameter(key), iv),
+              null,
+            ),
+          );
+
+    return cipher.process(encryptedBytes);
+  }
+
+  Uint8List _getKeyFromVideoId(String videoId) {
+    final padded = videoId.padRight(16, '0');
+    final keyStr = padded.substring(0, 16);
+    return Uint8List.fromList(keyStr.codeUnits);
   }
 
   @override
@@ -154,7 +240,7 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
                           ),
                           Expanded(
                             child: Text(
-                              widget.videoFile.path.split('/').last,
+                              widget.fileName,
                               style: AppTextStyles.s16w600.copyWith(
                                 color: Colors.white,
                               ),

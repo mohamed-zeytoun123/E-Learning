@@ -167,9 +167,10 @@ class _DownloadsPageState extends State<DownloadsPage> {
                               ),
                             ),
                             subtitle: Text(
-                              download.downloadDate != null && download.downloadDate!.isNotEmpty
-                                ? "Downloaded: ${_formatDate(download.downloadDate!)}"
-                                : "Video ID: ${download.videoId}",
+                              download.downloadDate != null &&
+                                      download.downloadDate!.isNotEmpty
+                                  ? "Downloaded: ${_formatDate(download.downloadDate!)}"
+                                  : "Video ID: ${download.videoId}",
                               style: TextStyle(
                                 fontSize: 12.sp,
                                 color: AppColors.textGrey,
@@ -264,11 +265,14 @@ class _DownloadsPageState extends State<DownloadsPage> {
                                       download.videoId,
                                       download.fileName,
                                     );
-                                if (videoFile == null) {
+
+                                if (videoFile == null ||
+                                    !videoFile.existsSync()) {
                                   AppMessage.showFlushbar(
                                     context: context,
                                     title: "Error",
-                                    message: "Video file not found",
+                                    message:
+                                        "Video file not found or corrupted",
                                     backgroundColor: AppColors.messageError,
                                     iconData: Icons.error,
                                     iconColor: AppColors.iconWhite,
@@ -276,20 +280,11 @@ class _DownloadsPageState extends State<DownloadsPage> {
                                   );
                                   return;
                                 }
+
                                 context.push(
                                   RouteNames.videoPageCached,
                                   extra: {"videoFile": videoFile},
                                 );
-
-                                // context.push(
-                                //   RouteNames.viedioPage,
-                                //   extra: {
-                                //     "chapterCubit": cubit,
-                                //     "videoModel": null,
-                                //     "videoFile": videoFile,
-                                //     "videoId": null,
-                                //   },
-                                // );
                               } catch (e) {
                                 debugPrint("Failed to decrypt video: $e");
                                 AppMessage.showFlushbar(

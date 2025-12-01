@@ -328,7 +328,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                       context: context,
                                       title: "Error",
                                       message:
-                                          // "Failed to download ${d.fileName}",
                                           d.errorMessage ?? "Download failed",
                                       backgroundColor: AppColors.messageError,
                                       iconData: Icons.error_outline,
