@@ -122,9 +122,9 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
         ),
       );
 
-      _videoController.initialize().then((_) {
-        setState(() {});
-      });
+      // _videoController.initialize().then((_) {
+      //   setState(() {});
+      // });
 
       _videoController.addListener(() {
         if (widget.onPositionChanged != null) {
@@ -238,6 +238,8 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                 _chewieController.dispose();
 
                 _chewieController = ChewieController(
+                  allowPlaybackSpeedChanging: false,
+                  showOptions: false,
                   videoPlayerController: _videoController,
                   autoPlay: true,
                   autoInitialize: true,
@@ -245,7 +247,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                   allowFullScreen: true,
                   showControls: true,
                   allowMuting: true,
-                  allowPlaybackSpeedChanging: true,
                   materialProgressColors: ChewieProgressColors(
                     playedColor: Colors.blueAccent,
                     handleColor: Colors.blue,
