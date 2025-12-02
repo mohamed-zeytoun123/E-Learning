@@ -108,26 +108,108 @@ class SelectedInformationWidget extends StatelessWidget {
             switch (state.getCollegesState) {
               case ResponseStatusEnum.loading:
                 return AppLoading.linear();
-
               case ResponseStatusEnum.failure:
-                return Text(
-                  state.getCollegesError ??
-                      AppLocalizations.of(
-                        context,
-                      )?.translate("failed_to_load_colleges") ??
-                      "Failed to load colleges",
-                  style: TextStyle(color: AppColors.textError),
-                );
+                if (state.getCollegesError?.contains("No Data") == true) {
+                  String universityName = "";
+                  if (state.signUpRequestParams?.universityId != null) {
+                    final selectedUniversity = state.universities.firstWhere(
+                      (u) => u.id == state.signUpRequestParams!.universityId,
+                      orElse: () => state.universities.first,
+                    );
+                    universityName = selectedUniversity.name;
+                  }
+
+                  return Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.h,
+                      horizontal: 12.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundDisabled,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: AppColors.borderSecondary),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: AppColors.textGrey,
+                          size: 24.sp,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          "No colleges for this university $universityName",
+                          style: AppTextStyles.s14w400.copyWith(
+                            color: AppColors.textGrey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Text(
+                    state.getCollegesError ??
+                        AppLocalizations.of(
+                          context,
+                        )?.translate("failed_to_load_colleges") ??
+                        "Failed to load colleges",
+                    style: TextStyle(color: AppColors.textError),
+                  );
+                }
 
               case ResponseStatusEnum.success:
                 context.read<AuthCubit>().getStudyYears();
                 if (state.colleges.isEmpty) {
-                  return Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("no_colleges_for_university") ??
-                        "No colleges for this university",
-                    style: TextStyle(color: AppColors.textGrey),
+                  // Find the selected university name
+                  String universityName = "";
+                  if (state.signUpRequestParams?.universityId != null) {
+                    final selectedUniversity = state.universities.firstWhere(
+                      (u) => u.id == state.signUpRequestParams!.universityId,
+                      orElse: () => state.universities.first,
+                    );
+                    universityName = selectedUniversity.name;
+                  }
+
+                  return Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.h,
+                      horizontal: 12.w,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.backgroundDisabled,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(color: AppColors.borderSecondary),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: AppColors.textGrey,
+                          size: 24.sp,
+                        ),
+                        SizedBox(height: 8.h),
+                        Text(
+                          AppLocalizations.of(
+                                context,
+                              )?.translate("no_colleges_for_university") ??
+                              "No colleges for this university",
+                          style: AppTextStyles.s14w400.copyWith(
+                            color: AppColors.textGrey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          universityName,
+                          style: AppTextStyles.s14w500.copyWith(
+                            color: AppColors.textGrey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   );
                 }
 
