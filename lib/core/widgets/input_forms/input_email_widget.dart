@@ -6,12 +6,12 @@ import 'package:e_learning/core/utils/validator/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class InputPhoneWidget extends StatelessWidget {
+class InputEmailWidget extends StatelessWidget {
   final TextEditingController controller;
   final IconData? icon;
   final double? width;
 
-  const InputPhoneWidget({
+  const InputEmailWidget({
     super.key,
     required this.controller,
     this.width,
@@ -29,19 +29,18 @@ class InputPhoneWidget extends StatelessWidget {
             height: 70.h,
             child: TextFormField(
               controller: controller,
-              keyboardType: TextInputType.phone,
+              keyboardType: TextInputType.emailAddress, // ← تعديل
               textInputAction: TextInputAction.next,
               autovalidateMode: AutovalidateMode.onUserInteraction,
               onFieldSubmitted: (_) {
                 FocusScope.of(context).requestFocus();
               },
               decoration: TextFormFieldStyle.baseForm(
-                AppLocalizations.of(context)?.translate("Phone_Number") ??
-                    "Phone Number",
+                AppLocalizations.of(context)?.translate("Email") ?? "Email",
                 context,
                 AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
               ).copyWith(prefixIcon: icon != null ? Icon(icon) : null),
-              validator: (value) => Validator.phoneValidation(value, context),
+              validator: (value) => Validator.emailValidation(value, context),
             ),
           ),
         ],

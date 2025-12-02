@@ -3,7 +3,7 @@ class SignUpRequestParams {
   final int? universityId;
   final int? collegeId;
   final int? studyYear;
-  final String phone;
+  final String email; // ← استبدال phone بـ email
   final String password;
 
   SignUpRequestParams({
@@ -11,7 +11,7 @@ class SignUpRequestParams {
     required this.universityId,
     required this.collegeId,
     required this.studyYear,
-    required this.phone,
+    required this.email,
     required this.password,
   });
 
@@ -21,7 +21,7 @@ class SignUpRequestParams {
       'university_id': universityId,
       'college_id': collegeId,
       'study_year': studyYear,
-      'phone': phone,
+      'email': email, // ← بدل phone
       'password': password,
     };
   }
@@ -31,7 +31,7 @@ class SignUpRequestParams {
     int? universityId,
     int? collegeId,
     int? studyYear,
-    String? phone,
+    String? email,
     String? password,
   }) {
     return SignUpRequestParams(
@@ -39,7 +39,7 @@ class SignUpRequestParams {
       universityId: universityId ?? this.universityId,
       collegeId: collegeId ?? this.collegeId,
       studyYear: studyYear ?? this.studyYear,
-      phone: phone ?? this.phone,
+      email: email ?? this.email, // ← بدل phone
       password: password ?? this.password,
     );
   }

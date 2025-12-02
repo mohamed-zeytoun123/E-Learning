@@ -61,7 +61,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             "university_id": params.universityId,
             "college_id": params.collegeId,
             "study_year": params.studyYear,
-            "phone": params.phone,
+            "email": params.email,
             "password": params.password,
           },
         ),

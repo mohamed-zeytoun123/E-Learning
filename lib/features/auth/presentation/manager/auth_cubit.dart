@@ -129,7 +129,7 @@ class AuthCubit extends Cubit<AuthState> {
     int? universityId,
     int? collegeId,
     int? studyYear,
-    String? phone,
+    String? email,
     String? password,
   }) {
     final currentParams =
@@ -139,7 +139,7 @@ class AuthCubit extends Cubit<AuthState> {
           universityId: null,
           collegeId: null,
           studyYear: null,
-          phone: '',
+          email: '',
           password: '',
         );
 
@@ -148,7 +148,7 @@ class AuthCubit extends Cubit<AuthState> {
       universityId: universityId ?? currentParams.universityId,
       collegeId: collegeId ?? currentParams.collegeId, // << هنا
       studyYear: studyYear ?? currentParams.studyYear,
-      phone: phone ?? currentParams.phone,
+      email: email ?? currentParams.email,
       password: password ?? currentParams.password,
     );
 

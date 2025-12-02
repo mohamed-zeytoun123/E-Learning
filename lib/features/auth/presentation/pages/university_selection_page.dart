@@ -88,7 +88,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                       signUpParams?.universityId != null &&
                       signUpParams?.collegeId != null &&
                       signUpParams?.studyYear != null &&
-                      (signUpParams?.phone.isNotEmpty ?? false) &&
+                      (signUpParams?.email.isNotEmpty ?? false) &&
                       (signUpParams?.password.isNotEmpty ?? false);
 
                   return CustomButtonWidget(
