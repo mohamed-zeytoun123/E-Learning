@@ -42,7 +42,9 @@ class SelectedInformationWidget extends StatelessWidget {
                 hint: "Choose University",
                 hintKey: "choose_university",
                 options: state.universities.map((u) => u.name).toList(),
-                value: state.signUpRequestParams?.universityId != null
+                value: state.signUpRequestParams?.universityId != null &&
+                        state.universities.any((u) =>
+                                u.id == state.signUpRequestParams!.universityId)
                     ? state.universities
                           .firstWhere(
                             (u) =>
@@ -53,6 +55,7 @@ class SelectedInformationWidget extends StatelessWidget {
                 onChanged: (value) {
                   final selected = state.universities.firstWhere(
                     (u) => u.name == value,
+                    orElse: () => state.universities.first,
                   );
 
                   context.read<AuthCubit>().updateSignUpParams(
@@ -122,7 +125,8 @@ class SelectedInformationWidget extends StatelessWidget {
                   hint: "Choose College",
                   hintKey: "choose_college",
                   options: state.colleges.map((u) => u.name).toList(),
-                  value: state.signUpRequestParams?.collegeId != null
+                  value: state.signUpRequestParams?.collegeId != null &&
+                          state.colleges.any((u) => u.id == state.signUpRequestParams!.collegeId)
                       ? state.colleges
                             .firstWhere(
                               (u) =>
@@ -133,6 +137,7 @@ class SelectedInformationWidget extends StatelessWidget {
                   onChanged: (value) {
                     final selected = state.colleges.firstWhere(
                       (u) => u.name == value,
+                      orElse: () => state.colleges.first,
                     );
 
                     context.read<AuthCubit>().updateSignUpParams(
@@ -201,7 +206,10 @@ class SelectedInformationWidget extends StatelessWidget {
                   hint: "Choose Study Year",
                   hintKey: "choose_study_year",
                   options: state.studyYears!.map((sy) => sy.name).toList(),
-                  value: state.signUpRequestParams?.studyYear != null
+                  value: state.signUpRequestParams?.studyYear != null &&
+                          state.studyYears?.any((sy) =>
+                                  sy.id == state.signUpRequestParams!.studyYear) ==
+                              true
                       ? state.studyYears
                             ?.firstWhere(
                               (sy) =>
@@ -212,6 +220,7 @@ class SelectedInformationWidget extends StatelessWidget {
                   onChanged: (value) {
                     final selectedYear = state.studyYears?.firstWhere(
                       (sy) => sy.name == value,
+                      orElse: () => state.studyYears!.first,
                     );
 
                     context.read<AuthCubit>().updateSignUpParams(
