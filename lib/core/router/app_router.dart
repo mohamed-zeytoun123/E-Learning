@@ -108,7 +108,7 @@ class AppRouter {
           final phone = args["phone"] as String;
           return BlocProvider.value(
             value: blocProvider,
-            child: UniversitySelectionPage(phone: phone),
+            child: UniversitySelectionPage(email: phone),
           );
         },
       ),

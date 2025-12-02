@@ -15,9 +15,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class UniversitySelectionPage extends StatefulWidget {
-  const UniversitySelectionPage({super.key, required this.phone});
+  const UniversitySelectionPage({super.key, required this.email});
 
-  final String phone;
+  final String email;
 
   @override
   State<UniversitySelectionPage> createState() =>
@@ -38,7 +38,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
   @override
   Widget build(BuildContext context) {
     debugPrint(
-      'UniversitySelectionPage rebuilt ===========================>> ${widget.phone}',
+      'UniversitySelectionPage rebuilt ===========================>> ${widget.email}',
     );
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
@@ -115,7 +115,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                                 'blocProvide': BlocProvider.of<AuthCubit>(
                                   context,
                                 ),
-                                'phone': widget.phone,
+                                'phone': widget.email,
                                 'purpose': 'register',
                               },
                             );

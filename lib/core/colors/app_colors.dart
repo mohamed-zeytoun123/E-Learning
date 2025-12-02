@@ -10,6 +10,7 @@ class AppColors {
   static const Color backgroundWhiteWidget = Color(0xffFFFFFF);
   static const Color backgroundDarkPage = Color(0xff000000);
   static const Color backgroundLittelOrange = Color(0xFFFDF4F1);
+  static const Color backgroundDisabled = Color(0xffF5F5F5); // Added disabled background color
 
   //* Text Colors
   static const Color textPrimary = Color(0xff0071C7);

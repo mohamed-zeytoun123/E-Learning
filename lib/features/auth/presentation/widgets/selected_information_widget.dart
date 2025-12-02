@@ -8,6 +8,7 @@ import 'package:e_learning/features/auth/presentation/widgets/input_select_widge
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:e_learning/core/style/app_text_styles.dart';
 
 class SelectedInformationWidget extends StatelessWidget {
   const SelectedInformationWidget({super.key});
@@ -74,13 +75,20 @@ class SelectedInformationWidget extends StatelessWidget {
               pre.getCollegesState != cur.getCollegesState ||
               pre.colleges != cur.colleges ||
               pre.signUpRequestParams?.collegeId !=
-                  cur.signUpRequestParams?.collegeId,
+                  cur.signUpRequestParams?.collegeId ||
+              pre.signUpRequestParams?.universityId !=
+                  cur.signUpRequestParams?.universityId,
           builder: (context, state) {
-            if (state.signUpRequestParams?.universityId == null) {
-              return Text(
-                AppLocalizations.of(context)?.translate("select_university") ??
-                    "Select university",
-                style: TextStyle(color: AppColors.textGrey),
+            final bool isUniversitySelected =
+                state.signUpRequestParams?.universityId != null;
+
+            // If university is not selected, show disabled state with tooltip
+            if (!isUniversitySelected) {
+              return DisabledInputSelectWidget(
+                hint: AppLocalizations.of(context)?.translate("choose_university_first") ??
+                    "Choose university first",
+                onTapMessage: AppLocalizations.of(context)?.translate("please_select_university_before_selecting_college") ??
+                    "Please select a university before selecting a college",
               );
             }
 
@@ -143,17 +151,24 @@ class SelectedInformationWidget extends StatelessWidget {
           buildWhen: (pre, cur) =>
               pre.getStudyYearsState != cur.getStudyYearsState ||
               pre.signUpRequestParams?.studyYear !=
-                  cur.signUpRequestParams?.studyYear,
+                  cur.signUpRequestParams?.studyYear ||
+              pre.signUpRequestParams?.universityId !=
+                  cur.signUpRequestParams?.universityId ||
+              pre.signUpRequestParams?.collegeId !=
+                  cur.signUpRequestParams?.collegeId,
           builder: (context, state) {
-            // ما نعرض السنة إذا ما اختيرت الجامعة أو الكلية
-            if (state.signUpRequestParams?.universityId == null ||
-                state.signUpRequestParams?.collegeId == null) {
-              return Text(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("select_university_and_college") ??
-                    "Select university and college first",
-                style: TextStyle(color: AppColors.textGrey),
+            final bool isUniversitySelected =
+                state.signUpRequestParams?.universityId != null;
+            final bool isCollegeSelected =
+                state.signUpRequestParams?.collegeId != null;
+
+            // If university or college is not selected, show disabled state with tooltip
+            if (!isUniversitySelected || !isCollegeSelected) {
+              return DisabledInputSelectWidget(
+                hint: AppLocalizations.of(context)?.translate("choose_university_and_college_first") ??
+                    "Choose university and college first",
+                onTapMessage: AppLocalizations.of(context)?.translate("please_select_university_and_college_before_selecting_year") ??
+                    "Please select a university and college before selecting a year",
               );
             }
 
@@ -211,6 +226,54 @@ class SelectedInformationWidget extends StatelessWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+// New widget for disabled input fields with tooltip functionality
+class DisabledInputSelectWidget extends StatelessWidget {
+  final String hint;
+  final String onTapMessage;
+
+  const DisabledInputSelectWidget({
+    super.key,
+    required this.hint,
+    required this.onTapMessage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Show tooltip/snackbar message when tapped
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(onTapMessage),
+            backgroundColor: AppColors.textError,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      },
+      child: Container(
+        width: 361.w,
+        height: 49.h,
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: AppColors.borderSecondary,
+            width: 1.5,
+          ),
+          color: AppColors.backgroundDisabled,
+        ),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          hint,
+          style: AppTextStyles.s14w400.copyWith(
+            color: AppColors.textGrey,
+          ),
+        ),
+      ),
     );
   }
 }
