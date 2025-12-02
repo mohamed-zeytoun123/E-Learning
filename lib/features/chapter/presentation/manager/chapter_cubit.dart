@@ -23,13 +23,11 @@ import 'package:pointycastle/paddings/pkcs7.dart';
 class ChapterCubit extends Cubit<ChapterState> {
   ChapterCubit({required this.repo, required this.local})
     : super(ChapterState()) {
-    
     _loadCachedVideos();
   }
   final ChapterRepository repo;
   final ChapterLocalDataSource local;
-  
-  
+
   Future<void> _loadCachedVideos() async {
     try {
       final cachedVideos = await getCachedDownloads();
@@ -875,6 +873,64 @@ class ChapterCubit extends Cubit<ChapterState> {
         );
       },
     );
+  }
+
+  //?--------------------------------------------------------
+  //* Add New Comment and Update State
+  Future<void> addNewComment({
+    required int videoId,
+    required String content,
+  }) async {
+    emit(
+      state.copyWith(
+        addCommentStatus: ResponseStatusEnum.loading,
+        addCommentError: null,
+      ),
+    );
+
+    try {
+      final result = await repo.addVideoCommentRepo(
+        videoId: videoId.toString(),
+        content: content,
+      );
+
+      result.fold(
+        (failure) {
+          emit(
+            state.copyWith(
+              addCommentStatus: ResponseStatusEnum.failure,
+              addCommentError: failure.message,
+            ),
+          );
+        },
+        (newComment) {
+          final updatedComments = [newComment, ...?state.comments?.comments];
+
+          emit(
+            state.copyWith(
+              addCommentStatus: ResponseStatusEnum.success,
+              newComment: newComment,
+              comments:
+                  state.comments?.copyWith(
+                    comments: updatedComments,
+                    hasNextPage: state.comments?.hasNextPage ?? true,
+                  ) ??
+                  CommentsResultModel(
+                    comments: updatedComments,
+                    hasNextPage: true,
+                  ),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          addCommentStatus: ResponseStatusEnum.failure,
+          addCommentError: e.toString(),
+        ),
+      );
+    }
   }
 
   //?--------------------------------------------------------

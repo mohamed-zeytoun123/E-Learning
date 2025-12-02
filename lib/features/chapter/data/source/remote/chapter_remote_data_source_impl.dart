@@ -258,8 +258,6 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     }
   }
 
-
-
   //?----------------------------------------------------
   //* Get Videos by Chapter ID (pagination)
   @override
@@ -416,7 +414,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
             errorMessage = data['error'].toString();
           }
         }
-        
+
         return Left(
           Failure(message: errorMessage, statusCode: response.statusCode),
         );
@@ -465,7 +463,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         if (await tempFile.exists()) {
           await tempFile.delete();
         }
-        
+
         // Extract error message from response if available
         String errorMessage = "Download error";
         if (response.data is Map<String, dynamic>) {
@@ -478,7 +476,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
             errorMessage = data['error'].toString();
           }
         }
-        
+
         return Left(
           Failure(
             message: errorMessage,
@@ -649,6 +647,50 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       if (exception is DioException) {
         return Left(Failure.handleError(exception));
       }
+      return Left(Failure(message: exception.toString()));
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Reply to a Comment
+  @override
+  Future<Either<Failure, CommentModel>> replyToCommentRemote({
+    required int commentId,
+    required String content,
+  }) async {
+    try {
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.replyToComment(commentId),
+        body: {"content": content},
+      );
+
+      final ApiResponse response = await api.post(request);
+
+      log("REPLY COMMENT RESPONSE: ${response.body}");
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        final data = response.body;
+        if (data is Map<String, dynamic>) {
+          final comment = CommentModel.fromMap(data);
+          return Right(comment);
+        } else {
+          return Left(FailureServer());
+        }
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log("replyToCommentRemote exception: $exception");
+
+      if (exception is DioException) {
+        return Left(Failure.handleError(exception));
+      }
+
       return Left(Failure(message: exception.toString()));
     }
   }

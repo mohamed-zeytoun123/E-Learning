@@ -8,7 +8,7 @@ class CommentModel {
   final bool isPublic;
   final String createdAt;
   final String updatedAt;
-  final int? parent; // يمكن يكون null
+  final int? parent;
   final List<CommentModel> replies;
 
   CommentModel({

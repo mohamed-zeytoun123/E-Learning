@@ -9,7 +9,7 @@ class AppUrls {
 
   static const String baseURl = 'http://$_ip:8100/api/v1';
   // static const String baseURl = 'https://elearning.onedoorit.com';
-// https://elearning.onedoorit.com/
+  // https://elearning.onedoorit.com/
 
   //?---------------------------------------------------------------
 
@@ -148,6 +148,8 @@ class AppUrls {
   static String updateVideoProgress(int videoId) =>
       "$baseURl/videos/$videoId/progress/";
 
+  //?------------------- Comments -------------------
+
   //* Get Comments for a Video
   static String getVideoComments(int videoId, {int page = 1}) =>
       "$baseURl/videos/$videoId/comments/?page=$page";
@@ -155,6 +157,10 @@ class AppUrls {
   //* Add Comment to Video
   static String addVideoComment(String videoId) =>
       "$baseURl/videos/$videoId/comments/";
+
+  //* Reply to a Comment
+  static String replyToComment(int commentId) =>
+      "$baseURl/comments/$commentId/reply/";
 
   //?------------------- Channels -------------------
   //* Get All Channels

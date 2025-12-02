@@ -348,4 +348,23 @@ class ChapterRepositoryImpl implements ChapterRepository {
   }
 
   //?--------------------------------------------------------
+  //* Reply to a Comment Repository
+  @override
+  Future<Either<Failure, CommentModel>> replyToCommentRepo({
+    required int commentId,
+    required String content,
+  }) async {
+    if (!await network.isConnected) {
+      return Left(FailureNoConnection());
+    }
+
+    final result = await remote.replyToCommentRemote(
+      commentId: commentId,
+      content: content,
+    );
+
+    return result.fold((failure) => Left(failure), (comment) => Right(comment));
+  }
+
+  //?--------------------------------------------------------
 }

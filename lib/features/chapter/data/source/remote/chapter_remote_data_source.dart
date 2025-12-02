@@ -93,5 +93,11 @@ abstract class ChapterRemoteDataSource {
     required String content,
   });
 
+
+  //* Reply to a Comment
+  Future<Either<Failure, CommentModel>> replyToCommentRemote({
+    required int commentId,
+    required String content,
+  }) ;
   //?--------------------------------------------------------
 }

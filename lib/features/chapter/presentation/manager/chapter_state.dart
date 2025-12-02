@@ -78,6 +78,11 @@ class ChapterState {
   final ResponseStatusEnum submitAnswersListStatus;
   final String? submitAnswersListError;
 
+  //* Add Comment
+  final CommentModel? newComment;
+  final ResponseStatusEnum addCommentStatus;
+  final String? addCommentError;
+
   //?----------------------------------------------------------
   ChapterState({
     //* Get Chapter Details
@@ -142,6 +147,11 @@ class ChapterState {
     this.submitAnswersList,
     this.submitAnswersListStatus = ResponseStatusEnum.initial,
     this.submitAnswersListError,
+
+    //* Add Comment
+    this.newComment,
+    this.addCommentStatus = ResponseStatusEnum.initial,
+    this.addCommentError,
   });
 
   //?--------------------------------------------------------
@@ -208,6 +218,11 @@ class ChapterState {
     SubmitCompletedModel? submitAnswersList,
     ResponseStatusEnum? submitAnswersListStatus,
     String? submitAnswersListError,
+
+    //* Add Comment
+    CommentModel? newComment,
+    ResponseStatusEnum? addCommentStatus,
+    String? addCommentError,
   }) {
     return ChapterState(
       //* Get Chapter Details
@@ -273,6 +288,11 @@ class ChapterState {
       submitAnswersListStatus:
           submitAnswersListStatus ?? this.submitAnswersListStatus,
       submitAnswersListError: submitAnswersListError,
+
+      //* Add Comment
+      newComment: newComment ?? this.newComment,
+      addCommentStatus: addCommentStatus ?? this.addCommentStatus,
+      addCommentError: addCommentError,
     );
   }
 }

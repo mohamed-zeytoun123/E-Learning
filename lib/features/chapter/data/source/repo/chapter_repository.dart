@@ -43,7 +43,6 @@ abstract class ChapterRepository {
     required int selectedChoiceId,
   });
 
-
   //?--------------------------------------------------------
   //* Get Videos by Chapter with Pagination (Repository)
   Future<Either<Failure, VideosResultModel>> getVideosRepo({
@@ -90,5 +89,12 @@ abstract class ChapterRepository {
     required int attemptId,
     required List<Map<String, dynamic>> answers,
   });
+
+  //* Reply to a Comment Repository
+  Future<Either<Failure, CommentModel>> replyToCommentRepo({
+    required int commentId,
+    required String content,
+  });
+  
   //?--------------------------------------------------------
 }
