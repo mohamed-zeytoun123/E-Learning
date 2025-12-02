@@ -4,6 +4,7 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
+import 'package:e_learning/features/auth/presentation/widgets/disabled_input_select_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/input_select_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,9 +43,12 @@ class SelectedInformationWidget extends StatelessWidget {
                 hint: "Choose University",
                 hintKey: "choose_university",
                 options: state.universities.map((u) => u.name).toList(),
-                value: state.signUpRequestParams?.universityId != null &&
-                        state.universities.any((u) =>
-                                u.id == state.signUpRequestParams!.universityId)
+                value:
+                    state.signUpRequestParams?.universityId != null &&
+                        state.universities.any(
+                          (u) =>
+                              u.id == state.signUpRequestParams!.universityId,
+                        )
                     ? state.universities
                           .firstWhere(
                             (u) =>
@@ -88,9 +92,15 @@ class SelectedInformationWidget extends StatelessWidget {
             // If university is not selected, show disabled state with tooltip
             if (!isUniversitySelected) {
               return DisabledInputSelectWidget(
-                hint: AppLocalizations.of(context)?.translate("choose_university_first") ??
+                hint:
+                    AppLocalizations.of(
+                      context,
+                    )?.translate("choose_university_first") ??
                     "Choose university first",
-                onTapMessage: AppLocalizations.of(context)?.translate("please_select_university_before_selecting_college") ??
+                onTapMessage:
+                    AppLocalizations.of(context)?.translate(
+                      "please_select_university_before_selecting_college",
+                    ) ??
                     "Please select a university before selecting a college",
               );
             }
@@ -125,8 +135,11 @@ class SelectedInformationWidget extends StatelessWidget {
                   hint: "Choose College",
                   hintKey: "choose_college",
                   options: state.colleges.map((u) => u.name).toList(),
-                  value: state.signUpRequestParams?.collegeId != null &&
-                          state.colleges.any((u) => u.id == state.signUpRequestParams!.collegeId)
+                  value:
+                      state.signUpRequestParams?.collegeId != null &&
+                          state.colleges.any(
+                            (u) => u.id == state.signUpRequestParams!.collegeId,
+                          )
                       ? state.colleges
                             .firstWhere(
                               (u) =>
@@ -167,12 +180,17 @@ class SelectedInformationWidget extends StatelessWidget {
             final bool isCollegeSelected =
                 state.signUpRequestParams?.collegeId != null;
 
-            // If university or college is not selected, show disabled state with tooltip
             if (!isUniversitySelected || !isCollegeSelected) {
               return DisabledInputSelectWidget(
-                hint: AppLocalizations.of(context)?.translate("choose_university_and_college_first") ??
+                hint:
+                    AppLocalizations.of(
+                      context,
+                    )?.translate("choose_university_and_college_first") ??
                     "Choose university and college first",
-                onTapMessage: AppLocalizations.of(context)?.translate("please_select_university_and_college_before_selecting_year") ??
+                onTapMessage:
+                    AppLocalizations.of(context)?.translate(
+                      "please_select_university_and_college_before_selecting_year",
+                    ) ??
                     "Please select a university and college before selecting a year",
               );
             }
@@ -206,9 +224,13 @@ class SelectedInformationWidget extends StatelessWidget {
                   hint: "Choose Study Year",
                   hintKey: "choose_study_year",
                   options: state.studyYears!.map((sy) => sy.name).toList(),
-                  value: state.signUpRequestParams?.studyYear != null &&
-                          state.studyYears?.any((sy) =>
-                                  sy.id == state.signUpRequestParams!.studyYear) ==
+                  value:
+                      state.signUpRequestParams?.studyYear != null &&
+                          state.studyYears?.any(
+                                (sy) =>
+                                    sy.id ==
+                                    state.signUpRequestParams!.studyYear,
+                              ) ==
                               true
                       ? state.studyYears
                             ?.firstWhere(
@@ -235,54 +257,6 @@ class SelectedInformationWidget extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-}
-
-// New widget for disabled input fields with tooltip functionality
-class DisabledInputSelectWidget extends StatelessWidget {
-  final String hint;
-  final String onTapMessage;
-
-  const DisabledInputSelectWidget({
-    super.key,
-    required this.hint,
-    required this.onTapMessage,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Show tooltip/snackbar message when tapped
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(onTapMessage),
-            backgroundColor: AppColors.textError,
-            duration: const Duration(seconds: 2),
-          ),
-        );
-      },
-      child: Container(
-        width: 361.w,
-        height: 49.h,
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.r),
-          border: Border.all(
-            color: AppColors.borderSecondary,
-            width: 1.5,
-          ),
-          color: AppColors.backgroundDisabled,
-        ),
-        alignment: Alignment.centerLeft,
-        child: Text(
-          hint,
-          style: AppTextStyles.s14w400.copyWith(
-            color: AppColors.textGrey,
-          ),
-        ),
-      ),
     );
   }
 }
