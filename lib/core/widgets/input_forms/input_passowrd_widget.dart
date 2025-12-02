@@ -11,6 +11,8 @@ class InputPasswordWidget extends StatefulWidget {
   final double? width;
   final String hint;
   final String hintKey;
+  final FocusNode? focusNode; // Add focusNode parameter
+  final FocusNode? nextFocusNode; // Add nextFocusNode parameter
 
   const InputPasswordWidget({
     super.key,
@@ -18,6 +20,8 @@ class InputPasswordWidget extends StatefulWidget {
     this.width,
     required this.hint,
     required this.hintKey,
+    this.focusNode, // Add focusNode parameter
+    this.nextFocusNode, // Add nextFocusNode parameter
   });
 
   @override
@@ -48,8 +52,14 @@ class _InputPasswordWidgetState extends State<InputPasswordWidget> {
               obscureText: _obscureText,
               obscuringCharacter: '*',
               textInputAction: TextInputAction.next,
+              focusNode: widget.focusNode, // Use the focusNode parameter
               onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus();
+                // Move focus to the next field if provided, otherwise request focus normally
+                if (widget.nextFocusNode != null) {
+                  FocusScope.of(context).requestFocus(widget.nextFocusNode);
+                } else {
+                  FocusScope.of(context).requestFocus();
+                }
               },
               decoration:
                   TextFormFieldStyle.baseForm(

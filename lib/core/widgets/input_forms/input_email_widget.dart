@@ -10,12 +10,16 @@ class InputEmailWidget extends StatelessWidget {
   final TextEditingController controller;
   final IconData? icon;
   final double? width;
+  final FocusNode? focusNode; // Add focusNode parameter
+  final FocusNode? nextFocusNode; // Add nextFocusNode parameter
 
   const InputEmailWidget({
     super.key,
     required this.controller,
     this.width,
     this.icon,
+    this.focusNode, // Add focusNode parameter
+    this.nextFocusNode, // Add nextFocusNode parameter
   });
 
   @override
@@ -31,9 +35,15 @@ class InputEmailWidget extends StatelessWidget {
               controller: controller,
               keyboardType: TextInputType.emailAddress, // ← تعديل
               textInputAction: TextInputAction.next,
+              focusNode: focusNode, // Use focusNode parameter
               autovalidateMode: AutovalidateMode.onUserInteraction,
               onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus();
+                // Move focus to the next field if provided, otherwise request focus normally
+                if (nextFocusNode != null) {
+                  FocusScope.of(context).requestFocus(nextFocusNode);
+                } else {
+                  FocusScope.of(context).requestFocus();
+                }
               },
               decoration: TextFormFieldStyle.baseForm(
                 AppLocalizations.of(context)?.translate("Email") ?? "Email",

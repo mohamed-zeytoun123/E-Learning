@@ -46,7 +46,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                   AppLocalizations.of(
                         context,
                       )?.translate("Enter_Your_Phone_Number") ??
-                      "Enter Your Phone Number",
+                      "Enter Your Email Number",
                   style: AppTextStyles.s16w600,
                 ),
                 SizedBox(height: 48.h),

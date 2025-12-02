@@ -25,19 +25,29 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController passwordController = TextEditingController();
-
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  // Add FocusNodes for controlling focus between fields
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
+
   @override
   void dispose() {
     passwordController.dispose();
     emailController.dispose();
     nameController.dispose();
     confirmPasswordController.dispose();
+    
+    // Dispose FocusNodes
+    _emailFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _nameFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    
     super.dispose();
   }
 
@@ -48,21 +58,30 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
       child: Column(
         spacing: 10.h,
         children: [
-          InputEmailWidget(controller: emailController),
+          InputEmailWidget(
+            controller: emailController,
+            focusNode: _emailFocusNode,
+            nextFocusNode: _passwordFocusNode, // Move focus to password field next
+          ),
           InputPasswordWidget(
             controller: passwordController,
             hint: 'Password',
             hintKey: 'Password',
+            focusNode: _passwordFocusNode,
+            nextFocusNode: _nameFocusNode, // Move focus to name field next
           ),
           InputNameWidget(
             controller: nameController,
             hint: 'Full Name',
             hintKey: 'Full_name',
+            focusNode: _nameFocusNode,
+            nextFocusNode: _confirmPasswordFocusNode, // Move focus to confirm password field next
           ),
           InputPasswordWidget(
             controller: confirmPasswordController,
             hint: 'Confirm Password',
             hintKey: 'Confirm_password',
+            focusNode: _confirmPasswordFocusNode,
           ),
           CustomButtonWidget(
             title: AppLocalizations.of(context)?.translate("next") ?? "Next",
