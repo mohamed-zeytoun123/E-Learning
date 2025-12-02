@@ -105,10 +105,10 @@ class AppRouter {
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
           final blocProvider = args["blocProvide"] as AuthCubit;
-          final phone = args["phone"] as String;
+          final email = args["email"] as String;
           return BlocProvider.value(
             value: blocProvider,
-            child: UniversitySelectionPage(email: phone),
+            child: UniversitySelectionPage(email: email),
           );
         },
       ),
@@ -119,11 +119,11 @@ class AppRouter {
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
           final blocProvider = args["blocProvide"] as AuthCubit;
-          final phone = args["phone"] as String;
+          final email = args["email"] as String;
           final purpose = args["purpose"] as String;
           return BlocProvider.value(
             value: blocProvider,
-            child: OtpPage(phone: phone, purpose: purpose),
+            child: OtpPage(email: email, purpose: purpose),
           );
         },
       ),
@@ -142,13 +142,13 @@ class AppRouter {
         path: RouteNames.resetPassword,
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
-          final phone = args["phone"] as String;
+          final email = args["email"] as String;
           final resetToken = args["resetToken"] as String;
 
           return BlocProvider<AuthCubit>(
             create: (context) =>
                 AuthCubit(repository: appLocator<AuthRepository>()),
-            child: ResetPasswordPage(phone: phone, resetToken: resetToken),
+            child: ResetPasswordPage(email: email, resetToken: resetToken),
           );
         },
       ),

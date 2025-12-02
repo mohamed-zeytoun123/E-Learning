@@ -3,6 +3,7 @@ import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
@@ -17,11 +18,11 @@ import 'package:go_router/go_router.dart';
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({
     super.key,
-    required this.phone,
+    required this.email,
     required this.resetToken,
   });
 
-  final String phone;
+  final String email;
   final String resetToken;
 
   @override
@@ -50,7 +51,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       if (!mounted) return;
 
       final params = ResetPasswordRequestParams(
-        phone: widget.phone,
+        phone: widget.email,
         resetToken: widget.resetToken,
         newPassword: newPasswordController.text.trim(),
       );
@@ -68,31 +69,35 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   /// Shows error message using SnackBar
   void _showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppMessage.showFlushbar(
+      context: context,
+      title: AppLocalizations.of(context)?.translate("wrrong") ?? "Wrrong",
+      mainButtonOnPressed: () {
+        context.pop();
+      },
+      mainButtonText: AppLocalizations.of(context)?.translate("ok") ?? "Ok",
+      iconData: Icons.error,
+      backgroundColor: AppColors.messageError,
+      message: message,
+      isShowProgress: true,
     );
   }
 
   /// Shows success message using SnackBar
   void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-      ),
+    AppMessage.showFlushbar(
+      context: context,
+      iconData: Icons.check,
+      backgroundColor: AppColors.messageSuccess,
+      message: message,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     // Debug: Print the received parameters
-    print('Reset Password Page - Phone: ${widget.phone}');
-    print('Reset Password Page - Reset Token: ${widget.resetToken}');
+    debugPrint('Reset Password Page - Phone: ${widget.email}');
+    debugPrint('Reset Password Page - Reset Token: ${widget.resetToken}');
 
     return Scaffold(
       backgroundColor: AppColors.backgroundPage,
@@ -100,7 +105,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         listenWhen: (previous, current) =>
             previous.resetPasswordState != current.resetPasswordState,
         listener: (context, state) {
-          print(
+          debugPrint(
             'BlocListener - Reset Password State: ${state.resetPasswordState}',
           );
           switch (state.resetPasswordState) {

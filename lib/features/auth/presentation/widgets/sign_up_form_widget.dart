@@ -27,7 +27,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController confirmPasswordController =
+      TextEditingController();
 
   // Add FocusNodes for controlling focus between fields
   final FocusNode _emailFocusNode = FocusNode();
@@ -41,13 +42,13 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
     emailController.dispose();
     nameController.dispose();
     confirmPasswordController.dispose();
-    
+
     // Dispose FocusNodes
     _emailFocusNode.dispose();
     _passwordFocusNode.dispose();
     _nameFocusNode.dispose();
     _confirmPasswordFocusNode.dispose();
-    
+
     super.dispose();
   }
 
@@ -61,7 +62,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
           InputEmailWidget(
             controller: emailController,
             focusNode: _emailFocusNode,
-            nextFocusNode: _passwordFocusNode, // Move focus to password field next
+            nextFocusNode:
+                _passwordFocusNode, // Move focus to password field next
           ),
           InputPasswordWidget(
             controller: passwordController,
@@ -75,7 +77,8 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
             hint: 'Full Name',
             hintKey: 'Full_name',
             focusNode: _nameFocusNode,
-            nextFocusNode: _confirmPasswordFocusNode, // Move focus to confirm password field next
+            nextFocusNode:
+                _confirmPasswordFocusNode, // Move focus to confirm password field next
           ),
           InputPasswordWidget(
             controller: confirmPasswordController,
@@ -123,7 +126,7 @@ class _SignUpFormWidgetState extends State<SignUpFormWidget> {
                   RouteNames.universitySelection,
                   extra: {
                     'blocProvide': BlocProvider.of<AuthCubit>(context),
-                    'phone': emailController.text.trim(),
+                    'email': emailController.text.trim(),
                   },
                 );
               } else {

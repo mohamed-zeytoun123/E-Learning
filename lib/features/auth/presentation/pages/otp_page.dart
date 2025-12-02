@@ -5,6 +5,7 @@ import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:e_learning/features/auth/presentation/widgets/custom_otp.dart';
@@ -15,8 +16,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class OtpPage extends StatefulWidget {
-  const OtpPage({super.key, required this.phone, required this.purpose});
-  final String phone;
+  const OtpPage({super.key, required this.email, required this.purpose});
+  final String email;
   final String purpose;
 
   @override
@@ -28,12 +29,23 @@ class _OtpPageState extends State<OtpPage> {
 
   void _handleOtpVerification() {
     if (_verificationCode == null || _verificationCode!.length < 6) {
-      _showErrorMessage(
-        AppLocalizations.of(
+      AppMessage.showFlushbar(
+        context: context,
+        title: AppLocalizations.of(context)?.translate("wrrong") ?? "Wrrong",
+        mainButtonOnPressed: () {
+          context.pop();
+        },
+        mainButtonText: AppLocalizations.of(context)?.translate("ok") ?? "Ok",
+        iconData: Icons.error,
+        backgroundColor: AppColors.messageError,
+        message:
+            AppLocalizations.of(
               context,
             )?.translate("Please_enter_the_6-digit_code") ??
             "Please enter the 6-digit code",
+        isShowProgress: true,
       );
+
       return;
     }
 
@@ -41,29 +53,9 @@ class _OtpPageState extends State<OtpPage> {
     log('Purpose: ${widget.purpose}');
 
     context.read<AuthCubit>().otpVerfication(
-      widget.phone,
+      widget.email,
       _verificationCode!,
       widget.purpose,
-    );
-  }
-
-  void _showErrorMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.green,
-        behavior: SnackBarBehavior.floating,
-      ),
     );
   }
 
@@ -71,7 +63,7 @@ class _OtpPageState extends State<OtpPage> {
     return Column(
       children: [
         Text(
-          "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} :\n${widget.phone} ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
+          "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} :\n${widget.email} ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
           style: AppTextStyles.s12w400,
           textAlign: TextAlign.center,
         ),
@@ -95,8 +87,12 @@ class _OtpPageState extends State<OtpPage> {
       listener: (context, state) {
         switch (state.otpVerficationState) {
           case ResponseStatusEnum.success:
-            _showSuccessMessage(
-              AppLocalizations.of(
+            AppMessage.showFlushbar(
+              context: context,
+              iconData: Icons.check,
+              backgroundColor: AppColors.messageSuccess,
+              message:
+                  AppLocalizations.of(
                     context,
                   )?.translate("OTP_verified_successfully") ??
                   "OTP verified successfully",
@@ -110,7 +106,7 @@ class _OtpPageState extends State<OtpPage> {
                 context.go(
                   RouteNames.resetPassword,
                   extra: {
-                    "phone": widget.phone,
+                    "email": widget.email,
                     "resetToken":
                         resetToken ??
                         _verificationCode, // Use actual reset token or fallback to OTP
@@ -120,13 +116,25 @@ class _OtpPageState extends State<OtpPage> {
             });
             break;
           case ResponseStatusEnum.failure:
-            _showErrorMessage(
-              state.otpVerficationError ??
-                  (AppLocalizations.of(
-                        context,
-                      )?.translate("OTP_verification_failed") ??
-                      "OTP verification failed"),
+            AppMessage.showFlushbar(
+              context: context,
+              title:
+                  AppLocalizations.of(context)?.translate("wrrong") ?? "Wrrong",
+              mainButtonOnPressed: () {
+                context.pop();
+              },
+              mainButtonText:
+                  AppLocalizations.of(context)?.translate("ok") ?? "Ok",
+              iconData: Icons.error,
+              backgroundColor: AppColors.messageError,
+              message:
+                  AppLocalizations.of(
+                    context,
+                  )?.translate("OTP_verification_failed") ??
+                  "OTP verification failed",
+              isShowProgress: true,
             );
+
             break;
           case ResponseStatusEnum.loading:
           case ResponseStatusEnum.initial:
