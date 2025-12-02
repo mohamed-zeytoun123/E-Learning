@@ -47,19 +47,19 @@ class _CustomButtonWidgetState extends State<CustomButtonWidget>
 
   void _onTapDown(TapDownDetails details) {
     setState(() {
-      _scale = 0.95;
+      _scale = 0.95; // Slightly scale down when pressed
     });
   }
 
   void _onTapUp(TapUpDetails details) {
     setState(() {
-      _scale = 1.0;
+      _scale = 1.0; // Return to normal scale
     });
   }
 
   void _onTapCancel() {
     setState(() {
-      _scale = 1.0;
+      _scale = 1.0; // Return to normal scale if tap is cancelled
     });
   }
 
@@ -83,16 +83,26 @@ class _CustomButtonWidgetState extends State<CustomButtonWidget>
             border: Border.all(color: widget.borderColor),
           ),
           alignment: Alignment.center,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(widget.title, style: widget.titleStyle),
-              if (widget.icon != null) ...[
-                SizedBox(width: widget.iconSpacing.w),
-                widget.icon!,
-              ],
-            ],
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: widget.onTap,
+              borderRadius: BorderRadius.circular(12.r),
+              child: Container(
+                alignment: Alignment.center,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(widget.title, style: widget.titleStyle),
+                    if (widget.icon != null) ...[
+                      SizedBox(width: widget.iconSpacing.w), 
+                      widget.icon!
+                    ],
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
       ),
