@@ -21,6 +21,8 @@ class DisabledInputSelectWidget extends StatelessWidget {
         AppMessage.showFlushbar(
           context: context,
           message: onTapMessage,
+          iconData: Icons.error_outline_outlined,
+          iconColor: AppColors.iconWhite,
           title: "Error",
           backgroundColor: AppColors.messageWarning,
           isShowProgress: true,

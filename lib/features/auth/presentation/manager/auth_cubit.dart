@@ -146,7 +146,7 @@ class AuthCubit extends Cubit<AuthState> {
     final updatedParams = SignUpRequestParams(
       fullName: fullName ?? currentParams.fullName,
       universityId: universityId ?? currentParams.universityId,
-      collegeId: collegeId ?? currentParams.collegeId, // << هنا
+      collegeId: collegeId, // Fixed: Always use the passed value, even if null
       studyYear: studyYear ?? currentParams.studyYear,
       email: email ?? currentParams.email,
       password: password ?? currentParams.password,

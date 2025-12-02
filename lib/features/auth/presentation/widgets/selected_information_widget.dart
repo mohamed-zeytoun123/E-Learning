@@ -62,9 +62,10 @@ class SelectedInformationWidget extends StatelessWidget {
                     orElse: () => state.universities.first,
                   );
 
+                  // Reset college selection when university changes
                   context.read<AuthCubit>().updateSignUpParams(
                     universityId: selected.id,
-                    collegeId: null,
+                    collegeId: null, // This ensures collegeId is reset to null
                   );
 
                   context.read<AuthCubit>().getColleges(
@@ -89,7 +90,6 @@ class SelectedInformationWidget extends StatelessWidget {
             final bool isUniversitySelected =
                 state.signUpRequestParams?.universityId != null;
 
-            // If university is not selected, show disabled state with tooltip
             if (!isUniversitySelected) {
               return DisabledInputSelectWidget(
                 hint:
@@ -108,15 +108,19 @@ class SelectedInformationWidget extends StatelessWidget {
             switch (state.getCollegesState) {
               case ResponseStatusEnum.loading:
                 return AppLoading.linear();
+
               case ResponseStatusEnum.failure:
                 if (state.getCollegesError?.contains("No Data") == true) {
                   String universityName = "";
                   if (state.signUpRequestParams?.universityId != null) {
-                    final selectedUniversity = state.universities.firstWhere(
-                      (u) => u.id == state.signUpRequestParams!.universityId,
-                      orElse: () => state.universities.first,
-                    );
-                    universityName = selectedUniversity.name;
+                    try {
+                      final selectedUniversity = state.universities.firstWhere(
+                        (u) => u.id == state.signUpRequestParams!.universityId,
+                      );
+                      universityName = selectedUniversity.name;
+                    } catch (e) {
+                      universityName = "Unknown University";
+                    }
                   }
 
                   return Container(
@@ -139,8 +143,19 @@ class SelectedInformationWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          "No colleges for this university $universityName",
+                          AppLocalizations.of(
+                                context,
+                              )?.translate("no_colleges_for_university") ??
+                              "No colleges for this university",
                           style: AppTextStyles.s14w400.copyWith(
+                            color: AppColors.textGrey,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          universityName,
+                          style: AppTextStyles.s14w500.copyWith(
                             color: AppColors.textGrey,
                           ),
                           textAlign: TextAlign.center,
@@ -162,17 +177,20 @@ class SelectedInformationWidget extends StatelessWidget {
               case ResponseStatusEnum.success:
                 context.read<AuthCubit>().getStudyYears();
                 if (state.colleges.isEmpty) {
-                  // Find the selected university name
                   String universityName = "";
                   if (state.signUpRequestParams?.universityId != null) {
-                    final selectedUniversity = state.universities.firstWhere(
-                      (u) => u.id == state.signUpRequestParams!.universityId,
-                      orElse: () => state.universities.first,
-                    );
-                    universityName = selectedUniversity.name;
+                    try {
+                      final selectedUniversity = state.universities.firstWhere(
+                        (u) => u.id == state.signUpRequestParams!.universityId,
+                      );
+                      universityName = selectedUniversity.name;
+                    } catch (e) {
+                      universityName = "Unknown University";
+                    }
                   }
 
                   return Container(
+                    width: double.infinity,
                     padding: EdgeInsets.symmetric(
                       vertical: 16.h,
                       horizontal: 12.w,
