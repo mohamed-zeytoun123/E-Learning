@@ -589,8 +589,9 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         context.read<ChapterCubit>().replyToComment(
           commentId: parentCommentId,
           content: replyContent,
+          videoId: widget.videoId, // Pass the videoId to ensure comments refresh
         );
-      } else {}
-    } else {}
+      } 
+    }
   }
 }

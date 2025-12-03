@@ -907,6 +907,7 @@ class ChapterCubit extends Cubit<ChapterState> {
   Future<void> replyToComment({
     required int commentId,
     required String content,
+    int? videoId, // Add videoId parameter
   }) async {
     emit(
       state.copyWith(
@@ -1011,6 +1012,12 @@ class ChapterCubit extends Cubit<ChapterState> {
                   ),
             ),
           );
+          
+          // Refresh comments after successful reply to ensure data consistency
+          // This will fetch the latest comments from the server
+          if (videoId != null) {
+            getComments(videoId: videoId, reset: true, page: 1);
+          }
         },
       );
     } catch (e) {

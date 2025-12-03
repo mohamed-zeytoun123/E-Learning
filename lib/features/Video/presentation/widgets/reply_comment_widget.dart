@@ -10,11 +10,13 @@ import 'package:intl/intl.dart';
 class ReplyCommentWidget extends StatefulWidget {
   final CommentModel parentComment;
   final VoidCallback onReplySent;
+  final int videoId; // Add videoId parameter
 
   const ReplyCommentWidget({
     super.key,
     required this.parentComment,
     required this.onReplySent,
+    required this.videoId, // Add videoId to constructor
   });
 
   @override
@@ -137,6 +139,7 @@ class _ReplyCommentWidgetState extends State<ReplyCommentWidget> {
     context.read<ChapterCubit>().replyToComment(
       commentId: widget.parentComment.id,
       content: replyContent,
+      videoId: widget.videoId, // Pass the videoId to ensure comments refresh
     ).then((_) {
       // Close the reply sheet and notify parent
       Navigator.pop(context);
