@@ -911,8 +911,8 @@ class ChapterCubit extends Cubit<ChapterState> {
   }) async {
     emit(
       state.copyWith(
-        addCommentStatus: ResponseStatusEnum.loading,
-        addCommentError: null,
+        replyStatus: ResponseStatusEnum.loading,
+        replyError: null,
       ),
     );
 
@@ -926,8 +926,8 @@ class ChapterCubit extends Cubit<ChapterState> {
         (failure) {
           emit(
             state.copyWith(
-              addCommentStatus: ResponseStatusEnum.failure,
-              addCommentError: failure.message,
+              replyStatus: ResponseStatusEnum.failure,
+              replyError: failure.message,
             ),
           );
         },
@@ -1002,8 +1002,8 @@ class ChapterCubit extends Cubit<ChapterState> {
 
           emit(
             state.copyWith(
-              addCommentStatus: ResponseStatusEnum.success,
-              newComment: newReply,
+              replyStatus: ResponseStatusEnum.success,
+              replyComment: newReply,
               comments:
                   state.comments?.copyWith(comments: updatedComments) ??
                   CommentsResultModel(
@@ -1021,8 +1021,8 @@ class ChapterCubit extends Cubit<ChapterState> {
     } catch (e) {
       emit(
         state.copyWith(
-          addCommentStatus: ResponseStatusEnum.failure,
-          addCommentError: e.toString(),
+          replyStatus: ResponseStatusEnum.failure,
+          replyError: e.toString(),
         ),
       );
     }

@@ -82,6 +82,11 @@ class ChapterState {
   final CommentModel? newComment;
   final ResponseStatusEnum addCommentStatus;
   final String? addCommentError;
+  
+  //* Reply to Comment
+  final CommentModel? replyComment;
+  final ResponseStatusEnum replyStatus;
+  final String? replyError;
 
   //?----------------------------------------------------------
   ChapterState({
@@ -128,7 +133,7 @@ class ChapterState {
     this.videoStreamingError,
     this.selectVideo,
 
-    //* Download Video
+    //* Video Downloads (progress + state)
     this.downloads = const [],
 
     //* Get Comments
@@ -152,6 +157,11 @@ class ChapterState {
     this.newComment,
     this.addCommentStatus = ResponseStatusEnum.initial,
     this.addCommentError,
+    
+    //* Reply to Comment
+    this.replyComment,
+    this.replyStatus = ResponseStatusEnum.initial,
+    this.replyError,
   });
 
   //?--------------------------------------------------------
@@ -223,6 +233,11 @@ class ChapterState {
     CommentModel? newComment,
     ResponseStatusEnum? addCommentStatus,
     String? addCommentError,
+    
+    //* Reply to Comment
+    CommentModel? replyComment,
+    ResponseStatusEnum? replyStatus,
+    String? replyError,
   }) {
     return ChapterState(
       //* Get Chapter Details
@@ -293,6 +308,11 @@ class ChapterState {
       newComment: newComment ?? this.newComment,
       addCommentStatus: addCommentStatus ?? this.addCommentStatus,
       addCommentError: addCommentError,
+      
+      //* Reply to Comment
+      replyComment: replyComment ?? this.replyComment,
+      replyStatus: replyStatus ?? this.replyStatus,
+      replyError: replyError,
     );
   }
 }

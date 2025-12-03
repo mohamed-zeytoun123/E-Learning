@@ -316,7 +316,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                 BlocConsumer<ChapterCubit, ChapterState>(
                   listenWhen: (previous, current) =>
                       previous.commentStatus != current.commentStatus ||
-                      previous.addCommentStatus != current.addCommentStatus,
+                      previous.replyStatus != current.replyStatus,
                   listener: (context, state) {
                     if (state.commentStatus == ResponseStatusEnum.failure) {
                       AppMessage.showFlushbar(
@@ -339,7 +339,6 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         title: "Success",
                         iconColor: AppColors.iconWhite,
                       );
-
                       _commentController.clear();
                       context.read<ChapterCubit>().getComments(
                         videoId: widget.videoId,
@@ -348,23 +347,22 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       );
                     }
 
-                    if (state.addCommentStatus == ResponseStatusEnum.failure) {
+                    if (state.replyStatus == ResponseStatusEnum.failure) {
                       AppMessage.showFlushbar(
                         context: context,
                         message:
-                            state.addCommentError ?? "Failed to send reply",
+                            state.replyError ?? "Failed to send reply",
                         iconData: Icons.error_outline,
                         isShowProgress: true,
                         title: "Error",
                         backgroundColor: AppColors.messageError,
                         iconColor: AppColors.iconWhite,
                       );
-                    } else if (state.addCommentStatus ==
+                    } else if (state.replyStatus ==
                         ResponseStatusEnum.success) {
                       AppMessage.showFlushbar(
                         context: context,
-                        // message: "Reply sent successfully",
-                        message: "Comment sent successfully",
+                        message: "Reply sent successfully",
                         iconData: Icons.check_circle_outline,
                         backgroundColor: AppColors.messageSuccess,
                         isShowProgress: true,
