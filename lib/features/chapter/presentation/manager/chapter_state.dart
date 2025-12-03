@@ -68,7 +68,7 @@ class ChapterState {
   final String? commentsMoreError;
   final ResponseStatusEnum? commentsMoreStatus;
 
-  //* Add Comment Repository
+  //* Add Comment 
   final CommentModel? comment;
   final ResponseStatusEnum commentStatus;
   final String? commentError;

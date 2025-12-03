@@ -341,9 +341,11 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       );
 
                       _commentController.clear();
-                      
-                      // Note: We don't call getComments here anymore as it's handled in the cubit
-                      // and calling it here would create an infinite loop
+                      context.read<ChapterCubit>().getComments(
+                        videoId: widget.videoId,
+                        reset: true,
+                        page: 1,
+                      );
                     }
 
                     if (state.addCommentStatus == ResponseStatusEnum.failure) {
@@ -361,7 +363,8 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         ResponseStatusEnum.success) {
                       AppMessage.showFlushbar(
                         context: context,
-                        message: "Reply sent successfully",
+                        // message: "Reply sent successfully",
+                        message: "Comment sent successfully",
                         iconData: Icons.check_circle_outline,
                         backgroundColor: AppColors.messageSuccess,
                         isShowProgress: true,
@@ -375,7 +378,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       setState(() {
                         _replyingToCommentId = null;
                       });
-                      
+
                       // Note: We don't call getComments here anymore as it's handled in the cubit
                       // and calling it here would create an infinite loop
                     }
@@ -407,16 +410,15 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                                       .trim();
                                   if (comment.isNotEmpty) {
                                     context.read<ChapterCubit>().addComment(
-                                          videoId: widget.videoId,
-                                          content: comment,
-                                        );
+                                      videoId: widget.videoId,
+                                      content: comment,
+                                    );
                                   }
                                 },
                               ),
                       ],
                     );
                   },
-
                 ),
               ],
             ),
@@ -515,7 +517,8 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                           TextEditingController(),
                       hint: "Write a reply...",
                       autofocus: false,
-                      focusNode: _replyFocusNodes[comment.id], // Pass the focus node
+                      focusNode:
+                          _replyFocusNodes[comment.id], // Pass the focus node
                     ),
                   ),
                   IconButton(
@@ -573,9 +576,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         context.read<ChapterCubit>().replyToComment(
           commentId: parentCommentId,
           content: replyContent,
-          videoId: widget.videoId, // Pass the videoId to ensure comments refresh
+          videoId:
+              widget.videoId, // Pass the videoId to ensure comments refresh
         );
-      } 
+      }
     }
   }
 }
