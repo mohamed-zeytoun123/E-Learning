@@ -201,13 +201,11 @@ class ChapterRepositoryImpl implements ChapterRepository {
     Function(double progress)? onProgress,
   }) async {
     try {
-      // 1) إذا الفيديو موجود بالكاش → رجّعو من التخزين
       if (await local.isVideoCached(videoId)) {
         final cachedBytes = await local.getEncryptedVideo(videoId);
         return Right(cachedBytes);
       }
 
-      // 2) إذا غير موجود بالكاش لكن في إنترنت → نزلو من الريموت
       if (await network.isConnected) {
         final downloadResult = await remote.downloadVideoRemoteWithProgress(
           videoId: videoId,
@@ -226,7 +224,6 @@ class ChapterRepositoryImpl implements ChapterRepository {
         });
       }
 
-      // 5) لا كاش ولا إنترنت
       return Left(FailureNoConnection());
     } catch (e) {
       return Left(Failure.handleError(e as DioException));
@@ -294,10 +291,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
     required int videoId,
     int page = 1,
   }) async {
-    print("ChapterRepository: getCommentsRepo called for videoId: $videoId, page: $page");
-    
     if (!await network.isConnected) {
-      print("ChapterRepository: No internet connection");
       return Left(FailureNoConnection());
     }
 
@@ -305,16 +299,12 @@ class ChapterRepositoryImpl implements ChapterRepository {
       chapterId: videoId,
       page: page,
     );
-    
-    print("ChapterRepository: getCommentsRemote returned result");
 
     return result.fold(
       (failure) {
-        print("ChapterRepository: getCommentsRepo failed with error: ${failure.message}");
         return Left(failure);
       },
       (commentsResult) {
-        print("ChapterRepository: getCommentsRepo succeeded, comments count: ${commentsResult.comments?.length ?? 0}, hasNextPage: ${commentsResult.hasNextPage}");
         return Right(commentsResult);
       },
     );
@@ -365,10 +355,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
     required int commentId,
     required String content,
   }) async {
-    print("ChapterRepository: replyToCommentRepo called with commentId: $commentId");
-    
     if (!await network.isConnected) {
-      print("ChapterRepository: No internet connection");
       return Left(FailureNoConnection());
     }
 
@@ -376,18 +363,14 @@ class ChapterRepositoryImpl implements ChapterRepository {
       commentId: commentId,
       content: content,
     );
-    
-    print("ChapterRepository: replyToCommentRemote returned result");
 
     return result.fold(
       (failure) {
-        print("ChapterRepository: replyToCommentRepo failed with error: ${failure.message}");
         return Left(failure);
-      }, 
+      },
       (comment) {
-        print("ChapterRepository: replyToCommentRepo succeeded, new comment ID: ${comment.id}");
         return Right(comment);
-      }
+      },
     );
   }
 

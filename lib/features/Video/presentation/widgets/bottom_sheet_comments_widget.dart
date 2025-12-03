@@ -26,7 +26,7 @@ class _KeyboardVisibilityObserver extends WidgetsBindingObserver {
   void didChangeMetrics() {
     final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
     final newValue = bottomInset > 0;
-    
+
     if (_state._isKeyboardVisible != newValue && _state.mounted) {
       _state.setState(() {
         _state._isKeyboardVisible = newValue;
@@ -61,6 +61,12 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
     if (state.commentsMoreStatus == ResponseStatusEnum.loading) return;
     if ((state.comments?.comments?.isEmpty ?? true)) return;
     if (state.comments?.hasNextPage == false) return;
+    
+    // Prevent requesting page 0 or negative pages
+    if (page <= 0) {
+      print("Invalid page counter: $page");
+      return;
+    }
 
     final nextPage = page + 1;
     print("Attempting to fetch page $nextPage");
@@ -81,11 +87,11 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
   @override
   void initState() {
     super.initState();
-    
+
     // Listen for keyboard visibility changes
     _keyboardObserver = _KeyboardVisibilityObserver(this);
     WidgetsBinding.instance.addObserver(_keyboardObserver);
-    
+
     _scrollController.addListener(() {
       final position = _scrollController.position;
       if (position.pixels > position.maxScrollExtent * 0.85) {
@@ -131,10 +137,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                   });
                 }
                 // Detect downward drag to collapse (when at top of scroll)
-                else if (details.delta.dy > 5 && 
-                         _isExpanded && 
-                         _scrollController.hasClients && 
-                         _scrollController.position.pixels <= 0) {
+                else if (details.delta.dy > 5 &&
+                    _isExpanded &&
+                    _scrollController.hasClients &&
+                    _scrollController.position.pixels <= 0) {
                   setState(() {
                     _isExpanded = false;
                   });
@@ -169,11 +175,11 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
             Divider(height: 1.h, color: AppColors.dividerGrey),
             SizedBox(
               // Adjust height based on keyboard visibility
-              height: _isExpanded 
-                ? MediaQuery.of(context).size.height * 0.7 
-                : (_isKeyboardVisible 
-                    ? MediaQuery.of(context).size.height * 0.5
-                    : 350.h),
+              height: _isExpanded
+                  ? MediaQuery.of(context).size.height * 0.7
+                  : (_isKeyboardVisible
+                        ? MediaQuery.of(context).size.height * 0.5
+                        : 350.h),
               child: BlocBuilder<ChapterCubit, ChapterState>(
                 buildWhen: (prev, curr) =>
                     prev.comments != curr.comments ||
@@ -314,7 +320,9 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                 BlocConsumer<ChapterCubit, ChapterState>(
                   listenWhen: (previous, current) =>
                       previous.commentStatus != current.commentStatus ||
-                      previous.addCommentStatus != current.addCommentStatus, // Added listener for reply status
+                      previous.addCommentStatus !=
+                          current
+                              .addCommentStatus, // Added listener for reply status
                   listener: (context, state) {
                     // Handle original comment status
                     if (state.commentStatus == ResponseStatusEnum.failure) {
@@ -344,13 +352,19 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       );
 
                       _commentController.clear();
+                      
+                      // Reset page counter when adding new comment
+                      setState(() {
+                        page = 1;
+                      });
                     }
-                    
+
                     // Handle reply status
                     if (state.addCommentStatus == ResponseStatusEnum.failure) {
                       AppMessage.showFlushbar(
                         context: context,
-                        message: state.addCommentError ?? "Failed to send reply",
+                        message:
+                            state.addCommentError ?? "Failed to send reply",
                         iconData: Icons.error_outline,
                         isShowProgress: true,
                         title: "Error",
@@ -368,11 +382,13 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         title: "Success",
                         iconColor: AppColors.iconWhite,
                       );
-                      
+
                       // Clear all reply controllers
                       _replyControllers.values.forEach((controller) => controller.clear());
                       setState(() {
                         _replyingToCommentId = null;
+                        // Reset page counter when adding new reply
+                        page = 1;
                       });
                       
                       // Refresh comments to show the new reply
@@ -425,7 +441,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
     final createdAt = DateTime.tryParse(comment.createdAt);
     // Limit the depth to prevent UI issues
     final isMaxDepth = depth >= 3;
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -433,16 +449,14 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (depth > 0) 
+            if (depth > 0)
               // Add indentation for replies
               SizedBox(width: (depth * 15.0).w),
             Expanded(
               child: CommentBubbleWidget(
                 comment: comment.content,
                 time: createdAt != null
-                    ? DateFormat(
-                        'MMM d, yyyy hh:mm a',
-                      ).format(createdAt)
+                    ? DateFormat('MMM d, yyyy hh:mm a').format(createdAt)
                     : "Just now",
                 isMine: comment.authorType == "Student",
                 authorName: comment.authorName,
@@ -450,7 +464,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
             ),
             // Always show reply button for teachers' comments and students' own comments
             // Only hide reply button when max depth is reached
-            if (!isMaxDepth) 
+            if (!isMaxDepth)
               IconButton(
                 onPressed: () {
                   _toggleReplyInput(comment.id);
@@ -488,9 +502,12 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                 children: [
                   Expanded(
                     child: InputCommentWidget(
-                      controller: _replyControllers[comment.id] ?? TextEditingController(),
+                      controller:
+                          _replyControllers[comment.id] ??
+                          TextEditingController(),
                       hint: "Write a reply...",
-                      autofocus: true, // Enable autofocus for immediate keyboard appearance
+                      autofocus:
+                          true, // Enable autofocus for immediate keyboard appearance
                     ),
                   ),
                   IconButton(
@@ -525,7 +542,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         _replyControllers.putIfAbsent(commentId, () => TextEditingController());
       }
     });
-    
+
     // Request focus after the widget is built
     if (_replyingToCommentId == commentId) {
       // Use a slightly longer delay to ensure the widget is fully rendered
@@ -547,11 +564,14 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
     if (replyController != null) {
       final replyContent = replyController.text.trim();
       if (replyContent.isNotEmpty) {
-        print("Sending reply to comment ID: $parentCommentId with content: $replyContent");
-        context
-            .read<ChapterCubit>()
-            .replyToComment(commentId: parentCommentId, content: replyContent);
-            // Removed manual refresh since we're now listening for status changes
+        print(
+          "Sending reply to comment ID: $parentCommentId with content: $replyContent",
+        );
+        context.read<ChapterCubit>().replyToComment(
+          commentId: parentCommentId,
+          content: replyContent,
+        );
+        // Removed manual refresh since we're now listening for status changes
       } else {
         print("Reply content is empty for comment ID: $parentCommentId");
       }

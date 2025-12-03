@@ -130,7 +130,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     String? fileUrl,
   }) async {
     try {
-      // بداية التحميل
       final updatedDownloads = Map<int, AttachmentDownloadState>.from(
         state.attachmentDownloads,
       );
@@ -141,7 +140,6 @@ class ChapterCubit extends Cubit<ChapterState> {
       );
       emit(state.copyWith(attachmentDownloads: updatedDownloads));
 
-      // تحميل الملف مع progress callback
       final filePath = await downloadAttachment(
         attachmentId: attachmentId,
         token: token,
@@ -158,7 +156,6 @@ class ChapterCubit extends Cubit<ChapterState> {
         },
       );
 
-      // اكتمل التحميل
       final finalDownloads = Map<int, AttachmentDownloadState>.from(
         state.attachmentDownloads,
       );
@@ -171,10 +168,8 @@ class ChapterCubit extends Cubit<ChapterState> {
       );
       emit(state.copyWith(attachmentDownloads: finalDownloads));
 
-      // فتح الملف
       await OpenFilex.open(filePath);
     } catch (e) {
-      // حذف حالة التحميل في حالة فشل
       final errorDownloads = Map<int, AttachmentDownloadState>.from(
         state.attachmentDownloads,
       );
@@ -250,10 +245,8 @@ class ChapterCubit extends Cubit<ChapterState> {
     required int questionId,
     required int selectedChoiceId,
   }) async {
-    // حفظ نسخة من الخيارات الحالية
     final previousOptions = Map<int, int>.from(state.selectedOptions);
 
-    // تحديث UI مباشرة على أساس questionId
     final questionIndex = state.statrtQuiz?.questions.indexWhere(
       (q) => q.id == questionId,
     );
@@ -263,7 +256,6 @@ class ChapterCubit extends Cubit<ChapterState> {
       emit(state.copyWith(selectedOptions: updated));
     }
 
-    // Emit loading state
     emit(
       state.copyWith(
         answerStatus: ResponseStatusEnum.loading,
@@ -307,7 +299,6 @@ class ChapterCubit extends Cubit<ChapterState> {
   }) async {
     final cubitState = state;
 
-    // 1️⃣ تعيين حالة التحميل
     if (reset) {
       emit(
         cubitState.copyWith(
@@ -328,13 +319,10 @@ class ChapterCubit extends Cubit<ChapterState> {
     }
 
     try {
-      // 2️⃣ جلب البيانات من الريبو
       final result = await repo.getVideosRepo(chapterId: chapterId, page: page);
 
-      // 3️⃣ التعامل مع النتيجة
       result.fold(
         (failure) {
-          // معالجة الأخطاء
           if (reset) {
             emit(
               cubitState.copyWith(
@@ -353,7 +341,6 @@ class ChapterCubit extends Cubit<ChapterState> {
           }
         },
         (newVideosResult) {
-          // 4️⃣ دمج البيانات القديمة والجديدة
           final oldVideos = reset
               ? <VideoModel>[]
               : (cubitState.videos?.videos ?? <VideoModel>[]);
@@ -363,7 +350,6 @@ class ChapterCubit extends Cubit<ChapterState> {
             ...?newVideosResult.videos,
           ];
 
-          // 5️⃣ تحديث الحالة في الـ cubit
           emit(
             cubitState.copyWith(
               videosStatus: ResponseStatusEnum.success,
@@ -437,7 +423,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     required String videoId,
     required String fileName,
   }) async {
-    // 1️⃣ إضافة الفيديو للقائمة إذا مش موجود
     final existing = state.downloads.indexWhere((d) => d.videoId == videoId);
     if (existing == -1) {
       final newItem = DownloadItem(
@@ -459,18 +444,14 @@ class ChapterCubit extends Cubit<ChapterState> {
     }
 
     try {
-      // 2️⃣ التحقق إذا الفيديو موجود بالكاش
       if (await local.isVideoCached(videoId)) {
-        // 3️⃣ إذا موجود، تحديث progress لـ 100% والحالة مكتمل
         _updateDownloadProgress(videoId, 1.0);
         _completeDownload(videoId);
         await local.saveCachedVideoMeta(videoId: videoId, fileName: fileName);
         return;
       }
 
-      // 4️⃣ إذا مش موجود بالكاش لكن في إنترنت → نزلو من الريموت مع progress updates
       if (await repo.isConnected) {
-        // استخدام طريقة الريبو موجود لتحميل و تشفير الفيديو مع progress tracking
         final result = await repo.getEncryptedVideoRepo(
           videoId: videoId,
           onProgress: (progress) {
@@ -480,40 +461,31 @@ class ChapterCubit extends Cubit<ChapterState> {
 
         await result.fold(
           (failure) async {
-            log('Failed to download video: ${failure.message}');
             _setDownloadError(videoId, errorMessage: failure.message);
           },
           (encryptedBytes) async {
-            // تحديث progress لـ 100% والحالة مكتمل
             _updateDownloadProgress(videoId, 1.0);
             _completeDownload(videoId);
 
-            // حفظ ميتاداتا الكاش لعرضها لاحقًا بعد إعادة التشغيل التطبيق
             await local.saveCachedVideoMeta(
               videoId: videoId,
               fileName: fileName,
             );
-
-            log(
-              'Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes',
-            );
           },
         );
       } else {
-        log('No internet connection and video not cached');
         _setDownloadError(
           videoId,
           errorMessage: "No internet connection and video not cached",
         );
       }
     } catch (e) {
-      log('Download error: $e');
       _setDownloadError(videoId, errorMessage: e.toString());
     }
   }
 
   //?--------------------------------------------------------
-  //* Helpers لتحديث Progress / Complete / Error
+
   void _updateDownloadProgress(String videoId, double progress) {
     final index = state.downloads.indexWhere((d) => d.videoId == videoId);
     if (index != -1) {
@@ -543,7 +515,7 @@ class ChapterCubit extends Cubit<ChapterState> {
         isDownloading: false,
         hasError: true,
         progress: 0.0,
-        errorMessage: errorMessage, // <-- الرسالة تظهر صح
+        errorMessage: errorMessage,
       );
       final downloads = List<DownloadItem>.from(state.downloads);
       downloads[index] = updated;
@@ -561,7 +533,7 @@ class ChapterCubit extends Cubit<ChapterState> {
     for (final m in metas) {
       final vid = m['videoId'] ?? '';
       final name = m['fileName'] ?? '';
-      final downloadDate = m['downloadDate'] ?? ''; // <-- Get download date
+      final downloadDate = m['downloadDate'] ?? '';
       if (vid.isEmpty) continue;
       if (await local.isVideoCached(vid)) {
         items.add(
@@ -571,7 +543,7 @@ class ChapterCubit extends Cubit<ChapterState> {
             isDownloading: false,
             isCompleted: true,
             progress: 1.0,
-            downloadDate: downloadDate, // <-- Add download date to DownloadItem
+            downloadDate: downloadDate,
           ),
         );
       }
@@ -597,7 +569,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     }
 
     try {
-      // استخدام طريقة الريبو موجود لتحميل و تشفير الفيديو
       final result = await repo.getEncryptedVideoRepo(videoId: videoId);
 
       await result.fold(
@@ -606,12 +577,7 @@ class ChapterCubit extends Cubit<ChapterState> {
           _setDownloadError(videoId, errorMessage: failure.message);
         },
         (encryptedBytes) async {
-          // اكتمال التحميل
           _completeDownload(videoId);
-
-          log(
-            'Video downloaded and encrypted successfully, size: ${encryptedBytes.length} bytes',
-          );
         },
       );
     } catch (e) {
@@ -630,7 +596,6 @@ class ChapterCubit extends Cubit<ChapterState> {
       final videoBytes = await local.getEncryptedVideo(videoId);
       log('Encrypted video bytes size: ${videoBytes.length}');
       if (videoBytes.isEmpty) {
-        log('Video bytes empty for video: $videoId');
         return null;
       }
 
@@ -704,15 +669,15 @@ class ChapterCubit extends Cubit<ChapterState> {
     int page = 1,
   }) async {
     final currentState = state;
-    
-    // Prevent requesting page 0 or negative pages
+
     if (page <= 0) {
-      print("ChapterCubit: Invalid page number requested: $page");
       return;
     }
-    
-    print("ChapterCubit: getComments called for videoId: $videoId, page: $page, reset: $reset");
-    
+
+    if (!reset && currentState.comments?.hasNextPage == false) {
+      return;
+    }
+
     if (reset) {
       emit(currentState.copyWith(commentsStatus: ResponseStatusEnum.loading));
     } else {
@@ -725,7 +690,6 @@ class ChapterCubit extends Cubit<ChapterState> {
 
     result.fold(
       (failure) {
-        print("ChapterCubit: getComments failed for page $page with error: ${failure.message}");
         if (reset) {
           emit(
             currentState.copyWith(
@@ -743,7 +707,6 @@ class ChapterCubit extends Cubit<ChapterState> {
         }
       },
       (commentsResult) {
-        print("ChapterCubit: getComments succeeded for page $page, hasNextPage: ${commentsResult.hasNextPage}, comments count: ${commentsResult.comments?.length ?? 0}");
         if (reset) {
           emit(
             currentState.copyWith(
@@ -776,7 +739,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     required int videoId,
     required String content,
   }) async {
-    // 1️⃣ Emit loading state
     emit(
       state.copyWith(
         commentStatus: ResponseStatusEnum.loading,
@@ -785,13 +747,11 @@ class ChapterCubit extends Cubit<ChapterState> {
     );
 
     try {
-      // 2️⃣ Call repository method
       final result = await repo.addVideoCommentRepo(
         videoId: videoId.toString(),
         content: content,
       );
 
-      // 3️⃣ Handle result
       result.fold(
         (failure) {
           emit(
@@ -802,7 +762,6 @@ class ChapterCubit extends Cubit<ChapterState> {
           );
         },
         (newComment) {
-          // دمج الكومنت الجديد مع الموجودة إذا أردت
           final updatedComments = [newComment, ...?state.comments?.comments];
 
           emit(
@@ -833,10 +792,8 @@ class ChapterCubit extends Cubit<ChapterState> {
   //* Delete Cached Video
   Future<void> deleteCachedVideo(String videoId) async {
     try {
-      // Delete the video from local storage
       await local.deleteCachedVideo(videoId);
 
-      // Remove the video from the downloads list in state
       final updatedDownloads = state.downloads
           .where((download) => download.videoId != videoId)
           .toList();
@@ -951,9 +908,6 @@ class ChapterCubit extends Cubit<ChapterState> {
     required int commentId,
     required String content,
   }) async {
-    print("ChapterCubit: replyToComment called with commentId: $commentId, content: $content");
-    
-    // 1️⃣ Emit loading state
     emit(
       state.copyWith(
         addCommentStatus: ResponseStatusEnum.loading,
@@ -962,16 +916,13 @@ class ChapterCubit extends Cubit<ChapterState> {
     );
 
     try {
-      // 2️⃣ Call repository method
       final result = await repo.replyToCommentRepo(
         commentId: commentId,
         content: content,
       );
 
-      // 3️⃣ Handle result
       result.fold(
         (failure) {
-          print("ChapterCubit: replyToComment failed with error: ${failure.message}");
           emit(
             state.copyWith(
               addCommentStatus: ResponseStatusEnum.failure,
@@ -980,14 +931,10 @@ class ChapterCubit extends Cubit<ChapterState> {
           );
         },
         (newReply) {
-          print("ChapterCubit: replyToComment succeeded, new reply ID: ${newReply.id}");
-          // Update the comments state with the new reply
           final updatedComments = [...?state.comments?.comments];
-          
-          // Find the parent comment and add the reply to it
+
           for (int i = 0; i < updatedComments.length; i++) {
             if (updatedComments[i].id == commentId) {
-              // Found the parent comment, add the reply to its replies
               final updatedParent = CommentModel(
                 id: updatedComments[i].id,
                 video: updatedComments[i].video,
@@ -1001,18 +948,16 @@ class ChapterCubit extends Cubit<ChapterState> {
                 parent: updatedComments[i].parent,
                 replies: [...updatedComments[i].replies, newReply],
               );
-              
+
               updatedComments[i] = updatedParent;
-              print("ChapterCubit: Added reply to parent comment at index $i");
+
               break;
             }
-            
-            // Also check replies of this comment for nested replies
+
             final replies = [...updatedComments[i].replies];
             bool found = false;
             for (int j = 0; j < replies.length; j++) {
               if (replies[j].id == commentId) {
-                // Found the parent comment in replies, add the reply to its replies
                 final updatedParent = CommentModel(
                   id: replies[j].id,
                   video: replies[j].video,
@@ -1026,16 +971,15 @@ class ChapterCubit extends Cubit<ChapterState> {
                   parent: replies[j].parent,
                   replies: [...replies[j].replies, newReply],
                 );
-                
+
                 replies[j] = updatedParent;
                 found = true;
-                print("ChapterCubit: Added reply to nested comment at index $i, reply index $j");
+
                 break;
               }
             }
-            
+
             if (found) {
-              // Update the parent comment with updated replies
               final updatedComment = CommentModel(
                 id: updatedComments[i].id,
                 video: updatedComments[i].video,
@@ -1049,7 +993,7 @@ class ChapterCubit extends Cubit<ChapterState> {
                 parent: updatedComments[i].parent,
                 replies: replies,
               );
-              
+
               updatedComments[i] = updatedComment;
               break;
             }
@@ -1070,7 +1014,6 @@ class ChapterCubit extends Cubit<ChapterState> {
         },
       );
     } catch (e) {
-      print("ChapterCubit: replyToComment caught exception: $e");
       emit(
         state.copyWith(
           addCommentStatus: ResponseStatusEnum.failure,
