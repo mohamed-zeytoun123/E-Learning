@@ -294,7 +294,10 @@ class ChapterRepositoryImpl implements ChapterRepository {
     required int videoId,
     int page = 1,
   }) async {
+    print("ChapterRepository: getCommentsRepo called for videoId: $videoId, page: $page");
+    
     if (!await network.isConnected) {
+      print("ChapterRepository: No internet connection");
       return Left(FailureNoConnection());
     }
 
@@ -302,10 +305,18 @@ class ChapterRepositoryImpl implements ChapterRepository {
       chapterId: videoId,
       page: page,
     );
+    
+    print("ChapterRepository: getCommentsRemote returned result");
 
     return result.fold(
-      (failure) => Left(failure),
-      (commentsResult) => Right(commentsResult),
+      (failure) {
+        print("ChapterRepository: getCommentsRepo failed with error: ${failure.message}");
+        return Left(failure);
+      },
+      (commentsResult) {
+        print("ChapterRepository: getCommentsRepo succeeded, comments count: ${commentsResult.comments?.length ?? 0}, hasNextPage: ${commentsResult.hasNextPage}");
+        return Right(commentsResult);
+      },
     );
   }
 

@@ -704,6 +704,15 @@ class ChapterCubit extends Cubit<ChapterState> {
     int page = 1,
   }) async {
     final currentState = state;
+    
+    // Prevent requesting page 0 or negative pages
+    if (page <= 0) {
+      print("ChapterCubit: Invalid page number requested: $page");
+      return;
+    }
+    
+    print("ChapterCubit: getComments called for videoId: $videoId, page: $page, reset: $reset");
+    
     if (reset) {
       emit(currentState.copyWith(commentsStatus: ResponseStatusEnum.loading));
     } else {
@@ -716,6 +725,7 @@ class ChapterCubit extends Cubit<ChapterState> {
 
     result.fold(
       (failure) {
+        print("ChapterCubit: getComments failed for page $page with error: ${failure.message}");
         if (reset) {
           emit(
             currentState.copyWith(
@@ -733,6 +743,7 @@ class ChapterCubit extends Cubit<ChapterState> {
         }
       },
       (commentsResult) {
+        print("ChapterCubit: getComments succeeded for page $page, hasNextPage: ${commentsResult.hasNextPage}, comments count: ${commentsResult.comments?.length ?? 0}");
         if (reset) {
           emit(
             currentState.copyWith(

@@ -3,15 +3,43 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 
-class InputCommentWidget extends StatelessWidget {
+class InputCommentWidget extends StatefulWidget {
   final TextEditingController controller;
   final String hint;
+  final bool autofocus;
 
   const InputCommentWidget({
     super.key,
     required this.controller,
     required this.hint,
+    this.autofocus = false,
   });
+
+  @override
+  State<InputCommentWidget> createState() => _InputCommentWidgetState();
+}
+
+class _InputCommentWidgetState extends State<InputCommentWidget> {
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = FocusNode();
+    
+    // Request focus if autofocus is enabled
+    if (widget.autofocus) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        FocusScope.of(context).requestFocus(_focusNode);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,9 +47,11 @@ class InputCommentWidget extends StatelessWidget {
       height: 49.h,
       width: 361.w,
       child: TextFormField(
-        controller: controller,
+        controller: widget.controller,
+        focusNode: _focusNode,
+        autofocus: widget.autofocus,
         decoration: InputDecoration(
-          hintText: hint,
+          hintText: widget.hint,
           hintStyle: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
           filled: true,
           fillColor: Colors.transparent,

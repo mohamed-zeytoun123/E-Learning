@@ -14,6 +14,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
+
+// Observer class to track keyboard visibility
+class _KeyboardVisibilityObserver extends WidgetsBindingObserver {
+  final _BottomSheetCommentsWidgetState _state;
+
+  _KeyboardVisibilityObserver(this._state);
+
+  @override
+  void didChangeMetrics() {
+    final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
+    final newValue = bottomInset > 0;
+    
+    if (_state._isKeyboardVisible != newValue && _state.mounted) {
+      _state.setState(() {
+        _state._isKeyboardVisible = newValue;
+      });
+    }
+  }
+}
 
 class BottomSheetCommentsWidget extends StatefulWidget {
   const BottomSheetCommentsWidget({super.key, required this.videoId});
@@ -30,22 +50,30 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
   bool _isExpanded = false;
   int? _replyingToCommentId;
   final Map<int, TextEditingController> _replyControllers = {};
+  bool _isKeyboardVisible = false; // Track keyboard visibility
+  late _KeyboardVisibilityObserver _keyboardObserver;
 
   void _handleFetchMore() {
     final cubit = context.read<ChapterCubit>();
     final state = cubit.state;
 
+    // Check if already loading or if there are no more pages
     if (state.commentsMoreStatus == ResponseStatusEnum.loading) return;
     if ((state.comments?.comments?.isEmpty ?? true)) return;
     if (state.comments?.hasNextPage == false) return;
 
     final nextPage = page + 1;
+    print("Attempting to fetch page $nextPage");
 
     cubit
         .getComments(videoId: widget.videoId, reset: false, page: nextPage)
         .then((_) {
+          // Only increment page counter if the request was successful
           if (cubit.state.commentsMoreStatus != ResponseStatusEnum.failure) {
             page = nextPage;
+            print("Successfully fetched page $nextPage, new page counter: $page");
+          } else {
+            print("Failed to fetch page $nextPage: ${cubit.state.commentsMoreError}");
           }
         });
   }
@@ -53,6 +81,11 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
   @override
   void initState() {
     super.initState();
+    
+    // Listen for keyboard visibility changes
+    _keyboardObserver = _KeyboardVisibilityObserver(this);
+    WidgetsBinding.instance.addObserver(_keyboardObserver);
+    
     _scrollController.addListener(() {
       final position = _scrollController.position;
       if (position.pixels > position.maxScrollExtent * 0.85) {
@@ -69,6 +102,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(_keyboardObserver);
     _scrollController.dispose();
     _commentController.dispose();
     // Dispose all reply controllers
@@ -83,6 +117,8 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 10.h),
       child: SingleChildScrollView(
+        // Add reverse padding to accommodate keyboard
+        reverse: true,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -95,10 +131,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                   });
                 }
                 // Detect downward drag to collapse (when at top of scroll)
-                else if (details.delta.dy > 5 &&
-                    _isExpanded &&
-                    _scrollController.hasClients &&
-                    _scrollController.position.pixels <= 0) {
+                else if (details.delta.dy > 5 && 
+                         _isExpanded && 
+                         _scrollController.hasClients && 
+                         _scrollController.position.pixels <= 0) {
                   setState(() {
                     _isExpanded = false;
                   });
@@ -132,9 +168,12 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
             SizedBox(height: 10.h),
             Divider(height: 1.h, color: AppColors.dividerGrey),
             SizedBox(
-              height: _isExpanded
-                  ? MediaQuery.of(context).size.height * 0.7
-                  : 350.h,
+              // Adjust height based on keyboard visibility
+              height: _isExpanded 
+                ? MediaQuery.of(context).size.height * 0.7 
+                : (_isKeyboardVisible 
+                    ? MediaQuery.of(context).size.height * 0.5
+                    : 350.h),
               child: BlocBuilder<ChapterCubit, ChapterState>(
                 buildWhen: (prev, curr) =>
                     prev.comments != curr.comments ||
@@ -438,27 +477,34 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         ],
         // Reply input field (shown when user taps reply)
         if (_replyingToCommentId == comment.id)
-          Padding(
-            padding: EdgeInsets.only(top: 6.h, left: (depth * 15.0).w),
-            child: Row(
-              children: [
-                Expanded(
-                  child: InputCommentWidget(
-                    controller: _replyControllers[comment.id] ?? TextEditingController(),
-                    hint: "Write a reply...",
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200), // Faster animation
+            switchInCurve: Curves.easeOutCubic,
+            switchOutCurve: Curves.easeInCubic,
+            child: Padding(
+              key: ValueKey<int>(comment.id), // Key for animation
+              padding: EdgeInsets.only(top: 6.h, left: (depth * 15.0).w),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: InputCommentWidget(
+                      controller: _replyControllers[comment.id] ?? TextEditingController(),
+                      hint: "Write a reply...",
+                      autofocus: true, // Enable autofocus for immediate keyboard appearance
+                    ),
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    _sendReply(comment.id);
-                  },
-                  icon: Icon(
-                    Icons.send,
-                    size: 16.sp, // Reduced from 18.sp
-                    color: AppColors.primary,
+                  IconButton(
+                    onPressed: () {
+                      _sendReply(comment.id);
+                    },
+                    icon: Icon(
+                      Icons.send,
+                      size: 16.sp, // Reduced from 18.sp
+                      color: AppColors.primary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
       ],
@@ -479,6 +525,21 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         _replyControllers.putIfAbsent(commentId, () => TextEditingController());
       }
     });
+    
+    // Request focus after the widget is built
+    if (_replyingToCommentId == commentId) {
+      // Use a slightly longer delay to ensure the widget is fully rendered
+      Future.microtask(() {
+        // Find the controller and request focus
+        final controller = _replyControllers[commentId];
+        if (controller != null) {
+          // Move cursor to end of text
+          controller.selection = TextSelection.fromPosition(
+            TextPosition(offset: controller.text.length),
+          );
+        }
+      });
+    }
   }
 
   void _sendReply(int parentCommentId) {
