@@ -28,14 +28,29 @@ class ReplyBubbleWidget extends StatelessWidget {
     final bubbleColor = _getLighterShade(baseColor);
     final textColor = isMine ? AppColors.textWhite : AppColors.textPrimary;
 
+    final lightTextColor = textColor.withOpacity(0.95);
+    final lighterTextColor = textColor.withOpacity(0.8);
+
     return Row(
       mainAxisAlignment: isMine
           ? MainAxisAlignment.start
           : MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: isMine
-          ? _buildBubble(bubbleColor, textColor, Alignment.bottomLeft)
-          : _buildBubble(bubbleColor, textColor, Alignment.bottomRight),
+          ? _buildBubble(
+              bubbleColor,
+              textColor,
+              lightTextColor,
+              lighterTextColor,
+              Alignment.bottomLeft,
+            )
+          : _buildBubble(
+              bubbleColor,
+              textColor,
+              lightTextColor,
+              lighterTextColor,
+              Alignment.bottomRight,
+            ),
     );
   }
 
@@ -51,6 +66,8 @@ class ReplyBubbleWidget extends StatelessWidget {
   List<Widget> _buildBubble(
     Color bubbleColor,
     Color textColor,
+    Color lightTextColor,
+    Color lighterTextColor,
     Alignment arrowAlignment,
   ) {
     final bubble = Container(
@@ -65,7 +82,7 @@ class ReplyBubbleWidget extends StatelessWidget {
         children: [
           Text(
             comment,
-            style: TextStyle(color: textColor, fontSize: 12.sp),
+            style: TextStyle(color: lightTextColor, fontSize: 12.sp),
           ),
           SizedBox(height: 2.h),
           Align(
@@ -75,17 +92,11 @@ class ReplyBubbleWidget extends StatelessWidget {
               children: [
                 Text(
                   authorName,
-                  style: TextStyle(
-                    color: textColor.withOpacity(0.7),
-                    fontSize: 8.sp,
-                  ),
+                  style: TextStyle(color: lighterTextColor, fontSize: 8.sp),
                 ),
                 Text(
                   time,
-                  style: TextStyle(
-                    color: textColor.withOpacity(0.7),
-                    fontSize: 8.sp,
-                  ),
+                  style: TextStyle(color: lighterTextColor, fontSize: 8.sp),
                 ),
               ],
             ),
