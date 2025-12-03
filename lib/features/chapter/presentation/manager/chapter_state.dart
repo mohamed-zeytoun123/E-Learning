@@ -5,6 +5,7 @@ import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_list_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
@@ -31,6 +32,7 @@ class ChapterState {
   //*---  Quize  ---------------------------
   //* Step 1 : Get Quiz Details by Chapter ID
   final QuizDetailsModel? quizDetails;
+  final QuizListModel? quizList; // Added for multiple quizzes
   final ResponseStatusEnum quizDetailsStatus;
   final String? quizDetailsError;
 
@@ -101,6 +103,7 @@ class ChapterState {
     //*---  Quize  ---------------------------
     //* Step 1  : Get Quiz Details by Chapter ID
     this.quizDetails,
+    this.quizList,
     this.quizDetailsStatus = ResponseStatusEnum.initial,
     this.quizDetailsError,
 
@@ -172,6 +175,7 @@ class ChapterState {
     //*---  Quize  ----
     //* Step 1  : Get Quiz Details by Chapter ID
     QuizDetailsModel? quizDetails,
+    QuizListModel? quizList,
     ResponseStatusEnum? quizDetailsStatus,
     String? quizDetailsError,
 
@@ -241,6 +245,7 @@ class ChapterState {
       //*---  Quize  ---------------------------
       //* Step 1  : Get Quiz Details by Chapter ID
       quizDetails: quizDetails ?? this.quizDetails,
+      quizList: quizList ?? this.quizList,
       quizDetailsStatus: quizDetailsStatus ?? this.quizDetailsStatus,
       quizDetailsError: quizDetailsError,
 

@@ -200,13 +200,18 @@ class AppRouter {
       GoRoute(
         path: RouteNames.quizPage,
         builder: (context, state) {
-          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
-          final chapterCubit = args["chapterCubit"] as ChapterCubit;
+          final Map<String, dynamic>? args = state.extra as Map<String, dynamic>?;
+          final chapterCubit = args?["chapterCubit"] as ChapterCubit?;
+          final quizId = args?["quizId"] as int?;
 
-          return BlocProvider.value(
-            value: chapterCubit,
-            child: const QuizPage(),
-          );
+          if (chapterCubit != null) {
+            return BlocProvider.value(
+              value: chapterCubit,
+              child: QuizPage(quizId: quizId),
+            );
+          } else {
+            return QuizPage(quizId: quizId);
+          }
         },
       ),
 

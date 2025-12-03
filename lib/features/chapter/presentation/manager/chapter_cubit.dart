@@ -199,10 +199,10 @@ class ChapterCubit extends Cubit<ChapterState> {
           quizDetailsError: failure.message,
         ),
       ),
-      (quiz) => emit(
+      (quizList) => emit(
         state.copyWith(
           quizDetailsStatus: ResponseStatusEnum.success,
-          quizDetails: quiz,
+          quizList: quizList,
         ),
       ),
     );

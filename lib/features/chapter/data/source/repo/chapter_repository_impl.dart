@@ -8,6 +8,7 @@ import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_list_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
@@ -78,7 +79,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
   //?--- Quiz -----------------------------------------------------
   //* Step 1 : Get Quiz Details by Chapter ID
   @override
-  Future<Either<Failure, QuizDetailsModel>> getQuizDetailsByChapterRepo({
+  Future<Either<Failure, QuizListModel>> getQuizDetailsByChapterRepo({
     required int chapterId,
   }) async {
     if (await network.isConnected) {
@@ -86,7 +87,7 @@ class ChapterRepositoryImpl implements ChapterRepository {
         chapterId: chapterId,
       );
 
-      return result.fold((failure) => Left(failure), (quiz) => Right(quiz));
+      return result.fold((failure) => Left(failure), (quizList) => Right(quizList));
     } else {
       return Left(FailureNoConnection());
     }

@@ -17,13 +17,27 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class QuizPage extends StatefulWidget {
-  const QuizPage({super.key});
+  const QuizPage({super.key, this.quizId});
+
+  final int? quizId;
 
   @override
   State<QuizPage> createState() => _QuizPageState();
 }
 
 class _QuizPageState extends State<QuizPage> {
+  @override
+  void initState() {
+    super.initState();
+    
+    // If we have a quiz ID, start the quiz
+    if (widget.quizId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<ChapterCubit>().startQuiz(quizId: widget.quizId!);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChapterCubit, ChapterState>(
@@ -58,11 +72,69 @@ class _QuizPageState extends State<QuizPage> {
 
       buildWhen: (pre, curr) =>
           pre.submitAnswersListStatus != curr.submitAnswersListStatus ||
-          pre.selectedOptions != curr.selectedOptions,
+          pre.selectedOptions != curr.selectedOptions ||
+          pre.statrtQuizStatus != curr.statrtQuizStatus,
 
       builder: (context, state) {
+        // Handle loading state for starting quiz
+        if (state.statrtQuizStatus == ResponseStatusEnum.loading) {
+          return Scaffold(
+            backgroundColor: AppColors.backgroundPage,
+            appBar: CustomAppBarWidget(title: "Quiz", showBack: true),
+            body: Center(child: AppLoading.circular()),
+          );
+        }
+
+        // Handle error state for starting quiz
+        if (state.statrtQuizStatus == ResponseStatusEnum.failure) {
+          return Scaffold(
+            backgroundColor: AppColors.backgroundPage,
+            appBar: CustomAppBarWidget(title: "Quiz", showBack: true),
+            body: Center(
+              child: Padding(
+                padding: EdgeInsets.all(20.w),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 50.sp,
+                      color: AppColors.iconError,
+                    ),
+                    SizedBox(height: 16.h),
+                    Text(
+                      state.statrtQuizError ?? "Failed to load quiz",
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.s16w400.copyWith(
+                        color: AppColors.textError,
+                      ),
+                    ),
+                    SizedBox(height: 20.h),
+                    CustomButtonWidget(
+                      title: "Retry",
+                      titleStyle: AppTextStyles.s16w500.copyWith(
+                        color: AppColors.titlePrimary,
+                      ),
+                      buttonColor: AppColors.buttonPrimary,
+                      borderColor: AppColors.borderPrimary,
+                      onTap: () {
+                        if (widget.quizId != null) {
+                          context.read<ChapterCubit>().startQuiz(quizId: widget.quizId!);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+
         final startQuiz = state.statrtQuiz;
-        final quizDetails = state.quizDetails;
+        // Use quiz from startQuiz if available, otherwise fallback to quizDetails
+        final quizDetails = startQuiz != null 
+            ? null // We'll create a temporary QuizDetailsModel from startQuiz data
+            : state.quizDetails;
 
         return Scaffold(
           backgroundColor: AppColors.backgroundPage,
@@ -74,10 +146,10 @@ class _QuizPageState extends State<QuizPage> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 QuizInfoCardWidget(
-                  title: quizDetails?.chapterTitle ?? "Chapter’s Title",
-                  questionCount: quizDetails?.questionsCount ?? 0,
-                  points: quizDetails?.totalPoints ?? 0,
-                  quiz: quizDetails?.title ?? "Quiz Title",
+                  title: startQuiz?.quizTitle ?? quizDetails?.chapterTitle ?? "Chapter's Title",
+                  questionCount: startQuiz?.questions.length ?? quizDetails?.questionsCount ?? 0,
+                  points: startQuiz?.totalPoints ?? quizDetails?.totalPoints ?? 0,
+                  quiz: startQuiz?.quizTitle ?? quizDetails?.title ?? "Quiz Title",
                 ),
                 SizedBox(height: 20.h),
 
@@ -246,12 +318,15 @@ class _QuizPageState extends State<QuizPage> {
                                     context,
                                     rootNavigator: true,
                                   ).pop();
-                                  context.go(RouteNames.courses);
+                                  context.pop();
                                 },
                               ),
                             ),
                           );
                         });
+                        return const SizedBox.shrink();
+
+                      default:
                         return const SizedBox.shrink();
                     }
                   },

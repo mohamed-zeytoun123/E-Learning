@@ -12,7 +12,7 @@ import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/answer_model.dart';
-import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/quize/quiz_list_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/quiz_model/start_quiz_model.dart';
 import 'package:e_learning/features/chapter/data/models/quize/submit/submit_completed_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
@@ -112,7 +112,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
   //?----------------------------------------------------
   //* Get Quiz Details by Chapter ID
   @override
-  Future<Either<Failure, QuizDetailsModel>> getQuizDetailsByChapterRemote({
+  Future<Either<Failure, QuizListModel>> getQuizDetailsByChapterRemote({
     required int chapterId,
   }) async {
     try {
@@ -134,8 +134,8 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         }
 
         if (data is Map<String, dynamic>) {
-          final quiz = QuizDetailsModel.fromJson(data);
-          return Right(quiz);
+          final quizList = QuizListModel.fromJson(data);
+          return Right(quizList);
         }
 
         return Left(FailureServer());
