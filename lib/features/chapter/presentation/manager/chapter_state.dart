@@ -77,11 +77,6 @@ class ChapterState {
   final SubmitCompletedModel? submitAnswersList;
   final ResponseStatusEnum submitAnswersListStatus;
   final String? submitAnswersListError;
-
-  //* Add Comment
-  final CommentModel? newComment;
-  final ResponseStatusEnum addCommentStatus;
-  final String? addCommentError;
   
   //* Reply to Comment
   final CommentModel? replyComment;
@@ -152,11 +147,6 @@ class ChapterState {
     this.submitAnswersList,
     this.submitAnswersListStatus = ResponseStatusEnum.initial,
     this.submitAnswersListError,
-
-    //* Add Comment
-    this.newComment,
-    this.addCommentStatus = ResponseStatusEnum.initial,
-    this.addCommentError,
     
     //* Reply to Comment
     this.replyComment,
@@ -228,11 +218,6 @@ class ChapterState {
     SubmitCompletedModel? submitAnswersList,
     ResponseStatusEnum? submitAnswersListStatus,
     String? submitAnswersListError,
-
-    //* Add Comment
-    CommentModel? newComment,
-    ResponseStatusEnum? addCommentStatus,
-    String? addCommentError,
     
     //* Reply to Comment
     CommentModel? replyComment,
@@ -303,11 +288,6 @@ class ChapterState {
       submitAnswersListStatus:
           submitAnswersListStatus ?? this.submitAnswersListStatus,
       submitAnswersListError: submitAnswersListError,
-
-      //* Add Comment
-      newComment: newComment ?? this.newComment,
-      addCommentStatus: addCommentStatus ?? this.addCommentStatus,
-      addCommentError: addCommentError,
       
       //* Reply to Comment
       replyComment: replyComment ?? this.replyComment,
