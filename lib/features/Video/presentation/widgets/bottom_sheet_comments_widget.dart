@@ -35,8 +35,13 @@ class _KeyboardVisibilityObserver extends WidgetsBindingObserver {
 }
 
 class BottomSheetCommentsWidget extends StatefulWidget {
-  const BottomSheetCommentsWidget({super.key, required this.videoId});
+  const BottomSheetCommentsWidget({
+    super.key,
+    required this.videoId,
+    this.onClose,
+  });
   final int videoId;
+  final VoidCallback? onClose;
   @override
   State<BottomSheetCommentsWidget> createState() =>
       _BottomSheetCommentsWidgetState();
@@ -159,7 +164,9 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
             ),
             SizedBox(height: 10.h),
             Divider(height: 1.h, color: AppColors.dividerGrey),
-            SizedBox(
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 150),
+              curve: Curves.easeInOut,
               height: _isExpanded
                   ? MediaQuery.of(context).size.height * 0.7
                   : (_isKeyboardVisible
@@ -316,10 +323,6 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       );
                     } else if (state.commentStatus ==
                         ResponseStatusEnum.success) {
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.of(context).pop();
-                      }
-
                       AppMessage.showFlushbar(
                         context: context,
                         message: "Comment sent successfully",
@@ -329,6 +332,14 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         title: "Success",
                         iconColor: AppColors.iconWhite,
                       );
+
+                      Future.delayed(const Duration(seconds: 1), () {
+                        if (widget.onClose != null) {
+                          widget.onClose!();
+                        } else if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
+                        }
+                      });
 
                       _commentController.clear();
 
@@ -360,9 +371,9 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         iconColor: AppColors.iconWhite,
                       );
 
-                      _replyControllers.values.forEach(
-                        (controller) => controller.clear(),
-                      );
+                      for (var controller in _replyControllers.values) {
+                        controller.clear();
+                      }
                       setState(() {
                         _replyingToCommentId = null;
 
@@ -420,10 +431,9 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
     Color? parentColor,
   }) {
     final createdAt = DateTime.tryParse(comment.createdAt);
-    // Limit the depth to prevent UI issues
+
     final isMaxDepth = depth >= 3;
 
-    // Determine the base color for this comment
     final baseColor =
         parentColor ??
         (comment.authorType == "Student"
@@ -433,19 +443,13 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Main comment
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (depth > 0)
-              // Add indentation for replies
-              SizedBox(
-                width: (depth * 20.0).w,
-              ), // Increased from 15.0 to 20.0 for better visual hierarchy
+            if (depth > 0) SizedBox(width: (depth * 20.0).w),
             Expanded(
               child: depth == 0
                   ? CommentBubbleWidget(
-                      // Use CommentBubbleWidget for top-level comments
                       comment: comment.content,
                       time: createdAt != null
                           ? TimeFormatter.formatRelativeTime(createdAt)
@@ -454,43 +458,34 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       authorName: comment.authorName,
                     )
                   : ReplyBubbleWidget(
-                      // Use ReplyBubbleWidget for replies with parent color
                       comment: comment.content,
                       time: createdAt != null
                           ? TimeFormatter.formatRelativeTime(createdAt)
                           : "just now",
                       isMine: comment.authorType == "Student",
                       authorName: comment.authorName,
-                      parentColor:
-                          baseColor, // Pass the parent color to create a lighter shade
+                      parentColor: baseColor,
                     ),
             ),
-            // Always show reply button for teachers' comments and students' own comments
-            // Only hide reply button when max depth is reached
+
             if (!isMaxDepth)
               IconButton(
                 onPressed: () {
                   _toggleReplyInput(comment.id);
                 },
-                icon: Icon(
-                  Icons.reply,
-                  size: 16.sp, // Further reduced from 18.sp
-                  color: AppColors.iconGrey,
-                ),
+                icon: Icon(Icons.reply, size: 16.sp, color: AppColors.iconGrey),
               ),
           ],
         ),
-        // Replies
+
         if (comment.replies.isNotEmpty) ...[
-          SizedBox(height: 5.h), // Increased spacing for better separation
+          SizedBox(height: 5.h),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ...comment.replies.map((reply) {
                 return Padding(
-                  padding: EdgeInsets.only(
-                    bottom: 4.h,
-                  ), // Add spacing between replies
+                  padding: EdgeInsets.only(bottom: 4.h),
                   child: _buildCommentWithReplies(
                     reply,
                     depth: depth + 1,
@@ -502,18 +497,14 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
           ),
         ],
 
-        // Reply input field (shown when user taps reply)
         if (_replyingToCommentId == comment.id)
           AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200), // Faster animation
-            switchInCurve: Curves.easeOutCubic,
-            switchOutCurve: Curves.easeInCubic,
+            duration: const Duration(milliseconds: 150),
+            switchInCurve: Curves.easeOutQuart,
+            switchOutCurve: Curves.easeInQuart,
             child: Padding(
-              key: ValueKey<int>(comment.id), // Key for animation
-              padding: EdgeInsets.only(
-                top: 6.h,
-                left: (depth * 20.0).w,
-              ), // Match the indentation with comments
+              key: ValueKey<int>(comment.id),
+              padding: EdgeInsets.only(top: 6.h, left: (depth * 20.0).w),
               child: Row(
                 children: [
                   Expanded(
@@ -522,8 +513,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                           _replyControllers[comment.id] ??
                           TextEditingController(),
                       hint: "Write a reply...",
-                      autofocus:
-                          true, // Enable autofocus for immediate keyboard appearance
+                      autofocus: false,
                     ),
                   ),
                   IconButton(
@@ -532,7 +522,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                     },
                     icon: Icon(
                       Icons.send,
-                      size: 16.sp, // Reduced from 18.sp
+                      size: 16.sp,
                       color: AppColors.primary,
                     ),
                   ),
@@ -548,22 +538,32 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
     setState(() {
       if (_replyingToCommentId == commentId) {
         _replyingToCommentId = null;
-
         _replyControllers.remove(commentId);
       } else {
         _replyingToCommentId = commentId;
-
         _replyControllers.putIfAbsent(commentId, () => TextEditingController());
       }
     });
 
     if (_replyingToCommentId == commentId) {
-      Future.microtask(() {
-        final controller = _replyControllers[commentId];
-        if (controller != null) {
-          controller.selection = TextSelection.fromPosition(
-            TextPosition(offset: controller.text.length),
-          );
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) {
+          final controller = _replyControllers[commentId];
+          if (controller != null) {
+            controller.selection = TextSelection.fromPosition(
+              TextPosition(offset: controller.text.length),
+            );
+
+            Future.delayed(const Duration(milliseconds: 50), () {
+              if (mounted) {
+                FocusScope.of(context).requestFocus(FocusNode());
+
+                FocusScope.of(context).requestFocus(
+                  FocusScope.of(context).focusedChild ?? FocusNode(),
+                );
+              }
+            });
+          }
         }
       });
     }

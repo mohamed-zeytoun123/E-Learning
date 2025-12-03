@@ -14,7 +14,7 @@ void openCommentsSheet(BuildContext context, int videoId) {
     shape: const RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
     ),
-    builder: (context) {
+    builder: (BuildContext bottomSheetContext) {
       final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
       return Padding(
@@ -23,7 +23,10 @@ void openCommentsSheet(BuildContext context, int videoId) {
           value: chapterCubit,
           child: SizedBox(
             height: 605.h,
-            child: BottomSheetCommentsWidget(videoId: videoId),
+            child: BottomSheetCommentsWidget(
+              videoId: videoId,
+              onClose: () => Navigator.pop(bottomSheetContext),
+            ),
           ),
         ),
       );

@@ -27,10 +27,15 @@ class _InputCommentWidgetState extends State<InputCommentWidget> {
     super.initState();
     _focusNode = FocusNode();
     
-    // Request focus if autofocus is enabled
+    // Request focus with a delayed approach to prevent animation jank
     if (widget.autofocus) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        FocusScope.of(context).requestFocus(_focusNode);
+        // Use a delayed approach to prevent conflicts with keyboard animations
+        Future.delayed(const Duration(milliseconds: 150), () {
+          if (mounted) {
+            FocusScope.of(context).requestFocus(_focusNode);
+          }
+        });
       });
     }
   }
@@ -49,7 +54,7 @@ class _InputCommentWidgetState extends State<InputCommentWidget> {
       child: TextFormField(
         controller: widget.controller,
         focusNode: _focusNode,
-        autofocus: widget.autofocus,
+        autofocus: false, // Disable direct autofocus to prevent animation issues
         decoration: InputDecoration(
           hintText: widget.hint,
           hintStyle: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
