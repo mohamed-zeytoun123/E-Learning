@@ -261,21 +261,6 @@ class _BodyTabVedioWidgetState extends State<BodyTabVedioWidget> {
                             ),
                           ),
                           SizedBox(height: 10.h),
-                          CustomButtonWidget(
-                            title: "Retry",
-                            titleStyle: AppTextStyles.s16w600.copyWith(
-                              color: AppColors.titlePrimary,
-                            ),
-                            buttonColor: AppColors.buttonPrimary,
-                            borderColor: AppColors.borderPrimary,
-                            onTap: () {
-                              context.read<ChapterCubit>().getVideos(
-                                chapterId: widget.chapterId,
-                                reset: false,
-                                page: page + 1,
-                              );
-                            },
-                          ),
                         ],
                       ),
                     ),
