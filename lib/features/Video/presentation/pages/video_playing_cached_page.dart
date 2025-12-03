@@ -35,12 +35,12 @@ class VideoPlayingCachedPage extends StatefulWidget {
 }
 
 class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
-  late VideoPlayerController _videoController;
-  late ChewieController _chewieController;
-
+  VideoPlayerController? _videoController;
+  ChewieController? _chewieController;
   double _currentSpeed = 1.0;
   bool _videoError = false;
   bool _isInitializing = true;
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -56,6 +56,8 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
   }
 
   Future<void> _initializeVideo() async {
+    if (_isDisposed) return;
+    
     File? videoFileToPlay;
 
     try {
@@ -73,10 +75,12 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
       }
 
       if (videoFileToPlay == null) {
-        setState(() {
-          _videoError = true;
-          _isInitializing = false;
-        });
+        if (!_isDisposed) {
+          setState(() {
+            _videoError = true;
+            _isInitializing = false;
+          });
+        }
         return;
       }
 
@@ -84,13 +88,18 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
       _videoController = VideoPlayerController.file(videoFileToPlay);
 
       // 4️⃣ تحقق قبل الinitialize لتجنب Future already completed
-      if (!_videoController.value.isInitialized) {
-        await _videoController.initialize();
+      if (!_videoController!.value.isInitialized) {
+        await _videoController!.initialize();
+      }
+
+      if (_isDisposed) {
+        _videoController!.dispose();
+        return;
       }
 
       // 5️⃣ إنشاء ChewieController بعد التأكد من initialize
       _chewieController = ChewieController(
-        videoPlayerController: _videoController,
+        videoPlayerController: _videoController!,
         autoPlay: true,
         autoInitialize: true,
         looping: false,
@@ -109,18 +118,26 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
       );
 
       // 6️⃣ إضافة Listener لتحديث الواجهة
-      _videoController.addListener(() => setState(() {}));
+      _videoController!.addListener(() {
+        if (!_isDisposed) {
+          setState(() {});
+        }
+      });
 
       // 7️⃣ تحديث حالة الصفحة
-      setState(() {
-        _isInitializing = false;
-      });
+      if (!_isDisposed) {
+        setState(() {
+          _isInitializing = false;
+        });
+      }
     } catch (e) {
       debugPrint("Video init failed: $e");
-      setState(() {
-        _videoError = true;
-        _isInitializing = false;
-      });
+      if (!_isDisposed) {
+        setState(() {
+          _videoError = true;
+          _isInitializing = false;
+        });
+      }
     }
   }
 
@@ -170,15 +187,22 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
 
   @override
   void dispose() {
-    if (!_videoError) {
-      _videoController.dispose();
-      _chewieController.dispose();
+    _isDisposed = true;
+    if (_videoController != null && !_videoError) {
+      _videoController!.dispose();
+      _videoController = null;
+    }
+    if (_chewieController != null && !_videoError) {
+      _chewieController!.dispose();
+      _chewieController = null;
     }
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
   void openSpeedSheet() {
+    if (_isDisposed || _videoController == null) return;
+    
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -188,9 +212,11 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
       builder: (context) => BottomSheetSpeedWidget(
         initialSpeed: _currentSpeed,
         onSpeedSelected: (speed) {
+          if (_isDisposed || _videoController == null) return;
+          
           setState(() {
             _currentSpeed = speed;
-            _videoController.setPlaybackSpeed(speed);
+            _videoController!.setPlaybackSpeed(speed);
           });
         },
       ),
@@ -212,9 +238,14 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
                 ),
               ),
             )
-          : Stack(
+          : (_videoController != null && _videoController!.value.isInitialized)
+          ? Stack(
               children: [
-                Center(child: Chewie(controller: _chewieController)),
+                Center(
+                  child: _chewieController != null 
+                    ? Chewie(controller: _chewieController!) 
+                    : const SizedBox(),
+                ),
                 Positioned(
                   top: 0,
                   left: 0,
@@ -233,8 +264,10 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              if (_chewieController.isFullScreen) {
-                                _chewieController.exitFullScreen();
+                              if (_isDisposed || _chewieController == null) return;
+                              
+                              if (_chewieController!.isFullScreen) {
+                                _chewieController!.exitFullScreen();
                               } else {
                                 Navigator.pop(context);
                               }
@@ -260,7 +293,8 @@ class _VideoPlayingCachedPageState extends State<VideoPlayingCachedPage> {
                   ),
                 ),
               ],
-            ),
+            )
+          : Center(child: AppLoading.circular()),
     );
   }
 }

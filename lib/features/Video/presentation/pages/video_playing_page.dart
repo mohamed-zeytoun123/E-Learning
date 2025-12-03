@@ -36,11 +36,12 @@ class VideoPlayingPage extends StatefulWidget {
 }
 
 class _VideoPlayingPageState extends State<VideoPlayingPage> {
-  late VideoPlayerController _videoController;
-  late ChewieController _chewieController;
+  VideoPlayerController? _videoController;
+  ChewieController? _chewieController;
   double _currentSpeed = 1.0;
   bool _videoError = false;
   String _currentQuality = "AUTO";
+  bool _isDisposed = false;
 
   @override
   void initState() {
@@ -51,6 +52,12 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
       DeviceOrientation.landscapeRight,
       DeviceOrientation.landscapeLeft,
     ]);
+
+    _initializeVideo();
+  }
+
+  Future<void> _initializeVideo() async {
+    if (_isDisposed) return;
 
     try {
       _videoController =
@@ -66,10 +73,15 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
             ..setVolume(1.0)
             ..setPlaybackSpeed(_currentSpeed);
 
-      loadVideoQualities();
+      await _videoController!.initialize();
+
+      if (_isDisposed) {
+        _videoController!.dispose();
+        return;
+      }
 
       _chewieController = ChewieController(
-        videoPlayerController: _videoController,
+        videoPlayerController: _videoController!,
         autoPlay: true,
         autoInitialize: false,
         looping: false,
@@ -87,31 +99,47 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
         ),
       );
 
-      _videoController.addListener(() {
-        if (widget.onPositionChanged != null) {
-          widget.onPositionChanged!(_videoController.value.position);
+      _videoController!.addListener(() {
+        if (!_isDisposed && widget.onPositionChanged != null) {
+          widget.onPositionChanged!(_videoController!.value.position);
         }
-        setState(() {});
+        if (!_isDisposed) {
+          setState(() {});
+        }
       });
 
-      _chewieController.addListener(() => setState(() {}));
+      _chewieController!.addListener(() {
+        if (!_isDisposed) {
+          setState(() {});
+        }
+      });
+
+      if (!_isDisposed) {
+        setState(() {});
+      }
     } catch (e) {
       debugPrint("Video initialization failed: $e");
-      _videoError = true;
+      if (!_isDisposed) {
+        setState(() {
+          _videoError = true;
+        });
+      }
 
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        AppMessage.showFlushbar(
-          context: context,
-          title: "Error",
-          message: "Video file not found",
-          backgroundColor: AppColors.messageError,
-          iconData: Icons.error_outline,
-          iconColor: AppColors.iconWhite,
-          isShowProgress: true,
-        );
+      if (!_isDisposed) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          AppMessage.showFlushbar(
+            context: context,
+            title: "Error",
+            message: "Video file not found",
+            backgroundColor: AppColors.messageError,
+            iconData: Icons.error_outline,
+            iconColor: AppColors.iconWhite,
+            isShowProgress: true,
+          );
 
-        Navigator.pop(context);
-      });
+          Navigator.pop(context);
+        });
+      }
     }
   }
 
@@ -121,7 +149,7 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
         widget.videoModel.secureStreamingUrl,
       );
 
-      if (qualities.isNotEmpty) {
+      if (qualities.isNotEmpty && !_isDisposed) {
         setState(() {
           widget.videoModel.qualities?.addAll(qualities);
           widget.videoModel.qualities ??= qualities;
@@ -134,15 +162,22 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
 
   @override
   void dispose() {
-    if (!_videoError) {
-      _videoController.dispose();
-      _chewieController.dispose();
+    _isDisposed = true;
+    if (_videoController != null && !_videoError) {
+      _videoController!.dispose();
+      _videoController = null;
+    }
+    if (_chewieController != null && !_videoError) {
+      _chewieController!.dispose();
+      _chewieController = null;
     }
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
   void openSettingsSheet() {
+    if (_isDisposed || _videoError || _videoController == null) return;
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.white,
@@ -157,58 +192,74 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
               widget.videoModel.qualities ??
               {"AUTO": widget.videoModel.secureStreamingUrl},
           onQualitySelected: (url) async {
-            if (!_videoError) {
-              final currentPosition = _videoController.value.position;
+            if (_isDisposed || _videoError || _videoController == null) return;
 
-              try {
-                await _videoController.pause();
-                await _videoController.dispose();
+            final currentPosition = _videoController!.value.position;
 
-                _videoController = VideoPlayerController.networkUrl(
-                  Uri.parse(url),
-                  videoPlayerOptions: VideoPlayerOptions(
-                    allowBackgroundPlayback: false,
-                    mixWithOthers: false,
-                  ),
-                  formatHint: VideoFormat.hls,
-                );
+            try {
+              await _videoController!.pause();
 
-                await _videoController.initialize();
-                await _videoController.seekTo(currentPosition);
-                await _videoController.setPlaybackSpeed(_currentSpeed);
+              // Dispose old controllers
+              if (_chewieController != null) {
+                _chewieController!.dispose();
+                _chewieController = null;
+              }
 
-                setState(() {
-                  _currentQuality =
-                      widget.videoModel.qualities?.entries
-                          .firstWhere(
-                            (entry) => entry.value == url,
-                            orElse: () => MapEntry("AUTO", url),
-                          )
-                          .key ??
-                      "AUTO";
-                });
+              if (_videoController != null) {
+                _videoController!.dispose();
+                _videoController = null;
+              }
 
-                _chewieController.dispose();
+              // Create new controllers
+              _videoController = VideoPlayerController.networkUrl(
+                Uri.parse(url),
+                videoPlayerOptions: VideoPlayerOptions(
+                  allowBackgroundPlayback: false,
+                  mixWithOthers: false,
+                ),
+                formatHint: VideoFormat.hls,
+              );
 
-                _chewieController = ChewieController(
-                  allowPlaybackSpeedChanging: false,
-                  showOptions: false,
-                  videoPlayerController: _videoController,
-                  autoPlay: true,
-                  autoInitialize: true,
-                  looping: false,
-                  allowFullScreen: true,
-                  showControls: true,
-                  allowMuting: true,
-                  materialProgressColors: ChewieProgressColors(
-                    playedColor: Colors.blueAccent,
-                    handleColor: Colors.blue,
-                    backgroundColor: Colors.white24,
-                    bufferedColor: Colors.white54,
-                  ),
-                );
-              } catch (e) {
-                debugPrint("Error changing video quality: $e");
+              await _videoController!.initialize();
+              await _videoController!.seekTo(currentPosition);
+              await _videoController!.setPlaybackSpeed(_currentSpeed);
+
+              if (_isDisposed) {
+                _videoController!.dispose();
+                return;
+              }
+
+              setState(() {
+                _currentQuality =
+                    widget.videoModel.qualities?.entries
+                        .firstWhere(
+                          (entry) => entry.value == url,
+                          orElse: () => MapEntry("AUTO", url),
+                        )
+                        .key ??
+                    "AUTO";
+              });
+
+              _chewieController = ChewieController(
+                allowPlaybackSpeedChanging: false,
+                showOptions: false,
+                videoPlayerController: _videoController!,
+                autoPlay: true,
+                autoInitialize: true,
+                looping: false,
+                allowFullScreen: true,
+                showControls: true,
+                allowMuting: true,
+                materialProgressColors: ChewieProgressColors(
+                  playedColor: Colors.blueAccent,
+                  handleColor: Colors.blue,
+                  backgroundColor: Colors.white24,
+                  bufferedColor: Colors.white54,
+                ),
+              );
+            } catch (e) {
+              debugPrint("Error changing video quality: $e");
+              if (!_isDisposed) {
                 AppMessage.showFlushbar(
                   context: context,
                   title: "Error",
@@ -222,9 +273,11 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
             }
           },
           onSpeedSelected: (newSpeed) {
+            if (_isDisposed || _videoError || _videoController == null) return;
+
             setState(() {
               _currentSpeed = newSpeed;
-              if (!_videoError) _videoController.setPlaybackSpeed(newSpeed);
+              _videoController!.setPlaybackSpeed(newSpeed);
             });
           },
         );
@@ -252,10 +305,15 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                   ),
                 ),
               )
-            : _videoController.value.isInitialized
+            : (_videoController != null &&
+                  _videoController!.value.isInitialized)
             ? Stack(
                 children: [
-                  Center(child: Chewie(controller: _chewieController)),
+                  Center(
+                    child: _chewieController != null
+                        ? Chewie(controller: _chewieController!)
+                        : const SizedBox(),
+                  ),
                   Positioned(
                     top: 0,
                     left: 0,
@@ -275,8 +333,13 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                 color: AppColors.iconWhite,
                               ),
                               onPressed: () {
+                                if (_isDisposed ||
+                                    _videoController == null ||
+                                    _chewieController == null)
+                                  return;
+
                                 int seconds =
-                                    _videoController.value.position.inSeconds;
+                                    _videoController!.value.position.inSeconds;
 
                                 context
                                     .read<ChapterCubit>()
@@ -285,8 +348,8 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                       watchedSeconds: seconds,
                                     );
 
-                                if (_chewieController.isFullScreen) {
-                                  _chewieController.exitFullScreen();
+                                if (_chewieController!.isFullScreen) {
+                                  _chewieController!.exitFullScreen();
                                 } else {
                                   Navigator.pop(context);
                                 }
@@ -460,99 +523,6 @@ class _VideoPlayingPageState extends State<VideoPlayingPage> {
                                 },
                               ),
                             ),
-
-                            // BlocBuilder<ChapterCubit, ChapterState>(
-                            //   buildWhen: (previous, current) =>
-                            //       previous.downloads != current.downloads,
-                            //   builder: (context, state) {
-                            //     final video = state.selectVideo ?? displayVideo;
-
-                            //     DownloadItem downloadItem = state.downloads
-                            //         .firstWhere(
-                            //           (d) => d.videoId == video?.id.toString(),
-                            //           orElse: () => DownloadItem(
-                            //             videoId: video?.id.toString() ?? "",
-                            //             fileName: "",
-                            //             isDownloading: false,
-                            //             progress: 0.0,
-                            //           ),
-                            //         );
-
-                            //     bool isCached = state.downloads.any(
-                            //       (d) =>
-                            //           d.videoId == video?.id.toString() &&
-                            //           d.isCompleted,
-                            //     );
-
-                            //     if (isCached) {
-                            //       return const Icon(
-                            //         Icons.check_circle,
-                            //         color: Colors.green,
-                            //         size: 28,
-                            //       );
-                            //     }
-
-                            //     if (downloadItem.isDownloading) {
-                            //       return SizedBox(
-                            //         width: 40,
-                            //         height: 40,
-                            //         child: Stack(
-                            //           alignment: Alignment.center,
-                            //           children: [
-                            //             CircularProgressIndicator(
-                            //               value: downloadItem.progress == 0.0
-                            //                   ? null
-                            //                   : downloadItem.progress,
-                            //               color: Colors.blueAccent,
-                            //             ),
-                            //             Text(
-                            //               '${(downloadItem.progress * 100).toInt()}%',
-                            //               style: AppTextStyles.s12w400.copyWith(
-                            //                 color: AppColors.textWhite,
-                            //                 fontWeight: FontWeight.bold,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       );
-                            //     }
-
-                            //     return IconButton(
-                            //       icon: const Icon(
-                            //         Icons.download,
-                            //         color: Colors.white,
-                            //       ),
-                            //       onPressed: () async {
-                            //         if (video != null) {
-                            //           final cubit = context
-                            //               .read<ChapterCubit>();
-                            //           final vid = video.id.toString();
-
-                            //           if (await cubit.isVideoCachedById(vid)) {
-                            //             AppMessage.showFlushbar(
-                            //               context: context,
-                            //               title: "Info",
-                            //               message: 'Video already downloaded',
-                            //               backgroundColor:
-                            //                   AppColors.messageInfo,
-                            //               iconData: Icons.check_circle,
-                            //               iconColor: AppColors.iconWhite,
-                            //               isShowProgress: true,
-                            //               duration: const Duration(seconds: 4),
-                            //             );
-                            //             return;
-                            //           }
-
-                            //           cubit.downloadVideo(
-                            //             videoId: vid,
-                            //             fileName:
-                            //                 "${video.title.replaceAll(' ', '_')}.mp4",
-                            //           );
-                            //         }
-                            //       },
-                            //     );
-                            //   },
-                            // ),
                             IconButton(
                               icon: const Icon(
                                 Icons.messenger_outline,
