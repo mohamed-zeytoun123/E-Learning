@@ -23,6 +23,7 @@ class AppUrls {
   static final String logOut = "$baseURl/auth/logout";
   static final String verifyOtp = "$baseURl/auth/verify-otp";
   static final String verifyForgotPasswordOtp = "$baseURl/auth/forgot/verify";
+  static final String resendOtp = "$baseURl/auth/resend-otp";
   static final String forgetPassword = "$baseURl/auth/forgot/start";
   static final String resetPassword = "$baseURl/auth/forgot/reset";
 

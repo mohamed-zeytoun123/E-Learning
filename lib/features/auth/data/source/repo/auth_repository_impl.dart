@@ -137,13 +137,13 @@ class AuthRepositoryImpl implements AuthRepository {
   //* otp Verfication
   @override
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRepo({
-    required String phone,
+    required String email,
     required String code,
     required String purpose, // reset_password || sign_up
   }) async {
     if (await network.isConnected) {
       final result = await remote.otpVerficationRemote(
-        phone: phone,
+        email: email,
         code: code,
         purpose: purpose,
       );
@@ -153,6 +153,30 @@ class AuthRepositoryImpl implements AuthRepository {
         },
         (response) async {
           return Right(response);
+        },
+      );
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //* Resend Otp
+  @override
+  Future<Either<Failure, bool>> resendOtpRepo({
+    required String email,
+    required String purpose, // reset_password || sign_up
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.resendOtpRemote(
+        email: email,
+        purpose: purpose,
+      );
+      return result.fold(
+        (error) {
+          return Left(error);
+        },
+        (isResent) async {
+          return Right(isResent);
         },
       );
     } else {
