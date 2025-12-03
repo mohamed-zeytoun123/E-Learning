@@ -413,7 +413,7 @@ class _QuizPageState extends State<QuizPage> {
                                       context,
                                       rootNavigator: true,
                                     ).pop();
-                                    context.pop();
+                                    context.go(RouteNames.courses);
                                   },
                                 ),
                               ),
