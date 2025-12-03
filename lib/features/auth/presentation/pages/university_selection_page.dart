@@ -115,7 +115,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                                 'blocProvide': BlocProvider.of<AuthCubit>(
                                   context,
                                 ),
-                                'phone': widget.email,
+                                'email': widget.email,
                                 'purpose': 'register',
                               },
                             );
