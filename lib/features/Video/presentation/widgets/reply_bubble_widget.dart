@@ -3,13 +3,13 @@ import 'package:e_learning/features/Video/presentation/widgets/bubble_arrow_pain
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CommentBubbleWidget extends StatelessWidget {
+class ReplyBubbleWidget extends StatelessWidget {
   final String comment;
   final String time;
   final String authorName;
   final bool isMine;
 
-  const CommentBubbleWidget({
+  const ReplyBubbleWidget({
     super.key,
     required this.comment,
     required this.authorName,
@@ -39,20 +39,20 @@ class CommentBubbleWidget extends StatelessWidget {
     Alignment arrowAlignment,
   ) {
     final bubble = Container(
-      constraints: BoxConstraints(maxWidth: 250.w),
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      constraints: BoxConstraints(maxWidth: 200.w),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
       decoration: BoxDecoration(
         color: bubbleColor,
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             comment,
-            style: TextStyle(color: textColor, fontSize: 13.sp),
+            style: TextStyle(color: textColor, fontSize: 12.sp),
           ),
-          SizedBox(height: 3.h),
+          SizedBox(height: 2.h),
           Align(
             alignment: Alignment.bottomRight,
             child: Row(
@@ -62,14 +62,14 @@ class CommentBubbleWidget extends StatelessWidget {
                   authorName,
                   style: TextStyle(
                     color: textColor.withOpacity(0.7),
-                    fontSize: 9.sp,
+                    fontSize: 8.sp,
                   ),
                 ),
                 Text(
                   time,
                   style: TextStyle(
                     color: textColor.withOpacity(0.7),
-                    fontSize: 9.sp,
+                    fontSize: 8.sp,
                   ),
                 ),
               ],
@@ -80,11 +80,11 @@ class CommentBubbleWidget extends StatelessWidget {
     );
 
     final arrow = SizedBox(
-      width: 7.w,
+      width: 5.w,
       child: Align(
         alignment: arrowAlignment,
         child: CustomPaint(
-          size: Size(7, 20),
+          size: Size(5, 15),
           painter: BubbleArrowPainterWidget(
             isMine: arrowAlignment == Alignment.bottomLeft,
             color: bubbleColor,
@@ -94,7 +94,7 @@ class CommentBubbleWidget extends StatelessWidget {
     );
 
     return arrowAlignment == Alignment.bottomLeft
-        ? [arrow, SizedBox(width: 3.w), bubble]
-        : [bubble, SizedBox(width: 3.w), arrow];
+        ? [arrow, SizedBox(width: 2.w), bubble]
+        : [bubble, SizedBox(width: 2.w), arrow];
   }
 }

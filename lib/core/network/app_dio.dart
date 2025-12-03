@@ -16,7 +16,7 @@ class AppDio {
     _addLoggerToDIo();
     _addTokenInterceptor();
     addTokenToHeader(
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyNjY0MDcyOTU3LCJpYXQiOjE3NjQwNzI5NTcsImp0aSI6IjYwZmEzZmNhY2EwNDQyZjFiM2FjNTQzYjBiNzBkZTliIiwidXNlcl9pZCI6IjM3Iiwicm9sZSI6IlNUVURFTlQifQ.dUKxovSFo_3DmPxnrVQzBKfZdfkWN6W6AG0m9Hj1R6s",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyNjY0NjgyMzQxLCJpYXQiOjE3NjQ2ODIzNDEsImp0aSI6IjVkOTQxMDBiYTdlNjQ1MGNhNTM5OGFhMmY0MDY5YWRlIiwidXNlcl9pZCI6IjM1Iiwicm9sZSI6IlNUVURFTlQifQ.ivBShFazdcGyImtzbZiHu7_9tUGxu13M1N-sr93jz-4",
     );
   }
 

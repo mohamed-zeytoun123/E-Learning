@@ -4,6 +4,8 @@ import 'package:e_learning/core/widgets/input_forms/input_comment_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/Video/presentation/widgets/comment_bubble_widget.dart';
+import 'package:e_learning/features/Video/presentation/widgets/reply_bubble_widget.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +27,9 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _commentController = TextEditingController();
   int page = 1;
+  bool _isExpanded = false;
+  int? _replyingToCommentId;
+  final Map<int, TextEditingController> _replyControllers = {};
 
   void _handleFetchMore() {
     final cubit = context.read<ChapterCubit>();
@@ -66,6 +71,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
   void dispose() {
     _scrollController.dispose();
     _commentController.dispose();
+    // Dispose all reply controllers
+    for (var controller in _replyControllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -77,14 +86,38 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Center(
-              child: Container(
-                margin: EdgeInsets.only(top: 8.h, bottom: 16.h),
-                width: 80.w,
-                height: 8.h,
-                decoration: BoxDecoration(
-                  color: AppColors.dividerWhite,
-                  borderRadius: BorderRadius.circular(4),
+            GestureDetector(
+              onVerticalDragUpdate: (details) {
+                // Detect upward drag to expand
+                if (details.delta.dy < -5 && !_isExpanded) {
+                  setState(() {
+                    _isExpanded = true;
+                  });
+                }
+                // Detect downward drag to collapse (when at top of scroll)
+                else if (details.delta.dy > 5 &&
+                    _isExpanded &&
+                    _scrollController.hasClients &&
+                    _scrollController.position.pixels <= 0) {
+                  setState(() {
+                    _isExpanded = false;
+                  });
+                }
+              },
+              onDoubleTap: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: Center(
+                child: Container(
+                  margin: EdgeInsets.only(top: 8.h, bottom: 16.h),
+                  width: 80.w,
+                  height: 8.h,
+                  decoration: BoxDecoration(
+                    color: AppColors.dividerWhite,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
               ),
             ),
@@ -99,7 +132,9 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
             SizedBox(height: 10.h),
             Divider(height: 1.h, color: AppColors.dividerGrey),
             SizedBox(
-              height: 350.h,
+              height: _isExpanded
+                  ? MediaQuery.of(context).size.height * 0.7
+                  : 350.h,
               child: BlocBuilder<ChapterCubit, ChapterState>(
                 buildWhen: (prev, curr) =>
                     prev.comments != curr.comments ||
@@ -181,17 +216,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                     itemBuilder: (context, index) {
                       if (index < comments.length) {
                         final comment = comments[index];
-                        final createdAt = DateTime.tryParse(comment.createdAt);
-                        return CommentBubbleWidget(
-                          comment: comment.content,
-                          time: createdAt != null
-                              ? DateFormat(
-                                  'MMM d, yyyy hh:mm a',
-                                ).format(createdAt)
-                              : "Just now",
-                          isMine: comment.authorType == "Student",
-                          authorName: comment.authorName,
-                        );
+                        return _buildCommentWithReplies(comment, depth: 0);
                       } else {
                         if (state.commentsMoreStatus ==
                             ResponseStatusEnum.loading) {
@@ -249,8 +274,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                 ),
                 BlocConsumer<ChapterCubit, ChapterState>(
                   listenWhen: (previous, current) =>
-                      previous.commentStatus != current.commentStatus,
+                      previous.commentStatus != current.commentStatus ||
+                      previous.addCommentStatus != current.addCommentStatus, // Added listener for reply status
                   listener: (context, state) {
+                    // Handle original comment status
                     if (state.commentStatus == ResponseStatusEnum.failure) {
                       AppMessage.showFlushbar(
                         context: context,
@@ -279,11 +306,47 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
 
                       _commentController.clear();
                     }
+                    
+                    // Handle reply status
+                    if (state.addCommentStatus == ResponseStatusEnum.failure) {
+                      AppMessage.showFlushbar(
+                        context: context,
+                        message: state.addCommentError ?? "Failed to send reply",
+                        iconData: Icons.error_outline,
+                        isShowProgress: true,
+                        title: "Error",
+                        backgroundColor: AppColors.messageError,
+                        iconColor: AppColors.iconWhite,
+                      );
+                    } else if (state.addCommentStatus ==
+                        ResponseStatusEnum.success) {
+                      AppMessage.showFlushbar(
+                        context: context,
+                        message: "Reply sent successfully",
+                        iconData: Icons.check_circle_outline,
+                        backgroundColor: AppColors.messageSuccess,
+                        isShowProgress: true,
+                        title: "Success",
+                        iconColor: AppColors.iconWhite,
+                      );
+                      
+                      // Clear all reply controllers
+                      _replyControllers.values.forEach((controller) => controller.clear());
+                      setState(() {
+                        _replyingToCommentId = null;
+                      });
+                      
+                      // Refresh comments to show the new reply
+                      context.read<ChapterCubit>().getComments(
+                        videoId: widget.videoId,
+                        reset: true,
+                        page: 1,
+                      );
+                    }
                   },
                   builder: (context, state) {
                     final isLoading =
                         state.commentStatus == ResponseStatusEnum.loading;
-
                     return Column(
                       children: [
                         SizedBox(height: 10.h),
@@ -317,5 +380,122 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         ),
       ),
     );
+  }
+
+  Widget _buildCommentWithReplies(CommentModel comment, {int depth = 0}) {
+    final createdAt = DateTime.tryParse(comment.createdAt);
+    // Limit the depth to prevent UI issues
+    final isMaxDepth = depth >= 3;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Main comment
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (depth > 0) 
+              // Add indentation for replies
+              SizedBox(width: (depth * 15.0).w),
+            Expanded(
+              child: CommentBubbleWidget(
+                comment: comment.content,
+                time: createdAt != null
+                    ? DateFormat(
+                        'MMM d, yyyy hh:mm a',
+                      ).format(createdAt)
+                    : "Just now",
+                isMine: comment.authorType == "Student",
+                authorName: comment.authorName,
+              ),
+            ),
+            // Always show reply button for teachers' comments and students' own comments
+            // Only hide reply button when max depth is reached
+            if (!isMaxDepth) 
+              IconButton(
+                onPressed: () {
+                  _toggleReplyInput(comment.id);
+                },
+                icon: Icon(
+                  Icons.reply,
+                  size: 16.sp, // Further reduced from 18.sp
+                  color: AppColors.iconGrey,
+                ),
+              ),
+          ],
+        ),
+        // Replies
+        if (comment.replies.isNotEmpty) ...[
+          SizedBox(height: 3.h),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...comment.replies.map((reply) {
+                return _buildCommentWithReplies(reply, depth: depth + 1);
+              }),
+            ],
+          ),
+        ],
+        // Reply input field (shown when user taps reply)
+        if (_replyingToCommentId == comment.id)
+          Padding(
+            padding: EdgeInsets.only(top: 6.h, left: (depth * 15.0).w),
+            child: Row(
+              children: [
+                Expanded(
+                  child: InputCommentWidget(
+                    controller: _replyControllers[comment.id] ?? TextEditingController(),
+                    hint: "Write a reply...",
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _sendReply(comment.id);
+                  },
+                  icon: Icon(
+                    Icons.send,
+                    size: 16.sp, // Reduced from 18.sp
+                    color: AppColors.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
+    );
+  }
+
+  void _toggleReplyInput(int commentId) {
+    setState(() {
+      if (_replyingToCommentId == commentId) {
+        // If already replying to this comment, hide the input
+        _replyingToCommentId = null;
+        // Dispose of the controller if needed
+        _replyControllers.remove(commentId);
+      } else {
+        // Show input for this comment
+        _replyingToCommentId = commentId;
+        // Initialize controller if not exists
+        _replyControllers.putIfAbsent(commentId, () => TextEditingController());
+      }
+    });
+  }
+
+  void _sendReply(int parentCommentId) {
+    final replyController = _replyControllers[parentCommentId];
+    if (replyController != null) {
+      final replyContent = replyController.text.trim();
+      if (replyContent.isNotEmpty) {
+        print("Sending reply to comment ID: $parentCommentId with content: $replyContent");
+        context
+            .read<ChapterCubit>()
+            .replyToComment(commentId: parentCommentId, content: replyContent);
+            // Removed manual refresh since we're now listening for status changes
+      } else {
+        print("Reply content is empty for comment ID: $parentCommentId");
+      }
+    } else {
+      print("No reply controller found for comment ID: $parentCommentId");
+    }
   }
 }

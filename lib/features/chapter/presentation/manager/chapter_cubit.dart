@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/chapter/data/models/attachment_download_state.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/download/download_attachment_function.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/comment_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/comments_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
 import 'package:e_learning/features/chapter/data/models/video_models/video_model.dart';
@@ -924,6 +925,141 @@ class ChapterCubit extends Cubit<ChapterState> {
         },
       );
     } catch (e) {
+      emit(
+        state.copyWith(
+          addCommentStatus: ResponseStatusEnum.failure,
+          addCommentError: e.toString(),
+        ),
+      );
+    }
+  }
+
+  //?--------------------------------------------------------
+  //* Reply to a Comment
+  Future<void> replyToComment({
+    required int commentId,
+    required String content,
+  }) async {
+    print("ChapterCubit: replyToComment called with commentId: $commentId, content: $content");
+    
+    // 1️⃣ Emit loading state
+    emit(
+      state.copyWith(
+        addCommentStatus: ResponseStatusEnum.loading,
+        addCommentError: null,
+      ),
+    );
+
+    try {
+      // 2️⃣ Call repository method
+      final result = await repo.replyToCommentRepo(
+        commentId: commentId,
+        content: content,
+      );
+
+      // 3️⃣ Handle result
+      result.fold(
+        (failure) {
+          print("ChapterCubit: replyToComment failed with error: ${failure.message}");
+          emit(
+            state.copyWith(
+              addCommentStatus: ResponseStatusEnum.failure,
+              addCommentError: failure.message,
+            ),
+          );
+        },
+        (newReply) {
+          print("ChapterCubit: replyToComment succeeded, new reply ID: ${newReply.id}");
+          // Update the comments state with the new reply
+          final updatedComments = [...?state.comments?.comments];
+          
+          // Find the parent comment and add the reply to it
+          for (int i = 0; i < updatedComments.length; i++) {
+            if (updatedComments[i].id == commentId) {
+              // Found the parent comment, add the reply to its replies
+              final updatedParent = CommentModel(
+                id: updatedComments[i].id,
+                video: updatedComments[i].video,
+                author: updatedComments[i].author,
+                authorName: updatedComments[i].authorName,
+                authorType: updatedComments[i].authorType,
+                content: updatedComments[i].content,
+                isPublic: updatedComments[i].isPublic,
+                createdAt: updatedComments[i].createdAt,
+                updatedAt: updatedComments[i].updatedAt,
+                parent: updatedComments[i].parent,
+                replies: [...updatedComments[i].replies, newReply],
+              );
+              
+              updatedComments[i] = updatedParent;
+              print("ChapterCubit: Added reply to parent comment at index $i");
+              break;
+            }
+            
+            // Also check replies of this comment for nested replies
+            final replies = [...updatedComments[i].replies];
+            bool found = false;
+            for (int j = 0; j < replies.length; j++) {
+              if (replies[j].id == commentId) {
+                // Found the parent comment in replies, add the reply to its replies
+                final updatedParent = CommentModel(
+                  id: replies[j].id,
+                  video: replies[j].video,
+                  author: replies[j].author,
+                  authorName: replies[j].authorName,
+                  authorType: replies[j].authorType,
+                  content: replies[j].content,
+                  isPublic: replies[j].isPublic,
+                  createdAt: replies[j].createdAt,
+                  updatedAt: replies[j].updatedAt,
+                  parent: replies[j].parent,
+                  replies: [...replies[j].replies, newReply],
+                );
+                
+                replies[j] = updatedParent;
+                found = true;
+                print("ChapterCubit: Added reply to nested comment at index $i, reply index $j");
+                break;
+              }
+            }
+            
+            if (found) {
+              // Update the parent comment with updated replies
+              final updatedComment = CommentModel(
+                id: updatedComments[i].id,
+                video: updatedComments[i].video,
+                author: updatedComments[i].author,
+                authorName: updatedComments[i].authorName,
+                authorType: updatedComments[i].authorType,
+                content: updatedComments[i].content,
+                isPublic: updatedComments[i].isPublic,
+                createdAt: updatedComments[i].createdAt,
+                updatedAt: updatedComments[i].updatedAt,
+                parent: updatedComments[i].parent,
+                replies: replies,
+              );
+              
+              updatedComments[i] = updatedComment;
+              break;
+            }
+          }
+
+          emit(
+            state.copyWith(
+              addCommentStatus: ResponseStatusEnum.success,
+              newComment: newReply,
+              comments:
+                  state.comments?.copyWith(comments: updatedComments) ??
+                  CommentsResultModel(
+                    comments: updatedComments,
+                    hasNextPage: true,
+                  ),
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      print("ChapterCubit: replyToComment caught exception: $e");
       emit(
         state.copyWith(
           addCommentStatus: ResponseStatusEnum.failure,

@@ -354,7 +354,10 @@ class ChapterRepositoryImpl implements ChapterRepository {
     required int commentId,
     required String content,
   }) async {
+    print("ChapterRepository: replyToCommentRepo called with commentId: $commentId");
+    
     if (!await network.isConnected) {
+      print("ChapterRepository: No internet connection");
       return Left(FailureNoConnection());
     }
 
@@ -362,8 +365,19 @@ class ChapterRepositoryImpl implements ChapterRepository {
       commentId: commentId,
       content: content,
     );
+    
+    print("ChapterRepository: replyToCommentRemote returned result");
 
-    return result.fold((failure) => Left(failure), (comment) => Right(comment));
+    return result.fold(
+      (failure) {
+        print("ChapterRepository: replyToCommentRepo failed with error: ${failure.message}");
+        return Left(failure);
+      }, 
+      (comment) {
+        print("ChapterRepository: replyToCommentRepo succeeded, new comment ID: ${comment.id}");
+        return Right(comment);
+      }
+    );
   }
 
   //?--------------------------------------------------------

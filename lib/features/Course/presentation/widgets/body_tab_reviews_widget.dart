@@ -173,21 +173,6 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                                 color: AppColors.textGrey.withOpacity(0.7),
                               ),
                             ),
-                            SizedBox(height: 20.h),
-                            CustomButtonWidget(
-                              onTap: () {
-                                context.read<CourseCubit>().getRatings(
-                                  courseId: "${widget.courseId}",
-                                  page: 1,
-                                );
-                              },
-                              title: "Rate",
-                              titleStyle: AppTextStyles.s18w600.copyWith(
-                                color: AppColors.titlePrimary,
-                              ),
-                              buttonColor: AppColors.buttonPrimary,
-                              borderColor: AppColors.borderPrimary,
-                            ),
                           ],
                         ),
                       ),

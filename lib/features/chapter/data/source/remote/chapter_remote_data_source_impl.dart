@@ -658,6 +658,8 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     required int commentId,
     required String content,
   }) async {
+    print("ChapterRemoteDataSource: replyToCommentRemote called with commentId: $commentId");
+    
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.replyToComment(commentId),
@@ -666,17 +668,22 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
 
       final ApiResponse response = await api.post(request);
 
-      log("REPLY COMMENT RESPONSE: ${response.body}");
+      print("ChapterRemoteDataSource: REPLY COMMENT RESPONSE status: ${response.statusCode}");
 
       if (response.statusCode == 201 || response.statusCode == 200) {
         final data = response.body;
+        print("ChapterRemoteDataSource: REPLY COMMENT RESPONSE data: $data");
+        
         if (data is Map<String, dynamic>) {
           final comment = CommentModel.fromMap(data);
+          print("ChapterRemoteDataSource: Successfully created comment with ID: ${comment.id}");
           return Right(comment);
         } else {
+          print("ChapterRemoteDataSource: Invalid response data format");
           return Left(FailureServer());
         }
       } else {
+        print("ChapterRemoteDataSource: API returned error status: ${response.statusCode}");
         return Left(
           Failure(
             message: response.body['message']?.toString() ?? 'Unknown error',
@@ -685,7 +692,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         );
       }
     } catch (exception) {
-      log("replyToCommentRemote exception: $exception");
+      print("ChapterRemoteDataSource: replyToCommentRemote exception: $exception");
 
       if (exception is DioException) {
         return Left(Failure.handleError(exception));
