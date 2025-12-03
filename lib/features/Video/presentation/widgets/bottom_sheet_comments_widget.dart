@@ -80,8 +80,6 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
           }
         })
         .catchError((error) {
-          // In case of error, don't increment the page counter
-          // This ensures we retry the same page on next attempt
           debugPrint("Error fetching more comments: $error");
         });
   }
@@ -117,7 +115,6 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
       controller.dispose();
     }
 
-    // Dispose focus nodes
     for (var focusNode in _replyFocusNodes.values) {
       focusNode.dispose();
     }
@@ -222,7 +219,6 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                             buttonColor: AppColors.buttonPrimary,
                             borderColor: AppColors.borderPrimary,
                             onTap: () {
-                              // Reset page counter when retrying
                               setState(() {
                                 page = 1;
                               });
@@ -375,7 +371,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         ResponseStatusEnum.success) {
                       AppMessage.showFlushbar(
                         context: context,
-                        message: "Reply sent successfully",
+                        message: "Sent successfully",
                         iconData: Icons.check_circle_outline,
                         backgroundColor: AppColors.messageSuccess,
                         isShowProgress: true,
@@ -388,16 +384,12 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       }
                       setState(() {
                         _replyingToCommentId = null;
-                        // Also reset page counter for replies to ensure consistent pagination
+
                         page = 1;
                       });
-
-                      // Note: We don't call getComments here anymore as it's handled in the cubit
-                      // and calling it here would create an infinite loop
                     }
                   },
                   builder: (context, state) {
-                    // Check if we're specifically loading for adding a comment (not fetching comments)
                     final isAddingComment =
                         state.commentStatus == ResponseStatusEnum.loading;
                     return Column(
@@ -530,8 +522,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                           TextEditingController(),
                       hint: "Write a reply...",
                       autofocus: false,
-                      focusNode:
-                          _replyFocusNodes[comment.id], // Pass the focus node
+                      focusNode: _replyFocusNodes[comment.id],
                     ),
                   ),
                   IconButton(
@@ -557,18 +548,17 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
       if (_replyingToCommentId == commentId) {
         _replyingToCommentId = null;
         _replyControllers.remove(commentId);
-        // Remove focus node when not needed
+
         final focusNode = _replyFocusNodes.remove(commentId);
         focusNode?.dispose();
       } else {
         _replyingToCommentId = commentId;
         _replyControllers.putIfAbsent(commentId, () => TextEditingController());
-        // Create focus node for this reply input
+
         _replyFocusNodes.putIfAbsent(commentId, () => FocusNode());
       }
     });
 
-    // Focus the input field when showing it
     if (_replyingToCommentId == commentId) {
       Future.delayed(const Duration(milliseconds: 150), () {
         if (mounted) {
@@ -589,8 +579,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
         context.read<ChapterCubit>().replyToComment(
           commentId: parentCommentId,
           content: replyContent,
-          videoId:
-              widget.videoId, // Pass the videoId to ensure comments refresh
+          videoId: widget.videoId,
         );
       }
     }

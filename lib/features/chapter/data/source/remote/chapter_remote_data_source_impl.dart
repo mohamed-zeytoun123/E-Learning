@@ -503,25 +503,14 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
     int page = 1,
   }) async {
     try {
-      print(
-        "ChapterRemoteDataSource: getCommentsRemote called for chapterId: $chapterId, page: $page",
-      );
-
       final ApiRequest request = ApiRequest(
         url: AppUrls.getVideoComments(chapterId, page: page),
       );
 
       final ApiResponse response = await api.get(request);
 
-      print(
-        "ChapterRemoteDataSource: COMMENTS RESPONSE page $page, status: ${response.statusCode}",
-      );
-
       if (response.statusCode == 200) {
         final data = response.body;
-        print(
-          "ChapterRemoteDataSource: COMMENTS RESPONSE data keys: ${data is Map ? (data as Map).keys.join(', ') : 'Not a map'}",
-        );
 
         if (data is Map<String, dynamic> && data['results'] is List) {
           final commentsList = (data['results'] as List)
@@ -529,30 +518,18 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
               .toList();
 
           final hasNext = data['next'] != null;
-          print(
-            "ChapterRemoteDataSource: Page $page has ${commentsList.length} comments, hasNext: $hasNext",
-          );
 
           return Right(
             CommentsResultModel(comments: commentsList, hasNextPage: hasNext),
           );
         } else {
-          print("ChapterRemoteDataSource: Empty or invalid response data");
           return Right(CommentsResultModel.empty());
         }
       } else {
-        // Handle specific error cases
         String errorMessage =
             response.body['message']?.toString() ?? 'Unknown error';
-        print(
-          "ChapterRemoteDataSource: API error - status: ${response.statusCode}, message: $errorMessage",
-        );
 
-        // Special handling for "Invalid page" error
         if (errorMessage.contains("Invalid page")) {
-          print(
-            "ChapterRemoteDataSource: Detected invalid page error, returning empty result",
-          );
           return Right(CommentsResultModel.empty());
         }
 
@@ -561,8 +538,6 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
         );
       }
     } catch (exception) {
-      print("ChapterRemoteDataSource: getCommentsRemote exception: $exception");
-
       if (exception is DioException) {
         return Left(Failure.handleError(exception));
       }
@@ -677,16 +652,11 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
   }
 
   //?----------------------------------------------------
-  //* Reply to a Comment
   @override
   Future<Either<Failure, CommentModel>> replyToCommentRemote({
     required int commentId,
     required String content,
   }) async {
-    print(
-      "ChapterRemoteDataSource: replyToCommentRemote called with commentId: $commentId",
-    );
-
     try {
       final ApiRequest request = ApiRequest(
         url: AppUrls.replyToComment(commentId),
@@ -695,40 +665,29 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
 
       final ApiResponse response = await api.post(request);
 
-      print(
-        "ChapterRemoteDataSource: REPLY COMMENT RESPONSE status: ${response.statusCode}",
-      );
+      final data = response.body;
 
       if (response.statusCode == 201 || response.statusCode == 200) {
-        final data = response.body;
-        print("ChapterRemoteDataSource: REPLY COMMENT RESPONSE data: $data");
-
         if (data is Map<String, dynamic>) {
           final comment = CommentModel.fromMap(data);
-          print(
-            "ChapterRemoteDataSource: Successfully created comment with ID: ${comment.id}",
-          );
+
           return Right(comment);
         } else {
-          print("ChapterRemoteDataSource: Invalid response data format");
           return Left(FailureServer());
         }
       } else {
-        print(
-          "ChapterRemoteDataSource: API returned error status: ${response.statusCode}",
-        );
+        String errorMessage = 'Unknown error';
+        if (data is Map<String, dynamic> && data['message'] != null) {
+          errorMessage = data['message'].toString();
+        } else if (data is String) {
+          errorMessage = data;
+        }
+
         return Left(
-          Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
-            statusCode: response.statusCode,
-          ),
+          Failure(message: errorMessage, statusCode: response.statusCode),
         );
       }
     } catch (exception) {
-      print(
-        "ChapterRemoteDataSource: replyToCommentRemote exception: $exception",
-      );
-
       if (exception is DioException) {
         return Left(Failure.handleError(exception));
       }
