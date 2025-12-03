@@ -350,9 +350,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
 
                       _commentController.clear();
 
-                      setState(() {
-                        page = 1;
-                      });
+                      // Don't fetch comments again, just add the new comment to the list locally
+                      // setState(() {
+                      //   page = 1;
+                      // });
                     }
 
                     if (state.addCommentStatus == ResponseStatusEnum.failure) {
@@ -383,25 +384,33 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       }
                       setState(() {
                         _replyingToCommentId = null;
-
-                        page = 1;
+                        // Don't reset page or fetch comments again
+                        // page = 1;
                       });
 
-                      context.read<ChapterCubit>().getComments(
-                        videoId: widget.videoId,
-                        reset: true,
-                        page: 1,
-                      );
+                      // Don't fetch all comments again after replying
+                      // context.read<ChapterCubit>().getComments(
+                      //   videoId: widget.videoId,
+                      //   reset: true,
+                      //   page: 1,
+                      // );
                     }
                   },
                   builder: (context, state) {
-                    final isLoading =
+                    // Check if we're specifically loading for adding a comment (not fetching comments)
+                    final isAddingComment =
                         state.commentStatus == ResponseStatusEnum.loading;
                     return Column(
                       children: [
                         SizedBox(height: 10.h),
-                        isLoading
-                            ? Center(child: AppLoading.circular())
+                        isAddingComment
+                            ? Center(
+                                child: SizedBox(
+                                  width: 24.w,
+                                  height: 24.h,
+                                  child: AppLoading.circular(),
+                                ),
+                              )
                             : CustomButtonWidget(
                                 title: "Send Comment",
                                 titleStyle: AppTextStyles.s16w600.copyWith(
@@ -414,15 +423,16 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                                       .trim();
                                   if (comment.isNotEmpty) {
                                     context.read<ChapterCubit>().addComment(
-                                      videoId: widget.videoId,
-                                      content: comment,
-                                    );
+                                          videoId: widget.videoId,
+                                          content: comment,
+                                        );
                                   }
                                 },
                               ),
                       ],
                     );
                   },
+
                 ),
               ],
             ),
