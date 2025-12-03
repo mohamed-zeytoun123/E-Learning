@@ -32,9 +32,15 @@ abstract class AuthRepository {
 
   //* otp verfication
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRepo({
-    required String phone,
+    required String email,
     required String code,
-    required String purpose,
+    required String purpose, // reset_password || sign_up
+  });
+
+  //* Resend Otp
+  Future<Either<Failure, bool>> resendOtpRepo({
+    required String email,
+    required String purpose, // reset_password || sign_up
   });
 
   //* Forget Password

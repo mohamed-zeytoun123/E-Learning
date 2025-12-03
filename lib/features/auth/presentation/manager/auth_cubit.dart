@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
@@ -10,8 +12,15 @@ import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository repository;
+  Timer? _otpTimer;
 
   AuthCubit({required this.repository}) : super(AuthState());
+
+  @override
+  Future<void> close() {
+    _otpTimer?.cancel();
+    return super.close();
+  }
 
   //? ------------------------ Login ----------------------------
   Future<void> login(String numberPhone, String password) async {
@@ -164,7 +173,7 @@ class AuthCubit extends Cubit<AuthState> {
       ),
     );
     return repository
-        .otpVerficationRepo(phone: phone, code: code, purpose: purpose)
+        .otpVerficationRepo(email: phone, code: code, purpose: purpose)
         .then((result) {
           result.fold(
             (failure) => emit(
@@ -184,6 +193,68 @@ class AuthCubit extends Cubit<AuthState> {
             },
           );
         });
+  }
+
+  //? ------------------------ OTP Timer Management ----------------------------
+  void startOtpTimer() {
+    _otpTimer?.cancel();
+    emit(state.copyWith(otpTimerSeconds: 60, canResendOtp: false));
+
+    _otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (state.otpTimerSeconds > 0) {
+        emit(state.copyWith(otpTimerSeconds: state.otpTimerSeconds - 1));
+      } else {
+        emit(state.copyWith(canResendOtp: true));
+        timer.cancel();
+      }
+    });
+  }
+
+  void stopOtpTimer() {
+    _otpTimer?.cancel();
+  }
+
+  void setOtpCode(String code) {
+    emit(state.copyWith(currentOtpCode: code));
+  }
+
+  // ------------------------- Resend OTP ----------------------------
+  Future<void> resendOtp(String phone, String purpose) async {
+    // Check if resend is allowed (timer expired)
+    if (!state.canResendOtp) {
+      return;
+    }
+
+    emit(
+      state.copyWith(
+        resendOtpState: ResponseStatusEnum.loading,
+        resendOtpError: null,
+      ),
+    );
+
+    final result = await repository.resendOtpRepo(
+      email: phone,
+      purpose: purpose,
+    );
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          resendOtpState: ResponseStatusEnum.failure,
+          resendOtpError: failure.message,
+        ),
+      ),
+      (isResent) {
+        emit(
+          state.copyWith(
+            resendOtpState: ResponseStatusEnum.success,
+            resendOtpError: null,
+          ),
+        );
+        // Restart the timer after successful resend
+        startOtpTimer();
+      },
+    );
   }
 
   //? ------------------------ Forgot Password ----------------------------

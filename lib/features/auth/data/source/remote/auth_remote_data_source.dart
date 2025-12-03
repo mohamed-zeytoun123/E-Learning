@@ -31,8 +31,14 @@ abstract class AuthRemoteDataSource {
 
   //* Otp Verfication
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRemote({
-    required String phone,
+    required String email,
     required String code,
+    required String purpose, // reset_password || sign_up
+  });
+
+  //* Resend Otp
+  Future<Either<Failure, bool>> resendOtpRemote({
+    required String email,
     required String purpose, // reset_password || sign_up
   });
 

@@ -36,6 +36,15 @@ class AuthState {
   final String? otpVerficationError;
   final String? resetToken;
 
+  //* Resend OTP
+  final ResponseStatusEnum resendOtpState;
+  final String? resendOtpError;
+
+  //* OTP Timer and Resend
+  final int otpTimerSeconds;
+  final bool canResendOtp;
+  final String? currentOtpCode;
+
   //* Forgot Password
   final ResponseStatusEnum forgotPasswordState;
   final String? forgotPasswordError;
@@ -68,6 +77,11 @@ class AuthState {
     this.forgotPasswordError,
     this.resetPasswordState = ResponseStatusEnum.initial,
     this.resetPasswordError,
+    this.otpTimerSeconds = 60,
+    this.canResendOtp = false,
+    this.currentOtpCode,
+    this.resendOtpState = ResponseStatusEnum.initial,
+    this.resendOtpError,
   });
 
   AuthState copyWith({
@@ -92,6 +106,11 @@ class AuthState {
     ResponseStatusEnum? getStudyYearsState,
     String? studyYearsError,
     List<StudyYearModel>? studyYears,
+    ResponseStatusEnum? resendOtpState,
+    String? resendOtpError,
+    int? otpTimerSeconds,
+    bool? canResendOtp,
+    String? currentOtpCode,
   }) {
     return AuthState(
       getStudyYearsState: getStudyYearsState ?? this.getStudyYearsState,
@@ -115,6 +134,11 @@ class AuthState {
       forgotPasswordError: forgotPasswordError,
       resetPasswordState: resetPasswordState ?? this.resetPasswordState,
       resetPasswordError: resetPasswordError,
+      resendOtpState: resendOtpState ?? this.resendOtpState,
+      resendOtpError: resendOtpError,
+      otpTimerSeconds: otpTimerSeconds ?? this.otpTimerSeconds,
+      canResendOtp: canResendOtp ?? this.canResendOtp,
+      currentOtpCode: currentOtpCode ?? this.currentOtpCode,
     );
   }
 }

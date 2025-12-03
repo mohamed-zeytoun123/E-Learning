@@ -51,7 +51,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       if (!mounted) return;
 
       final params = ResetPasswordRequestParams(
-        phone: widget.email,
+        email: widget.email,
         resetToken: widget.resetToken,
         newPassword: newPasswordController.text.trim(),
       );

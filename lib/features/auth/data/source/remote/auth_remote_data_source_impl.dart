@@ -169,10 +169,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   //? -----------------------------------------------------------------
 
-  //* otp verfication
+  // otp verfication
   @override
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRemote({
-    required String phone,
+    required String email,
     required String code,
     required String purpose,
   }) async {
@@ -184,21 +184,16 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (purpose == 'reset') {
         // For password reset:
         url = AppUrls.verifyForgotPasswordOtp;
-        body = {"phone": phone, "code": code, "purpose": purpose};
+        body = {"email": email, "code": code, "purpose": purpose};
       } else {
         // For registration:
         url = AppUrls.verifyOtp;
-        body = {"phone": phone, "code": code, "purpose": purpose};
+        body = {"email": email, "code": code, "purpose": purpose};
       }
-
-      log("🔍 OTP Verification URL: $url");
-      log("🔍 OTP Verification Body: $body");
 
       final response = await api.post(ApiRequest(url: url, body: body));
 
       if (response.statusCode == 200 && response.body != null) {
-        log("🔍 OTP Verification Response: ${response.body}");
-
         // Parse the response based on purpose
         if (purpose == 'reset') {
           // For reset purpose, extract the reset_token
@@ -212,6 +207,30 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return Left(FailureServer());
     } catch (e) {
       log("error 🔥🔥🔥🔥🔥 OTP Verification:::$e");
+      return Left(Failure.handleError(e as Exception));
+    }
+  }
+
+  //* Resend Otp
+  @override
+  Future<Either<Failure, bool>> resendOtpRemote({
+    required String email,
+    required String purpose,
+  }) async {
+    try {
+      final response = await api.post(
+        ApiRequest(
+          url: AppUrls.resendOtp,
+          body: {"email": email, "purpose": purpose},
+        ),
+      );
+
+      if (response.statusCode == 200 && response.body != null) {
+        return Right(true);
+      }
+      return Left(FailureServer());
+    } catch (e) {
+      log("error 🔥🔥🔥🔥🔥 Resend OTP:::$e");
       return Left(Failure.handleError(e as Exception));
     }
   }
