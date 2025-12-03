@@ -125,7 +125,7 @@ class _OtpPageState extends State<OtpPage> {
             });
             break;
           case ResponseStatusEnum.failure:
-            AppMessage.showSnackBar(
+            AppMessage.showFlushbar(
               context: context,
               message:
                   state.otpVerficationError ??
