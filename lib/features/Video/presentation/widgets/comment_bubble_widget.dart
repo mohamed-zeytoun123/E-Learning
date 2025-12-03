@@ -1,11 +1,12 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bubble_arrow_painter_widget.dart';
+import 'package:e_learning/core/utils/time_formatter.dart'; // Add this import
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CommentBubbleWidget extends StatelessWidget {
   final String comment;
-  final String time;
+  final String time; // This will now be a relative time string
   final String authorName;
   final bool isMine;
 
@@ -66,7 +67,7 @@ class CommentBubbleWidget extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  time,
+                  time, // This is now a relative time string
                   style: TextStyle(
                     color: textColor.withOpacity(0.7),
                     fontSize: 9.sp,

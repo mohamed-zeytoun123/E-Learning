@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bubble_arrow_painter_widget.dart';
+import 'package:e_learning/core/utils/time_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -8,6 +9,7 @@ class ReplyBubbleWidget extends StatelessWidget {
   final String time;
   final String authorName;
   final bool isMine;
+  final Color? parentColor;
 
   const ReplyBubbleWidget({
     super.key,
@@ -15,11 +17,15 @@ class ReplyBubbleWidget extends StatelessWidget {
     required this.authorName,
     required this.time,
     required this.isMine,
+    this.parentColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final bubbleColor = isMine ? AppColors.primary : AppColors.secondary;
+    final baseColor =
+        parentColor ?? (isMine ? AppColors.primary : AppColors.secondary);
+
+    final bubbleColor = _getLighterShade(baseColor);
     final textColor = isMine ? AppColors.textWhite : AppColors.textPrimary;
 
     return Row(
@@ -31,6 +37,15 @@ class ReplyBubbleWidget extends StatelessWidget {
           ? _buildBubble(bubbleColor, textColor, Alignment.bottomLeft)
           : _buildBubble(bubbleColor, textColor, Alignment.bottomRight),
     );
+  }
+
+  Color _getLighterShade(Color color) {
+    final hsv = HSVColor.fromColor(color);
+
+    final lighterHsv = hsv
+        .withValue((hsv.value + 0.2).clamp(0.0, 1.0))
+        .withSaturation((hsv.saturation * 0.7).clamp(0.0, 1.0));
+    return lighterHsv.toColor();
   }
 
   List<Widget> _buildBubble(
