@@ -96,7 +96,7 @@ class _BodyTabQuizzesWidgetState extends State<BodyTabQuizzesWidget> {
                       SizedBox(height: 16.h),
                       Text(
                         state.quizDetailsError ??
-                            'An error occurred while loading the quizzes 😕',
+                            'An error occurred while loading the quizzes.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16.sp,
@@ -178,7 +178,10 @@ class _BodyTabQuizzesWidgetState extends State<BodyTabQuizzesWidget> {
                     onTap: () {
                       context.pushNamed(
                         RouteNames.quizPage,
-                        extra: {'quizId': quiz.id},
+                        extra: {
+                          'quizId': quiz.id,
+                          'chapterCubit': context.read<ChapterCubit>(),
+                        },
                       );
                     },
                   );

@@ -199,6 +199,7 @@ class AppRouter {
 
       GoRoute(
         path: RouteNames.quizPage,
+        name: RouteNames.quizPage,
         builder: (context, state) {
           final Map<String, dynamic>? args = state.extra as Map<String, dynamic>?;
           final chapterCubit = args?["chapterCubit"] as ChapterCubit?;
