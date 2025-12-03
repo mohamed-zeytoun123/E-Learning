@@ -1013,11 +1013,9 @@ class ChapterCubit extends Cubit<ChapterState> {
             ),
           );
           
-          // Refresh comments after successful reply to ensure data consistency
-          // This will fetch the latest comments from the server
-          if (videoId != null) {
-            getComments(videoId: videoId, reset: true, page: 1);
-          }
+          // Note: We don't call getComments here anymore as it would create
+          // an infinite loop with the UI listener. The UI will update based
+          // on the state changes we emit above.
         },
       );
     } catch (e) {

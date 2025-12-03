@@ -340,20 +340,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         iconColor: AppColors.iconWhite,
                       );
 
-                      Future.delayed(const Duration(seconds: 1), () {
-                        if (widget.onClose != null) {
-                          widget.onClose!();
-                        } else if (Navigator.of(context).canPop()) {
-                          Navigator.of(context).pop();
-                        }
-                      });
-
                       _commentController.clear();
-
-                      // Don't fetch comments again, just add the new comment to the list locally
-                      // setState(() {
-                      //   page = 1;
-                      // });
+                      
+                      // Note: We don't call getComments here anymore as it's handled in the cubit
+                      // and calling it here would create an infinite loop
                     }
 
                     if (state.addCommentStatus == ResponseStatusEnum.failure) {
@@ -384,16 +374,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       }
                       setState(() {
                         _replyingToCommentId = null;
-                        // Don't reset page or fetch comments again
-                        // page = 1;
                       });
-
-                      // Don't fetch all comments again after replying
-                      // context.read<ChapterCubit>().getComments(
-                      //   videoId: widget.videoId,
-                      //   reset: true,
-                      //   page: 1,
-                      // );
+                      
+                      // Note: We don't call getComments here anymore as it's handled in the cubit
+                      // and calling it here would create an infinite loop
                     }
                   },
                   builder: (context, state) {
