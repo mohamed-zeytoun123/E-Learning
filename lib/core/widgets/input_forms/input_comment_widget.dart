@@ -7,12 +7,14 @@ class InputCommentWidget extends StatefulWidget {
   final TextEditingController controller;
   final String hint;
   final bool autofocus;
+  final FocusNode? focusNode; // Add this parameter
 
   const InputCommentWidget({
     super.key,
     required this.controller,
     required this.hint,
     this.autofocus = false,
+    this.focusNode, // Add this parameter
   });
 
   @override
@@ -25,7 +27,8 @@ class _InputCommentWidgetState extends State<InputCommentWidget> {
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
+    // Use provided focus node or create a new one
+    _focusNode = widget.focusNode ?? FocusNode();
     
     // Request focus with a delayed approach to prevent animation jank
     if (widget.autofocus) {
@@ -42,7 +45,10 @@ class _InputCommentWidgetState extends State<InputCommentWidget> {
 
   @override
   void dispose() {
-    _focusNode.dispose();
+    // Only dispose if we created the focus node (not provided externally)
+    if (widget.focusNode == null) {
+      _focusNode.dispose();
+    }
     super.dispose();
   }
 

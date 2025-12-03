@@ -54,6 +54,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
   bool _isExpanded = false;
   int? _replyingToCommentId;
   final Map<int, TextEditingController> _replyControllers = {};
+  final Map<int, FocusNode> _replyFocusNodes = {};
   bool _isKeyboardVisible = false;
   late _KeyboardVisibilityObserver _keyboardObserver;
 
@@ -110,6 +111,12 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
     for (var controller in _replyControllers.values) {
       controller.dispose();
     }
+
+    // Dispose focus nodes
+    for (var focusNode in _replyFocusNodes.values) {
+      focusNode.dispose();
+    }
+
     super.dispose();
   }
 
@@ -514,6 +521,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                           TextEditingController(),
                       hint: "Write a reply...",
                       autofocus: false,
+                      focusNode: _replyFocusNodes[comment.id], // Pass the focus node
                     ),
                   ),
                   IconButton(
@@ -539,30 +547,24 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
       if (_replyingToCommentId == commentId) {
         _replyingToCommentId = null;
         _replyControllers.remove(commentId);
+        // Remove focus node when not needed
+        final focusNode = _replyFocusNodes.remove(commentId);
+        focusNode?.dispose();
       } else {
         _replyingToCommentId = commentId;
         _replyControllers.putIfAbsent(commentId, () => TextEditingController());
+        // Create focus node for this reply input
+        _replyFocusNodes.putIfAbsent(commentId, () => FocusNode());
       }
     });
 
+    // Focus the input field when showing it
     if (_replyingToCommentId == commentId) {
-      Future.delayed(const Duration(milliseconds: 100), () {
+      Future.delayed(const Duration(milliseconds: 150), () {
         if (mounted) {
-          final controller = _replyControllers[commentId];
-          if (controller != null) {
-            controller.selection = TextSelection.fromPosition(
-              TextPosition(offset: controller.text.length),
-            );
-
-            Future.delayed(const Duration(milliseconds: 50), () {
-              if (mounted) {
-                FocusScope.of(context).requestFocus(FocusNode());
-
-                FocusScope.of(context).requestFocus(
-                  FocusScope.of(context).focusedChild ?? FocusNode(),
-                );
-              }
-            });
+          final focusNode = _replyFocusNodes[commentId];
+          if (focusNode != null) {
+            FocusScope.of(context).requestFocus(focusNode);
           }
         }
       });
