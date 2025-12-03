@@ -9,6 +9,7 @@ import 'package:e_learning/features/chapter/data/models/video_models/comment_mod
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
@@ -25,7 +26,6 @@ class _KeyboardVisibilityObserver extends WidgetsBindingObserver {
   void didChangeMetrics() {
     final bottomInset = WidgetsBinding.instance.window.viewInsets.bottom;
     final newValue = bottomInset > 0;
-
     if (_state._isKeyboardVisible != newValue && _state.mounted) {
       _state.setState(() {
         _state._isKeyboardVisible = newValue;
@@ -78,6 +78,11 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
           if (cubit.state.commentsMoreStatus != ResponseStatusEnum.failure) {
             page = nextPage;
           }
+        })
+        .catchError((error) {
+          // In case of error, don't increment the page counter
+          // This ensures we retry the same page on next attempt
+          debugPrint("Error fetching more comments: $error");
         });
   }
 
@@ -217,6 +222,10 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                             buttonColor: AppColors.buttonPrimary,
                             borderColor: AppColors.borderPrimary,
                             onTap: () {
+                              // Reset page counter when retrying
+                              setState(() {
+                                page = 1;
+                              });
                               context.read<ChapterCubit>().getComments(
                                 videoId: widget.videoId,
                                 reset: true,
@@ -340,6 +349,11 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                         iconColor: AppColors.iconWhite,
                       );
                       _commentController.clear();
+
+                      setState(() {
+                        page = 1;
+                      });
+
                       context.read<ChapterCubit>().getComments(
                         videoId: widget.videoId,
                         reset: true,
@@ -350,8 +364,7 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                     if (state.replyStatus == ResponseStatusEnum.failure) {
                       AppMessage.showFlushbar(
                         context: context,
-                        message:
-                            state.replyError ?? "Failed to send reply",
+                        message: state.replyError ?? "Failed to send reply",
                         iconData: Icons.error_outline,
                         isShowProgress: true,
                         title: "Error",
@@ -375,6 +388,8 @@ class _BottomSheetCommentsWidgetState extends State<BottomSheetCommentsWidget> {
                       }
                       setState(() {
                         _replyingToCommentId = null;
+                        // Also reset page counter for replies to ensure consistent pagination
+                        page = 1;
                       });
 
                       // Note: We don't call getComments here anymore as it's handled in the cubit
