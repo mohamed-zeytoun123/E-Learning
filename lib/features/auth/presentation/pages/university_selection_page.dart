@@ -1,9 +1,11 @@
-import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
@@ -80,49 +82,80 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
               SizedBox(height: 40.h),
               SelectedInformationWidget(),
               SizedBox(height: 20.h),
-              BlocSelector<AuthCubit, AuthState, SignUpRequestParams?>(
-                selector: (state) => state.signUpRequestParams,
-                builder: (context, signUpParams) {
-                  final isAllFilled =
-                      (signUpParams?.fullName.isNotEmpty ?? false) &&
-                      signUpParams?.universityId != null &&
-                      signUpParams?.collegeId != null &&
-                      signUpParams?.studyYear != null &&
-                      (signUpParams?.email.isNotEmpty ?? false) &&
-                      (signUpParams?.password.isNotEmpty ?? false);
 
-                  return CustomButtonWidget(
-                    title:
-                        AppLocalizations.of(context)?.translate("next") ??
-                        "Next",
-                    titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: isAllFilled
-                          ? AppColors.titlePrimary
-                          : AppColors.titleBlack,
-                      fontFamily: AppTextStyles.fontGeist,
-                    ),
-                    buttonColor: isAllFilled
-                        ? AppColors.buttonPrimary
-                        : AppColors.buttonGreyF,
-                    borderColor: AppColors.borderBrand,
-                    onTap: isAllFilled
-                        ? () {
-                            log("dsfdfsf");
-
-                            context.push(
-                              RouteNames.otpScreen,
-                              extra: {
-                                'blocProvide': BlocProvider.of<AuthCubit>(
-                                  context,
-                                ),
-                                'email': widget.email,
-                                'purpose': 'register',
-                              },
-                            );
-                          }
-                        : null,
-                  );
+              BlocListener<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state.signUpState == ResponseStatusEnum.loading) {
+                  } else if (state.signUpState == ResponseStatusEnum.success) {
+                    if (context.mounted) {
+                      context.push(
+                        RouteNames.otpScreen,
+                        extra: {
+                          'blocProvide': BlocProvider.of<AuthCubit>(context),
+                          'email': widget.email,
+                          'purpose': 'register',
+                        },
+                      );
+                    }
+                  } else if (state.signUpState == ResponseStatusEnum.failure) {
+                    final errorMessage =
+                        state.signUpError ??
+                        AppLocalizations.of(
+                          context,
+                        )?.translate("Sign_up_failed") ??
+                        "Sign up failed";
+                    if (context.mounted) {
+                      AppMessage.showFlushbar(
+                        context: context,
+                        message: errorMessage,
+                        backgroundColor: AppColors.textError,
+                      );
+                    }
+                  }
                 },
+                child: BlocSelector<AuthCubit, AuthState, SignUpRequestParams?>(
+                  selector: (state) => state.signUpRequestParams,
+                  builder: (context, signUpParams) {
+                    final isAllFilled =
+                        (signUpParams?.fullName.isNotEmpty ?? false) &&
+                        signUpParams?.universityId != null &&
+                        signUpParams?.collegeId != null &&
+                        signUpParams?.studyYear != null &&
+                        (signUpParams?.email.isNotEmpty ?? false) &&
+                        (signUpParams?.password.isNotEmpty ?? false);
+
+                    return BlocBuilder<AuthCubit, AuthState>(
+                      buildWhen: (previous, current) =>
+                          previous.signUpState != current.signUpState,
+                      builder: (context, state) {
+                        if (state.signUpState == ResponseStatusEnum.loading) {
+                          return Center(child: AppLoading.circular());
+                        }
+                        return CustomButtonWidget(
+                          title:
+                              AppLocalizations.of(context)?.translate("next") ??
+                              "Next",
+                          titleStyle: AppTextStyles.s16w500.copyWith(
+                            color: isAllFilled
+                                ? AppColors.titlePrimary
+                                : AppColors.titleBlack,
+                            fontFamily: AppTextStyles.fontGeist,
+                          ),
+                          buttonColor: isAllFilled
+                              ? AppColors.buttonPrimary
+                              : AppColors.buttonGreyF,
+                          borderColor: AppColors.borderBrand,
+                          onTap: isAllFilled
+                              ? () async {
+                                  final authCubit = context.read<AuthCubit>();
+                                  await authCubit.signUp(params: signUpParams!);
+                                }
+                              : null,
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ],
           ),

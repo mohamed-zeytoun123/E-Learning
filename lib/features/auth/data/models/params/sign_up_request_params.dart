@@ -20,7 +20,7 @@ class SignUpRequestParams {
       'full_name': fullName,
       'university_id': universityId,
       'college_id': collegeId,
-      'study_year': studyYear,
+      'study_year_id': studyYear,
       'email': email, // ← بدل phone
       'password': password,
     };

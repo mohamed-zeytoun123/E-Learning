@@ -38,31 +38,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         final userData = AuthResponseModel.fromMap(response.body);
         return Right(userData);
       } else if (response.statusCode != 200 && response.body != null) {
-        // Handle error response with message from server
         String errorMessage = 'Login failed';
-        
+
         if (response.body is Map<String, dynamic>) {
           final body = response.body as Map<String, dynamic>;
-          
-          // Try to extract error message from common error fields
+
           if (body.containsKey('detail') && body['detail'] != null) {
             errorMessage = body['detail'].toString();
           } else if (body.containsKey('message') && body['message'] != null) {
             errorMessage = body['message'].toString();
-          } else if (body.containsKey('non_field_errors') && body['non_field_errors'] is List && (body['non_field_errors'] as List).isNotEmpty) {
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            // Try to get the first error message
             final firstEntry = body.entries.first;
             if (firstEntry.value is String) {
               errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
+            } else if (firstEntry.value is List &&
+                (firstEntry.value as List).isNotEmpty) {
               errorMessage = (firstEntry.value as List).first.toString();
             }
           }
         }
-        
-        return Left(Failure(statusCode: response.statusCode, message: errorMessage));
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
@@ -86,7 +88,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             "full_name": params.fullName,
             "university_id": params.universityId,
             "college_id": params.collegeId,
-            "study_year": params.studyYear,
+            "study_year_id": params.studyYear,
             "email": params.email,
             "password": params.password,
           },
@@ -94,39 +96,43 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 200 && response.body != null) {
-        final userData = AuthResponseModel.fromMap(response.body);
-        return Right(userData);
+        return Right(AuthResponseModel(access: '', refresh: '', role: ''));
       } else if (response.statusCode != 200 && response.body != null) {
-        // Handle error response with message from server
         String errorMessage = 'Sign up failed';
-        
+
         if (response.body is Map<String, dynamic>) {
           final body = response.body as Map<String, dynamic>;
-          
-          // Try to extract error message from common error fields
+
           if (body.containsKey('detail') && body['detail'] != null) {
             errorMessage = body['detail'].toString();
           } else if (body.containsKey('message') && body['message'] != null) {
             errorMessage = body['message'].toString();
-          } else if (body.containsKey('non_field_errors') && body['non_field_errors'] is List && (body['non_field_errors'] as List).isNotEmpty) {
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            // Try to get the first error message
             final firstEntry = body.entries.first;
             if (firstEntry.value is String) {
-              errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
-              errorMessage = (firstEntry.value as List).first.toString();
+              errorMessage = '${firstEntry.key}: ${firstEntry.value}';
+            } else if (firstEntry.value is List &&
+                (firstEntry.value as List).isNotEmpty) {
+              errorMessage =
+                  '${firstEntry.key}: ${(firstEntry.value as List).first}';
+            } else {
+              errorMessage = 'Sign up failed';
             }
           }
         }
-        
-        return Left(Failure(statusCode: response.statusCode, message: errorMessage));
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
       log("🔥🔥 Error in register: $e");
-      return Left(Failure.handleError(e as Exception));
+      return Left(Failure.handleError(Exception(e.toString())));
     }
   }
 
@@ -150,7 +156,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final data = response.body;
       final List<UniversityModel> universities = [];
 
-      // 🟢 الحالة الأساسية: response.body = Map وفيه key اسمه "results"
       if (data is Map<String, dynamic>) {
         final results = data['results'];
         if (results is List) {
@@ -158,9 +163,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             universities.add(UniversityModel.fromMap(item));
           }
         }
-      }
-      // 🟡 حالة احتياط: لو رجع List بدون Pagination
-      else if (data is List) {
+      } else if (data is List) {
         for (final item in data) {
           universities.add(UniversityModel.fromMap(item));
         }
@@ -221,7 +224,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   //? -----------------------------------------------------------------
 
-  // otp verfication
   @override
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRemote({
     required String email,
@@ -229,16 +231,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String purpose,
   }) async {
     try {
-      // Use different endpoints based on purpose
       String url;
       Map<String, dynamic> body;
 
       if (purpose == 'reset') {
-        // For password reset:
         url = AppUrls.verifyForgotPasswordOtp;
         body = {"email": email, "code": code, "purpose": purpose};
       } else {
-        // For registration:
         url = AppUrls.verifyOtp;
         body = {"email": email, "code": code, "purpose": purpose};
       }
@@ -246,41 +245,40 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await api.post(ApiRequest(url: url, body: body));
 
       if (response.statusCode == 200 && response.body != null) {
-        // Parse the response based on purpose
         if (purpose == 'reset') {
-          // For reset purpose, extract the reset_token
           final otpResponse = OtpVerificationResponse.fromJson(response.body);
           return Right(otpResponse);
         } else {
-          // For registration purpose, return empty response
           return Right(OtpVerificationResponse());
         }
       } else if (response.statusCode != 200 && response.body != null) {
-        // Handle error response with message from server
         String errorMessage = 'OTP verification failed';
-        
+
         if (response.body is Map<String, dynamic>) {
           final body = response.body as Map<String, dynamic>;
-          
-          // Try to extract error message from common error fields
+
           if (body.containsKey('detail') && body['detail'] != null) {
             errorMessage = body['detail'].toString();
           } else if (body.containsKey('message') && body['message'] != null) {
             errorMessage = body['message'].toString();
-          } else if (body.containsKey('non_field_errors') && body['non_field_errors'] is List && (body['non_field_errors'] as List).isNotEmpty) {
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            // Try to get the first error message
             final firstEntry = body.entries.first;
             if (firstEntry.value is String) {
               errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
+            } else if (firstEntry.value is List &&
+                (firstEntry.value as List).isNotEmpty) {
               errorMessage = (firstEntry.value as List).first.toString();
             }
           }
         }
-        
-        return Left(Failure(statusCode: response.statusCode, message: errorMessage));
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
@@ -306,31 +304,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200 && response.body != null) {
         return Right(true);
       } else if (response.statusCode != 200 && response.body != null) {
-        // Handle error response with message from server
         String errorMessage = 'Failed to resend OTP';
-        
+
         if (response.body is Map<String, dynamic>) {
           final body = response.body as Map<String, dynamic>;
-          
-          // Try to extract error message from common error fields
+
           if (body.containsKey('detail') && body['detail'] != null) {
             errorMessage = body['detail'].toString();
           } else if (body.containsKey('message') && body['message'] != null) {
             errorMessage = body['message'].toString();
-          } else if (body.containsKey('non_field_errors') && body['non_field_errors'] is List && (body['non_field_errors'] as List).isNotEmpty) {
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            // Try to get the first error message
             final firstEntry = body.entries.first;
             if (firstEntry.value is String) {
               errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
+            } else if (firstEntry.value is List &&
+                (firstEntry.value as List).isNotEmpty) {
               errorMessage = (firstEntry.value as List).first.toString();
             }
           }
         }
-        
-        return Left(Failure(statusCode: response.statusCode, message: errorMessage));
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
@@ -353,31 +353,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200 && response.body != null) {
         return Right(true);
       } else if (response.statusCode != 200 && response.body != null) {
-        // Handle error response with message from server
         String errorMessage = 'Failed to send reset password link';
-        
+
         if (response.body is Map<String, dynamic>) {
           final body = response.body as Map<String, dynamic>;
-          
-          // Try to extract error message from common error fields
+
           if (body.containsKey('detail') && body['detail'] != null) {
             errorMessage = body['detail'].toString();
           } else if (body.containsKey('message') && body['message'] != null) {
             errorMessage = body['message'].toString();
-          } else if (body.containsKey('non_field_errors') && body['non_field_errors'] is List && (body['non_field_errors'] as List).isNotEmpty) {
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            // Try to get the first error message
             final firstEntry = body.entries.first;
             if (firstEntry.value is String) {
               errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
+            } else if (firstEntry.value is List &&
+                (firstEntry.value as List).isNotEmpty) {
               errorMessage = (firstEntry.value as List).first.toString();
             }
           }
         }
-        
-        return Left(Failure(statusCode: response.statusCode, message: errorMessage));
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
@@ -400,31 +402,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200 && response.body != null) {
         return Right(true);
       } else if (response.statusCode != 200 && response.body != null) {
-        // Handle error response with message from server
         String errorMessage = 'Failed to reset password';
-        
+
         if (response.body is Map<String, dynamic>) {
           final body = response.body as Map<String, dynamic>;
-          
-          // Try to extract error message from common error fields
+
           if (body.containsKey('detail') && body['detail'] != null) {
             errorMessage = body['detail'].toString();
           } else if (body.containsKey('message') && body['message'] != null) {
             errorMessage = body['message'].toString();
-          } else if (body.containsKey('non_field_errors') && body['non_field_errors'] is List && (body['non_field_errors'] as List).isNotEmpty) {
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            // Try to get the first error message
             final firstEntry = body.entries.first;
             if (firstEntry.value is String) {
               errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
+            } else if (firstEntry.value is List &&
+                (firstEntry.value as List).isNotEmpty) {
               errorMessage = (firstEntry.value as List).first.toString();
             }
           }
         }
-        
-        return Left(Failure(statusCode: response.statusCode, message: errorMessage));
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
@@ -445,14 +449,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        // 🟢 الحالة الأساسية: response.body = Map وفيه key اسمه "results"
         if (data is Map<String, dynamic> && data['results'] is List) {
           for (final item in data['results']) {
             studyYears.add(StudyYearModel.fromJson(item));
           }
-        }
-        // 🟡 حالة احتياط: لو رجع List مباشرة
-        else if (data is List) {
+        } else if (data is List) {
           for (final item in data) {
             studyYears.add(StudyYearModel.fromJson(item));
           }
