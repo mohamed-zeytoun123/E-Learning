@@ -133,13 +133,13 @@ class AuthRepositoryImpl implements AuthRepository {
   //* otp Verfication
   @override
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRepo({
-    required String phone,
+    required String email,
     required String code,
     required String purpose, // reset_password || sign_up
   }) async {
     if (await network.isConnected) {
       final result = await remote.otpVerficationRemote(
-        phone: phone,
+        email: email,
         code: code,
         purpose: purpose,
       );
@@ -159,12 +159,12 @@ class AuthRepositoryImpl implements AuthRepository {
   //* Resend Otp
   @override
   Future<Either<Failure, bool>> resendOtpRepo({
-    required String phone,
+    required String email,
     required String purpose, // reset_password || sign_up
   }) async {
     if (await network.isConnected) {
       final result = await remote.resendOtpRemote(
-        phone: phone,
+        email: email,
         purpose: purpose,
       );
       return result.fold(
@@ -183,10 +183,10 @@ class AuthRepositoryImpl implements AuthRepository {
   //* Forget Password
   @override
   Future<Either<Failure, bool>> forgetPasswordRepo({
-    required String phone,
+    required String email,
   }) async {
     if (await network.isConnected) {
-      final result = await remote.forgetPasswordRemote(phone: phone);
+      final result = await remote.forgetPasswordRemote(email: email);
       return result.fold(
         (error) {
           return Left(error);

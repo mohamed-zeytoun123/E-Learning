@@ -31,19 +31,19 @@ abstract class AuthRepository {
 
   //* otp verfication
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRepo({
-    required String phone,
+    required String email,
     required String code,
     required String purpose, // reset_password || sign_up
   });
 
   //* Resend Otp
   Future<Either<Failure, bool>> resendOtpRepo({
-    required String phone,
+    required String email,
     required String purpose, // reset_password || sign_up
   });
 
   //* Forget Password
-  Future<Either<Failure, bool>> forgetPasswordRepo({required String phone});
+  Future<Either<Failure, bool>> forgetPasswordRepo({required String email});
 
   //* Reset Password
   Future<Either<Failure, bool>> resetPasswordRepo({

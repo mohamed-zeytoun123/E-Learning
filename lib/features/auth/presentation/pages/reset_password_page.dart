@@ -18,11 +18,11 @@ import 'package:go_router/go_router.dart';
 class ResetPasswordPage extends StatefulWidget {
   const ResetPasswordPage({
     super.key,
-    required this.phone,
+    required this.email,
     required this.resetToken,
   });
 
-  final String phone;
+  final String email;
   final String resetToken;
 
   @override
@@ -50,7 +50,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       if (!mounted) return;
 
       final params = ResetPasswordRequestParams(
-        phone: widget.phone,
+        email: widget.email,
         resetToken: widget.resetToken,
         newPassword: newPasswordController.text.trim(),
       );
@@ -67,7 +67,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   }
 
   void _showErrorMessage(String message) {
-    AppMessage.showSnackBar(
+    AppMessage.showFlushbar(
       context: context,
       message: message,
       backgroundColor: AppColors.textError,

@@ -149,7 +149,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   // otp verfication
   @override
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRemote({
-    required String phone,
+    required String email,
     required String code,
     required String purpose,
   }) async {
@@ -161,11 +161,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (purpose == 'reset') {
         // For password reset:
         url = AppUrls.verifyForgotPasswordOtp;
-        body = {"phone": phone, "code": code, "purpose": purpose};
+        body = {"email": email, "code": code, "purpose": purpose};
       } else {
         // For registration:
         url = AppUrls.verifyOtp;
-        body = {"phone": phone, "code": code, "purpose": purpose};
+        body = {"email": email, "code": code, "purpose": purpose};
       }
 
       final response = await api.post(ApiRequest(url: url, body: body));
@@ -191,14 +191,14 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   //* Resend Otp
   @override
   Future<Either<Failure, bool>> resendOtpRemote({
-    required String phone,
+    required String email,
     required String purpose,
   }) async {
     try {
       final response = await api.post(
         ApiRequest(
           url: AppUrls.resendOtp,
-          body: {"phone": phone, "purpose": purpose},
+          body: {"email": email, "purpose": purpose},
         ),
       );
 
@@ -215,11 +215,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   //* Forget Password
   @override
   Future<Either<Failure, bool>> forgetPasswordRemote({
-    required String phone,
+    required String email,
   }) async {
     try {
       final response = await api.post(
-        ApiRequest(url: AppUrls.forgetPassword, body: {"phone": phone}),
+        ApiRequest(url: AppUrls.forgetPassword, body: {"email": email}),
       );
       if (response.statusCode == 200 && response.body != null) {
         return Right(true);

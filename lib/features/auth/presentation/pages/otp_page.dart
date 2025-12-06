@@ -16,8 +16,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 class OtpPage extends StatefulWidget {
-  const OtpPage({super.key, required this.phone, required this.purpose});
-  final String phone;
+  const OtpPage({super.key, required this.email, required this.purpose});
+  final String email;
   final String purpose;
 
   @override
@@ -48,7 +48,7 @@ class _OtpPageState extends State<OtpPage> {
     final otpCode = _authCubit.state.currentOtpCode;
 
     if (otpCode == null || otpCode.length < 6) {
-      AppMessage.showSnackBar(
+      AppMessage.showFlushbar(
         context: context,
         message:
             AppLocalizations.of(
@@ -59,8 +59,7 @@ class _OtpPageState extends State<OtpPage> {
       );
       return;
     }
-
-    _authCubit.otpVerfication(widget.phone, otpCode, widget.purpose);
+    _authCubit.otpVerfication(widget.email, otpCode, widget.purpose);
   }
 
   Widget _buildOtpInput() {
@@ -72,7 +71,7 @@ class _OtpPageState extends State<OtpPage> {
         // Handle Resend OTP state
         switch (state.resendOtpState) {
           case ResponseStatusEnum.success:
-            AppMessage.showSnackBar(
+            AppMessage.showFlushbar(
               context: context,
               message:
                   AppLocalizations.of(
@@ -83,7 +82,7 @@ class _OtpPageState extends State<OtpPage> {
             );
             break;
           case ResponseStatusEnum.failure:
-            AppMessage.showSnackBar(
+            AppMessage.showFlushbar(
               context: context,
               message:
                   state.resendOtpError ??
@@ -102,7 +101,7 @@ class _OtpPageState extends State<OtpPage> {
         // Handle OTP verification state
         switch (state.otpVerficationState) {
           case ResponseStatusEnum.success:
-            AppMessage.showSnackBar(
+            AppMessage.showFlushbar(
               context: context,
               message:
                   AppLocalizations.of(
@@ -119,7 +118,7 @@ class _OtpPageState extends State<OtpPage> {
                 context.go(
                   RouteNames.resetPassword,
                   extra: {
-                    "phone": widget.phone,
+                    "email": widget.email,
                     "resetToken": resetToken ?? state.currentOtpCode,
                   },
                 );
@@ -127,7 +126,7 @@ class _OtpPageState extends State<OtpPage> {
             });
             break;
           case ResponseStatusEnum.failure:
-            AppMessage.showSnackBar(
+            AppMessage.showFlushbar(
               context: context,
               message:
                   state.otpVerficationError ??
@@ -171,7 +170,7 @@ class _OtpPageState extends State<OtpPage> {
           canResend: state.canResendOtp && !isResending,
           remainingSeconds: state.otpTimerSeconds,
           onResend: () async {
-            await _authCubit.resendOtp(widget.phone, widget.purpose);
+            await _authCubit.resendOtp(widget.email, widget.purpose);
           },
         );
       },
@@ -240,7 +239,7 @@ class _OtpPageState extends State<OtpPage> {
                   ),
                 ),
                 SizedBox(height: 48.h),
-                OtpInstructionWidget(phone: widget.phone),
+                OtpInstructionWidget(email: widget.email),
                 SizedBox(height: 24.h),
                 _buildOtpInput(),
                 _buildResendOtpWidget(),

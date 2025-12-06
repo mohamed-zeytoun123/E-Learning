@@ -5,22 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OtpInstructionWidget extends StatelessWidget {
-  final String phone;
+  final String email;
 
-  const OtpInstructionWidget({super.key, required this.phone});
+  const OtpInstructionWidget({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Text(
-          "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} :\n$phone ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
+          "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} :\n$email ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
           style: AppTextStyles.s12w400,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 12.h),
         Text(
-          AppLocalizations.of(context)?.translate("Please_Enter_The_Code_Down_Below") ??
+          AppLocalizations.of(
+                context,
+              )?.translate("Please_Enter_The_Code_Down_Below") ??
               "Please enter the code below to verify",
           style: AppTextStyles.s12w400,
           textAlign: TextAlign.center,
@@ -52,9 +54,7 @@ class OtpResendWidget extends StatelessWidget {
           Text(
             AppLocalizations.of(context)?.translate("Didnt_receive_the_code") ??
                 "Didn't receive the code?",
-            style: AppTextStyles.s12w400.copyWith(
-              color: AppColors.textGrey,
-            ),
+            style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
           ),
           SizedBox(width: 8.w),
           if (!canResend)

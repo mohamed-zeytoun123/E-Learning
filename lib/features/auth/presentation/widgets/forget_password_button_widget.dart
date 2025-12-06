@@ -19,7 +19,7 @@ class ForgetPasswordButtonWidget extends StatelessWidget {
   final Color? textColor;
   final Color? borderColor;
   final GlobalKey<FormState> formKey;
-  final TextEditingController phoneController;
+  final TextEditingController emailController;
 
   const ForgetPasswordButtonWidget({
     super.key,
@@ -27,7 +27,7 @@ class ForgetPasswordButtonWidget extends StatelessWidget {
     this.textColor,
     this.borderColor,
     required this.formKey,
-    required this.phoneController,
+    required this.emailController,
   });
 
   @override
@@ -82,12 +82,12 @@ class ForgetPasswordButtonWidget extends StatelessWidget {
             onTap: () {
               if (formKey.currentState!.validate()) {
                 log('Forget Password form is valid');
-                context.read<AuthCubit>().forgotPassword(phoneController.text);
+                context.read<AuthCubit>().forgotPassword(emailController.text);
                 context.push(
                   RouteNames.otpScreen,
                   extra: {
                     'blocProvide': BlocProvider.of<AuthCubit>(context),
-                    'phone': phoneController.text.trim(),
+                    'email': emailController.text.trim(),
                     'purpose': 'reset',
                   },
                 );

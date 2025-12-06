@@ -164,7 +164,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   //? ------------------------ otp verfication ----------------------------
-  Future<void> otpVerfication(String phone, String code, String purpose) {
+  Future<void> otpVerfication(String email, String code, String purpose) {
     emit(
       state.copyWith(
         otpVerficationState: ResponseStatusEnum.loading,
@@ -172,7 +172,7 @@ class AuthCubit extends Cubit<AuthState> {
       ),
     );
     return repository
-        .otpVerficationRepo(phone: phone, code: code, purpose: purpose)
+        .otpVerficationRepo(email: email, code: code, purpose: purpose)
         .then((result) {
           result.fold(
             (failure) => emit(
@@ -195,7 +195,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   // ------------------------- Resend OTP ----------------------------
-  Future<void> resendOtp(String phone, String purpose) async {
+  Future<void> resendOtp(String email, String purpose) async {
     // Check if resend is allowed (timer expired)
     if (!state.canResendOtp) {
       return;
@@ -209,7 +209,7 @@ class AuthCubit extends Cubit<AuthState> {
     );
 
     final result = await repository.resendOtpRepo(
-      phone: phone,
+      email: email,
       purpose: purpose,
     );
 
@@ -234,14 +234,14 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   //? ------------------------ Forgot Password ----------------------------
-  Future<void> forgotPassword(String phone) {
+  Future<void> forgotPassword(String email) {
     emit(
       state.copyWith(
         forgotPasswordState: ResponseStatusEnum.loading,
         forgotPasswordError: null,
       ),
     );
-    return repository.forgetPasswordRepo(phone: phone).then((result) {
+    return repository.forgetPasswordRepo(email: email).then((result) {
       result.fold(
         (failure) => emit(
           state.copyWith(
