@@ -42,6 +42,7 @@ class AuthCubit extends Cubit<AuthState> {
           state.copyWith(
             loginState: ResponseStatusEnum.success,
             loginError: null,
+            user: userData,
           ),
         );
       },

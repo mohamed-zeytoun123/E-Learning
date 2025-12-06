@@ -31,7 +31,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await api.post(
         ApiRequest(
           url: AppUrls.login,
-          body: {"phone": numberPhone, "password": password},
+          body: {"email": numberPhone, "password": password},
         ),
       );
       if (response.statusCode == 200 && response.body != null) {

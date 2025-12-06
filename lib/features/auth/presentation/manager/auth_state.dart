@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
@@ -10,6 +11,7 @@ class AuthState {
   //* LogIn
   final ResponseStatusEnum loginState;
   final String? loginError;
+  final AuthResponseModel? user;
 
   //* Sign Up
   final ResponseStatusEnum signUpState;
@@ -58,6 +60,7 @@ class AuthState {
   AuthState({
     this.getStudyYearsState = ResponseStatusEnum.initial,
     this.studyYearsError,
+    this.user,
     this.studyYears,
     this.signUpRequestParams,
     this.loginState = ResponseStatusEnum.initial,
@@ -85,6 +88,7 @@ class AuthState {
   });
 
   AuthState copyWith({
+    AuthResponseModel? user,
     SignUpRequestParams? signUpRequestParams,
     ResponseStatusEnum? loginState,
     String? loginError,
@@ -115,6 +119,7 @@ class AuthState {
     return AuthState(
       getStudyYearsState: getStudyYearsState ?? this.getStudyYearsState,
       studyYears: studyYears ?? this.studyYears,
+      user: user ?? this.user,
       studyYearsError: studyYearsError,
       loginState: loginState ?? this.loginState,
       signUpRequestParams: signUpRequestParams ?? this.signUpRequestParams,
