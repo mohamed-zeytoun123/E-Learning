@@ -2,13 +2,14 @@ class AppUrls {
   //?---------------------------------------------------------------
 
   // static const String _ip = "";
-  static const String _ip = "192.168.1.22";
+  // static const String _ip = "192.168.1.22";
   // static const String _ip = "192.168.1.100";
 
   //?---------------------------------------------------------------
 
-  static const String baseURl = 'http://$_ip:8100/api/v1';
-  // static const String baseURl = 'https://elearning.onedoorit.com';
+  // static const String baseURl = 'http://$_ip:8100/api/v1';
+  static const String baseURl = 'https://elearning.onedoorit.com/api/v1';
+
   // https://elearning.onedoorit.com/
 
   //?---------------------------------------------------------------
