@@ -122,14 +122,18 @@ class _OtpPageState extends State<OtpPage> {
             });
             break;
           case ResponseStatusEnum.failure:
-            AppMessage.showFlushbar(
+            // Show a more detailed error message
+            final errorMessage =
+                state.otpVerficationError ??
+                (AppLocalizations.of(
+                      context,
+                    )?.translate("OTP_verification_failed") ??
+                    "OTP verification failed");
+
+            // Show the error in a snackbar for better visibility
+            AppMessage.showSnackBar(
               context: context,
-              message:
-                  state.otpVerficationError ??
-                  (AppLocalizations.of(
-                        context,
-                      )?.translate("OTP_verification_failed") ??
-                      "OTP verification failed"),
+              message: errorMessage,
               backgroundColor: AppColors.textError,
             );
             break;
@@ -143,13 +147,11 @@ class _OtpPageState extends State<OtpPage> {
       builder: (context, state) => CustomOtp(
         onCodeChanged: (code) {
           if (context.mounted) {
-            _authCubit.setOtpCode(code); // تحديث الـ Cubit عند كل تغيير
+            _authCubit.setOtpCode(code);
           }
         },
         onSubmit: (code) {
-          _handleOtpVerification(
-            code,
-          ); // اعتمد على الكود اللي ارسله الـ CustomOtp مباشرة
+          _handleOtpVerification(code);
         },
       ),
     );
@@ -164,31 +166,14 @@ class _OtpPageState extends State<OtpPage> {
       builder: (context, state) {
         final isResending = state.resendOtpState == ResponseStatusEnum.loading;
 
-        // عرض التايمر مباشرة بالثواني بشكل سلس
-        final minutes = (state.otpTimerSeconds ~/ 60).toString().padLeft(
-          2,
-          '0',
-        );
-        final seconds = (state.otpTimerSeconds % 60).toString().padLeft(2, '0');
-        final timerText = "$minutes:$seconds";
-
-        return Column(
-          children: [
-            OtpResendWidget(
-              canResend: state.canResendOtp && !isResending,
-              remainingSeconds: state.otpTimerSeconds,
-              onResend: () async {
-                if (context.mounted) {
-                  await _authCubit.resendOtp(widget.email, widget.purpose);
-                }
-              },
-            ),
-            SizedBox(height: 8.h),
-            Text(
-              timerText,
-              style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
-            ),
-          ],
+        return OtpResendWidget(
+          canResend: state.canResendOtp && !isResending,
+          remainingSeconds: state.otpTimerSeconds,
+          onResend: () async {
+            if (context.mounted) {
+              await _authCubit.resendOtp(widget.email, widget.purpose);
+            }
+          },
         );
       },
     );

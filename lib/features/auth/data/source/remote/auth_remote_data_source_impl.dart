@@ -246,9 +246,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       String url;
       Map<String, dynamic> body;
 
+      // Map the purpose values to match what the backend expects
       if (purpose == 'reset') {
         url = AppUrls.verifyForgotPasswordOtp;
-        body = {"email": email, "code": code, "purpose": purpose};
+        body = {"email": email, "code": code};
       } else {
         url = AppUrls.verifyOtp;
         body = {"email": email, "code": code, "purpose": purpose};
@@ -269,22 +270,29 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         if (response.body is Map<String, dynamic>) {
           final body = response.body as Map<String, dynamic>;
 
+          // Check for specific error fields that might contain the error message
           if (body.containsKey('detail') && body['detail'] != null) {
             errorMessage = body['detail'].toString();
           } else if (body.containsKey('message') && body['message'] != null) {
             errorMessage = body['message'].toString();
+          } else if (body.containsKey('code') && body['code'] != null) {
+            errorMessage = body['code'].toString();
           } else if (body.containsKey('non_field_errors') &&
               body['non_field_errors'] is List &&
               (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
+          } else if (body.containsKey('error') && body['error'] != null) {
+            errorMessage = body['error'].toString();
           } else if (body.isNotEmpty) {
-            // Handle field-specific errors
+            // Handle field-specific errors like {"code": "Invalid or expired code"}
             final fieldErrors = <String>[];
             body.forEach((key, value) {
               if (value is String) {
-                fieldErrors.add(value);
+                fieldErrors.add('$key: $value');
               } else if (value is List && value.isNotEmpty) {
-                fieldErrors.add(value.first.toString());
+                fieldErrors.add('$key: ${value.first.toString()}');
+              } else if (value != null) {
+                fieldErrors.add('$key: $value');
               }
             });
 
@@ -312,50 +320,49 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String purpose,
   }) async {
     try {
+      // Map the purpose values to match what the backend expects for resend
+      String actualPurpose = purpose == 'reset' ? 'reset_password' : purpose;
+
       final response = await api.post(
         ApiRequest(
           url: AppUrls.resendOtp,
-          body: {"email": email, "purpose": purpose},
+          body: {"email": email, "purpose": actualPurpose},
         ),
       );
 
       if (response.statusCode == 200 && response.body != null) {
         return Right(true);
-      } else if (response.statusCode != 200 && response.body != null) {
-        String errorMessage = 'Failed to resend OTP';
+      } else if (response.body != null) {
+        final collectedErrors = <String>[];
 
-        if (response.body is Map<String, dynamic>) {
-          final body = response.body as Map<String, dynamic>;
-
-          if (body.containsKey('detail') && body['detail'] != null) {
-            errorMessage = body['detail'].toString();
-          } else if (body.containsKey('message') && body['message'] != null) {
-            errorMessage = body['message'].toString();
-          } else if (body.containsKey('non_field_errors') &&
-              body['non_field_errors'] is List &&
-              (body['non_field_errors'] as List).isNotEmpty) {
-            errorMessage = (body['non_field_errors'] as List).first.toString();
-          } else if (body.isNotEmpty) {
-            // Handle field-specific errors
-            final fieldErrors = <String>[];
-            body.forEach((key, value) {
-              if (value is String) {
-                fieldErrors.add(value);
-              } else if (value is List && value.isNotEmpty) {
-                fieldErrors.add(value.first.toString());
-              }
-            });
-
-            if (fieldErrors.isNotEmpty) {
-              errorMessage = fieldErrors.join(', ');
+        void extractErrors(dynamic value, [String? prefix]) {
+          if (value == null) return;
+          if (value is String) {
+            collectedErrors.add(prefix != null ? '$prefix: $value' : value);
+          } else if (value is List) {
+            for (var item in value) {
+              extractErrors(item, prefix);
             }
+          } else if (value is Map<String, dynamic>) {
+            value.forEach((key, val) {
+              extractErrors(val, key);
+            });
+          } else {
+            collectedErrors.add(value.toString());
           }
         }
+
+        extractErrors(response.body);
+
+        final errorMessage = collectedErrors.isNotEmpty
+            ? collectedErrors.join(', ')
+            : 'Failed to resend OTP';
 
         return Left(
           Failure(statusCode: response.statusCode, message: errorMessage),
         );
       }
+
       return Left(FailureServer());
     } catch (e) {
       log("error 🔥🔥🔥🔥🔥 Resend OTP:::$e");
