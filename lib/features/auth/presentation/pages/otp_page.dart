@@ -26,12 +26,12 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   late AuthCubit _authCubit;
+  final TextEditingController _otpController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _authCubit = context.read<AuthCubit>();
-    // Start the OTP timer with improved initialization
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _authCubit.startOtpTimer();
     });
@@ -39,15 +39,13 @@ class _OtpPageState extends State<OtpPage> {
 
   @override
   void dispose() {
-    // Stop the timer safely
     _authCubit.stopOtpTimer();
+    _otpController.dispose();
     super.dispose();
   }
 
-  void _handleOtpVerification() {
-    final otpCode = _authCubit.state.currentOtpCode;
-
-    if (otpCode == null || otpCode.length < 6) {
+  void _handleOtpVerification(String code) {
+    if (code.length < 6) {
       AppMessage.showSnackBar(
         context: context,
         message:
@@ -60,7 +58,7 @@ class _OtpPageState extends State<OtpPage> {
       return;
     }
 
-    _authCubit.otpVerfication(widget.email, otpCode, widget.purpose);
+    _authCubit.otpVerfication(widget.email, code, widget.purpose);
   }
 
   Widget _buildOtpInput() {
@@ -69,6 +67,7 @@ class _OtpPageState extends State<OtpPage> {
           previous.otpVerficationState != current.otpVerficationState ||
           previous.resendOtpState != current.resendOtpState,
       listener: (context, state) {
+        // Handle resend OTP messages
         switch (state.resendOtpState) {
           case ResponseStatusEnum.success:
             AppMessage.showFlushbar(
@@ -96,7 +95,7 @@ class _OtpPageState extends State<OtpPage> {
             break;
         }
 
-        // Handle OTP verification state
+        // Handle OTP verification messages
         switch (state.otpVerficationState) {
           case ResponseStatusEnum.success:
             AppMessage.showSnackBar(
@@ -109,7 +108,6 @@ class _OtpPageState extends State<OtpPage> {
               backgroundColor: Colors.green,
             );
 
-            // Navigate to reset password page
             Future.microtask(() {
               if (context.mounted) {
                 final resetToken = _authCubit.state.resetToken;
@@ -144,26 +142,19 @@ class _OtpPageState extends State<OtpPage> {
           previous.otpVerficationState != current.otpVerficationState,
       builder: (context, state) => CustomOtp(
         onCodeChanged: (code) {
-          // Check if context is still mounted before calling setOtpCode
           if (context.mounted) {
-            _authCubit.setOtpCode(code);
+            _authCubit.setOtpCode(code); // تحديث الـ Cubit عند كل تغيير
           }
         },
         onSubmit: (code) {
-          // Check if context is still mounted before calling setOtpCode
-          if (context.mounted) {
-            _authCubit.setOtpCode(code);
-            // Auto-submit when 6 digits are entered
-            if (code.length == 6) {
-              _handleOtpVerification();
-            }
-          }
+          _handleOtpVerification(
+            code,
+          ); // اعتمد على الكود اللي ارسله الـ CustomOtp مباشرة
         },
       ),
     );
   }
 
-  /// Builds the resend OTP widget with countdown timer
   Widget _buildResendOtpWidget() {
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (previous, current) =>
@@ -173,21 +164,36 @@ class _OtpPageState extends State<OtpPage> {
       builder: (context, state) {
         final isResending = state.resendOtpState == ResponseStatusEnum.loading;
 
-        return OtpResendWidget(
-          canResend: state.canResendOtp && !isResending,
-          remainingSeconds: state.otpTimerSeconds,
-          onResend: () async {
-            // Check if context is still mounted before calling cubit methods
-            if (context.mounted) {
-              await _authCubit.resendOtp(widget.email, widget.purpose);
-            }
-          },
+        // عرض التايمر مباشرة بالثواني بشكل سلس
+        final minutes = (state.otpTimerSeconds ~/ 60).toString().padLeft(
+          2,
+          '0',
+        );
+        final seconds = (state.otpTimerSeconds % 60).toString().padLeft(2, '0');
+        final timerText = "$minutes:$seconds";
+
+        return Column(
+          children: [
+            OtpResendWidget(
+              canResend: state.canResendOtp && !isResending,
+              remainingSeconds: state.otpTimerSeconds,
+              onResend: () async {
+                if (context.mounted) {
+                  await _authCubit.resendOtp(widget.email, widget.purpose);
+                }
+              },
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              timerText,
+              style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
+            ),
+          ],
         );
       },
     );
   }
 
-  /// Builds the submit button with loading state
   Widget _buildSubmitButton() {
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (previous, current) =>
@@ -210,10 +216,7 @@ class _OtpPageState extends State<OtpPage> {
           onTap: isLoading
               ? null
               : () {
-                  // Check if context is still mounted before handling verification
-                  if (context.mounted) {
-                    _handleOtpVerification();
-                  }
+                  _handleOtpVerification(_otpController.text);
                 },
         );
       },

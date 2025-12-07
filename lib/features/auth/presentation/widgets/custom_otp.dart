@@ -5,7 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomOtp extends StatelessWidget {
   final void Function(String)? onCodeChanged;
-  final void Function(String)? onSubmit;
+  final void Function(String) onSubmit;
+
   const CustomOtp({super.key, this.onCodeChanged, required this.onSubmit});
 
   @override
@@ -20,7 +21,18 @@ class CustomOtp extends StatelessWidget {
       fieldHeight: 48.h,
       showFieldAsBox: true,
       onCodeChanged: onCodeChanged,
-      onSubmit: onSubmit,
+      onSubmit: (code) {
+        if (code.length == 6) {
+          onSubmit(code); // نرسل الكود مباشرة للتحقق
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Please enter the 6-digit code"),
+              backgroundColor: AppColors.textError,
+            ),
+          );
+        }
+      },
     );
   }
 }
