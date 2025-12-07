@@ -86,7 +86,7 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
               SizedBox(height: 20.h),
               BlocConsumer<AuthCubit, AuthState>(
                 listener: (context, state) {
-                  // نجاح التسجيل → الانتقال لصفحة OTP
+                  
                   if (state.signUpState == ResponseStatusEnum.success) {
                     if (context.mounted) {
                       context.go(
