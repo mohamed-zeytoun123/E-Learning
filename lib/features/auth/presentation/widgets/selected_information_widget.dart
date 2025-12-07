@@ -27,7 +27,10 @@ class SelectedInformationWidget extends StatelessWidget {
                   cur.signUpRequestParams?.universityId,
           builder: (context, state) {
             if (state.getUniversitiesState == ResponseStatusEnum.loading) {
-              return AppLoading.linear();
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                child: AppLoading.linear(),
+              );
             } else if (state.getUniversitiesState ==
                 ResponseStatusEnum.failure) {
               return Text(
@@ -284,7 +287,7 @@ class SelectedInformationWidget extends StatelessWidget {
               hintKey: "choose_study_year",
               options: studyYears.isNotEmpty
                   ? studyYears.map((sy) => sy.name).toList()
-                  : ["Loading..."], // temporary placeholder
+                  : ["Loading..."],
               value:
                   state.signUpRequestParams?.studyYear != null &&
                       studyYears.any(
