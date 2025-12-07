@@ -4,10 +4,8 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomOtp extends StatelessWidget {
-  final void Function(String)? onCodeChanged;
-  final void Function(String) onSubmit;
-
-  const CustomOtp({super.key, this.onCodeChanged, required this.onSubmit});
+  final void Function(String)? onSubmit;
+  const CustomOtp({super.key, required this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +18,8 @@ class CustomOtp extends StatelessWidget {
       fieldWidth: 48.w,
       fieldHeight: 48.h,
       showFieldAsBox: true,
-      onCodeChanged: onCodeChanged,
-      onSubmit: (code) {
-        if (code.length == 6) {
-          onSubmit(code); // نرسل الكود مباشرة للتحقق
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text("Please enter the 6-digit code"),
-              backgroundColor: AppColors.textError,
-            ),
-          );
-        }
-      },
+      onCodeChanged: (value) {},
+      onSubmit: onSubmit,
     );
   }
 }

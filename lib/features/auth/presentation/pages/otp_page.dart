@@ -4,6 +4,7 @@ import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
@@ -183,22 +184,20 @@ class _OtpPageState extends State<OtpPage> {
       buildWhen: (previous, current) =>
           previous.otpVerficationState != current.otpVerficationState,
       builder: (context, state) {
-        final isLoading =
-            state.otpVerficationState == ResponseStatusEnum.loading;
-
-        return CustomButtonWidget(
-          title: isLoading
-              ? (AppLocalizations.of(context)?.translate("Loading") ??
-                    "Loading...")
-              : (AppLocalizations.of(context)?.translate("Next") ?? "Next"),
-          titleStyle: AppTextStyles.s16w500.copyWith(
-            fontFamily: AppTextStyles.fontGeist,
-            color: AppColors.titlePrimary,
-          ),
-          buttonColor: AppColors.buttonPrimary,
-          borderColor: AppColors.borderPrimary,
-          onTap: isLoading ? null : _handleOtpVerification,
-        );
+        if (state.otpVerficationState == ResponseStatusEnum.loading) {
+          return Center(child: AppLoading.circular());
+        } else {
+          return CustomButtonWidget(
+            title: "Next",
+            titleStyle: AppTextStyles.s16w500.copyWith(
+              fontFamily: AppTextStyles.fontGeist,
+              color: AppColors.titlePrimary,
+            ),
+            buttonColor: AppColors.buttonPrimary,
+            borderColor: AppColors.borderPrimary,
+            onTap: _handleOtpVerification,
+          );
+        }
       },
     );
   }
