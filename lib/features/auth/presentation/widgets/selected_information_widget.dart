@@ -261,8 +261,6 @@ class SelectedInformationWidget extends StatelessWidget {
                     context.read<AuthCubit>().updateSignUpParams(
                       collegeId: selected.id,
                     );
-
-                    context.read<AuthCubit>().getStudyYears();
                   },
                 );
 

@@ -26,12 +26,12 @@ class OtpPage extends StatefulWidget {
 
 class _OtpPageState extends State<OtpPage> {
   late AuthCubit _authCubit;
-  final TextEditingController _otpController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _authCubit = context.read<AuthCubit>();
+    // Start the OTP timer
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _authCubit.startOtpTimer();
     });
@@ -39,14 +39,16 @@ class _OtpPageState extends State<OtpPage> {
 
   @override
   void dispose() {
+    // Stop the timer safely
     _authCubit.stopOtpTimer();
-    _otpController.dispose();
     super.dispose();
   }
 
-  void _handleOtpVerification(String code) {
-    if (code.length < 6) {
-      AppMessage.showSnackBar(
+  void _handleOtpVerification() {
+    final otpCode = _authCubit.state.currentOtpCode;
+
+    if (otpCode == null || otpCode.length < 6) {
+      AppMessage.showFlushbar(
         context: context,
         message:
             AppLocalizations.of(
@@ -57,8 +59,7 @@ class _OtpPageState extends State<OtpPage> {
       );
       return;
     }
-
-    _authCubit.otpVerfication(widget.email, code, widget.purpose);
+    _authCubit.otpVerfication(widget.email, otpCode, widget.purpose);
   }
 
   Widget _buildOtpInput() {
@@ -67,7 +68,7 @@ class _OtpPageState extends State<OtpPage> {
           previous.otpVerficationState != current.otpVerficationState ||
           previous.resendOtpState != current.resendOtpState,
       listener: (context, state) {
-        // Handle resend OTP messages
+        // Handle Resend OTP state
         switch (state.resendOtpState) {
           case ResponseStatusEnum.success:
             AppMessage.showFlushbar(
@@ -77,6 +78,7 @@ class _OtpPageState extends State<OtpPage> {
                     context,
                   )?.translate("OTP_sent_successfully") ??
                   "OTP sent successfully",
+              backgroundColor: Colors.green,
             );
             break;
           case ResponseStatusEnum.failure:
@@ -88,6 +90,7 @@ class _OtpPageState extends State<OtpPage> {
                         context,
                       )?.translate("Failed_to_send_OTP") ??
                       "Failed to send OTP"),
+              backgroundColor: AppColors.textError,
             );
             break;
           case ResponseStatusEnum.loading:
@@ -95,10 +98,10 @@ class _OtpPageState extends State<OtpPage> {
             break;
         }
 
-        // Handle OTP verification messages
+        // Handle OTP verification state
         switch (state.otpVerficationState) {
           case ResponseStatusEnum.success:
-            AppMessage.showSnackBar(
+            AppMessage.showFlushbar(
               context: context,
               message:
                   AppLocalizations.of(
@@ -108,6 +111,7 @@ class _OtpPageState extends State<OtpPage> {
               backgroundColor: Colors.green,
             );
 
+            // Navigate to reset password page
             Future.microtask(() {
               if (context.mounted) {
                 final resetToken = _authCubit.state.resetToken;
@@ -122,18 +126,14 @@ class _OtpPageState extends State<OtpPage> {
             });
             break;
           case ResponseStatusEnum.failure:
-            // Show a more detailed error message
-            final errorMessage =
-                state.otpVerficationError ??
-                (AppLocalizations.of(
-                      context,
-                    )?.translate("OTP_verification_failed") ??
-                    "OTP verification failed");
-
-            // Show the error in a snackbar for better visibility
-            AppMessage.showSnackBar(
+            AppMessage.showFlushbar(
               context: context,
-              message: errorMessage,
+              message:
+                  state.otpVerficationError ??
+                  (AppLocalizations.of(
+                        context,
+                      )?.translate("OTP_verification_failed") ??
+                      "OTP verification failed"),
               backgroundColor: AppColors.textError,
             );
             break;
@@ -145,18 +145,18 @@ class _OtpPageState extends State<OtpPage> {
       buildWhen: (previous, current) =>
           previous.otpVerficationState != current.otpVerficationState,
       builder: (context, state) => CustomOtp(
-        onCodeChanged: (code) {
-          if (context.mounted) {
-            _authCubit.setOtpCode(code);
-          }
-        },
         onSubmit: (code) {
-          _handleOtpVerification(code);
+          _authCubit.setOtpCode(code);
+          // Auto-submit when 6 digits are entered
+          if (code.length == 6) {
+            _handleOtpVerification();
+          }
         },
       ),
     );
   }
 
+  /// Builds the resend OTP widget with countdown timer
   Widget _buildResendOtpWidget() {
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (previous, current) =>
@@ -170,15 +170,14 @@ class _OtpPageState extends State<OtpPage> {
           canResend: state.canResendOtp && !isResending,
           remainingSeconds: state.otpTimerSeconds,
           onResend: () async {
-            if (context.mounted) {
-              await _authCubit.resendOtp(widget.email, widget.purpose);
-            }
+            await _authCubit.resendOtp(widget.email, widget.purpose);
           },
         );
       },
     );
   }
 
+  /// Builds the submit button with loading state
   Widget _buildSubmitButton() {
     return BlocBuilder<AuthCubit, AuthState>(
       buildWhen: (previous, current) =>
@@ -198,11 +197,7 @@ class _OtpPageState extends State<OtpPage> {
           ),
           buttonColor: AppColors.buttonPrimary,
           borderColor: AppColors.borderPrimary,
-          onTap: isLoading
-              ? null
-              : () {
-                  _handleOtpVerification(_otpController.text);
-                },
+          onTap: isLoading ? null : _handleOtpVerification,
         );
       },
     );

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
@@ -156,7 +155,7 @@ class AuthCubit extends Cubit<AuthState> {
     final updatedParams = SignUpRequestParams(
       fullName: fullName ?? currentParams.fullName,
       universityId: universityId ?? currentParams.universityId,
-      collegeId: collegeId, // Fixed: Always use the passed value, even if null
+      collegeId: collegeId,
       studyYear: studyYear ?? currentParams.studyYear,
       email: email ?? currentParams.email,
       password: password ?? currentParams.password,
@@ -165,62 +164,48 @@ class AuthCubit extends Cubit<AuthState> {
     emit(state.copyWith(signUpRequestParams: updatedParams));
   }
 
-  //? ------------------------ otp verfication ----------------------------
+  //? ------------------------ OTP Verification ----------------------------
   Future<void> otpVerfication(String phone, String code, String purpose) {
-    // Check if cubit is not closed before emitting
-    if (!isClosed) {
-      emit(
-        state.copyWith(
-          otpVerficationState: ResponseStatusEnum.loading,
-          otpVerficationError: null,
-        ),
-      );
-    }
+    emit(
+      state.copyWith(
+        otpVerficationState: ResponseStatusEnum.loading,
+        otpVerficationError: null,
+      ),
+    );
+
     return repository
         .otpVerficationRepo(email: phone, code: code, purpose: purpose)
         .then((result) {
-          // Check if cubit is not closed before emitting
-          if (!isClosed) {
-            result.fold(
-              (failure) => emit(
-                state.copyWith(
-                  otpVerficationState: ResponseStatusEnum.failure,
-                  otpVerficationError: failure.message,
-                ),
+          result.fold(
+            (failure) => emit(
+              state.copyWith(
+                otpVerficationState: ResponseStatusEnum.failure,
+                otpVerficationError: failure.message,
               ),
-              (otpResponse) {
-                emit(
-                  state.copyWith(
-                    otpVerficationState: ResponseStatusEnum.success,
-                    otpVerficationError: null,
-                    resetToken: otpResponse.resetToken, // Store the reset token
-                  ),
-                );
-              },
-            );
-          }
+            ),
+            (otpResponse) {
+              emit(
+                state.copyWith(
+                  otpVerficationState: ResponseStatusEnum.success,
+                  otpVerficationError: null,
+                  resetToken: otpResponse.resetToken,
+                ),
+              );
+            },
+          );
         });
   }
 
   //? ------------------------ OTP Timer Management ----------------------------
   void startOtpTimer() {
     _otpTimer?.cancel();
-    // Check if cubit is not closed before emitting
-    if (!isClosed) {
-      emit(state.copyWith(otpTimerSeconds: 60, canResendOtp: false));
-    }
+    emit(state.copyWith(otpTimerSeconds: 60, canResendOtp: false));
 
     _otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      // Check if cubit is not closed before emitting
-      if (!isClosed) {
-        final newTime = state.otpTimerSeconds - 1;
-        if (newTime > 0) {
-          emit(state.copyWith(otpTimerSeconds: newTime));
-        } else {
-          emit(state.copyWith(otpTimerSeconds: 0, canResendOtp: true));
-          timer.cancel();
-        }
+      if (state.otpTimerSeconds > 0) {
+        emit(state.copyWith(otpTimerSeconds: state.otpTimerSeconds - 1));
       } else {
+        emit(state.copyWith(canResendOtp: true));
         timer.cancel();
       }
     });
@@ -231,55 +216,42 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void setOtpCode(String code) {
-    // Check if cubit is not closed before emitting
-    if (!isClosed) {
-      emit(state.copyWith(currentOtpCode: code));
-    }
+    emit(state.copyWith(currentOtpCode: code));
   }
 
-  // ------------------------- Resend OTP ----------------------------
+  //? ------------------------- Resend OTP ----------------------------
   Future<void> resendOtp(String phone, String purpose) async {
-    // Check if resend is allowed (timer expired)
-    if (!state.canResendOtp) {
-      return;
-    }
+    if (!state.canResendOtp) return;
 
-    // Check if cubit is not closed before emitting
-    if (!isClosed) {
-      emit(
-        state.copyWith(
-          resendOtpState: ResponseStatusEnum.loading,
-          resendOtpError: null,
-        ),
-      );
-    }
+    emit(
+      state.copyWith(
+        resendOtpState: ResponseStatusEnum.loading,
+        resendOtpError: null,
+      ),
+    );
 
     final result = await repository.resendOtpRepo(
       email: phone,
       purpose: purpose,
     );
 
-    // Check if cubit is not closed before emitting
-    if (!isClosed) {
-      result.fold(
-        (failure) => emit(
-          state.copyWith(
-            resendOtpState: ResponseStatusEnum.failure,
-            resendOtpError: failure.message,
-          ),
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          resendOtpState: ResponseStatusEnum.failure,
+          resendOtpError: failure.message,
         ),
-        (isResent) {
-          emit(
-            state.copyWith(
-              resendOtpState: ResponseStatusEnum.success,
-              resendOtpError: null,
-            ),
-          );
-          // Restart the timer after successful resend
-          startOtpTimer();
-        },
-      );
-    }
+      ),
+      (isResent) {
+        emit(
+          state.copyWith(
+            resendOtpState: ResponseStatusEnum.success,
+            resendOtpError: null,
+          ),
+        );
+        startOtpTimer();
+      },
+    );
   }
 
   //? ------------------------ Forgot Password ----------------------------
@@ -290,6 +262,7 @@ class AuthCubit extends Cubit<AuthState> {
         forgotPasswordError: null,
       ),
     );
+
     return repository.forgetPasswordRepo(phone: phone).then((result) {
       result.fold(
         (failure) => emit(
@@ -298,14 +271,12 @@ class AuthCubit extends Cubit<AuthState> {
             forgotPasswordError: failure.message,
           ),
         ),
-        (userData) {
-          emit(
-            state.copyWith(
-              forgotPasswordState: ResponseStatusEnum.success,
-              forgotPasswordError: null,
-            ),
-          );
-        },
+        (_) => emit(
+          state.copyWith(
+            forgotPasswordState: ResponseStatusEnum.success,
+            forgotPasswordError: null,
+          ),
+        ),
       );
     });
   }
@@ -318,6 +289,7 @@ class AuthCubit extends Cubit<AuthState> {
         resetPasswordError: null,
       ),
     );
+
     return repository.resetPasswordRepo(params: params).then((result) {
       result.fold(
         (failure) => emit(
@@ -326,14 +298,12 @@ class AuthCubit extends Cubit<AuthState> {
             resetPasswordError: failure.message,
           ),
         ),
-        (isReset) {
-          emit(
-            state.copyWith(
-              resetPasswordState: ResponseStatusEnum.success,
-              resetPasswordError: null,
-            ),
-          );
-        },
+        (_) => emit(
+          state.copyWith(
+            resetPasswordState: ResponseStatusEnum.success,
+            resetPasswordError: null,
+          ),
+        ),
       );
     });
   }

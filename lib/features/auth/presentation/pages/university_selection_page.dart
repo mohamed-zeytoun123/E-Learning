@@ -29,22 +29,24 @@ class UniversitySelectionPage extends StatefulWidget {
 
 class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
   Future<void> _refreshUniversities() async {
-    await context.read<AuthCubit>().getUniversities();
+    final cubit = context.read<AuthCubit>();
+    await cubit.getUniversities();
+    await cubit.getStudyYears();
   }
 
   @override
   void initState() {
     super.initState();
     _refreshUniversities();
-    
+
     // If there's already a college selected, fetch study years
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final authCubit = context.read<AuthCubit>();
-      final currentState = authCubit.state;
-      if (currentState.signUpRequestParams?.collegeId != null) {
-        authCubit.getStudyYears();
-      }
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   final authCubit = context.read<AuthCubit>();
+    //   final currentState = authCubit.state;
+    // if (currentState.signUpRequestParams?.collegeId != null) {
+    //   authCubit.getStudyYears();
+    // }
+    // });
   }
 
   @override
