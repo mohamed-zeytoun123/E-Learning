@@ -287,7 +287,7 @@ class SelectedInformationWidget extends StatelessWidget {
               hintKey: "choose_study_year",
               options: studyYears.isNotEmpty
                   ? studyYears.map((sy) => sy.name).toList()
-                  : ["Loading..."],
+                  : [],
               value:
                   state.signUpRequestParams?.studyYear != null &&
                       studyYears.any(

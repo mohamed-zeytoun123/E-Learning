@@ -56,12 +56,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             final fieldErrors = <String>[];
             body.forEach((key, value) {
               if (value is String) {
-                fieldErrors.add('$key: $value');
+                fieldErrors.add(value);
               } else if (value is List && value.isNotEmpty) {
-                fieldErrors.add('$key: ${value.first}');
+                fieldErrors.add(value.first.toString());
               }
             });
-            
+
             if (fieldErrors.isNotEmpty) {
               errorMessage = fieldErrors.join(', ');
             }
@@ -111,6 +111,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
           if (body.containsKey('detail') && body['detail'] != null) {
             errorMessage = body['detail'].toString();
+          } else if (body.containsKey('email') && body['email'] != null) {
+            errorMessage = body['email'].toString();
           } else if (body.containsKey('message') && body['message'] != null) {
             errorMessage = body['message'].toString();
           } else if (body.containsKey('non_field_errors') &&
@@ -122,12 +124,12 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             final fieldErrors = <String>[];
             body.forEach((key, value) {
               if (value is String) {
-                fieldErrors.add('$key: $value');
+                fieldErrors.add(value);
               } else if (value is List && value.isNotEmpty) {
-                fieldErrors.add('$key: ${value.first}');
+                fieldErrors.add(value.first.toString());
               }
             });
-            
+
             if (fieldErrors.isNotEmpty) {
               errorMessage = fieldErrors.join(', ');
             } else {
@@ -187,7 +189,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   //? -----------------------------------------------------------------
-  //* getColleges
   //* getColleges
   @override
   Future<Either<Failure, List<CollegeModel>>> getCollegesRemote({
@@ -277,12 +278,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            final firstEntry = body.entries.first;
-            if (firstEntry.value is String) {
-              errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List &&
-                (firstEntry.value as List).isNotEmpty) {
-              errorMessage = (firstEntry.value as List).first.toString();
+            // Handle field-specific errors
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
+              }
+            });
+
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
             }
           }
         }
@@ -329,12 +336,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            final firstEntry = body.entries.first;
-            if (firstEntry.value is String) {
-              errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List &&
-                (firstEntry.value as List).isNotEmpty) {
-              errorMessage = (firstEntry.value as List).first.toString();
+            // Handle field-specific errors
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
+              }
+            });
+
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
             }
           }
         }
@@ -378,12 +391,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            final firstEntry = body.entries.first;
-            if (firstEntry.value is String) {
-              errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List &&
-                (firstEntry.value as List).isNotEmpty) {
-              errorMessage = (firstEntry.value as List).first.toString();
+            // Handle field-specific errors
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
+              }
+            });
+
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
             }
           }
         }
@@ -427,12 +446,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            final firstEntry = body.entries.first;
-            if (firstEntry.value is String) {
-              errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List &&
-                (firstEntry.value as List).isNotEmpty) {
-              errorMessage = (firstEntry.value as List).first.toString();
+            // Handle field-specific errors
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
+              }
+            });
+
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
             }
           }
         }

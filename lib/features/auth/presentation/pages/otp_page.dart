@@ -69,7 +69,6 @@ class _OtpPageState extends State<OtpPage> {
           previous.otpVerficationState != current.otpVerficationState ||
           previous.resendOtpState != current.resendOtpState,
       listener: (context, state) {
-        // Handle Resend OTP state
         switch (state.resendOtpState) {
           case ResponseStatusEnum.success:
             AppMessage.showFlushbar(

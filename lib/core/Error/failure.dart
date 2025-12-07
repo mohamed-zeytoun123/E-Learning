@@ -52,20 +52,26 @@ class Failure {
           } else if (data.containsKey('message') && data['message'] != null) {
             errorMsg = data['message'].toString();
           } else {
-            // Try to get the first error message
-            final firstEntry = data.entries.first;
-            if (firstEntry.value is String) {
-              errorMsg = firstEntry.value.toString();
-            } else if (firstEntry.value is List && (firstEntry.value as List).isNotEmpty) {
-              errorMsg = (firstEntry.value as List).first.toString();
+            // Handle field-specific errors like {"email": "Email already exists"}
+            final fieldErrors = <String>[];
+            data.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
+              }
+            });
+            
+            if (fieldErrors.isNotEmpty) {
+              errorMsg = fieldErrors.join(', ');
             } else {
-              errorMsg = 'Validation error';
+              errorMsg = 'Something went wrong, please try again.';
             }
           }
 
           return Failure(
             statusCode: status,
-            message: errorMsg ?? 'Something went wrong, please try again.',
+            message: errorMsg,
           );
         } else {
           //* لو البيانات مش Map أو فاضي

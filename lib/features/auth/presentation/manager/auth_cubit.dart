@@ -213,10 +213,11 @@ class AuthCubit extends Cubit<AuthState> {
     _otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       // Check if cubit is not closed before emitting
       if (!isClosed) {
-        if (state.otpTimerSeconds > 0) {
-          emit(state.copyWith(otpTimerSeconds: state.otpTimerSeconds - 1));
+        final newTime = state.otpTimerSeconds - 1;
+        if (newTime > 0) {
+          emit(state.copyWith(otpTimerSeconds: newTime));
         } else {
-          emit(state.copyWith(canResendOtp: true));
+          emit(state.copyWith(otpTimerSeconds: 0, canResendOtp: true));
           timer.cancel();
         }
       } else {
