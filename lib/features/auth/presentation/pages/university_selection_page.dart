@@ -5,6 +5,7 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
@@ -38,15 +39,6 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
   void initState() {
     super.initState();
     _refreshUniversities();
-
-    // If there's already a college selected, fetch study years
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   final authCubit = context.read<AuthCubit>();
-    //   final currentState = authCubit.state;
-    // if (currentState.signUpRequestParams?.collegeId != null) {
-    //   authCubit.getStudyYears();
-    // }
-    // });
   }
 
   @override
@@ -92,14 +84,10 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
               SizedBox(height: 40.h),
               SelectedInformationWidget(),
               SizedBox(height: 20.h),
-              // Add BlocListener to handle sign up success/failure
-              BlocListener<AuthCubit, AuthState>(
+              BlocConsumer<AuthCubit, AuthState>(
                 listener: (context, state) {
-                  if (state.signUpState == ResponseStatusEnum.loading) {
-                    // Show loading indicator if needed
-                  } else if (state.signUpState == ResponseStatusEnum.success) {
-                    // Navigate to OTP screen after successful registration
-                    // Use go() instead of push() to completely replace the page
+                  // نجاح التسجيل → الانتقال لصفحة OTP
+                  if (state.signUpState == ResponseStatusEnum.success) {
                     if (context.mounted) {
                       context.go(
                         RouteNames.otpScreen,
@@ -111,15 +99,18 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                       );
                     }
                   } else if (state.signUpState == ResponseStatusEnum.failure) {
-                    // Show error message
                     final errorMessage =
                         state.signUpError ??
                         AppLocalizations.of(
                           context,
                         )?.translate("Sign_up_failed") ??
                         "Sign up failed";
+
                     if (context.mounted) {
                       AppMessage.showFlushbar(
+                        isShowProgress: true,
+                        iconData: Icons.error_outline,
+                        title: "Error",
                         context: context,
                         message: errorMessage,
                         backgroundColor: AppColors.textError,
@@ -127,10 +118,13 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                     }
                   }
                 },
-                child: BlocSelector<AuthCubit, AuthState, SignUpRequestParams?>(
-                  selector: (state) => state.signUpRequestParams,
-                  builder: (context, signUpParams) {
-                    // Optimize rebuilds by only rebuilding when necessary fields change
+
+                builder: (context, state) {
+                  if (state.signUpState == ResponseStatusEnum.loading) {
+                    return Center(child: AppLoading.circular());
+                  } else {
+                    final signUpParams = state.signUpRequestParams;
+
                     final isAllFilled =
                         (signUpParams?.fullName.isNotEmpty ?? false) &&
                         signUpParams?.universityId != null &&
@@ -139,31 +133,39 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
                         (signUpParams?.email.isNotEmpty ?? false) &&
                         (signUpParams?.password.isNotEmpty ?? false);
 
+                    final isLoading =
+                        state.signUpState == ResponseStatusEnum.loading;
+
+                    // زر "Next"
                     return CustomButtonWidget(
-                      title:
-                          AppLocalizations.of(context)?.translate("next") ??
-                          "Next",
+                      title: "Next",
+
                       titleStyle: AppTextStyles.s16w500.copyWith(
                         color: isAllFilled
                             ? AppColors.titlePrimary
                             : AppColors.titleBlack,
                         fontFamily: AppTextStyles.fontGeist,
                       ),
+
                       buttonColor: isAllFilled
                           ? AppColors.buttonPrimary
                           : AppColors.buttonGreyF,
+
                       borderColor: AppColors.borderBrand,
-                      onTap: isAllFilled
+
+                      // الحالة: تحميل → زر معطل
+                      onTap: (isAllFilled && !isLoading)
                           ? () {
-                              // Trigger the sign up API call instead of navigating directly
                               context.read<AuthCubit>().signUp(
                                 params: signUpParams!,
                               );
                             }
                           : null,
+
+                      // دائرة التحميل داخل الزر
                     );
-                  },
-                ),
+                  }
+                },
               ),
             ],
           ),

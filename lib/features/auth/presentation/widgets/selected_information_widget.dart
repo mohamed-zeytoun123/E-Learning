@@ -235,7 +235,7 @@ class SelectedInformationWidget extends StatelessWidget {
                     ),
                   );
                 }
-
+                //?-----------------------------------------------------------------
                 return InputSelectWidget(
                   hint: "Choose College",
                   hintKey: "choose_college",
@@ -279,7 +279,24 @@ class SelectedInformationWidget extends StatelessWidget {
           builder: (context, state) {
             final studyYears = state.studyYears ?? [];
 
-            // Always show the study year field like university
+            if (state.getStudyYearsState == ResponseStatusEnum.loading) {
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 20.h),
+                child: AppLoading.linear(),
+              );
+            }
+
+            if (state.getStudyYearsState == ResponseStatusEnum.failure) {
+              return Text(
+                state.studyYearsError ??
+                    AppLocalizations.of(
+                      context,
+                    )?.translate("failed_to_load_study_years") ??
+                    "Failed to load study years",
+                style: TextStyle(color: AppColors.textError),
+              );
+            }
+
             return InputSelectWidget(
               hint: "Choose Study Year",
               hintKey: "choose_study_year",
@@ -299,6 +316,7 @@ class SelectedInformationWidget extends StatelessWidget {
                   : null,
               onChanged: (value) {
                 if (studyYears.isEmpty) return;
+
                 final selectedYear = studyYears.firstWhere(
                   (sy) => sy.name == value,
                   orElse: () => studyYears.first,

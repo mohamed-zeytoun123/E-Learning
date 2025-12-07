@@ -103,49 +103,45 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
       if (response.statusCode == 200 && response.body != null) {
         return Right(AuthResponseModel(access: '', refresh: '', role: ''));
-      } else if (response.statusCode != 200 && response.body != null) {
-        String errorMessage = 'Sign up failed';
+      }
 
-        if (response.body is Map<String, dynamic>) {
-          final body = response.body as Map<String, dynamic>;
+      String errorMessage = 'Sign up failed';
 
-          if (body.containsKey('detail') && body['detail'] != null) {
-            errorMessage = body['detail'].toString();
-          } else if (body.containsKey('email') && body['email'] != null) {
-            errorMessage = body['email'].toString();
-          } else if (body.containsKey('message') && body['message'] != null) {
-            errorMessage = body['message'].toString();
-          } else if (body.containsKey('non_field_errors') &&
-              body['non_field_errors'] is List &&
-              (body['non_field_errors'] as List).isNotEmpty) {
-            errorMessage = (body['non_field_errors'] as List).first.toString();
-          } else if (body.isNotEmpty) {
-            // Handle field-specific errors like {"email": "Email already exists"}
-            final fieldErrors = <String>[];
-            body.forEach((key, value) {
-              if (value is String) {
-                fieldErrors.add(value);
-              } else if (value is List && value.isNotEmpty) {
-                fieldErrors.add(value.first.toString());
-              }
-            });
+      if (response.body is Map<String, dynamic>) {
+        final body = response.body as Map<String, dynamic>;
 
-            if (fieldErrors.isNotEmpty) {
-              errorMessage = fieldErrors.join(', ');
-            } else {
-              errorMessage = 'Sign up failed';
+        if (body['detail'] != null) {
+          errorMessage = body['detail'].toString();
+        } else if (body['email'] != null) {
+          errorMessage = body['email'].toString();
+        } else if (body['message'] != null) {
+          errorMessage = body['message'].toString();
+        } else if (body['non_field_errors'] is List &&
+            (body['non_field_errors'] as List).isNotEmpty) {
+          errorMessage = body['non_field_errors'][0].toString();
+        } else {
+          // Collect field errors dynamically
+          final collected = <String>[];
+
+          body.forEach((key, value) {
+            if (value is String) {
+              collected.add(value);
+            } else if (value is List && value.isNotEmpty) {
+              collected.add(value.first.toString());
             }
+          });
+
+          if (collected.isNotEmpty) {
+            errorMessage = collected.join(', ');
           }
         }
-
-        return Left(
-          Failure(statusCode: response.statusCode, message: errorMessage),
-        );
       }
-      return Left(FailureServer());
+
+      return Left(
+        Failure(statusCode: response.statusCode, message: errorMessage),
+      );
     } catch (e) {
-      log("🔥🔥 Error in register: $e");
-      return Left(Failure.handleError(Exception(e.toString())));
+      return Left(Failure.handleError(e as Exception));
     }
   }
 

@@ -50,12 +50,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   //? ------------------------ SignUp ----------------------------
   Future<void> signUp({required SignUpRequestParams params}) async {
-    emit(
-      state.copyWith(
-        signUpState: ResponseStatusEnum.loading,
-        signUpError: null,
-      ),
-    );
+    emit(state.copyWith(signUpState: ResponseStatusEnum.loading));
 
     final result = await repository.signUpRepo(params: params);
 
@@ -67,12 +62,7 @@ class AuthCubit extends Cubit<AuthState> {
         ),
       ),
       (userData) {
-        emit(
-          state.copyWith(
-            signUpState: ResponseStatusEnum.success,
-            signUpError: null,
-          ),
-        );
+        emit(state.copyWith(signUpState: ResponseStatusEnum.success));
       },
     );
   }
