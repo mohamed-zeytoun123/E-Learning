@@ -52,12 +52,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            final firstEntry = body.entries.first;
-            if (firstEntry.value is String) {
-              errorMessage = firstEntry.value.toString();
-            } else if (firstEntry.value is List &&
-                (firstEntry.value as List).isNotEmpty) {
-              errorMessage = (firstEntry.value as List).first.toString();
+            // Handle field-specific errors
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add('$key: $value');
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add('$key: ${value.first}');
+              }
+            });
+            
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
             }
           }
         }
@@ -112,13 +118,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
               (body['non_field_errors'] as List).isNotEmpty) {
             errorMessage = (body['non_field_errors'] as List).first.toString();
           } else if (body.isNotEmpty) {
-            final firstEntry = body.entries.first;
-            if (firstEntry.value is String) {
-              errorMessage = '${firstEntry.key}: ${firstEntry.value}';
-            } else if (firstEntry.value is List &&
-                (firstEntry.value as List).isNotEmpty) {
-              errorMessage =
-                  '${firstEntry.key}: ${(firstEntry.value as List).first}';
+            // Handle field-specific errors like {"email": "Email already exists"}
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add('$key: $value');
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add('$key: ${value.first}');
+              }
+            });
+            
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
             } else {
               errorMessage = 'Sign up failed';
             }

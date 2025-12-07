@@ -286,7 +286,7 @@ class AuthCubit extends Cubit<AuthState> {
     });
   }
 
-  //? ------------------------ Reset Password ----------------------------
+  //?? ------------------------ Reset Password ----------------------------
   Future<void> resetPassword(ResetPasswordRequestParams params) {
     emit(
       state.copyWith(

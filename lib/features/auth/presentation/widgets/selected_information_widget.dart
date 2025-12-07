@@ -175,7 +175,7 @@ class SelectedInformationWidget extends StatelessWidget {
                 }
 
               case ResponseStatusEnum.success:
-                context.read<AuthCubit>().getStudyYears();
+                // Removed the problematic getStudyYears() call that was causing infinite rebuilds
                 if (state.colleges.isEmpty) {
                   String universityName = "";
                   if (state.signUpRequestParams?.universityId != null) {
@@ -256,6 +256,9 @@ class SelectedInformationWidget extends StatelessWidget {
                     context.read<AuthCubit>().updateSignUpParams(
                       collegeId: selected.id,
                     );
+
+                    // Fetch study years when college is selected
+                    context.read<AuthCubit>().getStudyYears();
                   },
                 );
 
@@ -310,7 +313,14 @@ class SelectedInformationWidget extends StatelessWidget {
                 );
 
               case ResponseStatusEnum.success:
-                if (state.studyYears!.isEmpty) {
+                // Filter study years to start from current year
+                final currentYear = DateTime.now().year;
+                final filteredStudyYears = state.studyYears
+                        ?.where((sy) => sy.yearNumber >= currentYear)
+                        .toList() ??
+                    [];
+
+                if (filteredStudyYears.isEmpty) {
                   return Text(
                     AppLocalizations.of(
                           context,
@@ -323,30 +333,30 @@ class SelectedInformationWidget extends StatelessWidget {
                 return InputSelectWidget(
                   hint: "Choose Study Year",
                   hintKey: "choose_study_year",
-                  options: state.studyYears!.map((sy) => sy.name).toList(),
+                  options: filteredStudyYears.map((sy) => sy.name).toList(),
                   value:
                       state.signUpRequestParams?.studyYear != null &&
-                          state.studyYears?.any(
+                          filteredStudyYears.any(
                                 (sy) =>
                                     sy.id ==
                                     state.signUpRequestParams!.studyYear,
                               ) ==
                               true
-                      ? state.studyYears
-                            ?.firstWhere(
+                      ? filteredStudyYears
+                            .firstWhere(
                               (sy) =>
                                   sy.id == state.signUpRequestParams!.studyYear,
                             )
                             .name
                       : null,
                   onChanged: (value) {
-                    final selectedYear = state.studyYears?.firstWhere(
+                    final selectedYear = filteredStudyYears.firstWhere(
                       (sy) => sy.name == value,
-                      orElse: () => state.studyYears!.first,
+                      orElse: () => filteredStudyYears.first,
                     );
 
                     context.read<AuthCubit>().updateSignUpParams(
-                      studyYear: selectedYear?.id,
+                      studyYear: selectedYear.id,
                     );
                   },
                 );

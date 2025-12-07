@@ -4,8 +4,9 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomOtp extends StatelessWidget {
+  final void Function(String)? onCodeChanged;
   final void Function(String)? onSubmit;
-  const CustomOtp({super.key, required this.onSubmit});
+  const CustomOtp({super.key, this.onCodeChanged, required this.onSubmit});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class CustomOtp extends StatelessWidget {
       fieldWidth: 48.w,
       fieldHeight: 48.h,
       showFieldAsBox: true,
-      onCodeChanged: (value) {},
+      onCodeChanged: onCodeChanged,
       onSubmit: onSubmit,
     );
   }
