@@ -60,7 +60,6 @@ class AuthState {
   AuthState({
     this.getStudyYearsState = ResponseStatusEnum.initial,
     this.studyYearsError,
-    this.user,
     this.studyYears,
     this.signUpRequestParams,
     this.loginState = ResponseStatusEnum.initial,
@@ -85,6 +84,7 @@ class AuthState {
     this.currentOtpCode,
     this.resendOtpState = ResponseStatusEnum.initial,
     this.resendOtpError,
+    this.user,
   });
 
   AuthState copyWith({
