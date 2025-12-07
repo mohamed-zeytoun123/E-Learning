@@ -167,45 +167,59 @@ class AuthCubit extends Cubit<AuthState> {
 
   //? ------------------------ otp verfication ----------------------------
   Future<void> otpVerfication(String phone, String code, String purpose) {
-    emit(
-      state.copyWith(
-        otpVerficationState: ResponseStatusEnum.loading,
-        otpVerficationError: null,
-      ),
-    );
+    // Check if cubit is not closed before emitting
+    if (!isClosed) {
+      emit(
+        state.copyWith(
+          otpVerficationState: ResponseStatusEnum.loading,
+          otpVerficationError: null,
+        ),
+      );
+    }
     return repository
         .otpVerficationRepo(email: phone, code: code, purpose: purpose)
         .then((result) {
-          result.fold(
-            (failure) => emit(
-              state.copyWith(
-                otpVerficationState: ResponseStatusEnum.failure,
-                otpVerficationError: failure.message,
-              ),
-            ),
-            (otpResponse) {
-              emit(
+          // Check if cubit is not closed before emitting
+          if (!isClosed) {
+            result.fold(
+              (failure) => emit(
                 state.copyWith(
-                  otpVerficationState: ResponseStatusEnum.success,
-                  otpVerficationError: null,
-                  resetToken: otpResponse.resetToken, // Store the reset token
+                  otpVerficationState: ResponseStatusEnum.failure,
+                  otpVerficationError: failure.message,
                 ),
-              );
-            },
-          );
+              ),
+              (otpResponse) {
+                emit(
+                  state.copyWith(
+                    otpVerficationState: ResponseStatusEnum.success,
+                    otpVerficationError: null,
+                    resetToken: otpResponse.resetToken, // Store the reset token
+                  ),
+                );
+              },
+            );
+          }
         });
   }
 
   //? ------------------------ OTP Timer Management ----------------------------
   void startOtpTimer() {
     _otpTimer?.cancel();
-    emit(state.copyWith(otpTimerSeconds: 60, canResendOtp: false));
+    // Check if cubit is not closed before emitting
+    if (!isClosed) {
+      emit(state.copyWith(otpTimerSeconds: 60, canResendOtp: false));
+    }
 
     _otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (state.otpTimerSeconds > 0) {
-        emit(state.copyWith(otpTimerSeconds: state.otpTimerSeconds - 1));
+      // Check if cubit is not closed before emitting
+      if (!isClosed) {
+        if (state.otpTimerSeconds > 0) {
+          emit(state.copyWith(otpTimerSeconds: state.otpTimerSeconds - 1));
+        } else {
+          emit(state.copyWith(canResendOtp: true));
+          timer.cancel();
+        }
       } else {
-        emit(state.copyWith(canResendOtp: true));
         timer.cancel();
       }
     });
@@ -216,7 +230,10 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void setOtpCode(String code) {
-    emit(state.copyWith(currentOtpCode: code));
+    // Check if cubit is not closed before emitting
+    if (!isClosed) {
+      emit(state.copyWith(currentOtpCode: code));
+    }
   }
 
   // ------------------------- Resend OTP ----------------------------
@@ -226,36 +243,42 @@ class AuthCubit extends Cubit<AuthState> {
       return;
     }
 
-    emit(
-      state.copyWith(
-        resendOtpState: ResponseStatusEnum.loading,
-        resendOtpError: null,
-      ),
-    );
+    // Check if cubit is not closed before emitting
+    if (!isClosed) {
+      emit(
+        state.copyWith(
+          resendOtpState: ResponseStatusEnum.loading,
+          resendOtpError: null,
+        ),
+      );
+    }
 
     final result = await repository.resendOtpRepo(
       email: phone,
       purpose: purpose,
     );
 
-    result.fold(
-      (failure) => emit(
-        state.copyWith(
-          resendOtpState: ResponseStatusEnum.failure,
-          resendOtpError: failure.message,
-        ),
-      ),
-      (isResent) {
-        emit(
+    // Check if cubit is not closed before emitting
+    if (!isClosed) {
+      result.fold(
+        (failure) => emit(
           state.copyWith(
-            resendOtpState: ResponseStatusEnum.success,
-            resendOtpError: null,
+            resendOtpState: ResponseStatusEnum.failure,
+            resendOtpError: failure.message,
           ),
-        );
-        // Restart the timer after successful resend
-        startOtpTimer();
-      },
-    );
+        ),
+        (isResent) {
+          emit(
+            state.copyWith(
+              resendOtpState: ResponseStatusEnum.success,
+              resendOtpError: null,
+            ),
+          );
+          // Restart the timer after successful resend
+          startOtpTimer();
+        },
+      );
+    }
   }
 
   //? ------------------------ Forgot Password ----------------------------
