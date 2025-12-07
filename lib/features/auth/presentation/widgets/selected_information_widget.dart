@@ -65,7 +65,7 @@ class SelectedInformationWidget extends StatelessWidget {
                   // Reset college selection when university changes
                   context.read<AuthCubit>().updateSignUpParams(
                     universityId: selected.id,
-                    collegeId: null, // This ensures collegeId is reset to null
+                    collegeId: null,
                   );
 
                   context.read<AuthCubit>().getColleges(
@@ -107,7 +107,10 @@ class SelectedInformationWidget extends StatelessWidget {
 
             switch (state.getCollegesState) {
               case ResponseStatusEnum.loading:
-                return AppLoading.linear();
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 20.h),
+                  child: AppLoading.linear(),
+                );
 
               case ResponseStatusEnum.failure:
                 if (state.getCollegesError?.contains("No Data") == true) {
@@ -175,7 +178,6 @@ class SelectedInformationWidget extends StatelessWidget {
                 }
 
               case ResponseStatusEnum.success:
-                // Removed the problematic getStudyYears() call that was causing infinite rebuilds
                 if (state.colleges.isEmpty) {
                   String universityName = "";
                   if (state.signUpRequestParams?.universityId != null) {
@@ -257,7 +259,6 @@ class SelectedInformationWidget extends StatelessWidget {
                       collegeId: selected.id,
                     );
 
-                    // Fetch study years when college is selected
                     context.read<AuthCubit>().getStudyYears();
                   },
                 );
@@ -267,103 +268,46 @@ class SelectedInformationWidget extends StatelessWidget {
             }
           },
         ),
+
         //?--------------------------- Study Year --------------------------
         BlocBuilder<AuthCubit, AuthState>(
           buildWhen: (pre, cur) =>
               pre.getStudyYearsState != cur.getStudyYearsState ||
               pre.signUpRequestParams?.studyYear !=
-                  cur.signUpRequestParams?.studyYear ||
-              pre.signUpRequestParams?.universityId !=
-                  cur.signUpRequestParams?.universityId ||
-              pre.signUpRequestParams?.collegeId !=
-                  cur.signUpRequestParams?.collegeId,
+                  cur.signUpRequestParams?.studyYear,
           builder: (context, state) {
-            final bool isUniversitySelected =
-                state.signUpRequestParams?.universityId != null;
-            final bool isCollegeSelected =
-                state.signUpRequestParams?.collegeId != null;
+            final studyYears = state.studyYears ?? [];
 
-            if (!isUniversitySelected || !isCollegeSelected) {
-              return DisabledInputSelectWidget(
-                hint:
-                    AppLocalizations.of(
-                      context,
-                    )?.translate("choose_university_and_college_first") ??
-                    "Choose university and college first",
-                onTapMessage:
-                    AppLocalizations.of(context)?.translate(
-                      "please_select_university_and_college_before_selecting_year",
-                    ) ??
-                    "Please select a university and college before selecting a year",
-              );
-            }
-
-            switch (state.getStudyYearsState) {
-              case ResponseStatusEnum.loading:
-                return AppLoading.linear();
-
-              case ResponseStatusEnum.failure:
-                return Text(
-                  state.studyYearsError ??
-                      AppLocalizations.of(
-                        context,
-                      )?.translate("failed_to_load_study_years") ??
-                      "Failed to load study years",
-                  style: TextStyle(color: AppColors.textError),
+            // Always show the study year field like university
+            return InputSelectWidget(
+              hint: "Choose Study Year",
+              hintKey: "choose_study_year",
+              options: studyYears.isNotEmpty
+                  ? studyYears.map((sy) => sy.name).toList()
+                  : ["Loading..."], // temporary placeholder
+              value:
+                  state.signUpRequestParams?.studyYear != null &&
+                      studyYears.any(
+                        (sy) => sy.id == state.signUpRequestParams!.studyYear,
+                      )
+                  ? studyYears
+                        .firstWhere(
+                          (sy) => sy.id == state.signUpRequestParams!.studyYear,
+                        )
+                        .name
+                  : null,
+              onChanged: (value) {
+                if (studyYears.isEmpty) return;
+                final selectedYear = studyYears.firstWhere(
+                  (sy) => sy.name == value,
+                  orElse: () => studyYears.first,
                 );
 
-              case ResponseStatusEnum.success:
-                // Filter study years to start from current year
-                final currentYear = DateTime.now().year;
-                final filteredStudyYears = state.studyYears
-                        ?.where((sy) => sy.yearNumber >= currentYear)
-                        .toList() ??
-                    [];
-
-                if (filteredStudyYears.isEmpty) {
-                  return Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("no_study_years_available") ??
-                        "No study years available",
-                    style: TextStyle(color: AppColors.textGrey),
-                  );
-                }
-
-                return InputSelectWidget(
-                  hint: "Choose Study Year",
-                  hintKey: "choose_study_year",
-                  options: filteredStudyYears.map((sy) => sy.name).toList(),
-                  value:
-                      state.signUpRequestParams?.studyYear != null &&
-                          filteredStudyYears.any(
-                                (sy) =>
-                                    sy.id ==
-                                    state.signUpRequestParams!.studyYear,
-                              ) ==
-                              true
-                      ? filteredStudyYears
-                            .firstWhere(
-                              (sy) =>
-                                  sy.id == state.signUpRequestParams!.studyYear,
-                            )
-                            .name
-                      : null,
-                  onChanged: (value) {
-                    final selectedYear = filteredStudyYears.firstWhere(
-                      (sy) => sy.name == value,
-                      orElse: () => filteredStudyYears.first,
-                    );
-
-                    context.read<AuthCubit>().updateSignUpParams(
-                      studyYear: selectedYear.id,
-                    );
-                  },
+                context.read<AuthCubit>().updateSignUpParams(
+                  studyYear: selectedYear.id,
                 );
-
-              default:
-                return const SizedBox.shrink();
-            }
+              },
+            );
           },
         ),
       ],

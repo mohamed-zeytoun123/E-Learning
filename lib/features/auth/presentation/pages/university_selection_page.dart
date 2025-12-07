@@ -12,6 +12,7 @@ import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/selected_information_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +36,15 @@ class _UniversitySelectionPageState extends State<UniversitySelectionPage> {
   void initState() {
     super.initState();
     _refreshUniversities();
+    
+    // If there's already a college selected, fetch study years
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final authCubit = context.read<AuthCubit>();
+      final currentState = authCubit.state;
+      if (currentState.signUpRequestParams?.collegeId != null) {
+        authCubit.getStudyYears();
+      }
+    });
   }
 
   @override
