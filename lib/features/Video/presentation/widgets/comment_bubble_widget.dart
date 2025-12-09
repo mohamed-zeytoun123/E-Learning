@@ -1,16 +1,19 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bubble_arrow_painter_widget.dart';
+import 'package:e_learning/core/utils/time_formatter.dart'; // Add this import
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CommentBubbleWidget extends StatelessWidget {
   final String comment;
-  final String time;
+  final String time; // This will now be a relative time string
+  final String authorName;
   final bool isMine;
 
   const CommentBubbleWidget({
     super.key,
     required this.comment,
+    required this.authorName,
     required this.time,
     required this.isMine,
   });
@@ -37,28 +40,40 @@ class CommentBubbleWidget extends StatelessWidget {
     Alignment arrowAlignment,
   ) {
     final bubble = Container(
-      constraints: BoxConstraints(maxWidth: 280.w),
-      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
+      constraints: BoxConstraints(maxWidth: 250.w),
+      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: bubbleColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             comment,
-            style: TextStyle(color: textColor, fontSize: 14.sp),
+            style: TextStyle(color: textColor, fontSize: 13.sp),
           ),
-          SizedBox(height: 4.h),
+          SizedBox(height: 3.h),
           Align(
             alignment: Alignment.bottomRight,
-            child: Text(
-              time,
-              style: TextStyle(
-                color: textColor.withOpacity(0.7),
-                fontSize: 10.sp,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  authorName,
+                  style: TextStyle(
+                    color: textColor.withOpacity(0.7),
+                    fontSize: 9.sp,
+                  ),
+                ),
+                Text(
+                  time, // This is now a relative time string
+                  style: TextStyle(
+                    color: textColor.withOpacity(0.7),
+                    fontSize: 9.sp,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -66,11 +81,11 @@ class CommentBubbleWidget extends StatelessWidget {
     );
 
     final arrow = SizedBox(
-      width: 8.w,
+      width: 7.w,
       child: Align(
         alignment: arrowAlignment,
         child: CustomPaint(
-          size: Size(8, 24),
+          size: Size(7, 20),
           painter: BubbleArrowPainterWidget(
             isMine: arrowAlignment == Alignment.bottomLeft,
             color: bubbleColor,
@@ -80,7 +95,7 @@ class CommentBubbleWidget extends StatelessWidget {
     );
 
     return arrowAlignment == Alignment.bottomLeft
-        ? [arrow, SizedBox(width: 4.w), bubble]
-        : [bubble, SizedBox(width: 4.w), arrow];
+        ? [arrow, SizedBox(width: 3.w), bubble]
+        : [bubble, SizedBox(width: 3.w), arrow];
   }
 }

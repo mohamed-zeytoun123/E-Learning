@@ -1,13 +1,25 @@
-class CourseFiltersModel {
+import 'package:hive/hive.dart';
+
+part 'course_filters_model.g.dart';
+
+@HiveType(typeId: 6)
+class CourseFiltersModel extends HiveObject {
+  @HiveField(0)
   final int? collegeId;
-  final int? categoryId;
+
+  @HiveField(1)
   final int? studyYear;
+
+  @HiveField(2)
+  final int? categoryId;
+
+  @HiveField(3)
   final int? universityId;
 
   CourseFiltersModel({
     this.collegeId,
-    this.categoryId,
     this.studyYear,
+    this.categoryId,
     this.universityId,
   });
 
@@ -25,4 +37,3 @@ class CourseFiltersModel {
     );
   }
 }
-

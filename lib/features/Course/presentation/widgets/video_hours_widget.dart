@@ -89,7 +89,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VideoHoursWidget extends StatelessWidget {
   final int videoCount;
-  final int hoursCount;
+  final double hoursCount;
 
   const VideoHoursWidget({
     super.key,

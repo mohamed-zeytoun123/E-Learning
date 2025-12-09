@@ -69,7 +69,7 @@
     "an_error_occurred": "حدث خطأ!",
     "server_error_generic": "خطأ في الخادم!",
     "no_data": "لا توجد بيانات",
-   "no_connection": "لا يوجد اتصال، يرجى المحاولة مرة أخرى",
+    "no_connection": "لا يوجد اتصال، يرجى المحاولة مرة أخرى",
     "select_university": "يرجى اختيار الجامعة",
     "Sign_In_To_Gain_Access_To_Your_Courses": "سجّل الدخول للوصول إلى دوراتك",
     "Your_Enrolls":"تسجيلاتك",
@@ -105,5 +105,6 @@
     "Send_Review": "إرسال المراجعة",
     "Contact_Us_To_Activate_Your_Course": "اتصل بنا لتفعيل دورتك",
     "Contact_Us": "اتصل بنا",
-    "Course_Has_Been_Suspended!": "تم تعليق الدورة!"
+    "Course_Has_Been_Suspended!": "تم تعليق الدورة!",
+    "Registration_completed_successfully": "اكتملت عملية التسجيل بنجاح"
 }

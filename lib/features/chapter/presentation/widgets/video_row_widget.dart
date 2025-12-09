@@ -1,25 +1,29 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/features/chapter/data/models/video_models/download_item.dart';
+import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
+import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
 import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VideoRowWidget extends StatelessWidget {
   final String chapterTitle;
-  final int durationMinutes;
+  final int durationSecond;
   final VoidCallback? onTap;
-  final int? completedVideos;
-  final int? totalVideos;
+  final double? completedVideos;
   final bool isLocked;
+  final String videoId;
 
   const VideoRowWidget({
     super.key,
     this.completedVideos,
-    this.totalVideos,
     required this.chapterTitle,
-    required this.durationMinutes,
+    required this.durationSecond,
     this.onTap,
     this.isLocked = true,
+    required this.videoId,
   });
 
   @override
@@ -37,79 +41,158 @@ class VideoRowWidget extends StatelessWidget {
                 ? Colors.transparent
                 : Colors.grey.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8.r),
-            child: SizedBox(
-              height: 88.h,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            width: 48.w,
-                            height: 48.h,
-                            decoration: BoxDecoration(
-                              color: AppColors.formSecondary,
-                              borderRadius: BorderRadius.circular(999.r),
-                            ),
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.play_arrow,
-                              color: AppColors.iconBlue,
-                              size: 25.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 7.w),
+              child: SizedBox(
+                height: 88.h,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Stack(
+                          alignment: Alignment.center,
                           children: [
-                            Text(
-                              chapterTitle,
-                              style: AppTextStyles.s16w600.copyWith(
-                                color: AppColors.textBlack,
+                            Container(
+                              width: 48.w,
+                              height: 48.h,
+                              decoration: BoxDecoration(
+                                color: AppColors.formSecondary,
+                                borderRadius: BorderRadius.circular(999.r),
                               ),
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            SizedBox(height: 4.h),
-                            Text(
-                              '$durationMinutes Mins',
-                              style: AppTextStyles.s14w400.copyWith(
-                                color: AppColors.textGrey,
-                              ),
+                              alignment: Alignment.center,
+                              child: isLocked
+                                  ? Icon(
+                                      Icons.lock,
+                                      color: AppColors.iconOrange,
+                                      size: 25.sp,
+                                    )
+                                  : BlocBuilder<ChapterCubit, ChapterState>(
+                                      buildWhen: (previous, current) =>
+                                          previous.downloads !=
+                                          current.downloads,
+                                      builder: (context, state) {
+                                        // Find the download item for this video
+                                        final downloadItem = state.downloads
+                                            .firstWhere(
+                                              (d) => d.videoId == videoId,
+                                              orElse: () => DownloadItem(
+                                                videoId: videoId,
+                                                fileName: "",
+                                                isDownloading: false,
+                                                progress: 0.0,
+                                              ),
+                                            );
+
+                                        // Check if video is cached on device
+                                        final isCachedOnDevice = state.downloads.any(
+                                          (d) => d.videoId == videoId && d.isCompleted,
+                                        );
+
+                                        if (downloadItem.isDownloading) {
+                                          // Show progress percentage instead of just loading icon
+                                          return Stack(
+                                            alignment: Alignment.center,
+                                            children: [
+                                              CircularProgressIndicator(
+                                                value: downloadItem.progress,
+                                                strokeWidth: 3,
+                                                valueColor:
+                                                    const AlwaysStoppedAnimation<
+                                                      Color
+                                                    >(AppColors.buttonPrimary),
+                                                backgroundColor:
+                                                    AppColors.dividerGrey,
+                                              ),
+                                              Text(
+                                                '${(downloadItem.progress * 100).toInt()}%',
+                                                style: TextStyle(
+                                                  fontSize: 8.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.textPrimary,
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        } else if (downloadItem.isCompleted || isCachedOnDevice) {
+                                          // Show checkmark when completed or cached
+                                          return Icon(
+                                            Icons.check,
+                                            color: Colors.green,
+                                            size: 25.sp,
+                                          );
+                                        } else if (downloadItem.hasError) {
+                                          // Show error icon
+                                          return Icon(
+                                            Icons.error,
+                                            color: Colors.red,
+                                            size: 25.sp,
+                                          );
+                                        } else {
+                                          // Show play icon when not downloading
+                                          return Icon(
+                                            Icons.play_arrow,
+                                            color: AppColors.iconBlue,
+                                            size: 25.sp,
+                                          );
+                                        }
+                                      },
+                                    ),
                             ),
                           ],
                         ),
-                      ),
-                      Icon(
-                        isLocked ? Icons.lock : Icons.arrow_forward_ios,
-                        size: 20.sp,
-                        color: isLocked
-                            ? AppColors.iconOrange
-                            : AppColors.iconBlue,
-                      ),
-                    ],
-                  ),
-                  if (totalVideos != null &&
-                      completedVideos != null &&
-                      !isLocked)
-                    Padding(
-                      padding: EdgeInsets.only(top: 10.h),
-                      child: VideoProgressWidget(
-                        completedVideos: completedVideos!,
-                        totalVideos: totalVideos!,
-                        hieghtProgress: 4,
-                        showDetiels: false,
-                      ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SingleChildScrollView(
+                                padding: EdgeInsets.only(right: 10.w),
+                                physics: const BouncingScrollPhysics(),
+                                child: Text(
+                                  chapterTitle,
+                                  style: AppTextStyles.s16w600.copyWith(
+                                    color: AppColors.textBlack,
+                                  ),
+                                  maxLines: 1,
+                                ),
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                '$durationSecond Mins',
+                                style: AppTextStyles.s14w400.copyWith(
+                                  color: AppColors.textGrey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(
+                          isLocked ? Icons.lock : Icons.arrow_forward_ios,
+                          size: 20.sp,
+                          color: isLocked
+                              ? AppColors.iconOrange
+                              : AppColors.iconBlue,
+                        ),
+                      ],
                     ),
-                ],
+                    if (durationSecond != 0 &&
+                        completedVideos != null &&
+                        !isLocked)
+                      Padding(
+                        padding: EdgeInsets.only(top: 10.h),
+                        child: VideoProgressWidget(
+                          completed: completedVideos!.toInt(),
+                          total: durationSecond,
+                          hieghtProgress: 4,
+                          showDetiels: false,
+                        ),
+                      ),
+                  ],
+                ),
               ),
             ),
           ),

@@ -1,8 +1,12 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/course/presentation/widgets/icon_circle_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 class ChapterTitleSubTitleWidget extends StatelessWidget {
   final String title;
@@ -24,7 +28,7 @@ class ChapterTitleSubTitleWidget extends StatelessWidget {
       width: double.infinity,
       height: 100.h,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.formWhite,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24.r),
           bottomRight: Radius.circular(24.r),
@@ -43,9 +47,17 @@ class ChapterTitleSubTitleWidget extends StatelessWidget {
           spacing: 15.h,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: AppTextStyles.s18w600.copyWith(color: AppColors.textBlack),
+            SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              scrollDirection: Axis.horizontal,
+              child: Text(
+                title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.s18w600.copyWith(
+                  color: AppColors.textBlack,
+                ),
+              ),
             ),
             Row(
               spacing: 7.w,
@@ -70,6 +82,32 @@ class ChapterTitleSubTitleWidget extends StatelessWidget {
                     color: AppColors.textGrey,
                   ),
                 ),
+                //?-------------------------------------------------------------------------
+                SizedBox(
+                  height: 10.h,
+
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      // جلب ChapterCubit من الـ context
+                      final cubit = context.read<ChapterCubit>();
+
+                      // الانتقال لشاشة Downloads Page
+                      context.push(
+                        RouteNames.downloads,
+                        extra: {"chapterCubit": cubit},
+                      );
+                    },
+                    icon: const Icon(Icons.download), // أيقونة مناسبة
+                    label: const Text("Cached"), // نص الزر
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                    ),
+                  ),
+                ),
+                //?-------------------------------------------------------------------------
               ],
             ),
           ],

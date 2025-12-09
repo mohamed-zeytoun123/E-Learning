@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/Video/presentation/widgets/bottom_sheet_quality_widget.dart';
@@ -6,15 +5,44 @@ import 'package:e_learning/features/Video/presentation/widgets/bottom_sheet_spee
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class BootomSheetSettingsWidget extends StatelessWidget {
+class BootomSheetSettingsWidget extends StatefulWidget {
   final double currentSpeed;
   final Function(double) onSpeedSelected;
+  final Map<String, String> qualities;
+  final Function(String) onQualitySelected;
+  final String initialQuality; // Add initial quality parameter
 
   const BootomSheetSettingsWidget({
     super.key,
     required this.currentSpeed,
     required this.onSpeedSelected,
+    required this.qualities,
+    required this.onQualitySelected,
+    this.initialQuality = "AUTO", // Default to AUTO
   });
+
+  @override
+  State<BootomSheetSettingsWidget> createState() =>
+      _BootomSheetSettingsWidgetState();
+}
+
+class _BootomSheetSettingsWidgetState extends State<BootomSheetSettingsWidget> {
+  late String selectedQuality;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedQuality = widget.initialQuality;
+  }
+
+  @override
+  void didUpdateWidget(covariant BootomSheetSettingsWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update selectedQuality if initialQuality changes
+    if (oldWidget.initialQuality != widget.initialQuality) {
+      selectedQuality = widget.initialQuality;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,25 +82,27 @@ class BootomSheetSettingsWidget extends StatelessWidget {
                 ),
                 onTap: () {
                   Navigator.pop(context);
-                  log("Open Quality BottomSheet");
-                  showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16),
+                  Future.microtask(() {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                       ),
-                    ),
-                    builder: (context) {
-                      return BottomSheetQualityWidget(
-                        onQualitySelected: (String p1) {
-                          log("Selected Quality: $p1");
+                      builder: (_) => BottomSheetQualityWidget(
+                        initialQuality: selectedQuality,
+                        qualities: widget.qualities,
+                        onQualitySelected: (url) {
+                          widget.onQualitySelected(url);
                         },
-                      );
-                    },
-                  );
+                      ),
+                    );
+                  });
                 },
               ),
+
               //* Playback Speed
               ListTile(
                 leading: Icon(
@@ -86,25 +116,25 @@ class BootomSheetSettingsWidget extends StatelessWidget {
                   ),
                 ),
                 onTap: () {
-                  Navigator.pop(context); // Close Settings
-
-                  // Open Speed BottomSheet
-                  showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(16),
+                  Navigator.pop(context);
+                  // Add a small delay to ensure the first sheet is fully closed
+                  Future.microtask(() {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.white,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(16),
+                        ),
                       ),
-                    ),
-                    builder: (context) {
-                      return BottomSheetSpeedWidget(
-                        initialSpeed: currentSpeed, // ✅ آخر قيمة
-                        onSpeedSelected:
-                            onSpeedSelected, // ✅ تمرير التعديل للصفحة الأساسية
-                      );
-                    },
-                  );
+                      builder: (context) {
+                        return BottomSheetSpeedWidget(
+                          initialSpeed: widget.currentSpeed,
+                          onSpeedSelected: widget.onSpeedSelected,
+                        );
+                      },
+                    );
+                  });
                 },
               ),
             ],

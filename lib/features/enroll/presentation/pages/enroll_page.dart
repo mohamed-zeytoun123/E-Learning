@@ -51,7 +51,6 @@ class _EnrollPageState extends State<EnrollPage> {
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
                 child: Builder(
                   builder: (_) {
-                    // TODO: I used dummy data, replace it with real data later
                     return ListView.separated(
                       itemCount: filteredCourses.length,
                       physics: const NeverScrollableScrollPhysics(),
@@ -66,8 +65,9 @@ class _EnrollPageState extends State<EnrollPage> {
                               courseState: filteredCourses[index]
                                   ['courseState'],
                               stateSectionWidget: VideoProgressWidget(
-                                completedVideos: 12,
-                                totalVideos: 40,
+                                completed: 12,
+                                // videoCount: 40,
+                                total: 65,
                               ),
                               height: 203,
                             );

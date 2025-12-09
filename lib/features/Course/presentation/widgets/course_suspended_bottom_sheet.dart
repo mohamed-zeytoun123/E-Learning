@@ -69,7 +69,6 @@
 //   }
 // }
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/features/course/presentation/widgets/contact_options_row_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -129,7 +128,7 @@ class CourseSuspendedBottomSheet extends StatelessWidget {
 
                 SizedBox(height: 25.h),
 
-                ContactOptionsRowWidget(),
+                // ContactOptionsRowWidget(),
               ],
             ),
           ),

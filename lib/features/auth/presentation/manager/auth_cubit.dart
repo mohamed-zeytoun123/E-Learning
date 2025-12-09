@@ -1,17 +1,25 @@
+import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final AuthRepository repository;
+  Timer? _otpTimer;
 
   AuthCubit({required this.repository}) : super(AuthState());
+
+  @override
+  Future<void> close() {
+    _otpTimer?.cancel();
+    return super.close();
+  }
 
   //? ------------------------ Login ----------------------------
   Future<void> login(String numberPhone, String password) async {
@@ -33,6 +41,7 @@ class AuthCubit extends Cubit<AuthState> {
           state.copyWith(
             loginState: ResponseStatusEnum.success,
             loginError: null,
+            user: userData,
           ),
         );
       },
@@ -41,12 +50,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   //? ------------------------ SignUp ----------------------------
   Future<void> signUp({required SignUpRequestParams params}) async {
-    emit(
-      state.copyWith(
-        signUpState: ResponseStatusEnum.loading,
-        signUpError: null,
-      ),
-    );
+    emit(state.copyWith(signUpState: ResponseStatusEnum.loading));
 
     final result = await repository.signUpRepo(params: params);
 
@@ -58,12 +62,7 @@ class AuthCubit extends Cubit<AuthState> {
         ),
       ),
       (userData) {
-        emit(
-          state.copyWith(
-            signUpState: ResponseStatusEnum.success,
-            signUpError: null,
-          ),
-        );
+        emit(state.copyWith(signUpState: ResponseStatusEnum.success));
       },
     );
   }
@@ -129,7 +128,7 @@ class AuthCubit extends Cubit<AuthState> {
     int? universityId,
     int? collegeId,
     int? studyYear,
-    String? phone,
+    String? email,
     String? password,
   }) {
     final currentParams =
@@ -139,7 +138,7 @@ class AuthCubit extends Cubit<AuthState> {
           universityId: null,
           collegeId: null,
           studyYear: null,
-          phone: '',
+          email: '',
           password: '',
         );
 
@@ -148,14 +147,14 @@ class AuthCubit extends Cubit<AuthState> {
       universityId: universityId ?? currentParams.universityId,
       collegeId: collegeId,
       studyYear: studyYear ?? currentParams.studyYear,
-      phone: phone ?? currentParams.phone,
+      email: email ?? currentParams.email,
       password: password ?? currentParams.password,
     );
 
     emit(state.copyWith(signUpRequestParams: updatedParams));
   }
 
-  //? ------------------------ otp verfication ----------------------------
+  //? ------------------------ OTP Verification ----------------------------
   Future<void> otpVerfication(String phone, String code, String purpose) {
     emit(
       state.copyWith(
@@ -163,8 +162,9 @@ class AuthCubit extends Cubit<AuthState> {
         otpVerficationError: null,
       ),
     );
+
     return repository
-        .otpVerficationRepo(phone: phone, code: code, purpose: purpose)
+        .otpVerficationRepo(email: phone, code: code, purpose: purpose)
         .then((result) {
           result.fold(
             (failure) => emit(
@@ -178,12 +178,70 @@ class AuthCubit extends Cubit<AuthState> {
                 state.copyWith(
                   otpVerficationState: ResponseStatusEnum.success,
                   otpVerficationError: null,
-                  resetToken: otpResponse.resetToken, // Store the reset token
+                  resetToken: otpResponse.resetToken,
                 ),
               );
             },
           );
         });
+  }
+
+  //? ------------------------ OTP Timer Management ----------------------------
+  void startOtpTimer() {
+    _otpTimer?.cancel();
+    emit(state.copyWith(otpTimerSeconds: 60, canResendOtp: false));
+
+    _otpTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (state.otpTimerSeconds > 0) {
+        emit(state.copyWith(otpTimerSeconds: state.otpTimerSeconds - 1));
+      } else {
+        emit(state.copyWith(canResendOtp: true));
+        timer.cancel();
+      }
+    });
+  }
+
+  void stopOtpTimer() {
+    _otpTimer?.cancel();
+  }
+
+  void setOtpCode(String code) {
+    emit(state.copyWith(currentOtpCode: code));
+  }
+
+  //? ------------------------- Resend OTP ----------------------------
+  Future<void> resendOtp(String phone, String purpose) async {
+    if (!state.canResendOtp) return;
+
+    emit(
+      state.copyWith(
+        resendOtpState: ResponseStatusEnum.loading,
+        resendOtpError: null,
+      ),
+    );
+
+    final result = await repository.resendOtpRepo(
+      email: phone,
+      purpose: purpose,
+    );
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          resendOtpState: ResponseStatusEnum.failure,
+          resendOtpError: failure.message,
+        ),
+      ),
+      (isResent) {
+        emit(
+          state.copyWith(
+            resendOtpState: ResponseStatusEnum.success,
+            resendOtpError: null,
+          ),
+        );
+        startOtpTimer();
+      },
+    );
   }
 
   //? ------------------------ Forgot Password ----------------------------
@@ -194,6 +252,7 @@ class AuthCubit extends Cubit<AuthState> {
         forgotPasswordError: null,
       ),
     );
+
     return repository.forgetPasswordRepo(phone: phone).then((result) {
       result.fold(
         (failure) => emit(
@@ -202,19 +261,17 @@ class AuthCubit extends Cubit<AuthState> {
             forgotPasswordError: failure.message,
           ),
         ),
-        (userData) {
-          emit(
-            state.copyWith(
-              forgotPasswordState: ResponseStatusEnum.success,
-              forgotPasswordError: null,
-            ),
-          );
-        },
+        (_) => emit(
+          state.copyWith(
+            forgotPasswordState: ResponseStatusEnum.success,
+            forgotPasswordError: null,
+          ),
+        ),
       );
     });
   }
 
-  //? ------------------------ Reset Password ----------------------------
+  //?? ------------------------ Reset Password ----------------------------
   Future<void> resetPassword(ResetPasswordRequestParams params) {
     emit(
       state.copyWith(
@@ -222,6 +279,7 @@ class AuthCubit extends Cubit<AuthState> {
         resetPasswordError: null,
       ),
     );
+
     return repository.resetPasswordRepo(params: params).then((result) {
       result.fold(
         (failure) => emit(
@@ -230,16 +288,42 @@ class AuthCubit extends Cubit<AuthState> {
             resetPasswordError: failure.message,
           ),
         ),
-        (isReset) {
-          emit(
-            state.copyWith(
-              resetPasswordState: ResponseStatusEnum.success,
-              resetPasswordError: null,
-            ),
-          );
-        },
+        (_) => emit(
+          state.copyWith(
+            resetPasswordState: ResponseStatusEnum.success,
+            resetPasswordError: null,
+          ),
+        ),
       );
     });
+  }
+
+  //? ------------------------ Get Study Years ----------------------------
+
+  Future<void> getStudyYears() async {
+    emit(
+      state.copyWith(
+        getStudyYearsState: ResponseStatusEnum.loading,
+        studyYearsError: null,
+      ),
+    );
+
+    final result = await repository.getStudyYearsRepo();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          getStudyYearsState: ResponseStatusEnum.failure,
+          studyYearsError: failure.message,
+        ),
+      ),
+      (studyYearsList) => emit(
+        state.copyWith(
+          getStudyYearsState: ResponseStatusEnum.success,
+          studyYears: studyYearsList,
+        ),
+      ),
+    );
   }
 
   //?---------------------------------------------------------------------------------------

@@ -1,13 +1,14 @@
-import 'dart:async';
+import 'dart:developer';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
-import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
-import 'package:e_learning/features/Course/data/models/study_year_model.dart';
-import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
-import 'package:e_learning/features/auth/data/models/study_year_enum.dart';
-import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapters_result/chapters_result_model.dart';
+import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/course/presentation/manager/course_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
@@ -23,37 +24,16 @@ class CourseCubit extends Cubit<CourseState> {
   //* Change Selected Index
   void changeSelectedIndex(int index) {
     emit(state.copyWith(selectedIndex: index));
+    //* emit this function apply with changed info tabs
   }
-
-  List<CourseModel> getCoursesBySelectedCollege() {
-    final selectedIndex = state.selectedIndex;
-    final allCourses = state.courses ?? [];
-    final colleges = state.colleges ?? [];
-
-    if (selectedIndex == 0) {
-      return allCourses;
-    }
-
-    final selectedCollegeIndex = selectedIndex - 1;
-    if (selectedCollegeIndex < 0 || selectedCollegeIndex >= colleges.length) {
-      return [];
-    }
-
-    final selectedCollegeId = colleges[selectedCollegeIndex].id;
-
-    return allCourses
-        .where((course) => course.college == selectedCollegeId)
-        .toList();
-  }
-
   //?-----------------------------------------------------------------------------
 
   //* Get Filter Categories
-  Future<void> getFilterCategories() async {
+  Future<void> getCategories() async {
     emit(state.copyWith(categoriesStatus: ResponseStatusEnum.loading));
 
-    final Either<Failure, List<CategorieModel>> result =
-        await repo.getFilterCategoriesRepo();
+    final Either<Failure, List<CategorieModel>> result = await repo
+        .getCategoriesRepo();
 
     result.fold(
       (failure) {
@@ -71,112 +51,214 @@ class CourseCubit extends Cubit<CourseState> {
             categories: categories,
           ),
         );
+        log('Fetched categories: ${categories.map((c) => c.name).toList()}');
       },
     );
   }
 
   //?-----------------------------------------------------------------------------
-
-  //* Get Courses
-  Future<void> getCourses({int? categoryId}) async {
-    emit(state.copyWith(
-      coursesStatus: ResponseStatusEnum.loading,
-      selectedCategoryId: categoryId,
-    ));
-
-    final result = await repo.getCoursesRepo(categoryId: categoryId);
-
-    result.fold(
-      (failure) {
-        print('❌ CourseCubit: Failed to get courses - ${failure.message}');
-        emit(
-          state.copyWith(
-            coursesStatus: ResponseStatusEnum.failure,
-            coursesError: failure.message,
-          ),
-        );
-      },
-      (courses) {
-        print('✅ CourseCubit: Successfully loaded ${courses.length} courses');
-        print(
-            '✅ CourseCubit: Emitting new state with ${courses.length} courses');
-        final newState = state.copyWith(
-          coursesStatus: ResponseStatusEnum.success,
-          courses: courses,
-          coursesError: null, // Clear any previous errors
-        );
-        print(
-            '✅ CourseCubit: New state courses length: ${newState.courses?.length ?? 0}');
-        emit(newState);
-      },
-    );
-  }
-
-  //?-------------------------------------------------
-  //* Get Universities
-  Future<void> getUniversities() async {
-    if (authRepo == null) return;
-    
-    emit(state.copyWith(universitiesState: ResponseStatusEnum.loading));
-
-    final result = await authRepo!.getUniversitiesRepo();
-
-    result.fold(
-      (failure) {
-        emit(
-          state.copyWith(
-            universitiesState: ResponseStatusEnum.failure,
-            universitiesError: failure.message,
-          ),
-        );
-      },
-      (universities) {
-        emit(
-          state.copyWith(
-            universitiesState: ResponseStatusEnum.success,
-            universities: universities,
-          ),
-        );
-      },
-    );
-  }
-
-  //?-------------------------------------------------
-  //* Get Study Years
-  Future<void> getStudyYears() async {
-    emit(state.copyWith(studyYearsStatus: ResponseStatusEnum.loading));
-
-    // Convert enum to model list
-    final studyYears = SchoolYear.values.map((year) {
-      return StudyYearModel(
-        id: year.number,
-        name: 'Year ${year.number}', // Simple name, can be improved with localization
+  //* Get Courses with Pagination & optional reset
+  Future<void> getCourses({
+    CourseFiltersModel? filters,
+    int? teacherId,
+    String? search,
+    String? ordering,
+    bool reset = true,
+    int page = 1,
+    int pageSize = 10,
+  }) async {
+    if (reset) {
+      // الحالة الأولى: تحميل أول مرة أو إعادة التحديث
+      emit(
+        state.copyWith(
+          coursesStatus: ResponseStatusEnum.loading,
+          loadCoursesMoreStatus: ResponseStatusEnum.initial,
+          coursesError: null,
+          coursesMoreError: null,
+          courses: CoursesResultModel.empty(),
+        ),
       );
-    }).toList();
+    } else {
+      // الحالة الثانية: تحميل المزيد (Load More)
+      emit(
+        state.copyWith(
+          loadCoursesMoreStatus: ResponseStatusEnum.loading,
+          coursesMoreError: null,
+        ),
+      );
+    }
 
-    emit(
-      state.copyWith(
-        studyYearsStatus: ResponseStatusEnum.success,
-        studyYears: studyYears,
-      ),
+    final result = await repo.getCoursesRepo(
+      filters: filters,
+      teacherId: teacherId,
+      search: search,
+      ordering: ordering,
+      page: page,
+      pageSize: pageSize,
+    );
+
+    result.fold(
+      (failure) {
+        if (reset) {
+          emit(
+            state.copyWith(
+              coursesStatus: ResponseStatusEnum.failure,
+              coursesError: failure.message,
+              loadCoursesMoreStatus: ResponseStatusEnum.initial,
+            ),
+          );
+        } else {
+          emit(
+            state.copyWith(
+              loadCoursesMoreStatus: ResponseStatusEnum.failure,
+              coursesMoreError: failure.message,
+            ),
+          );
+        }
+      },
+      (newCourses) {
+        // ✅ تحقق من أن القائمة فارغة بعد reset
+        if (reset && (newCourses.courses?.isEmpty ?? true)) {
+          emit(
+            state.copyWith(
+              coursesStatus: ResponseStatusEnum.success,
+              courses: CoursesResultModel.empty(),
+              hasMoreCourses: false,
+              currentPage: page,
+              coursesError: null,
+              loadCoursesMoreStatus: ResponseStatusEnum.initial,
+              coursesMoreError: null,
+            ),
+          );
+          return; // مهم لإيقاف باقي الكود
+        }
+
+        final updatedCourses = reset
+            ? newCourses
+            : (state.courses ?? CoursesResultModel.empty()).copyWith(
+                courses: [
+                  ...(state.courses?.courses ?? []),
+                  ...?(newCourses.courses),
+                ],
+                hasNextPage: newCourses.hasNextPage,
+              );
+
+        emit(
+          state.copyWith(
+            coursesStatus: ResponseStatusEnum.success,
+            loadCoursesMoreStatus: ResponseStatusEnum.success,
+            courses: updatedCourses,
+            hasMoreCourses: newCourses.hasNextPage,
+            currentPage: page,
+            coursesError: null,
+            coursesMoreError: null,
+          ),
+        );
+      },
     );
   }
 
   //?-------------------------------------------------
-  //* Apply Filters by IDs
-  void applyFiltersByIds({
-    int? categoryId,
+
+  //* Apply Filters with 3 optional parameters
+  Future<void> applyFiltersByIds({
+    int? collegeId,
     int? studyYear,
-  }) {
-    final filters = CourseFiltersModel(
-      categoryId: categoryId,
-      studyYear: studyYear,
-    );
+    int? categoryId,
+  }) async {
+    try {
+      final filters = CourseFiltersModel(
+        collegeId: collegeId,
+        studyYear: studyYear,
+        categoryId: categoryId,
+      );
 
-    emit(state.copyWith(coursefilters: filters));
+      emit(state.copyWith(coursefilters: filters));
 
-    // Re-fetch courses with filters
-    getCourses(categoryId: categoryId);
+      await getCourses(filters: filters, reset: true, page: 1);
+    } catch (e) {
+      log('Error in applyFiltersByIds: $e');
+    }
+  }
+
+  //?-------------------------------------------------
+  // * Toggle Favorite for a Course
+  Future<void> toggleFavorite({required String courseId}) async {
+    try {
+      if (state.courses == null) return;
+
+      final currentCoursesResult = state.courses!;
+      final currentCourses = List<CourseModel>.from(
+        currentCoursesResult.courses ?? [],
+      );
+
+      // تحديث محلي فوري (UI)
+      final locallyUpdatedCourses = currentCourses.map((course) {
+        if ("${course.id}" == courseId) {
+          return course.copyWith(isFavorite: !course.isFavorite);
+        }
+        return course;
+      }).toList();
+
+      emit(
+        state.copyWith(
+          courses: currentCoursesResult.copyWith(
+            courses: locallyUpdatedCourses,
+          ),
+          isFavoriteError: null,
+        ),
+      );
+
+      // استدعاء الريبو
+      final result = await repo.toggleFavoriteCourseRepo(courseSlug: courseId);
+
+      result.fold(
+        (failure) {
+          // رجع الحالة الأصلية إذا فشل
+          emit(
+            state.copyWith(
+              courses: currentCoursesResult,
+              isFavoriteError: failure.message,
+            ),
+          );
+          log('Error toggling favorite: ${failure.message}');
+        },
+        (isFavoriteFromServer) {
+          final serverUpdatedCourses = currentCourses.map((course) {
+            if ("${course.id}" == courseId) {
+              return course.copyWith(isFavorite: isFavoriteFromServer);
+            }
+            return course;
+          }).toList();
+
+          emit(
+            state.copyWith(
+              courses: currentCoursesResult.copyWith(
+                courses: serverUpdatedCourses,
+              ),
+              isFavoriteError: null,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      log('Unexpected error in toggleFavorite: $e');
+    }
+  }
+
+  //?-------------------------------------------------
+
+  //* Apply Filters
+  Future<void> applyFilters(CourseFiltersModel filters) async {
+    try {
+      // تحديث الفلاتر في الـ state
+      emit(state.copyWith(coursefilters: filters));
+
+      // استدعاء getCourses مع إعادة التعيين (reset=true)
+      await getCourses(filters: filters, reset: true, page: 1);
+    } catch (e) {
+      log('Error in applyFilters: $e');
+    }
   }
 
   //?-------------------------------------------------
@@ -208,23 +290,11 @@ class CourseCubit extends Cubit<CourseState> {
   }
 
   //?-------------------------------------------------
-
-  //* Filter Courses by College
-  List<CourseModel> filterCoursesByCollege(int collegeId) {
-    final allCourses = state.courses ?? [];
-
-    final filteredCourses =
-        allCourses.where((course) => course.college == collegeId).toList();
-
-    return filteredCourses;
-  }
-
-  //?-------------------------------------------------
-  //* Get Course Details by Slug
-  Future<void> getCourseDetails({required String slug}) async {
+  //* Get Course Details by id
+  Future<void> getCourseDetails({required String id}) async {
     emit(state.copyWith(courseDetailsStatus: ResponseStatusEnum.loading));
 
-    final result = await repo.getCourseDetailsRepo(courseSlug: slug);
+    final result = await repo.getCourseDetailsRepo(courseSlug: id);
 
     result.fold(
       (failure) {
@@ -247,153 +317,409 @@ class CourseCubit extends Cubit<CourseState> {
   }
 
   //?-------------------------------------------------
-  //* Search Courses with Debouncing
-  void onSearchChanged(String query) {
-    // Cancel previous timer if exists
-    _searchDebounceTimer?.cancel();
-
-    final trimmedQuery = query.trim();
-
-    // If query is empty, show search history
-    if (trimmedQuery.isEmpty) {
-      emit(state.copyWith(
-        searchQuery: null,
-        searchResults: null,
-        searchStatus: ResponseStatusEnum.initial,
-      ));
-      return;
-    }
-
-    // Update query immediately for UI feedback
-    emit(state.copyWith(searchQuery: trimmedQuery));
-
-    // Debounce: wait 350ms before executing search
-    _searchDebounceTimer = Timer(const Duration(milliseconds: 350), () {
-      searchCourses(query: trimmedQuery);
-    });
-  }
-
-  //* Search Courses
-  Future<void> searchCourses({
-    String? query,
-    int? collegeId,
-    int? studyYear,
-    int? categoryId,
-    int? teacherId,
-    String? ordering,
+  //* Get Chapters with Pagination & optional reset by Course
+  Future<void> getChapters({
+    required String courseId,
+    bool reset = true,
+    int page = 1,
+    int pageSize = 10,
   }) async {
-    // If no query and no filters, don't search
-    if ((query == null || query.isEmpty) &&
-        collegeId == null &&
-        studyYear == null &&
-        categoryId == null &&
-        teacherId == null) {
+    // Prevent duplicate requests if already loading
+    if (state.chaptersStatus == ResponseStatusEnum.loading &&
+        page == 1 &&
+        reset) {
+      log("Chapters already loading, skipping duplicate request");
       return;
     }
 
-    emit(state.copyWith(
-      searchStatus: ResponseStatusEnum.loading,
-      searchQuery: query,
-      searchError: null,
-    ));
+    // Prevent duplicate requests for pagination
+    if (state.loadchaptersMoreStatus == ResponseStatusEnum.loading && !reset) {
+      log("Chapters pagination already loading, skipping duplicate request");
+      return;
+    }
 
-    final result = await repo.getCoursesRepo(
-      categoryId: categoryId ?? state.selectedCategoryId,
-      collegeId: collegeId,
-      studyYear: studyYear,
-      teacherId: teacherId,
-      search: query,
-      ordering: ordering ?? '-price', // Default ordering by price descending
+    if (reset) {
+      // الحالة الأولى: تحميل أول مرة أو إعادة التحديث
+      emit(
+        state.copyWith(
+          chaptersStatus: ResponseStatusEnum.loading,
+          loadchaptersMoreStatus: ResponseStatusEnum.initial,
+          chaptersError: null,
+          chaptersMoreError: null,
+          chapters: ChaptersResultModel(chapters: [], hasNextPage: true),
+        ),
+      );
+    } else {
+      // الحالة الثانية: تحميل المزيد (Load More)
+      emit(
+        state.copyWith(
+          loadchaptersMoreStatus: ResponseStatusEnum.loading,
+          chaptersMoreError: null,
+        ),
+      );
+    }
+
+    final result = await repo.getChaptersRepo(
+      courseId: courseId,
+      page: page,
+      pageSize: pageSize,
     );
 
     result.fold(
       (failure) {
-        emit(state.copyWith(
-          searchStatus: ResponseStatusEnum.failure,
-          searchError: failure.message,
-          searchResults: [],
-        ));
-      },
-      (courses) {
-        // Add to search history if query is not empty
-        if (query != null && query.isNotEmpty) {
-          final updatedHistory = [
-            query,
-            ...state.searchHistory.where((item) => item != query),
-          ].take(10).toList(); // Keep max 10 items
-
-          emit(state.copyWith(
-            searchStatus: ResponseStatusEnum.success,
-            searchResults: courses,
-            searchHistory: updatedHistory,
-            searchError: null,
-          ));
+        if (reset) {
+          emit(
+            state.copyWith(
+              chaptersStatus: ResponseStatusEnum.failure,
+              chaptersError: failure.message,
+              loadchaptersMoreStatus: ResponseStatusEnum.initial,
+            ),
+          );
         } else {
-          emit(state.copyWith(
-            searchStatus: ResponseStatusEnum.success,
-            searchResults: courses,
-            searchError: null,
-          ));
+          emit(
+            state.copyWith(
+              loadchaptersMoreStatus: ResponseStatusEnum.failure,
+              chaptersMoreError: failure.message,
+            ),
+          );
         }
       },
-    );
-  }
+      (newChapters) {
+        // تجهيز القائمة المحدثة
+        final oldChapters = reset
+            ? <ChapterModel>[]
+            : state.chapters?.chapters ?? <ChapterModel>[];
+        final updatedChapters = <ChapterModel>[
+          ...oldChapters,
+          ...newChapters.chapters,
+        ];
 
-  //* Clear Search
-  void clearSearch() {
-    _searchDebounceTimer?.cancel();
-    emit(state.copyWith(
-      searchQuery: null,
-      searchResults: null,
-      searchStatus: ResponseStatusEnum.initial,
-      searchError: null,
-    ));
-  }
-
-  //* Remove from Search History
-  void removeFromSearchHistory(String query) {
-    final updatedHistory = state.searchHistory.where((item) => item != query).toList();
-    emit(state.copyWith(searchHistory: updatedHistory));
-  }
-
-  //* Select from Search History
-  void selectFromSearchHistory(String query) {
-    searchCourses(query: query);
-  }
-
-  @override
-  Future<void> close() {
-    _searchDebounceTimer?.cancel();
-    return super.close();
-  }
-
-  //?-------------------------------------------------
-
-  //* Get Chapters by Course
-  Future<void> getChapters({required int courseId}) async {
-    emit(state.copyWith(chaptersStatus: ResponseStatusEnum.loading));
-
-    final result = await repo.getChaptersRepo(courseId: courseId);
-
-    result.fold(
-      (failure) {
-        emit(
-          state.copyWith(
-            chaptersStatus: ResponseStatusEnum.failure,
-            chaptersError: failure.message,
-          ),
-        );
-      },
-      (chapters) {
         emit(
           state.copyWith(
             chaptersStatus: ResponseStatusEnum.success,
-            chapters: chapters,
+            loadchaptersMoreStatus: ResponseStatusEnum.success,
+            chapters:
+                (state.chapters ??
+                        ChaptersResultModel(chapters: [], hasNextPage: true))
+                    .copyWith(
+                      chapters: updatedChapters,
+                      hasNextPage: newChapters.hasNextPage,
+                    ),
+            currentPage: page,
+            chaptersError: null,
+            chaptersMoreError: null,
           ),
         );
       },
     );
   }
 
-  //?-------------------------------------------------}
+  //?--------------------------------------------------------
+
+  //* Get Universities
+  Future<void> getUniversities() async {
+    emit(
+      state.copyWith(
+        universitiesState: ResponseStatusEnum.loading,
+        universitiesError: null,
+      ),
+    );
+
+    final result = await repo.getUniversitiesRepo();
+
+    result.fold(
+      (failure) => emit(
+        state.copyWith(
+          universitiesState: ResponseStatusEnum.failure,
+          universitiesError: failure.message,
+        ),
+      ),
+      (universities) => emit(
+        state.copyWith(
+          universitiesState: ResponseStatusEnum.success,
+          universities: universities,
+        ),
+      ),
+    );
+  }
+
+  //?-------------------------------------------------
+  //* Get Study Years
+  Future<void> getStudyYears() async {
+    emit(state.copyWith(studyYearsStatus: ResponseStatusEnum.loading));
+
+    final result = await repo.getStudyYearsRepo();
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            studyYearsStatus: ResponseStatusEnum.failure,
+            studyYearsError: failure.message,
+          ),
+        );
+        log('Failed to fetch study years: ${failure.message}');
+      },
+      (years) {
+        emit(
+          state.copyWith(
+            studyYearsStatus: ResponseStatusEnum.success,
+            studyYears: years,
+          ),
+        );
+        log('Fetched study years: ${years.map((y) => y.name).toList()}');
+      },
+    );
+  }
+
+  //?-------------------------------------------------
+  //* Add Rating for a Course (improved: optionally insert locally)
+  Future<void> getRatings({
+    required String courseId,
+    bool reset = true,
+    int page = 1,
+    int pageSize = 10,
+  }) async {
+    log(
+      "📥 Start getRatings | courseId: $courseId, reset: $reset, page: $page",
+    );
+
+    final cubitState = state;
+
+    // Set loading state
+    if (reset) {
+      emit(
+        cubitState.copyWith(
+          ratingsStatus: ResponseStatusEnum.loading,
+          loadratingsMoreStatus: ResponseStatusEnum.initial,
+          ratingsError: null,
+          ratingsMoreError: null,
+          ratings: RatingsResultModel.empty(),
+        ),
+      );
+    } else {
+      emit(
+        cubitState.copyWith(
+          loadratingsMoreStatus: ResponseStatusEnum.loading,
+          ratingsMoreError: null,
+        ),
+      );
+    }
+
+    try {
+      final result = await repo.getRatingsRepo(
+        courseId: courseId,
+        page: page,
+        pageSize: pageSize,
+      );
+
+      result.fold(
+        (failure) {
+          final message = failure.message;
+
+          if (reset) {
+            // التعامل مع No Data كنجاح مع قائمة فارغة
+            if (message == "No Data") {
+              emit(
+                cubitState.copyWith(
+                  ratingsStatus: ResponseStatusEnum.success,
+                  ratings: RatingsResultModel.empty(),
+                  currentPage: page,
+                  ratingsError: null,
+                  loadratingsMoreStatus: ResponseStatusEnum.initial,
+                  ratingsMoreError: null,
+                ),
+              );
+            } else {
+              // فشل حقيقي
+              emit(
+                cubitState.copyWith(
+                  ratingsStatus: ResponseStatusEnum.failure,
+                  ratingsError: message,
+                  loadratingsMoreStatus: ResponseStatusEnum.initial,
+                ),
+              );
+            }
+          } else {
+            emit(
+              cubitState.copyWith(
+                loadratingsMoreStatus: ResponseStatusEnum.failure,
+                ratingsMoreError: message,
+              ),
+            );
+          }
+        },
+        (newRatings) {
+          final oldRatings = reset
+              ? <RatingModel>[]
+              : (cubitState.ratings?.ratings ?? <RatingModel>[]);
+
+          final updatedRatings = <RatingModel>[
+            ...oldRatings,
+            ...?newRatings.ratings,
+          ];
+
+          emit(
+            cubitState.copyWith(
+              ratingsStatus: ResponseStatusEnum.success,
+              loadratingsMoreStatus: ResponseStatusEnum.success,
+              ratings: (cubitState.ratings ?? RatingsResultModel.empty())
+                  .copyWith(
+                    ratings: updatedRatings,
+                    hasNextPage: newRatings.hasNextPage,
+                  ),
+              currentPage: page,
+              ratingsError: null,
+              ratingsMoreError: null,
+            ),
+          );
+        },
+      );
+    } catch (e) {
+      log("❌ getRatings Error: $e");
+      if (reset) {
+        emit(
+          cubitState.copyWith(
+            ratingsStatus: ResponseStatusEnum.failure,
+            ratingsError: "An unexpected error occurred",
+            loadratingsMoreStatus: ResponseStatusEnum.initial,
+          ),
+        );
+      } else {
+        emit(
+          cubitState.copyWith(
+            loadratingsMoreStatus: ResponseStatusEnum.failure,
+            ratingsMoreError: "An unexpected error occurred",
+          ),
+        );
+      }
+    }
+  }
+
+  //?-----------------------------------------------------------------
+  //* Add Rating for a Course
+  Future<void> addRating({
+    required int rating,
+    required String courseId,
+    String? comment,
+    bool insertLocally = true,
+  }) async {
+    emit(
+      state.copyWith(
+        addRatingStatus: ResponseStatusEnum.loading,
+        addRatingError: null,
+      ),
+    );
+
+    final result = await repo.addRatingRepo(
+      rating: rating,
+      courseId: courseId,
+      comment: comment,
+    );
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            addRatingStatus: ResponseStatusEnum.failure,
+            addRatingError: failure.message,
+          ),
+        );
+        log('Add rating failed: ${failure.message}');
+      },
+      (ratingModel) {
+        if (insertLocally) {
+          final currentRatingsResult =
+              state.ratings ?? RatingsResultModel.empty();
+          final currentList = List<RatingModel>.from(
+            currentRatingsResult.ratings ?? [],
+          );
+          currentList.insert(0, ratingModel);
+
+          emit(
+            state.copyWith(
+              ratings: currentRatingsResult.copyWith(ratings: currentList),
+            ),
+          );
+        }
+
+        emit(
+          state.copyWith(
+            addRatingStatus: ResponseStatusEnum.success,
+            addRatingError: null,
+          ),
+        );
+        log('Rating added successfully: $ratingModel');
+      },
+    );
+  }
+
+  //?-------------------------------------------------
+  //* Enroll Cource
+
+  Future<void> enrollCourse({required int courseId}) async {
+    emit(
+      state.copyWith(
+        enrollStatus: ResponseStatusEnum.loading,
+        enrollError: null,
+      ),
+    );
+
+    final result = await repo.enrollCourseRepo(courseId: courseId);
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            enrollStatus: ResponseStatusEnum.failure,
+            enrollError: failure.message,
+          ),
+        );
+        log('Enroll course failed: ${failure.message}');
+      },
+      (enrollment) {
+        emit(state.copyWith(enrollStatus: ResponseStatusEnum.success));
+        log('Enrolled in course successfully: ${enrollment.courseTitle}');
+      },
+    );
+  }
+
+  // لإعادة تعيين حالة الـ enrollStatus بعد التعامل مع الرسالة/البوتوم شيت
+  void resetEnrollStatus() {
+    emit(state.copyWith(enrollStatus: ResponseStatusEnum.initial));
+  }
+
+  //?-------------------------------------------------
+  //* Get Channels with Pagination & optional reset
+  Future<void> getChannels() async {
+    emit(
+      state.copyWith(
+        channelsStatus: ResponseStatusEnum.loading,
+        channelsError: null,
+      ),
+    );
+
+    final result = await repo.getChannelsRepo();
+
+    result.fold(
+      (failure) {
+        emit(
+          state.copyWith(
+            channelsStatus: ResponseStatusEnum.failure,
+            channelsError: failure.message,
+          ),
+        );
+      },
+      (newChannels) {
+        emit(
+          state.copyWith(
+            channelsStatus: ResponseStatusEnum.success,
+            channels: newChannels,
+          ),
+        );
+      },
+    );
+  }
+
+  //?-------------------------------------------------
 }

@@ -14,7 +14,8 @@ class AppColors {
   static const Color backgroundPage = Color(0xffFFFFFF);
   static const Color backgroundWhiteWidget = Color(0xffFFFFFF);
   static const Color backgroundDarkPage = Color(0xff000000);
-  static const Color backgroundLittelOrange = Color(0xffFDF4F1);
+  static const Color backgroundLittelOrange = Color(0xFFFDF4F1);
+  static const Color backgroundDisabled = Color(0xffF5F5F5); // Added disabled background color
 
   //* Text Colors
   static const Color textPrimary = Color(0xff0071C7);
@@ -82,6 +83,8 @@ class AppColors {
   static const Color formProgress = Color(0xff0071C7);
   static const Color formCompleted = Color(0xff018532);
   static const Color formSuspended = Color(0xffFDF4F1);
+  static const Color formGrey = Color(0xff737373);
+  static const Color formGreyPro = Color(0xffBABABA);
 
   //* Divider Colors
   static const Color dividerGrey = Color(0xffF1F1F1);
@@ -90,7 +93,5 @@ class AppColors {
   //* Rating Color
   static const Color ratingStar = Color(0xffD45F2E);
 
-  //AppBar Color
-  static const Color appBar = Color(0xff333333);
-  static const Color ligthGray = Color(0xfff1f1f1);
+  //?-----------------------------------------------------
 }

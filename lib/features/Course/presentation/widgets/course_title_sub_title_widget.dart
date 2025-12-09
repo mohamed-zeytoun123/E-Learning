@@ -67,11 +67,15 @@ class CourseTitleSubTitleWidget extends StatelessWidget {
             style:
                 titleStyle ??
                 AppTextStyles.s16w500.copyWith(color: AppColors.textBlack),
+            maxLines: 1, // سماح بسطرين كحد أقصى
+            overflow: TextOverflow.ellipsis, // إذا زاد، بيحط ...
           ),
           SizedBox(height: 4.h),
           Text(
             subtitle,
             style: AppTextStyles.s14w400.copyWith(color: AppColors.textGrey),
+            maxLines: 1, // سطر واحد فقط
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

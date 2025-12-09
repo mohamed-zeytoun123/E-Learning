@@ -98,16 +98,16 @@ import 'package:e_learning/core/style/app_text_styles.dart';
 
 class FilterGroupWidget extends StatelessWidget {
   final String title;
-  final List<String> items;
-  final bool Function(String) isSelected;
-  final void Function(String) toggleSelection;
+  final List<FilterItem> items;
+  final int? selectedId;
+  final void Function(int?) onSelect;
 
   const FilterGroupWidget({
     super.key,
     required this.title,
     required this.items,
-    required this.isSelected,
-    required this.toggleSelection,
+    required this.selectedId,
+    required this.onSelect,
   });
 
   @override
@@ -126,10 +126,10 @@ class FilterGroupWidget extends StatelessWidget {
             spacing: 8.w,
             runSpacing: 8.h,
             children: items.map((item) {
-              final selected = isSelected(item);
+              final selected = item.id == selectedId;
 
               return GestureDetector(
-                onTap: () => toggleSelection(item),
+                onTap: () => onSelect(selected ? null : item.id),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
                   curve: Curves.easeInOut,
@@ -166,7 +166,7 @@ class FilterGroupWidget extends StatelessWidget {
                       ),
                       if (selected) SizedBox(width: 6.w),
                       Text(
-                        item,
+                        item.name,
                         style: AppTextStyles.s14w500.copyWith(
                           color: selected
                               ? AppColors.textWhite
@@ -183,4 +183,11 @@ class FilterGroupWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+class FilterItem {
+  final int id;
+  final String name;
+
+  FilterItem({required this.id, required this.name});
 }

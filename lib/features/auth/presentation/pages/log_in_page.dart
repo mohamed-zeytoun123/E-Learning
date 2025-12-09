@@ -63,7 +63,7 @@ class _LogInPageState extends State<LogInPage> {
                 Form(
                   key: _formKey,
                   child: FormLogInWidget(
-                    phoneController: phoneController,
+                    emailController: phoneController,
                     passwordController: passwordController,
                   ),
                 ),

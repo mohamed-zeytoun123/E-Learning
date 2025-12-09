@@ -1,24 +1,25 @@
 import 'package:dio/dio.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/api_response.dart';
+import 'api_request.dart';
+import 'api_response.dart';
 
 class API {
   final Dio dio;
 
-  API({
-    required this.dio,
-  });
+  API({required this.dio});
 
-  //?--- Get -----------------------------------------------------------
+  // ------------------- GET -------------------
   Future<ApiResponse> get(ApiRequest apiRequest) async {
     try {
       final response = await dio.get(
         apiRequest.url,
-        queryParameters: (apiRequest.queryParameters != null &&
-                apiRequest.queryParameters!.isNotEmpty)
-            ? apiRequest.queryParameters
-            : null,
+        queryParameters: apiRequest.queryParameters,
+        options: Options(
+          responseType: apiRequest.responseType ?? ResponseType.json,
+        ),
       );
+
       return ApiResponse(
         statusCode: response.statusCode ?? -1,
         body: response.data,
@@ -28,13 +29,18 @@ class API {
     }
   }
 
-  //?--- Post -----------------------------------------------------------
+  // ------------------- POST -------------------
   Future<ApiResponse> post(ApiRequest apiRequest) async {
     try {
       final response = await dio.post(
         apiRequest.url,
+        queryParameters: apiRequest.queryParameters,
         data: apiRequest.body,
+        options: Options(
+          responseType: apiRequest.responseType ?? ResponseType.json,
+        ),
       );
+
       return ApiResponse(
         statusCode: response.statusCode ?? -1,
         body: response.data,
@@ -44,14 +50,18 @@ class API {
     }
   }
 
-  //?--- Put -----------------------------------------------------------
-
+  // ------------------- PUT -------------------
   Future<ApiResponse> put(ApiRequest apiRequest) async {
     try {
       final response = await dio.put(
         apiRequest.url,
+        queryParameters: apiRequest.queryParameters,
         data: apiRequest.body,
+        options: Options(
+          responseType: apiRequest.responseType ?? ResponseType.json,
+        ),
       );
+
       return ApiResponse(
         statusCode: response.statusCode ?? -1,
         body: response.data,
@@ -61,13 +71,18 @@ class API {
     }
   }
 
-  //?--- Delete -----------------------------------------------------------
+  // ------------------- DELETE -------------------
   Future<ApiResponse> delete(ApiRequest apiRequest) async {
     try {
       final response = await dio.delete(
         apiRequest.url,
+        queryParameters: apiRequest.queryParameters,
         data: apiRequest.body,
+        options: Options(
+          responseType: apiRequest.responseType ?? ResponseType.json,
+        ),
       );
+
       return ApiResponse(
         statusCode: response.statusCode ?? -1,
         body: response.data,
@@ -77,13 +92,18 @@ class API {
     }
   }
 
-  //?--- Patch -----------------------------------------------------------
+  // ------------------- PATCH -------------------
   Future<ApiResponse> patch(ApiRequest apiRequest) async {
     try {
       final response = await dio.patch(
         apiRequest.url,
+        queryParameters: apiRequest.queryParameters,
         data: apiRequest.body,
+        options: Options(
+          responseType: apiRequest.responseType ?? ResponseType.json,
+        ),
       );
+
       return ApiResponse(
         statusCode: response.statusCode ?? -1,
         body: response.data,
@@ -92,5 +112,4 @@ class API {
       rethrow;
     }
   }
-  //?-----------------------------------------------------------------
 }

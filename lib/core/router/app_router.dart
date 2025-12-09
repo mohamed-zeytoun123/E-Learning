@@ -1,7 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/widgets/no_internet_screen/no_internet_page.dart';
+import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
+import 'package:e_learning/features/Video/presentation/pages/video_playing_cached_page.dart';
 import 'package:e_learning/features/Video/presentation/pages/video_playing_page.dart';
+import 'package:e_learning/features/auth/presentation/pages/selected_method_log_in_age.dart';
+import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/pages/chapter_page.dart';
 import 'package:e_learning/features/chapter/presentation/pages/quiz_page.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
@@ -42,8 +48,8 @@ class AppRouter {
       GoRoute(
         path: RouteNames.selectedMethodLogin,
         //?--------------------------------------------------------------------------
-        // builder: (context, state) => const SelectedMethodLogInPage(), //! base
-        builder: (context, state) => CoursesPage(),
+        builder: (context, state) => const SelectedMethodLogInPage(), //! base
+        // builder: (context, state) => CoursesPage(),
         //?--------------------------------------------------------------------------
       ),
       GoRoute(
@@ -62,11 +68,48 @@ class AppRouter {
           child: LogInPage(),
         ),
       ),
-
       //?-----  Viedeo Featchers   --------------------------------------------------------------
       GoRoute(
         path: RouteNames.viedioPage,
-        builder: (context, state) => const VideoPlayingPage(),
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final chapterCubit = args["chapterCubit"] as ChapterCubit;
+          final videoModel = args["videoModel"] as VideoStreamModel?;
+          final videoId = args["videoId"] as int?;
+
+          return BlocProvider.value(
+            value: chapterCubit,
+            child: VideoPlayingPage(videoId: videoId, videoModel: videoModel!),
+          );
+        },
+      ),
+
+      GoRoute(
+        path: RouteNames.videoPageCached,
+        builder: (context, state) {
+          final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+
+          if (args.containsKey("videoFile")) {
+            final File videoFile = args["videoFile"] as File;
+
+            return VideoPlayingCachedPage(
+              videoId: "cached",
+              fileName: videoFile.path.split('/').last,
+              encryptedBytes: Uint8List(0),
+              videoFile: videoFile,
+            );
+          }
+
+          final String videoId = args["videoId"] as String;
+          final String fileName = args["fileName"] as String;
+          final Uint8List encryptedBytes = args["encryptedBytes"] as Uint8List;
+
+          return VideoPlayingCachedPage(
+            videoId: videoId,
+            fileName: fileName,
+            encryptedBytes: encryptedBytes,
+          );
+        },
       ),
 
       //?-------------------------------------------------------------------
@@ -75,10 +118,10 @@ class AppRouter {
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
           final blocProvider = args["blocProvide"] as AuthCubit;
-          final phone = args["phone"] as String;
+          final email = args["email"] as String;
           return BlocProvider.value(
             value: blocProvider,
-            child: UniversitySelectionPage(phone: phone),
+            child: UniversitySelectionPage(email: email),
           );
         },
       ),
@@ -89,11 +132,11 @@ class AppRouter {
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
           final blocProvider = args["blocProvide"] as AuthCubit;
-          final phone = args["phone"] as String;
+          final email = args["email"] as String;
           final purpose = args["purpose"] as String;
           return BlocProvider.value(
             value: blocProvider,
-            child: OtpPage(phone: phone, purpose: purpose),
+            child: OtpPage(email: email, purpose: purpose),
           );
         },
       ),
@@ -155,13 +198,13 @@ class AppRouter {
         path: RouteNames.resetPassword,
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
-          final phone = args["phone"] as String;
+          final email = args["email"] as String;
           final resetToken = args["resetToken"] as String;
 
           return BlocProvider<AuthCubit>(
             create: (context) =>
                 AuthCubit(repository: appLocator<AuthRepository>()),
-            child: ResetPasswordPage(phone: phone, resetToken: resetToken),
+            child: ResetPasswordPage(email: email, resetToken: resetToken),
           );
         },
       ),
@@ -189,12 +232,13 @@ class AppRouter {
         name: RouteNames.courceInf,
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
-          final courseSlug = args["courseSlug"] as String;
+          final courseId = args["courseId"] as int;
+
           final courseCubit = args["courseCubit"] as CourseCubit;
 
           return BlocProvider.value(
             value: courseCubit,
-            child: CourceInfoPage(courseSlug: courseSlug),
+            child: CourceInfoPage(courseId: courseId),
           );
         },
       ),
@@ -204,14 +248,41 @@ class AppRouter {
         path: RouteNames.chapterPage,
         builder: (context, state) {
           final Map<String, dynamic> args = state.extra as Map<String, dynamic>;
+          final courseSlug = args["courseSlug"] as String;
+          final courseTitle = args["courseTitle"] as String;
+          final courseImage = args["courseImage"] as String;
+          final chapterId = args["chapterId"] as int;
+          final index = args["index"] as int;
           final isActive = args["isActive"] as bool;
-          return ChapterPage(isActive: isActive);
+          return ChapterPage(
+            isActive: isActive,
+            courseSlug: courseSlug,
+            chapterId: chapterId,
+            courseImage: courseImage,
+            courseTitle: courseTitle,
+            index: index,
+          );
         },
       ),
 
       GoRoute(
         path: RouteNames.quizPage,
-        builder: (context, state) => const QuizPage(),
+        name: RouteNames.quizPage,
+        builder: (context, state) {
+          final Map<String, dynamic>? args =
+              state.extra as Map<String, dynamic>?;
+          final chapterCubit = args?["chapterCubit"] as ChapterCubit?;
+          final quizId = args?["quizId"] as int?;
+
+          if (chapterCubit != null) {
+            return BlocProvider.value(
+              value: chapterCubit,
+              child: QuizPage(quizId: quizId),
+            );
+          } else {
+            return QuizPage(quizId: quizId);
+          }
+        },
       ),
 
       //? --------------------------- Profile Pages --------------------------
@@ -225,12 +296,21 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.downloads,
-        builder: (context, state) => const DownloadsPage(),
-      ),
-      //?------- No Internet ----------------------------------------------
-      GoRoute(
-        path: RouteNames.noInternet,
-        builder: (context, state) => const NoInternetPage(),
+        builder: (context, state) {
+          final Map<String, dynamic>? args =
+              state.extra as Map<String, dynamic>?;
+          final chapterCubit =
+              args != null ? args["chapterCubit"] as ChapterCubit : null;
+
+          if (chapterCubit != null) {
+            return BlocProvider.value(
+              value: chapterCubit,
+              child: const DownloadsPage(),
+            );
+          } else {
+            return const DownloadsPage();
+          }
+        },
       ),
 
       //?-------------------------------------------------------------------

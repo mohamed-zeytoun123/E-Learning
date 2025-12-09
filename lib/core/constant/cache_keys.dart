@@ -18,5 +18,8 @@ class CacheKeys {
   static final String courseBox = 'COURSE_BOX';
   static final String collegeBox = 'COLLEGE_BOX';
   static final String teacherBox = 'TEACHER_BOX';
+  static final String universityBox = 'UNIVERSITY_BOX';
+  static final String studyYearBox = 'STUDY_YEAR_BOX';
+  static final String courseFiltersBox = 'COURSE_FILTERS_BOX';
   //?------------------------------
 }

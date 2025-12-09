@@ -1,21 +1,35 @@
+// ignore_for_file: void_checks
+
 import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:e_learning/core/Error/failure.dart';
 import 'package:e_learning/core/network/api_general.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/api_response.dart';
 import 'package:e_learning/core/network/app_url.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
-import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
-import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
-import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/Course/data/models/course_details_model.dart';
-import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
-import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
-import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source.dart';
-import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
-import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
+import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
+import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
+
+import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
+import 'package:e_learning/features/chapter/data/models/chapter_details_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapters_result/chapters_result_model.dart';
+import 'package:e_learning/features/chapter/data/models/pag_chapter_model/paginated_chapters_model.dart';
+import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/course/data/models/course_details_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
+import 'package:e_learning/features/course/data/source/local/courcese_local_data_source.dart';
+import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
 
 class CourceseRepositoryImpl implements CourceseRepository {
   final CourceseRemoteDataSource remote;
@@ -31,148 +45,106 @@ class CourceseRepositoryImpl implements CourceseRepository {
   });
 
   //? -----------------------------------------------------------------
-  //* Get Filter Categories
-  @override
-  Future<Either<Failure, List<CategorieModel>>>
-      getFilterCategoriesRepo() async {
-    if (await network.isConnected) {
-      final result = await remote.getFilterCategoriesRemote();
+  // //* Get Filter Categories
+  // @override
+  // Future<Either<Failure, List<CategorieModel>>> getCategoriesRepo() async {
+  //   if (await network.isConnected) {
+  //     final result = await remote.getCategoriesRemote();
 
-      return result.fold((failure) => Left(failure), (categories) async {
+  //     return result.fold((failure) => Left(failure), (categories) async {
+  //       if (categories.isEmpty) return Left(FailureNoData());
+  //       await local.saveCategoriesInCash(categories);
+  //       return Right(categories);
+  //     });
+  //   } else {
+  //     final cachedCategories = local.getCategoriesInCach();
+
+  //     if (cachedCategories.isNotEmpty) {
+  //       return Right(cachedCategories);
+  //     } else {
+  //       return Left(FailureNoConnection());
+  //     }
+  //   }
+  // }
+
+  @override
+  Future<Either<Failure, List<CategorieModel>>> getCategoriesRepo() async {
+    if (await network.isConnected) {
+      final result = await remote.getCategoriesRemote();
+
+      return result.fold((failure) => Left(failure), (categories) {
         if (categories.isEmpty) return Left(FailureNoData());
-        await local.saveCategoriesInCash(categories);
         return Right(categories);
       });
     } else {
-      final cachedCategories = local.getCategoriesInCach();
-
-      if (cachedCategories.isNotEmpty) {
-        return Right(cachedCategories);
-      } else {
-        return Left(FailureNoConnection());
-      }
+      return Left(FailureNoConnection());
     }
   }
 
   //? -----------------------------------------------------------------
-  //* Get Courses (supports both paginated and non-paginated)
+  //* Get Courses with Pagination
   @override
-  Future<Either<Failure, dynamic>> getCoursesRepo({
-    int? categoryId,
-    int? collegeId,
-    int? studyYear,
+  Future<Either<Failure, CoursesResultModel>> getCoursesRepo({
+    CourseFiltersModel? filters,
     int? teacherId,
     String? search,
     String? ordering,
-    CourseFiltersModel? filters,
     int? page,
     int? pageSize,
   }) async {
-    // If pagination parameters are provided, return PagCoursesResult
-    if (page != null || pageSize != null) {
-      return await _getCoursesPaginated(
-        search: search,
-        filters: filters,
-        ordering: ordering,
-        page: page ?? 1,
-        pageSize: pageSize ?? 5,
-      );
-    }
+    try {
+      filters ??= local.getFilters();
 
-    // Otherwise, use filters from CourseFiltersModel or individual parameters
-    final effectiveCategoryId = filters?.categoryId ?? categoryId;
-    final effectiveCollegeId = filters?.collegeId ?? collegeId;
-    final effectiveStudyYear = filters?.studyYear ?? studyYear;
-    if (await network.isConnected) {
-      final result = await remote.getCoursesRemote(
-        categoryId: effectiveCategoryId,
-        collegeId: effectiveCollegeId,
-        studyYear: effectiveStudyYear,
-        teacherId: teacherId,
-        search: search,
-        ordering: ordering,
+      log(
+        'Applying filters Repo : college=${filters?.collegeId}, studyYear=${filters?.studyYear}, category=${filters?.categoryId}, page=$page, pageSize=$pageSize',
       );
 
-      return result.fold((failure) {
-        print('❌ Repository: Remote call failed - ${failure.message}');
-        return Left(failure);
-      }, (courses) async {
-        print('📦 Repository: Received ${courses.length} courses from remote');
-        // Allow empty lists - let UI handle showing "No courses available"
-        if (courses.isNotEmpty && effectiveCategoryId == null) {
-          // Only cache when fetching all courses, not filtered
-          await local.saveCoursesInCache(courses);
-        }
-        return Right(courses);
-      });
-    } else {
-      final cachedCourses = local.getCoursesInCache();
-
-      if (cachedCourses.isNotEmpty) {
-        print(
-            '📦 Repository: Loaded ${cachedCourses.length} courses from cache');
-        // If filtering by category and we're offline, filter cached courses
-        if (effectiveCategoryId != null) {
-          // Note: CourseModel doesn't have category field, so offline filtering won't work
-          // For now, return all cached courses when offline and filtering
-        }
-        return Right(cachedCourses);
-      } else {
-        print('❌ Repository: No cached courses available');
-        return Left(FailureNoConnection());
-      }
-    }
-  }
-
-  //* Get Courses with Pagination
-  Future<Either<Failure, PagCoursesResult>> _getCoursesPaginated({
-    String? search,
-    CourseFiltersModel? filters,
-    String? ordering,
-    int page = 1,
-    int pageSize = 5,
-  }) async {
-    if (await network.isConnected) {
-      try {
-        final Map<String, dynamic> queryParameters = {
-          if (filters?.collegeId != null) 'college': filters!.collegeId.toString(),
-          if (filters?.categoryId != null) 'category': filters!.categoryId.toString(),
-          if (filters?.studyYear != null) 'study_year': filters!.studyYear.toString(),
-          if (search != null && search.isNotEmpty) 'search': search,
-          'ordering': ordering ?? '-price',
-          'page': page.toString(),
-          'page_size': pageSize.toString(),
-        };
-
-        final ApiRequest request = ApiRequest(
-          url: AppUrls.getCourses,
-          queryParameters: queryParameters,
+      if (await network.isConnected) {
+        final result = await remote.getCoursesRemote(
+          filters: filters,
+          search: search,
+          ordering: ordering,
+          page: page,
+          pageSize: pageSize,
         );
 
-        log('🌐 Paginated Request URL: ${AppUrls.getCourses}');
-        log('🌐 Paginated Query Parameters: $queryParameters');
+        return await result.fold((failure) async => Left(failure), (
+          paginatedCourses,
+        ) async {
+          final courses = paginatedCourses.results ?? [];
 
-        final ApiResponse response = await api.get(request);
+          if (courses.isEmpty) return Left(FailureNoData());
 
-        if (response.statusCode == 200) {
-          final data = response.body;
-          
-          // Parse paginated response
-          if (data is Map<String, dynamic>) {
-            final pagResult = PagCoursesResult.fromMap(data);
-            return Right(pagResult);
+          if (page == null || page == 1) {
+            await local.saveCoursesInCache(courses);
           } else {
-            return Left(Failure(message: 'Unexpected response format'));
+            await local.appendCoursesToCache(courses);
           }
+
+          if (filters != null) {
+            await local.saveFilters(filters);
+          }
+
+          return Right(
+            CoursesResultModel(
+              courses: courses,
+              hasNextPage: paginatedCourses.next != null,
+            ),
+          );
+        });
+      } else {
+        final cachedCourses = local.getCoursesInCache();
+        if (cachedCourses.isNotEmpty) {
+          return Right(
+            CoursesResultModel(courses: cachedCourses, hasNextPage: false),
+          );
         } else {
-          return Left(Failure(message: 'Request failed with status ${response.statusCode}'));
+          return Left(FailureNoConnection());
         }
-      } catch (e) {
-        log('❌ Error in _getCoursesPaginated: $e');
-        return Left(Failure(message: e.toString()));
       }
-    } else {
-      return Left(FailureNoConnection());
+    } catch (e) {
+      log('getCoursesRepo Error: $e');
+      return Left(Failure.handleError(e as DioException));
     }
   }
 
@@ -222,18 +194,237 @@ class CourceseRepositoryImpl implements CourceseRepository {
   //? -----------------------------------------------------------------
 
   //* Get Chapters by Course
-  Future<Either<Failure, List<ChapterModel>>> getChaptersRepo({
-    required int courseId,
+  @override
+  Future<Either<Failure, ChaptersResultModel>> getChaptersRepo({
+    required String courseId,
+    int? page,
+    int? pageSize,
+  }) async {
+    try {
+      if (await network.isConnected) {
+        final result = await remote.getChaptersRemote(
+          courseId: courseId,
+          page: page,
+          pageSize: pageSize,
+        );
+
+        return result.fold((failure) => Left(failure), (paginatedChapters) {
+          final chapters = paginatedChapters.results;
+
+          return Right(
+            ChaptersResultModel(
+              chapters: chapters,
+              hasNextPage:
+                  paginatedChapters.currentPage < paginatedChapters.totalPages,
+            ),
+          );
+        });
+      } else {
+        return Left(FailureNoConnection());
+      }
+    } catch (e) {
+      log('getChaptersRepo Error: $e');
+      return Left(Failure.handleError(e as DioException));
+    }
+  }
+
+  //? -----------------------------------------------------------------
+
+  //* Get Ratings by Course (Repository)
+  @override
+  Future<Either<Failure, RatingsResultModel>> getRatingsRepo({
+    required String courseId,
+    int? page,
+    int? pageSize,
+    String? ordering,
+  }) async {
+    try {
+      if (await network.isConnected) {
+        final result = await remote.getRatingsRemote(
+          courseId: courseId,
+          page: page,
+          pageSize: pageSize,
+          ordering: ordering,
+        );
+
+        return result.fold((failure) => Left(failure), (paginatedRatings) {
+          final ratings = paginatedRatings.results;
+
+          if (ratings.isEmpty) return Left(FailureNoData());
+
+          return Right(
+            RatingsResultModel(
+              ratings: ratings,
+              hasNextPage:
+                  paginatedRatings.currentPage < paginatedRatings.totalPages,
+            ),
+          );
+        });
+      } else {
+        // لو بدك ممكن تعمل هنا cache لاحقًا
+        return Left(FailureNoConnection());
+      }
+    } catch (e) {
+      log('getRatingsRepo Error: $e');
+      return Left(Failure.handleError(e as DioException));
+    }
+  }
+
+  //?--------------------------------------------------------
+  //* Get Universities
+  @override
+  Future<Either<Failure, List<UniversityModel>>> getUniversitiesRepo() async {
+    if (await network.isConnected) {
+      final result = await remote.getUniversitiesRemote();
+
+      return result.fold((failure) => Left(failure), (universities) async {
+        if (universities.isEmpty) return Left(FailureNoData());
+        await local.saveUniversitiesInCache(universities);
+        return Right(universities);
+      });
+    } else {
+      final cachedUniversities = local.getUniversitiesInCache();
+
+      if (cachedUniversities.isNotEmpty) {
+        return Right(cachedUniversities);
+      } else {
+        return Left(FailureNoConnection());
+      }
+    }
+  }
+
+  //?----------------------------------------------------
+
+  //* Toggle Favorite Course
+  @override
+  Future<Either<Failure, bool>> toggleFavoriteCourseRepo({
+    required String courseSlug,
   }) async {
     if (await network.isConnected) {
-      final result = await remote.getChaptersRemote(courseId: courseId);
+      final result = await remote.toggleFavoriteCourseRemote(
+        courseSlug: courseSlug,
+      );
+
       return result.fold(
         (failure) => Left(failure),
-        (chapters) => Right(chapters),
+        (isFavorite) => Right(isFavorite),
       );
     } else {
       return Left(FailureNoConnection());
     }
   }
+
+  //?----------------------------------------------------
+
+  // //* Get Study Years
+  // @override
+  // Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRepo() async {
+  //   if (await network.isConnected) {
+  //     final result = await remote.getStudyYearsRemote();
+
+  //     return result.fold((failure) => Left(failure), (years) async {
+  //       if (years.isEmpty) return Left(FailureNoData());
+  //       await local.saveStudyYearsInCache(years);
+  //       return Right(years);
+  //     });
+  //   } else {
+  //     final cachedYears = local.getStudyYearsInCache();
+  //     if (cachedYears.isNotEmpty) {
+  //       return Right(cachedYears);
+  //     } else {
+  //       return Left(FailureNoConnection());
+  //     }
+  //   }
+  // }
+  @override
+  Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRepo() async {
+    if (await network.isConnected) {
+      final result = await remote.getStudyYearsRemote();
+
+      return result.fold((failure) => Left(failure), (years) {
+        if (years.isEmpty) return Left(FailureNoData());
+        return Right(years);
+      });
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //?----------------------------------------------------
+
+  //* Add Rating
+  @override
+  Future<Either<Failure, RatingModel>> addRatingRepo({
+    required int rating,
+    required String courseId,
+    String? comment,
+  }) async {
+    if (await network.isConnected) {
+      try {
+        final result = await remote.addRatingRemote(
+          rating: rating,
+          courseId: courseId,
+          comment: comment,
+        );
+
+        return result.fold(
+          (failure) => Left(failure),
+          (ratingModel) => Right(ratingModel),
+        );
+      } catch (e) {
+        return Left(Failure.handleError(e as DioException));
+      }
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
   //? -----------------------------------------------------------------
+  //* Enroll in a Course
+  @override
+  Future<Either<Failure, EnrollmentModel>> enrollCourseRepo({
+    required int courseId,
+  }) async {
+    if (await network.isConnected) {
+      try {
+        final result = await remote.enrollCourseRemote(courseId: courseId);
+
+        return result.fold(
+          (failure) => Left(failure),
+          (enrollment) => Right(enrollment),
+        );
+      } catch (e) {
+        if (e is DioException && e.response != null) {
+          final data = e.response?.data;
+          if (data != null && data['non_field_errors'] != null) {
+            return Left(Failure(message: data['non_field_errors'][0]));
+          }
+        }
+        log('enrollCourseRepo Error: $e');
+        return Left(Failure.handleError(e as DioException));
+      }
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Get Channels Repository
+  @override
+  Future<Either<Failure, List<ChannelModel>>> getChannelsRepo() async {
+    if (await network.isConnected) {
+      final result = await remote.getChannelsRemote();
+
+      return result.fold((failure) => Left(failure), (channels) async {
+        if (channels.isEmpty) return Left(FailureNoData());
+        // إذا حابب ممكن تعمل caching بعدين
+        return Right(channels);
+      });
+    } else {
+      // لو بدك ممكن تضيف caching هنا بعدين
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //?----------------------------------------------------
 }

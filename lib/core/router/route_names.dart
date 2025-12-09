@@ -13,6 +13,8 @@ class RouteNames {
 
   //* ================= Video Featchers =================
   static const viedioPage = '/video';
+  static const cachedVideos = '/cached-videos';
+  static const videoPageCached = '/video-Page-Cached';
 
   //* ================= Course Featchers =================
   static const courceInf = '/cource-inf';

@@ -80,8 +80,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CourseTabViewWidget extends StatelessWidget {
-  const CourseTabViewWidget({super.key, required this.isActive});
+  const CourseTabViewWidget({
+    super.key,
+    required this.isActive,
+    required this.courseId,
+    required this.courseImage,
+    required this.courseTitle,
+    required this.price,
+    required this.countVideos,
+    required this.houresDurtion,
+    required this.countChapter,
+  });
+  final int countChapter;
   final bool isActive;
+  final int countVideos;
+  final String? courseImage;
+  final String courseTitle;
+  final int courseId;
+  final double houresDurtion;
+  final String price;
 
   @override
   Widget build(BuildContext context) {
@@ -133,9 +150,23 @@ class CourseTabViewWidget extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                BodyTabChapterWidget(isActive: isActive),
-                BodyTabAboutWidget(isActive: isActive),
-                BodyTabReviewsWidget(isActive: isActive),
+                BodyTabChapterWidget(
+                  courseId: courseId,
+                  isActive: isActive,
+                  chapterId: courseId,
+                  courseTitle: courseTitle,
+                  courseImage: courseImage ?? '',
+                  price: price,
+                ),
+                BodyTabAboutWidget(
+                  countChapter: countChapter,
+                  countVideos: countVideos,
+                  houresDurtion: houresDurtion,
+                  isActive: isActive,
+                  courseId: courseId,
+                  price: price,
+                ),
+                BodyTabReviewsWidget(isActive: isActive, courseId: courseId),
               ],
             ),
           ),

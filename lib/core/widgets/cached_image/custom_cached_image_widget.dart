@@ -3,7 +3,6 @@ import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 class CustomCachedImageWidget extends StatelessWidget {
   final String appImage;
   final double height;
@@ -22,8 +21,53 @@ class CustomCachedImageWidget extends StatelessWidget {
     this.errorWidget,
   });
 
+  //   @override
+  //   Widget build(BuildContext context) {
+  //     return CachedNetworkImage(
+  //       imageUrl: appImage,
+  //       height: height == double.infinity ? double.infinity : height.h,
+  //       width: width == double.infinity ? double.infinity : width.w,
+  //       fit: fit,
+  //       placeholder: (context, url) =>
+  //           placeholder ??
+  //           Container(
+  //             height: height == double.infinity ? double.infinity : height.h,
+  //             width: width == double.infinity ? double.infinity : width.w,
+  //             color: Colors.grey.shade300,
+  //             child: Center(child: AppLoading.circular()),
+  //           ),
+  //       errorWidget: (context, url, error) =>
+  //           errorWidget ??
+  //           Container(
+  //             height: height == double.infinity ? double.infinity : height.h,
+  //             width: width == double.infinity ? double.infinity : width.w,
+  //             color: Colors.grey.shade300,
+  //             child: Icon(
+  //               Icons.broken_image,
+  //               size: 20.sp,
+  //               color: AppColors.iconError,
+  //             ),
+  //           ),
+  //     );
+  //   }
   @override
   Widget build(BuildContext context) {
+    // إذا appImage فاضية أو null، عرض placeholder افتراضي
+    if (appImage.isEmpty) {
+      return Container(
+        height: height == double.infinity ? double.infinity : height.h,
+        width: width == double.infinity ? double.infinity : width.w,
+        color: Colors.grey.shade300,
+        child: Center(
+          child: Icon(
+            Icons.image_not_supported,
+            size: 40.sp,
+            color: Colors.grey.shade600,
+          ),
+        ),
+      );
+    }
+
     return CachedNetworkImage(
       imageUrl: appImage,
       height: height == double.infinity ? double.infinity : height.h,
@@ -43,10 +87,12 @@ class CustomCachedImageWidget extends StatelessWidget {
             height: height == double.infinity ? double.infinity : height.h,
             width: width == double.infinity ? double.infinity : width.w,
             color: Colors.grey.shade300,
-            child: Icon(
-              Icons.broken_image,
-              size: 20.sp,
-              color: AppColors.iconError,
+            child: Center(
+              child: Icon(
+                Icons.broken_image,
+                size: 40.sp,
+                color: AppColors.iconError,
+              ),
             ),
           ),
     );

@@ -39,82 +39,82 @@ class Failure {
         return Failure(statusCode: status, message: 'Bad SSL Certificate');
 
       case DioExceptionType.badResponse:
-        if (data is Map<String, dynamic>) {
-          int? statusCode = data['code'];
+        if (data is Map<String, dynamic> && data.isNotEmpty) {
           String? errorMsg;
-          if (data.isNotEmpty) {
-            String? errorMsg;
 
-            if (data.containsKey('detail')) {
-              errorMsg = data['detail']?.toString();
-            } else if (data.containsKey('message')) {
-              errorMsg = data['message']?.toString();
-            } else {
-              final firstValue = data.values.first;
-              if (firstValue is String) {
-                errorMsg = firstValue;
-              } else if (firstValue is List && firstValue.isNotEmpty) {
-                errorMsg = firstValue.first.toString();
-              } else {
-                errorMsg = 'Validation error';
+          // Extract error message from common error fields
+          if (data.containsKey('non_field_errors') &&
+              data['non_field_errors'] is List &&
+              (data['non_field_errors'] as List).isNotEmpty) {
+            errorMsg = (data['non_field_errors'] as List).first.toString();
+          } else if (data.containsKey('detail') && data['detail'] != null) {
+            errorMsg = data['detail'].toString();
+          } else if (data.containsKey('message') && data['message'] != null) {
+            errorMsg = data['message'].toString();
+          } else {
+            // Handle field-specific errors like {"email": "Email already exists"}
+            final fieldErrors = <String>[];
+            data.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
               }
-            }
-
-            return Failure(
-              statusCode: status,
-              message: errorMsg ?? 'Validation error',
-            );
-          }
-          //* if message server is null :
-          else {
-            switch (status) {
-              case 400:
-                return Failure(
-                  statusCode: status,
-                  message: errorMsg ?? 'Invalid request',
-                );
-
-              case 401:
-                return Failure(
-                  statusCode: status,
-                  message: 'Unauthorized access, please login again',
-                );
-
-              case 404:
-                return Failure(
-                  statusCode: status,
-                  message: 'Resource not found',
-                );
-
-              case 422:
-                return Failure(
-                  statusCode: status,
-                  message: errorMsg ?? 'Validation error',
-                );
-
-              case 500:
-                return Failure(statusCode: status, message: 'Server Error');
-
-              case 403:
-                return Failure(
-                  statusCode: status,
-                  message: 'You don’t have permission to perform this action',
-                );
-
-              default:
-                return Failure(
-                  statusCode: status,
-                  message:
-                      errorMsg ?? 'Something went wrong, please try again.',
-                );
+            });
+            
+            if (fieldErrors.isNotEmpty) {
+              errorMsg = fieldErrors.join(', ');
+            } else {
+              errorMsg = 'Something went wrong, please try again.';
             }
           }
-        } else {
-          //* لو البيانات مش Map أو فاضي
+
           return Failure(
             statusCode: status,
-            message: 'Unexpected server error',
+            message: errorMsg,
           );
+        } else {
+          //* لو البيانات مش Map أو فاضي
+          switch (status) {
+            case 400:
+              return Failure(
+                statusCode: status,
+                message: 'Invalid request',
+              );
+
+            case 401:
+              return Failure(
+                statusCode: status,
+                message: 'Unauthorized access, please login again',
+              );
+
+            case 404:
+              return Failure(
+                statusCode: status,
+                message: 'Resource not found',
+              );
+
+            case 422:
+              return Failure(
+                statusCode: status,
+                message: 'Validation error',
+              );
+
+            case 500:
+              return Failure(statusCode: status, message: 'Server Error');
+
+            case 403:
+              return Failure(
+                statusCode: status,
+                message: 'You don’t have permission to perform this action',
+              );
+
+            default:
+              return Failure(
+                statusCode: status,
+                message: 'Something went wrong, please try again.',
+              );
+          }
         }
 
       case DioExceptionType.cancel:

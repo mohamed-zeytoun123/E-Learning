@@ -12,6 +12,8 @@ class InputNameWidget extends StatelessWidget {
   final double? width;
   final String hint;
   final String hintKey;
+  final FocusNode? focusNode; // Add focusNode parameter
+  final FocusNode? nextFocusNode; // Add nextFocusNode parameter
 
   const InputNameWidget({
     super.key,
@@ -20,6 +22,8 @@ class InputNameWidget extends StatelessWidget {
     this.icon,
     required this.hint,
     required this.hintKey,
+    this.focusNode, // Add focusNode parameter
+    this.nextFocusNode, // Add nextFocusNode parameter
   });
 
   @override
@@ -34,9 +38,15 @@ class InputNameWidget extends StatelessWidget {
             child: TextFormField(
               controller: controller,
               textInputAction: TextInputAction.next,
+              focusNode: focusNode, // Use focusNode parameter
               autovalidateMode: AutovalidateMode.onUserInteraction,
               onFieldSubmitted: (_) {
-                FocusScope.of(context).requestFocus();
+                // Move focus to the next field if provided, otherwise request focus normally
+                if (nextFocusNode != null) {
+                  FocusScope.of(context).requestFocus(nextFocusNode);
+                } else {
+                  FocusScope.of(context).requestFocus();
+                }
               },
               decoration: TextFormFieldStyle.baseForm(
                 AppLocalizations.of(context)?.translate(hintKey) ?? hint,

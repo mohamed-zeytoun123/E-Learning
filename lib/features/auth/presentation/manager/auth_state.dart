@@ -1,14 +1,17 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 
 class AuthState {
   //?--------------------------------------------------------------
   //* LogIn
   final ResponseStatusEnum loginState;
   final String? loginError;
+  final AuthResponseModel? user;
 
   //* Sign Up
   final ResponseStatusEnum signUpState;
@@ -25,10 +28,24 @@ class AuthState {
   final String? getCollegesError;
   final List<CollegeModel> colleges;
 
+  //* Get Study Years
+  final ResponseStatusEnum getStudyYearsState;
+  final String? studyYearsError;
+  final List<StudyYearModel>? studyYears;
+
   //* otp verfication
   final ResponseStatusEnum otpVerficationState;
   final String? otpVerficationError;
-  final String? resetToken; // Store the reset token from OTP verification
+  final String? resetToken;
+
+  //* Resend OTP
+  final ResponseStatusEnum resendOtpState;
+  final String? resendOtpError;
+
+  //* OTP Timer and Resend
+  final int otpTimerSeconds;
+  final bool canResendOtp;
+  final String? currentOtpCode;
 
   //* Forgot Password
   final ResponseStatusEnum forgotPasswordState;
@@ -41,6 +58,9 @@ class AuthState {
   //?--------------------------------------------------------------
 
   AuthState({
+    this.getStudyYearsState = ResponseStatusEnum.initial,
+    this.studyYearsError,
+    this.studyYears,
     this.signUpRequestParams,
     this.loginState = ResponseStatusEnum.initial,
     this.loginError,
@@ -59,9 +79,16 @@ class AuthState {
     this.forgotPasswordError,
     this.resetPasswordState = ResponseStatusEnum.initial,
     this.resetPasswordError,
+    this.otpTimerSeconds = 60,
+    this.canResendOtp = false,
+    this.currentOtpCode,
+    this.resendOtpState = ResponseStatusEnum.initial,
+    this.resendOtpError,
+    this.user,
   });
 
   AuthState copyWith({
+    AuthResponseModel? user,
     SignUpRequestParams? signUpRequestParams,
     ResponseStatusEnum? loginState,
     String? loginError,
@@ -80,8 +107,20 @@ class AuthState {
     String? forgotPasswordError,
     ResponseStatusEnum? resetPasswordState,
     String? resetPasswordError,
+    ResponseStatusEnum? getStudyYearsState,
+    String? studyYearsError,
+    List<StudyYearModel>? studyYears,
+    ResponseStatusEnum? resendOtpState,
+    String? resendOtpError,
+    int? otpTimerSeconds,
+    bool? canResendOtp,
+    String? currentOtpCode,
   }) {
     return AuthState(
+      getStudyYearsState: getStudyYearsState ?? this.getStudyYearsState,
+      studyYears: studyYears ?? this.studyYears,
+      user: user ?? this.user,
+      studyYearsError: studyYearsError,
       loginState: loginState ?? this.loginState,
       signUpRequestParams: signUpRequestParams ?? this.signUpRequestParams,
       loginError: loginError,
@@ -100,6 +139,11 @@ class AuthState {
       forgotPasswordError: forgotPasswordError,
       resetPasswordState: resetPasswordState ?? this.resetPasswordState,
       resetPasswordError: resetPasswordError,
+      resendOtpState: resendOtpState ?? this.resendOtpState,
+      resendOtpError: resendOtpError,
+      otpTimerSeconds: otpTimerSeconds ?? this.otpTimerSeconds,
+      canResendOtp: canResendOtp ?? this.canResendOtp,
+      currentOtpCode: currentOtpCode ?? this.currentOtpCode,
     );
   }
 }

@@ -10,7 +10,8 @@ import 'package:e_learning/core/model/response_model/auth_response_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/params/sign_up_request_params.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';
-import 'package:e_learning/features/auth/data/models/university_model.dart';
+import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
+import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/auth/data/models/response/otp_verification_response.dart';
 import 'package:e_learning/features/auth/data/source/remote/auth_remote_data_source.dart';
 
@@ -30,12 +31,46 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await api.post(
         ApiRequest(
           url: AppUrls.login,
-          body: {"phone": numberPhone, "password": password},
+          body: {"email": numberPhone, "password": password},
         ),
       );
       if (response.statusCode == 200 && response.body != null) {
         final userData = AuthResponseModel.fromMap(response.body);
         return Right(userData);
+      } else if (response.statusCode != 200 && response.body != null) {
+        String errorMessage = 'Login failed';
+
+        if (response.body is Map<String, dynamic>) {
+          final body = response.body as Map<String, dynamic>;
+
+          if (body.containsKey('detail') && body['detail'] != null) {
+            errorMessage = body['detail'].toString();
+          } else if (body.containsKey('message') && body['message'] != null) {
+            errorMessage = body['message'].toString();
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
+            errorMessage = (body['non_field_errors'] as List).first.toString();
+          } else if (body.isNotEmpty) {
+            // Handle field-specific errors
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
+              }
+            });
+
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
+            }
+          }
+        }
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
@@ -59,26 +94,58 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
             "full_name": params.fullName,
             "university_id": params.universityId,
             "college_id": params.collegeId,
-            "study_year": params.studyYear,
-            "phone": params.phone,
+            "study_year_id": params.studyYear,
+            "email": params.email,
             "password": params.password,
           },
         ),
       );
 
       if (response.statusCode == 200 && response.body != null) {
-        final userData = AuthResponseModel.fromMap(response.body);
-        return Right(userData);
+        return Right(AuthResponseModel(access: '', refresh: '', role: ''));
       }
-      return Left(FailureServer());
+
+      String errorMessage = 'Sign up failed';
+
+      if (response.body is Map<String, dynamic>) {
+        final body = response.body as Map<String, dynamic>;
+
+        if (body['detail'] != null) {
+          errorMessage = body['detail'].toString();
+        } else if (body['email'] != null) {
+          errorMessage = body['email'].toString();
+        } else if (body['message'] != null) {
+          errorMessage = body['message'].toString();
+        } else if (body['non_field_errors'] is List &&
+            (body['non_field_errors'] as List).isNotEmpty) {
+          errorMessage = body['non_field_errors'][0].toString();
+        } else {
+          // Collect field errors dynamically
+          final collected = <String>[];
+
+          body.forEach((key, value) {
+            if (value is String) {
+              collected.add(value);
+            } else if (value is List && value.isNotEmpty) {
+              collected.add(value.first.toString());
+            }
+          });
+
+          if (collected.isNotEmpty) {
+            errorMessage = collected.join(', ');
+          }
+        }
+      }
+
+      return Left(
+        Failure(statusCode: response.statusCode, message: errorMessage),
+      );
     } catch (e) {
-      log("🔥🔥 Error in register: $e");
       return Left(Failure.handleError(e as Exception));
     }
   }
 
   //? -----------------------------------------------------------------
-
   //* getUniversities
   @override
   Future<Either<Failure, List<UniversityModel>>> getUniversitiesRemote() async {
@@ -86,32 +153,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final ApiRequest request = ApiRequest(url: AppUrls.getUniversities);
       final ApiResponse response = await api.get(request);
 
-      final List<UniversityModel> universities = [];
-
-      if (response.statusCode == 200) {
-        final data = response.body;
-
-        // Handle paginated response (with results array)
-        if (data is Map<String, dynamic>) {
-          if (data.containsKey('results') && data['results'] is List) {
-            final results = data['results'] as List;
-            for (var item in results) {
-              if (item is Map<String, dynamic>) {
-                universities.add(UniversityModel.fromMap(item));
-              }
-            }
-          }
-        } else if (data is List) {
-          // Handle direct list response
-          for (var item in data) {
-            if (item is Map<String, dynamic>) {
-              universities.add(UniversityModel.fromMap(item));
-            }
-          }
-        }
-
-        return Right(universities);
-      } else {
+      if (response.statusCode != 200) {
         return Left(
           Failure(
             message: response.body['message']?.toString() ?? 'Unknown error',
@@ -119,90 +161,207 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
           ),
         );
       }
+
+      final data = response.body;
+      final List<UniversityModel> universities = [];
+
+      if (data is Map<String, dynamic>) {
+        final results = data['results'];
+        if (results is List) {
+          for (final item in results) {
+            universities.add(UniversityModel.fromMap(item));
+          }
+        }
+      } else if (data is List) {
+        for (final item in data) {
+          universities.add(UniversityModel.fromMap(item));
+        }
+      }
+
+      return Right(universities);
     } catch (exception) {
       return Left(Failure.handleError(exception as DioException));
     }
   }
-  //? -----------------------------------------------------------------
 
+  //? -----------------------------------------------------------------
   //* getColleges
   @override
   Future<Either<Failure, List<CollegeModel>>> getCollegesRemote({
     required int universityId,
   }) async {
     try {
-      final ApiRequest request = ApiRequest(
-        url: '${AppUrls.getColleges}?university=$universityId',
-      );
+      final String url =
+          '${AppUrls.getColleges}?page=1&page_size=10000&university=$universityId';
+
+      final ApiRequest request = ApiRequest(url: url);
 
       final ApiResponse response = await api.get(request);
       final List<CollegeModel> colleges = [];
 
       if (response.statusCode == 200) {
         final data = response.body;
-        if (data is List) {
-          for (var item in data) {
-            colleges.add(CollegeModel.fromMap(item));
-          }
+
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          colleges.addAll(
+            (data['results'] as List)
+                .map((item) => CollegeModel.fromMap(item))
+                .toList(),
+          );
+        } else if (data is List) {
+          colleges.addAll(data.map((item) => CollegeModel.fromMap(item)));
         }
+
         return Right(colleges);
       } else {
         return Left(
           Failure(
-            message: response.body['message']?.toString() ?? 'Unknown error',
+            message: (response.body is Map && response.body['message'] != null)
+                ? response.body['message'].toString()
+                : 'Unknown error',
             statusCode: response.statusCode,
           ),
         );
       }
-    } catch (exception) {
-      return Left(Failure.handleError(exception as DioException));
+    } on DioException catch (e) {
+      return Left(Failure.handleError(e));
+    } catch (e) {
+      return Left(Failure(message: e.toString()));
     }
   }
+
   //? -----------------------------------------------------------------
 
-  //* otp verfication
   @override
   Future<Either<Failure, OtpVerificationResponse>> otpVerficationRemote({
-    required String phone,
+    required String email,
     required String code,
     required String purpose,
   }) async {
     try {
-      // Use different endpoints based on purpose
       String url;
       Map<String, dynamic> body;
 
+      // Map the purpose values to match what the backend expects
       if (purpose == 'reset') {
-        // For password reset:
         url = AppUrls.verifyForgotPasswordOtp;
-        body = {"phone": phone, "code": code, "purpose": purpose};
+        body = {"email": email, "code": code};
       } else {
-        // For registration:
         url = AppUrls.verifyOtp;
-        body = {"phone": phone, "code": code, "purpose": purpose};
+        body = {"email": email, "code": code, "purpose": purpose};
       }
-
-      log("🔍 OTP Verification URL: $url");
-      log("🔍 OTP Verification Body: $body");
 
       final response = await api.post(ApiRequest(url: url, body: body));
 
       if (response.statusCode == 200 && response.body != null) {
-        log("🔍 OTP Verification Response: ${response.body}");
-
-        // Parse the response based on purpose
         if (purpose == 'reset') {
-          // For reset purpose, extract the reset_token
           final otpResponse = OtpVerificationResponse.fromJson(response.body);
           return Right(otpResponse);
         } else {
-          // For registration purpose, return empty response
           return Right(OtpVerificationResponse());
         }
+      } else if (response.statusCode != 200 && response.body != null) {
+        String errorMessage = 'OTP verification failed';
+
+        if (response.body is Map<String, dynamic>) {
+          final body = response.body as Map<String, dynamic>;
+
+          // Check for specific error fields that might contain the error message
+          if (body.containsKey('detail') && body['detail'] != null) {
+            errorMessage = body['detail'].toString();
+          } else if (body.containsKey('message') && body['message'] != null) {
+            errorMessage = body['message'].toString();
+          } else if (body.containsKey('code') && body['code'] != null) {
+            errorMessage = body['code'].toString();
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
+            errorMessage = (body['non_field_errors'] as List).first.toString();
+          } else if (body.containsKey('error') && body['error'] != null) {
+            errorMessage = body['error'].toString();
+          } else if (body.isNotEmpty) {
+            // Handle field-specific errors like {"code": "Invalid or expired code"}
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add('$key: $value');
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add('$key: ${value.first.toString()}');
+              } else if (value != null) {
+                fieldErrors.add('$key: $value');
+              }
+            });
+
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
+            }
+          }
+        }
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
       log("error 🔥🔥🔥🔥🔥 OTP Verification:::$e");
+      return Left(Failure.handleError(e as Exception));
+    }
+  }
+
+  //* Resend Otp
+  @override
+  Future<Either<Failure, bool>> resendOtpRemote({
+    required String email,
+    required String purpose,
+  }) async {
+    try {
+      // Map the purpose values to match what the backend expects for resend
+      String actualPurpose = purpose == 'reset' ? 'reset_password' : purpose;
+
+      final response = await api.post(
+        ApiRequest(
+          url: AppUrls.resendOtp,
+          body: {"email": email, "purpose": actualPurpose},
+        ),
+      );
+
+      if (response.statusCode == 200 && response.body != null) {
+        return Right(true);
+      } else if (response.body != null) {
+        final collectedErrors = <String>[];
+
+        void extractErrors(dynamic value, [String? prefix]) {
+          if (value == null) return;
+          if (value is String) {
+            collectedErrors.add(prefix != null ? '$prefix: $value' : value);
+          } else if (value is List) {
+            for (var item in value) {
+              extractErrors(item, prefix);
+            }
+          } else if (value is Map<String, dynamic>) {
+            value.forEach((key, val) {
+              extractErrors(val, key);
+            });
+          } else {
+            collectedErrors.add(value.toString());
+          }
+        }
+
+        extractErrors(response.body);
+
+        final errorMessage = collectedErrors.isNotEmpty
+            ? collectedErrors.join(', ')
+            : 'Failed to resend OTP';
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
+      }
+
+      return Left(FailureServer());
+    } catch (e) {
+      log("error 🔥🔥🔥🔥🔥 Resend OTP:::$e");
       return Left(Failure.handleError(e as Exception));
     }
   }
@@ -220,6 +379,40 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       if (response.statusCode == 200 && response.body != null) {
         return Right(true);
+      } else if (response.statusCode != 200 && response.body != null) {
+        String errorMessage = 'Failed to send reset password link';
+
+        if (response.body is Map<String, dynamic>) {
+          final body = response.body as Map<String, dynamic>;
+
+          if (body.containsKey('detail') && body['detail'] != null) {
+            errorMessage = body['detail'].toString();
+          } else if (body.containsKey('message') && body['message'] != null) {
+            errorMessage = body['message'].toString();
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
+            errorMessage = (body['non_field_errors'] as List).first.toString();
+          } else if (body.isNotEmpty) {
+            // Handle field-specific errors
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
+              }
+            });
+
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
+            }
+          }
+        }
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
@@ -241,11 +434,81 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
       if (response.statusCode == 200 && response.body != null) {
         return Right(true);
+      } else if (response.statusCode != 200 && response.body != null) {
+        String errorMessage = 'Failed to reset password';
+
+        if (response.body is Map<String, dynamic>) {
+          final body = response.body as Map<String, dynamic>;
+
+          if (body.containsKey('detail') && body['detail'] != null) {
+            errorMessage = body['detail'].toString();
+          } else if (body.containsKey('message') && body['message'] != null) {
+            errorMessage = body['message'].toString();
+          } else if (body.containsKey('non_field_errors') &&
+              body['non_field_errors'] is List &&
+              (body['non_field_errors'] as List).isNotEmpty) {
+            errorMessage = (body['non_field_errors'] as List).first.toString();
+          } else if (body.isNotEmpty) {
+            // Handle field-specific errors
+            final fieldErrors = <String>[];
+            body.forEach((key, value) {
+              if (value is String) {
+                fieldErrors.add(value);
+              } else if (value is List && value.isNotEmpty) {
+                fieldErrors.add(value.first.toString());
+              }
+            });
+
+            if (fieldErrors.isNotEmpty) {
+              errorMessage = fieldErrors.join(', ');
+            }
+          }
+        }
+
+        return Left(
+          Failure(statusCode: response.statusCode, message: errorMessage),
+        );
       }
       return Left(FailureServer());
     } catch (e) {
       log("error 🔥🔥🔥🔥🔥 Reset Password:::$e");
       return Left(Failure.handleError(e as Exception));
+    }
+  }
+
+  //? -----------------------------------------------------------------
+  //* getStudyYears
+  @override
+  Future<Either<Failure, List<StudyYearModel>>> getStudyYearsRemote() async {
+    try {
+      final ApiRequest request = ApiRequest(url: AppUrls.getStudyYears);
+      final ApiResponse response = await api.get(request);
+      final List<StudyYearModel> studyYears = [];
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is Map<String, dynamic> && data['results'] is List) {
+          for (final item in data['results']) {
+            studyYears.add(StudyYearModel.fromJson(item));
+          }
+        } else if (data is List) {
+          for (final item in data) {
+            studyYears.add(StudyYearModel.fromJson(item));
+          }
+        }
+
+        return Right(studyYears);
+      } else {
+        return Left(
+          Failure(
+            message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      return Left(Failure.handleError(exception as DioException));
     }
   }
 

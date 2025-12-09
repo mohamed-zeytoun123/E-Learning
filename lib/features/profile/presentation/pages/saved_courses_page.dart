@@ -19,7 +19,7 @@ class SavedCoursesPage extends StatelessWidget {
           itemCount: 3,
           itemBuilder: (context, index) => CourseInfoCardWidget(
             onTap: () {},
-            imageUrl: "https://picsum.photos/361/180",
+            imageUrl: "",
             title: "Flutter Masterclass",
             subtitle: "Build beautiful apps",
             rating: 4.3,

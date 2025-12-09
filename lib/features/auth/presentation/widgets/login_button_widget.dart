@@ -1,5 +1,7 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/network/app_dio.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
@@ -52,7 +54,14 @@ class LoginButtonWidget extends StatelessWidget {
             isShowProgress: true,
           );
         } else if (state.loginState == ResponseStatusEnum.success) {
+          // final token = state.user?.access ?? "";
+          if (state.user != null) {
+            final token = state.user?.access ?? "";
+            appLocator<AppDio>().addTokenToHeader(token);
+          }
           AppMessage.showFlushbar(
+            isShowProgress: true,
+            title: "Successful",
             context: context,
             iconData: Icons.check,
             backgroundColor: AppColors.messageSuccess,

@@ -1,59 +1,108 @@
-import 'package:e_learning/features/Course/data/models/course_model/course_model.dart' as base;
+import 'package:hive/hive.dart';
+part 'course_model.g.dart';
 
-class PagCoursesResult {
-  final List<base.CourseModel>? courses;
-  final int? count;
-  final String? next;
-  final String? previous;
-  final int? currentPage;
-  final int? totalPages;
+@HiveType(typeId: 2)
+class CourseModel extends HiveObject {
+  @HiveField(0)
+  final int id;
 
-  PagCoursesResult({
-    this.courses,
-    this.count,
-    this.next,
-    this.previous,
-    this.currentPage,
-    this.totalPages,
+  @HiveField(1)
+  final String title;
+
+  @HiveField(2)
+  final String slug;
+
+  @HiveField(3)
+  final String? image;
+
+  @HiveField(4)
+  final int college;
+
+  @HiveField(5)
+  final String collegeName;
+
+  @HiveField(6)
+  final String price;
+
+  @HiveField(7)
+  final double? averageRating;
+
+  @HiveField(8)
+  final double totalVideoDurationHours;
+
+  @HiveField(9)
+  final bool isFavorite;
+
+  CourseModel({
+    required this.id,
+    required this.title,
+    required this.slug,
+    this.image,
+    required this.college,
+    required this.collegeName,
+    required this.price,
+    this.averageRating,
+    required this.totalVideoDurationHours,
+    required this.isFavorite,
   });
 
-  factory PagCoursesResult.fromMap(Map<String, dynamic> map) {
-    final results = map['results'] as List?;
-    final courses = results
-        ?.map((item) {
-          try {
-            return base.CourseModel.fromMap(item as Map<String, dynamic>);
-          } catch (e) {
-            return null;
-          }
-        })
-        .whereType<base.CourseModel>()
-        .toList();
-
-    final count = map['count'] as int?;
-    final pageSize = map['page_size'] as int? ?? 5;
-    final currentPage = _extractPageFromUrl(map['next'] as String?) ??
-        (_extractPageFromUrl(map['previous'] as String?) != null
-            ? (_extractPageFromUrl(map['previous'] as String?)! + 1)
-            : 1);
-
-    return PagCoursesResult(
-      courses: courses ?? [],
-      count: count,
-      next: map['next'] as String?,
-      previous: map['previous'] as String?,
-      currentPage: currentPage,
-      totalPages: count != null && pageSize != 0
-          ? (count / pageSize).ceil()
-          : null,
+  CourseModel copyWith({
+    int? id,
+    String? title,
+    String? slug,
+    String? image,
+    int? college,
+    String? collegeName,
+    String? price,
+    double? averageRating,
+    double? totalVideoDurationHours,
+    bool? isFavorite,
+  }) {
+    return CourseModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      slug: slug ?? this.slug,
+      image: image ?? this.image,
+      college: college ?? this.college,
+      collegeName: collegeName ?? this.collegeName,
+      price: price ?? this.price,
+      averageRating: averageRating ?? this.averageRating,
+      totalVideoDurationHours:
+          totalVideoDurationHours ?? this.totalVideoDurationHours,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 
-  static int? _extractPageFromUrl(String? url) {
-    if (url == null) return null;
-    final uri = Uri.parse(url);
-    final pageParam = uri.queryParameters['page'];
-    return pageParam != null ? int.tryParse(pageParam) : null;
+  factory CourseModel.fromMap(Map<String, dynamic> map) {
+    return CourseModel(
+      id: map['id'] ?? 0,
+      title: map['title'] ?? '',
+      slug: map['slug'] ?? '',
+      image: map['image'] as String?,
+      college: map['college'] ?? 0,
+      collegeName: map['college_name'] ?? '',
+      price: map['price']?.toString() ?? '',
+      averageRating: map['average_rating'] != null
+          ? double.tryParse(map['average_rating'].toString())
+          : null,
+      totalVideoDurationHours:
+          (map['total_video_duration_hours'] ?? 0.0).toDouble(),
+      isFavorite: map['is_favorite'] ?? false,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'slug': slug,
+      'image': image,
+      'college': college,
+      'college_name': collegeName,
+      'price': price,
+      'average_rating': averageRating,
+      'total_video_duration_hours': totalVideoDurationHours,
+      'is_favorite': isFavorite,
+    };
   }
 }
-
