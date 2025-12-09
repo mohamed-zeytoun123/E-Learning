@@ -6,7 +6,12 @@ import 'package:e_learning/core/widgets/custom_error_widget.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_cubit.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_state.dart';
+import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/home/presentation/widgets/articles_section.dart';
+import 'package:e_learning/features/home/presentation/widgets/filtered_bottom_sheet.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,9 +23,21 @@ class ViewAllArticles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          ArticleCubit(repo: appLocator<ArticleRepository>())..getArticles(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              ArticleCubit(repo: appLocator<ArticleRepository>())..getArticles(),
+        ),
+        BlocProvider(
+          create: (context) => CourseCubit(
+            repo: appLocator<CourceseRepository>(),
+            authRepo: appLocator<AuthRepository>(),
+          )
+            ..getFilterCategories()
+            ..getColleges(),
+        ),
+      ],
       child: Scaffold(
         appBar: AppBar(
           title: Text("news".tr()),
@@ -48,15 +65,37 @@ class ViewAllArticles extends StatelessWidget {
             SizedBox(height: 20.h),
             Padding(
               padding: AppPadding.appPadding.copyWith(end: 0),
-              child: ChipsBar(
-                labels: [
-                  "all".tr(),
-                  "tips_and_skills".tr(),
-                  "academic_guidance".tr(),
-                  "carrer_and_skils".tr()
-                ],
-                onChipSelected: (value) {
-                  // TODO: Implement category filtering
+              child: BlocBuilder<CourseCubit, CourseState>(
+                builder: (context, courseState) {
+                  final categories = courseState.categories ?? [];
+                  final labels = [
+                    "all".tr(),
+                    ...categories.map((c) => c.name).toList(),
+                  ];
+
+                  return ChipsBar(
+                    labels: labels,
+                    onChipSelected: (value) {
+                      final articleCubit = context.read<ArticleCubit>();
+                      if (value == "all".tr()) {
+                        articleCubit.getArticles();
+                      } else {
+                        final category = categories.firstWhere(
+                          (c) => c.name == value,
+                          orElse: () => categories.first,
+                        );
+                        articleCubit.getArticles(categoryId: category.id);
+                      }
+                    },
+                    withFilter: true,
+                    onFilterTap: () {
+                      final courseCubit = context.read<CourseCubit>();
+                      showFilterBottomSheet(
+                        context,
+                        courseCubit: courseCubit,
+                      );
+                    },
+                  );
                 },
               ),
             ),

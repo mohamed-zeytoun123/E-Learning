@@ -33,9 +33,22 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
+        // Handle paginated response (with results array)
+        if (data is Map<String, dynamic>) {
+          if (data.containsKey('results') && data['results'] is List) {
+            final results = data['results'] as List;
+            for (var item in results) {
+              if (item is Map<String, dynamic>) {
+                categories.add(CategorieModel.fromMap(item));
+              }
+            }
+          }
+        } else if (data is List) {
+          // Handle direct list response
           for (var item in data) {
-            categories.add(CategorieModel.fromMap(item));
+            if (item is Map<String, dynamic>) {
+              categories.add(CategorieModel.fromMap(item));
+            }
           }
         }
 
@@ -76,6 +89,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         'ordering': (ordering != null && ordering.isNotEmpty)
             ? ordering
             : '-created_at', // Default ordering when not specified
+        // Note: page and pageSize can be added here if needed for pagination
       };
 
       final ApiRequest request = ApiRequest(
@@ -198,9 +212,22 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
+        // Handle paginated response (with results array)
+        if (data is Map<String, dynamic>) {
+          if (data.containsKey('results') && data['results'] is List) {
+            final results = data['results'] as List;
+            for (var item in results) {
+              if (item is Map<String, dynamic>) {
+                colleges.add(CollegeModel.fromMap(item));
+              }
+            }
+          }
+        } else if (data is List) {
+          // Handle direct list response
           for (var item in data) {
-            colleges.add(CollegeModel.fromMap(item));
+            if (item is Map<String, dynamic>) {
+              colleges.add(CollegeModel.fromMap(item));
+            }
           }
         }
 

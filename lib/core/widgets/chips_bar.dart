@@ -29,7 +29,7 @@ class _ChipsBarState extends State<ChipsBar> {
       scrollDirection: Axis.horizontal,
       child: Row(
         children: [
-          // Filter button if withFilter is true
+          // Filter button if withFilter is true (aligned to the left)
           if (widget.withFilter)
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 10.0),

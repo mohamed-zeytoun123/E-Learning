@@ -1,11 +1,18 @@
+import 'dart:developer';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
+import 'package:e_learning/core/network/api_general.dart';
+import 'package:e_learning/core/network/api_request.dart';
+import 'package:e_learning/core/network/api_response.dart';
+import 'package:e_learning/core/network/app_url.dart';
 import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/chapter/data/models/chapter_model.dart';
 import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/Course/data/models/course_details_model.dart';
 import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/source/local/courcese_local_data_source.dart';
 import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
@@ -14,11 +21,13 @@ class CourceseRepositoryImpl implements CourceseRepository {
   final CourceseRemoteDataSource remote;
   final CourceseLocalDataSource local;
   final NetworkInfoService network;
+  final API api;
 
   CourceseRepositoryImpl({
     required this.remote,
     required this.local,
     required this.network,
+    required this.api,
   });
 
   //? -----------------------------------------------------------------
@@ -46,12 +55,43 @@ class CourceseRepositoryImpl implements CourceseRepository {
   }
 
   //? -----------------------------------------------------------------
-  //* Get Courses
+  //* Get Courses (supports both paginated and non-paginated)
   @override
-  Future<Either<Failure, List<CourseModel>>> getCoursesRepo(
-      {int? categoryId}) async {
+  Future<Either<Failure, dynamic>> getCoursesRepo({
+    int? categoryId,
+    int? collegeId,
+    int? studyYear,
+    int? teacherId,
+    String? search,
+    String? ordering,
+    CourseFiltersModel? filters,
+    int? page,
+    int? pageSize,
+  }) async {
+    // If pagination parameters are provided, return PagCoursesResult
+    if (page != null || pageSize != null) {
+      return await _getCoursesPaginated(
+        search: search,
+        filters: filters,
+        ordering: ordering,
+        page: page ?? 1,
+        pageSize: pageSize ?? 5,
+      );
+    }
+
+    // Otherwise, use filters from CourseFiltersModel or individual parameters
+    final effectiveCategoryId = filters?.categoryId ?? categoryId;
+    final effectiveCollegeId = filters?.collegeId ?? collegeId;
+    final effectiveStudyYear = filters?.studyYear ?? studyYear;
     if (await network.isConnected) {
-      final result = await remote.getCoursesRemote(categoryId: categoryId);
+      final result = await remote.getCoursesRemote(
+        categoryId: effectiveCategoryId,
+        collegeId: effectiveCollegeId,
+        studyYear: effectiveStudyYear,
+        teacherId: teacherId,
+        search: search,
+        ordering: ordering,
+      );
 
       return result.fold((failure) {
         print('❌ Repository: Remote call failed - ${failure.message}');
@@ -59,7 +99,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
       }, (courses) async {
         print('📦 Repository: Received ${courses.length} courses from remote');
         // Allow empty lists - let UI handle showing "No courses available"
-        if (courses.isNotEmpty && categoryId == null) {
+        if (courses.isNotEmpty && effectiveCategoryId == null) {
           // Only cache when fetching all courses, not filtered
           await local.saveCoursesInCache(courses);
         }
@@ -72,7 +112,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
         print(
             '📦 Repository: Loaded ${cachedCourses.length} courses from cache');
         // If filtering by category and we're offline, filter cached courses
-        if (categoryId != null) {
+        if (effectiveCategoryId != null) {
           // Note: CourseModel doesn't have category field, so offline filtering won't work
           // For now, return all cached courses when offline and filtering
         }
@@ -81,6 +121,58 @@ class CourceseRepositoryImpl implements CourceseRepository {
         print('❌ Repository: No cached courses available');
         return Left(FailureNoConnection());
       }
+    }
+  }
+
+  //* Get Courses with Pagination
+  Future<Either<Failure, PagCoursesResult>> _getCoursesPaginated({
+    String? search,
+    CourseFiltersModel? filters,
+    String? ordering,
+    int page = 1,
+    int pageSize = 5,
+  }) async {
+    if (await network.isConnected) {
+      try {
+        final Map<String, dynamic> queryParameters = {
+          if (filters?.collegeId != null) 'college': filters!.collegeId.toString(),
+          if (filters?.categoryId != null) 'category': filters!.categoryId.toString(),
+          if (filters?.studyYear != null) 'study_year': filters!.studyYear.toString(),
+          if (search != null && search.isNotEmpty) 'search': search,
+          'ordering': ordering ?? '-price',
+          'page': page.toString(),
+          'page_size': pageSize.toString(),
+        };
+
+        final ApiRequest request = ApiRequest(
+          url: AppUrls.getCourses,
+          queryParameters: queryParameters,
+        );
+
+        log('🌐 Paginated Request URL: ${AppUrls.getCourses}');
+        log('🌐 Paginated Query Parameters: $queryParameters');
+
+        final ApiResponse response = await api.get(request);
+
+        if (response.statusCode == 200) {
+          final data = response.body;
+          
+          // Parse paginated response
+          if (data is Map<String, dynamic>) {
+            final pagResult = PagCoursesResult.fromMap(data);
+            return Right(pagResult);
+          } else {
+            return Left(Failure(message: 'Unexpected response format'));
+          }
+        } else {
+          return Left(Failure(message: 'Request failed with status ${response.statusCode}'));
+        }
+      } catch (e) {
+        log('❌ Error in _getCoursesPaginated: $e');
+        return Left(Failure(message: e.toString()));
+      }
+    } else {
+      return Left(FailureNoConnection());
     }
   }
 

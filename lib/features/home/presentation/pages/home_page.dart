@@ -67,7 +67,7 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 context.push(RouteNames.viewAllCourses);
               },
-              title: 'recommended courses'.tr(),
+              title: 'recommended_courses'.tr(),
             ),
           ),
           SliverToBoxAdapter(
@@ -113,7 +113,7 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 context.push(RouteNames.viewAllTeachers);
               },
-              title: 'top teachers'.tr(),
+              title: 'top_teachers'.tr(),
             ),
           ),
           const SliverToBoxAdapter(
@@ -133,7 +133,7 @@ class HomePage extends StatelessWidget {
               onTap: () {
                 context.push(RouteNames.viewAllArticles);
               },
-              title: 'news and articles'.tr(),
+              title: 'news_and_articles'.tr(),
             ),
           ),
           const SliverToBoxAdapter(

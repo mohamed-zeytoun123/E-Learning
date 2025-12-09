@@ -91,9 +91,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
+        // Handle paginated response (with results array)
+        if (data is Map<String, dynamic>) {
+          if (data.containsKey('results') && data['results'] is List) {
+            final results = data['results'] as List;
+            for (var item in results) {
+              if (item is Map<String, dynamic>) {
+                universities.add(UniversityModel.fromMap(item));
+              }
+            }
+          }
+        } else if (data is List) {
+          // Handle direct list response
           for (var item in data) {
-            universities.add(UniversityModel.fromMap(item));
+            if (item is Map<String, dynamic>) {
+              universities.add(UniversityModel.fromMap(item));
+            }
           }
         }
 

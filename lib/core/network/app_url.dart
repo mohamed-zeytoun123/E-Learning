@@ -5,7 +5,7 @@ class AppUrls {
 
   //?---------------------------------------------------------------
 
-  static const String _baseURl = 'http://$_ip:8100/api/v1';
+  static const String _baseURl = 'https://elearning.onedoorit.com/api/v1';
 
   //?---------------------------------------------------------------
 
@@ -31,7 +31,7 @@ class AppUrls {
   static final String getCategories = "$_baseURl/categories/";
 
   //* Get Courses
-  static final String getCourses = "$_baseURl/courses/";
+  static final String getCourses = "$_baseURl/courses";
 
   //* Get Course Details by Slug
   static String courseDetails(String courseSlug) =>

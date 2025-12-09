@@ -84,6 +84,9 @@ class AppDio {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
+          // Remove trailing slashes from path to prevent double slashes
+          options.path = options.path.replaceAll(RegExp(r'/+$'), '');
+          
           final hasToken = await tokenService.hasTokenService();
 
           if (hasToken) {

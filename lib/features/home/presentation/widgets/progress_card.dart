@@ -67,7 +67,7 @@ class ProgressCard extends StatelessWidget {
             ),
             SizedBox(height: 24.h),
             CustomButtonWidget(
-                title: 'view_all'.tr(),
+                title: 'see_all'.tr(),
                 titleStyle: AppTextStyles.s16w400
                     .copyWith(color: AppColors.primaryTextColor),
                 buttonColor: Color(0xffECF6FE),

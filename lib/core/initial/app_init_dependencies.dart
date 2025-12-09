@@ -189,6 +189,7 @@ Future<void> appInitDependencies() async {
   //* Course Repository
   appLocator.registerLazySingleton<CourceseRepository>(
     () => CourceseRepositoryImpl(
+      api: appLocator<API>(),
       remote: appLocator<CourceseRemoteDataSource>(),
       local: appLocator<CourceseLocalDataSource>(),
       network: appLocator<NetworkInfoService>(),
