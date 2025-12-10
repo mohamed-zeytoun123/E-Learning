@@ -34,7 +34,7 @@ class ViewAllArticles extends StatelessWidget {
             repo: appLocator<CourceseRepository>(),
             authRepo: appLocator<AuthRepository>(),
           )
-            ..getFilterCategories()
+            ..getCategories()
             ..getColleges(),
         ),
       ],

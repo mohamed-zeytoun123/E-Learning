@@ -120,7 +120,7 @@ class SearchPage extends StatelessWidget {
                                   );
                                 },
                                 separatorBuilder: (context, index) => Divider(
-                                  color: AppColors.ligthGray,
+                                  color: AppColors.dividerGrey,
                                 ),
                                 itemCount: state.searchHistory.length,
                               ),

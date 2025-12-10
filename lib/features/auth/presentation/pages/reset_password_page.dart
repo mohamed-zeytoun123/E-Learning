@@ -1,7 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
-import 'package:e_learning/core/style/app_text_styles.dart' hide Colors;
+import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/auth/data/models/params/reset_password_request_params.dart';

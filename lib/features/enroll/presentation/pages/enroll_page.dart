@@ -1,6 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/widgets/app_bar/custom_app_bar_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/video_progress_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/video_progress_widget.dart';
 import 'package:e_learning/features/enroll/data/models/enums/course_state_enum.dart';
 import 'package:e_learning/features/enroll/data/source/static/dummy_courses.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/completed_section_widget.dart';

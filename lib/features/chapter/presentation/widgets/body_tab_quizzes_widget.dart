@@ -7,8 +7,6 @@ import 'package:e_learning/features/chapter/data/models/quize/quiz_model/quiz_de
 import 'package:e_learning/features/chapter/data/models/quize/quiz_list_model.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_cubit.dart';
 import 'package:e_learning/features/chapter/presentation/manager/chapter_state.dart';
-import 'package:e_learning/features/chapter/presentation/widgets/quiz_locked_widget.dart';
-import 'package:e_learning/features/chapter/presentation/widgets/quiz_ready_widget.dart';
 import 'package:e_learning/features/chapter/presentation/widgets/quiz_row_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

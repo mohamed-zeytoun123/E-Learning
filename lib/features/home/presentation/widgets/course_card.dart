@@ -14,15 +14,18 @@ class CourseCard extends StatelessWidget {
   final double? rating;
   final String? imageUrl;
   final String courseSlug;
+  final int courseId;
 
-  const CourseCard(
-      {super.key,
-      required this.price,
-      required this.title,
-      required this.collegeName,
-      required this.courseSlug,
-      this.rating,
-      this.imageUrl});
+  const CourseCard({
+    super.key,
+    required this.price,
+    required this.title,
+    required this.collegeName,
+    required this.courseSlug,
+    required this.courseId,
+    this.rating,
+    this.imageUrl,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,7 @@ class CourseCard extends StatelessWidget {
         context.push(
           RouteNames.courceInf,
           extra: {
-            'courseSlug': courseSlug,
+            'courseId': courseId,
             'courseCubit': courseCubit,
           },
         );
@@ -103,7 +106,7 @@ class CourseCard extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   horizontal: 6.w, vertical: 4.h),
                               decoration: BoxDecoration(
-                                color: AppColors.ligthGray,
+                                color: AppColors.dividerGrey,
                                 borderRadius: BorderRadius.circular(12.r),
                               ),
                               child: Row(

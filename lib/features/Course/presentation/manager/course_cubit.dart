@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
@@ -7,8 +8,9 @@ import 'package:e_learning/features/Course/data/models/rating_result/rating_mode
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapters_result/chapters_result_model.dart';
-import 'package:e_learning/features/course/data/source/repo/courcese_repository.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/auth/data/source/repo/auth_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:e_learning/core/Error/failure.dart';
@@ -32,8 +34,8 @@ class CourseCubit extends Cubit<CourseState> {
   Future<void> getCategories() async {
     emit(state.copyWith(categoriesStatus: ResponseStatusEnum.loading));
 
-    final Either<Failure, List<CategorieModel>> result = await repo
-        .getCategoriesRepo();
+    final Either<Failure, List<CategorieModel>> result =
+        await repo.getCategoriesRepo();
 
     result.fold(
       (failure) {
@@ -178,6 +180,24 @@ class CourseCubit extends Cubit<CourseState> {
       await getCourses(filters: filters, reset: true, page: 1);
     } catch (e) {
       log('Error in applyFiltersByIds: $e');
+    }
+  }
+
+  //?-------------------------------------------------
+  //* Clear Filters and Get All Courses
+  Future<void> clearFiltersAndGetCourses() async {
+    try {
+      // Clear filters from state
+      emit(state.copyWith(coursefilters: null));
+
+      // Get courses without any filters (pass empty filters to override cached ones)
+      await getCourses(
+        filters: CourseFiltersModel(),
+        reset: true,
+        page: 1,
+      );
+    } catch (e) {
+      log('Error in clearFiltersAndGetCourses: $e');
     }
   }
 
@@ -398,13 +418,12 @@ class CourseCubit extends Cubit<CourseState> {
           state.copyWith(
             chaptersStatus: ResponseStatusEnum.success,
             loadchaptersMoreStatus: ResponseStatusEnum.success,
-            chapters:
-                (state.chapters ??
-                        ChaptersResultModel(chapters: [], hasNextPage: true))
-                    .copyWith(
-                      chapters: updatedChapters,
-                      hasNextPage: newChapters.hasNextPage,
-                    ),
+            chapters: (state.chapters ??
+                    ChaptersResultModel(chapters: [], hasNextPage: true))
+                .copyWith(
+              chapters: updatedChapters,
+              hasNextPage: newChapters.hasNextPage,
+            ),
             currentPage: page,
             chaptersError: null,
             chaptersMoreError: null,
@@ -563,11 +582,11 @@ class CourseCubit extends Cubit<CourseState> {
             cubitState.copyWith(
               ratingsStatus: ResponseStatusEnum.success,
               loadratingsMoreStatus: ResponseStatusEnum.success,
-              ratings: (cubitState.ratings ?? RatingsResultModel.empty())
-                  .copyWith(
-                    ratings: updatedRatings,
-                    hasNextPage: newRatings.hasNextPage,
-                  ),
+              ratings:
+                  (cubitState.ratings ?? RatingsResultModel.empty()).copyWith(
+                ratings: updatedRatings,
+                hasNextPage: newRatings.hasNextPage,
+              ),
               currentPage: page,
               ratingsError: null,
               ratingsMoreError: null,

@@ -21,9 +21,9 @@ class AppDio {
     _initDio();
     _addLoggerToDIo();
     _addTokenInterceptor();
-    // addTokenToHeader(
-    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyNjY0NjgyMzQxLCJpYXQiOjE3NjQ2ODIzNDEsImp0aSI6IjVkOTQxMDBiYTdlNjQ1MGNhNTM5OGFhMmY0MDY5YWRlIiwidXNlcl9pZCI6IjM1Iiwicm9sZSI6IlNUVURFTlQifQ.ivBShFazdcGyImtzbZiHu7_9tUGxu13M1N-sr93jz-4",
-    // );
+    addTokenToHeader(
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoyNjY1MzY3OTgyLCJpYXQiOjE3NjUzNjc5ODMsImp0aSI6IjFiZjE5MzU2MDQxNTQ0ZTViY2UxY2QyNjUzODkyZWMwIiwidXNlcl9pZCI6IjE1NSIsInJvbGUiOiJTVFVERU5UIn0._ToreHV3R9Sl-SvOMXRiQDBOSTbhROy_3C7AaTDF6SE",
+    );
   }
 
   Dio get dio => _dio;
@@ -49,7 +49,7 @@ class AppDio {
   //?----------------------------------------------------------------------------------------
   void addTokenToHeader(String token) {
     log('🔥 Added token to Dio headers: $token');
-    // _dio.options.headers["Authorization"] = 'Bearer $token';
+    _dio.options.headers["Authorization"] = 'Bearer $token';
   }
 
   //?----------------------------------------------------------------------------------------

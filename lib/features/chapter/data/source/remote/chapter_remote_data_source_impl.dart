@@ -442,7 +442,7 @@ class ChapterRemoteDataSourceImpl implements ChapterRemoteDataSource {
       final tempFile = File('${tempDir.path}/temp_video_$videoId.mp4');
 
       // Use Dio's download method with progress callback
-      final response = await (api.dio as Dio).download(
+      final response = await api.dio.download(
         url,
         tempFile.path,
         onReceiveProgress: (received, total) {

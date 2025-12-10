@@ -194,7 +194,6 @@ import 'package:e_learning/features/Course/presentation/widgets/course_tab_view_
 import 'package:e_learning/features/Course/presentation/widgets/course_title_sub_title_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/custom_app_bar_course_widget.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

@@ -16,9 +16,9 @@ import 'package:e_learning/features/auth/data/models/college_model/college_model
 import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
 import 'package:e_learning/features/auth/data/models/university_model/university_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/paginated_chapters_model.dart';
-import 'package:e_learning/features/course/data/models/categorie_model/categorie_model.dart';
-import 'package:e_learning/features/course/data/models/course_details_model.dart';
-import 'package:e_learning/features/course/data/source/remote/courcese_remote_data_source.dart';
+import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
+import 'package:e_learning/features/Course/data/models/course_details_model.dart';
+import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source.dart';
 
 class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   final API api;
@@ -55,9 +55,6 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
             if (item is Map<String, dynamic>) {
               categories.add(CategorieModel.fromMap(item));
             }
-        if (data is Map && data['results'] is List) {
-          for (var item in data['results']) {
-            categories.add(CategorieModel.fromMap(item));
           }
         }
 
@@ -175,9 +172,6 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
             if (item is Map<String, dynamic>) {
               colleges.add(CollegeModel.fromMap(item));
             }
-        if (data is Map && data['results'] is List) {
-          for (var item in data['results']) {
-            colleges.add(CollegeModel.fromMap(item));
           }
         }
 

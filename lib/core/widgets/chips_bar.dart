@@ -36,7 +36,7 @@ class _ChipsBarState extends State<ChipsBar> {
               child: IconButton(
                 icon: Icon(
                   Icons.tune,
-                  color: AppColors.primaryTextColor,
+                  color: Color(0xffECF6FE),
                 ),
                 onPressed: widget.onFilterTap,
               ),
@@ -50,7 +50,7 @@ class _ChipsBarState extends State<ChipsBar> {
                     borderRadius: BorderRadius.circular(16)),
                 side: const BorderSide(color: Colors.transparent),
                 showCheckmark: false,
-                backgroundColor: AppColors.ligthGray,
+                backgroundColor: AppColors.dividerGrey,
                 selectedColor: AppColors.primaryColor,
                 label: Text(
                   widget.labels[index],

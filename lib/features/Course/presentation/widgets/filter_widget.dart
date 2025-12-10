@@ -7,12 +7,13 @@ import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
 import 'package:e_learning/features/Course/presentation/widgets/filters_bottom_sheet_widget.dart';
-import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_info_card_widget.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class FilterWidget extends StatefulWidget {

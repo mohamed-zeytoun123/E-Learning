@@ -5,6 +5,8 @@ import 'package:e_learning/features/Teacher/presentation/manager/teacher_cubit.d
 import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.dart';
 import 'package:e_learning/features/Article/presentation/manager/article_cubit.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
+import 'package:e_learning/features/Banner/presentation/manager/banner_cubit.dart';
+import 'package:e_learning/features/Banner/data/source/repo/banner_repository.dart';
 import 'package:e_learning/features/home/presentation/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,8 +21,8 @@ class HomeContent extends StatelessWidget {
         BlocProvider(
           create: (context) =>
               CourseCubit(repo: appLocator<CourceseRepository>())
-                ..getFilterCategories()
-                ..getCourses(),
+                ..getCategories()
+                ..clearFiltersAndGetCourses(),
         ),
         BlocProvider(
           create: (context) =>
@@ -31,6 +33,10 @@ class HomeContent extends StatelessWidget {
           create: (context) =>
               ArticleCubit(repo: appLocator<ArticleRepository>())
                 ..getArticles(),
+        ),
+        BlocProvider(
+          create: (context) => BannerCubit(repo: appLocator<BannerRepository>())
+            ..getBanners(pageSize: 10),
         ),
       ],
       child: const HomePage(),

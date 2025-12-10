@@ -20,19 +20,22 @@ class CourseFiltersModelAdapter extends TypeAdapter<CourseFiltersModel> {
       collegeId: fields[0] as int?,
       studyYear: fields[1] as int?,
       categoryId: fields[2] as int?,
+      universityId: fields[3] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, CourseFiltersModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.collegeId)
       ..writeByte(1)
       ..write(obj.studyYear)
       ..writeByte(2)
-      ..write(obj.categoryId);
+      ..write(obj.categoryId)
+      ..writeByte(3)
+      ..write(obj.universityId);
   }
 
   @override

@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:chewie/chewie.dart';
-import 'package:e_learning/core/asset/app_icons.dart';
 import 'package:e_learning/features/Video/data/functions/get_hls_qualities.dart';
 import 'package:e_learning/features/Video/data/functions/open_comments_sheet.dart';
 import 'package:e_learning/features/Video/data/model/video_stream_model.dart';

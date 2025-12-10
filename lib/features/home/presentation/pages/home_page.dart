@@ -44,7 +44,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   const CustomHomeAppBar(),
                   Positioned(
-                    bottom: -100.h,
+                    bottom: -87.h,
                     left: 16.w,
                     right: 16.w,
                     child: const ProgressCard(progress: 0.7),
@@ -60,7 +60,7 @@ class HomePage extends StatelessWidget {
             child: HomeBannersWidget(),
           ),
           SliverToBoxAdapter(
-            child: SizedBox(height: 24.h),
+            child: SizedBox(height: 48.h),
           ),
           SliverToBoxAdapter(
             child: SeeAllSeperator(
@@ -78,18 +78,33 @@ class HomePage extends StatelessWidget {
               padding: AppPadding.appPadding.copyWith(end: 0),
               child: BlocBuilder<CourseCubit, CourseState>(
                 builder: (context, state) {
+                  final categories = state.categories ?? [];
+                  final labels =
+                      ['all'.tr()] + categories.map((c) => c.name).toList();
+
                   return Skeletonizer(
                     enabled:
                         state.categoriesStatus == ResponseStatusEnum.loading,
                     child: ChipsBar(
-                      labels: context
-                              .read<CourseCubit>()
-                              .state
-                              .categories
-                              ?.map((e) => e.name)
-                              .toList() ??
-                          [],
-                      onChipSelected: (value) {},
+                      labels: labels,
+                      onChipSelected: (value) {
+                        final courseCubit = context.read<CourseCubit>();
+                        if (value == 'all'.tr()) {
+                          // Show all courses - clear filters
+                          courseCubit.clearFiltersAndGetCourses();
+                        } else {
+                          // Find category by name and filter
+                          if (categories.isNotEmpty) {
+                            final category = categories.firstWhere(
+                              (c) => c.name == value,
+                              orElse: () => categories.first,
+                            );
+                            courseCubit.applyFiltersByIds(
+                              categoryId: category.id,
+                            );
+                          }
+                        }
+                      },
                     ),
                   );
                 },

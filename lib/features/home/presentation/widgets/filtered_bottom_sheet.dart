@@ -27,7 +27,7 @@ void showFilterBottomSheet(
       if (courseCubit != null) {
         // Ensure data is loaded (categories for courses)
         courseCubit.getUniversities();
-        courseCubit.getFilterCategories();
+        courseCubit.getCategories();
         courseCubit.getStudyYears();
         return BlocProvider<CourseCubit>.value(
           value: courseCubit,

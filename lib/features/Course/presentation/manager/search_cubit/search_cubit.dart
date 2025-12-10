@@ -8,7 +8,10 @@ import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_state.dart';
 import 'package:e_learning/features/Article/data/models/article_model/article_model.dart';
 import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
-import 'package:e_learning/features/Course/data/models/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
+import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
+import 'package:e_learning/features/Article/data/models/article_response_model.dart';
+import 'package:e_learning/features/Teacher/data/models/teacher_response_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchCubit extends Cubit<SearchState> {
@@ -101,36 +104,31 @@ class SearchCubit extends Cubit<SearchState> {
     );
 
     // Search all three types in parallel
-    final results = await Future.wait([
-      courseRepository.getCoursesRepo(
-        search: searchQuery.trim(),
-        filters: filters ?? state.filters,
-        ordering: ordering ?? '-price',
-        page: page,
-        pageSize: pageSize,
-      ),
-      articleRepository.getArticlesRepo(
-        search: searchQuery.trim(),
-        page: page,
-        pageSize: pageSize,
-      ),
-      teacherRepository.getTeachersRepo(
-        search: searchQuery.trim(),
-        page: page,
-        pageSize: pageSize,
-      ),
-    ]);
-
-    // Process results
-    final courseResult = results[0];
-    final articleResult = results[1];
-    final teacherResult = results[2];
+    final courseResult = await courseRepository.getCoursesRepo(
+      search: searchQuery.trim(),
+      filters: filters ?? state.filters,
+      ordering: ordering ?? '-price',
+      page: page,
+      pageSize: pageSize,
+    );
+    
+    final articleResult = await articleRepository.getArticlesRepo(
+      search: searchQuery.trim(),
+      page: page,
+      pageSize: pageSize,
+    );
+    
+    final teacherResult = await teacherRepository.getTeachersRepo(
+      search: searchQuery.trim(),
+      page: page,
+      pageSize: pageSize,
+    );
 
     courseResult.fold(
       (failure) {
         log('❌ SearchCubit: Failed to search courses - ${failure.message}');
       },
-      (coursesResult) {
+      (CoursesResultModel coursesResult) {
         log('✅ SearchCubit: Loaded ${coursesResult.courses?.length ?? 0} courses');
       },
     );
@@ -139,7 +137,7 @@ class SearchCubit extends Cubit<SearchState> {
       (failure) {
         log('❌ SearchCubit: Failed to search articles - ${failure.message}');
       },
-      (articleResponse) {
+      (ArticleResponseModel articleResponse) {
         log('✅ SearchCubit: Loaded ${articleResponse.results.length} articles');
       },
     );
@@ -148,40 +146,52 @@ class SearchCubit extends Cubit<SearchState> {
       (failure) {
         log('❌ SearchCubit: Failed to search teachers - ${failure.message}');
       },
-      (teacherResponse) {
+      (TeacherResponseModel teacherResponse) {
         log('✅ SearchCubit: Loaded ${teacherResponse.results.length} teachers');
       },
     );
 
     // Extract results (handle failures gracefully - show partial results)
-    final courses = courseResult.fold(
+    final courses = courseResult.fold<List<CourseModel>>(
       (failure) {
         log('❌ SearchCubit: Failed to search courses - ${failure.message}');
         return <CourseModel>[];
       },
-      (result) => result.courses ?? [],
+      (CoursesResultModel result) => result.courses ?? [],
     );
 
-    final articles = articleResult.fold(
+    final articles = articleResult.fold<List<ArticleModel>>(
       (failure) {
         log('❌ SearchCubit: Failed to search articles - ${failure.message}');
         return <ArticleModel>[];
       },
-      (result) => result.results,
+      (ArticleResponseModel result) => result.results,
     );
 
-    final teachers = teacherResult.fold(
+    final teachers = teacherResult.fold<List<TeacherModel>>(
       (failure) {
         log('❌ SearchCubit: Failed to search teachers - ${failure.message}');
         return <TeacherModel>[];
       },
-      (result) => result.results,
+      (TeacherResponseModel result) => result.results,
     );
 
     // Check if all failed
-    final allFailed = courseResult.isLeft() &&
-        articleResult.isLeft() &&
-        teacherResult.isLeft();
+    bool allFailed = false;
+    courseResult.fold(
+      (_) {
+        articleResult.fold(
+          (_) {
+            teacherResult.fold(
+              (_) => allFailed = true,
+              (_) {},
+            );
+          },
+          (_) {},
+        );
+      },
+      (_) {},
+    );
     if (allFailed) {
       final errorMessage = courseResult.fold(
         (failure) => failure.message,

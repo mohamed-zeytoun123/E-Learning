@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:e_learning/core/network/api_request.dart';
 import 'package:e_learning/core/network/api_response.dart';
-import 'api_request.dart';
-import 'api_response.dart';
 
 class API {
   final Dio dio;

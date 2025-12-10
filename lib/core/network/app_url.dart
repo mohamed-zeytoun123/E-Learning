@@ -63,8 +63,6 @@ class AppUrls {
   //* Get Study Years
   static final String getStudyYears =
       "$baseURl/study-years/?page=1&page_size=10000";
-  //* Get Courses
-  static final String getCourses = "$_baseURl/courses";
 
   //* Get Course Details by Slug
   static String courseDetails(String courseSlug) =>
@@ -180,6 +178,10 @@ class AppUrls {
   //* Get Article Details by Slug
   static String articleDetails(String articleSlug) =>
       "$_baseURl/articles/$articleSlug/";
+
+  //?------------------- Banners -------------------
+
+  static final String getBanners = "$_baseURl/advertisements/";
 
   //* Get Related Articles by Article ID
   static String relatedArticles(int articleId) =>

@@ -116,6 +116,7 @@
   "log_out": "تسجيل الخروج",
   "sign_in_to_gain_access": "سجّل الدخول للوصول إلى دوراتك",
   "no_courses_available": "لا توجد دورات متاحة",
+  "select_another_category": "يرجى اختيار فئة أخرى أو المحاولة لاحقاً.",
   "error": "خطأ",
   "enrolls_page": "صفحة التسجيلات",
   "last_search": "آخر بحث",
@@ -211,5 +212,6 @@
   "wrong": "خطأ",
   "login_successful": "تم تسجيل الدخول بنجاح",
   "select_university": "اختر الجامعة",
-  "loading_dots": "جاري التحميل..."
+  "loading_dots": "جاري التحميل...",
+  "of": "من"
 }

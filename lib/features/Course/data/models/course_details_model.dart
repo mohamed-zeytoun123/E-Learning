@@ -1,7 +1,7 @@
 import 'package:e_learning/features/Course/data/models/categorie_model/categorie_model.dart';
 import 'package:e_learning/features/Course/data/models/college_detail_model.dart';
 import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
-import 'package:e_learning/features/course/data/models/university_detail_model.dart';
+import 'package:e_learning/features/Course/data/models/university_detail_model.dart';
 
 class CourseDetailsModel {
   final int id;

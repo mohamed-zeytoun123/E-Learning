@@ -25,7 +25,7 @@ class SeeAllSeperator extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'see_all'.tr(),
+                  'view_all'.tr(),
                   style: AppTextStyles.s14w400
                       .copyWith(color: AppColors.primaryTextColor),
                 ),

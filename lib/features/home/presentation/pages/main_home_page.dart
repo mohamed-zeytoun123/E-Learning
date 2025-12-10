@@ -3,7 +3,7 @@ import 'package:e_learning/features/Course/presentation/pages/courses_page.dart'
 import 'package:e_learning/features/home/presentation/pages/home_content.dart';
 import 'package:e_learning/features/home/presentation/pages/search_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
 import 'package:flutter/material.dart';
 
 class MainHomePage extends StatefulWidget {
@@ -31,7 +31,7 @@ class _MainHomePageState extends State<MainHomePage> {
           const HomeContent(),
           const SearchPage(),
           const CoursesPage(),
-          Center(child: Text('enrolls_page'.tr())),
+          const EnrollPage(),
           const ProfilePage(),
         ],
       ),

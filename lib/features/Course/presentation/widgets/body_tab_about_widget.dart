@@ -8,11 +8,11 @@ import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/error/error_state_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_enroll_widget.dart';
-import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/course/presentation/widgets/icon_count_text_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/price_text_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/teacher_row_widget.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/presentation/widgets/icon_count_text_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/price_text_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/teacher_row_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -93,8 +93,8 @@ class BodyTabAboutWidget extends StatelessWidget {
                         borderColor: AppColors.borderPrimary,
                         onTap: () {
                           context.read<CourseCubit>().getCourseDetails(
-                            id: "$courseId",
-                          );
+                                id: "$courseId",
+                              );
                         },
                       ),
                     ],
@@ -126,7 +126,6 @@ class BodyTabAboutWidget extends StatelessWidget {
                       thickness: 1,
                       height: 0.h,
                     ),
-
                     Text(
                       "About The Course",
                       style: AppTextStyles.s18w600.copyWith(
@@ -147,7 +146,6 @@ class BodyTabAboutWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 16.h),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -212,11 +210,8 @@ class BodyTabAboutWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    BlocSelector<
-                      AppManagerCubit,
-                      AppManagerState,
-                      AppStateEnum
-                    >(
+                    BlocSelector<AppManagerCubit, AppManagerState,
+                        AppStateEnum>(
                       selector: (state) => state.appState,
                       builder: (context, appState) {
                         if (!isActive && appState == AppStateEnum.user) {

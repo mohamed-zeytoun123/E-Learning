@@ -1,9 +1,13 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_padding.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
 import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
-import 'package:e_learning/features/home/presentation/widgets/course_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -166,15 +170,25 @@ class TeatcherPage extends StatelessWidget {
                 itemCount: courses.length,
                 itemBuilder: (context, index) {
                   final course = courses[index];
-                  return FittedBox(
-                    child: CourseCard(
-                      price: course.price,
-                      title: course.title,
-                      collegeName: course.collegeName,
-                      imageUrl: course.image ?? '',
-                      rating: course.averageRating,
-                      courseSlug: course.slug,
-                    ),
+                  return CourseInfoCardWidget(
+                    imageUrl: course.image ?? '',
+                    title: course.title,
+                    subtitle: course.collegeName,
+                    rating: (course.averageRating ?? 0).toDouble(),
+                    price: course.price,
+                    isFavorite: course.isFavorite,
+                    onTap: () {
+                      final courseCubit = CourseCubit(
+                        repo: appLocator<CourceseRepository>(),
+                      );
+                      context.push(
+                        RouteNames.courceInf,
+                        extra: {
+                          'courseId': course.id,
+                          'courseCubit': courseCubit,
+                        },
+                      );
+                    },
                   );
                 },
                 separatorBuilder: (context, index) => SizedBox(height: 20.h),

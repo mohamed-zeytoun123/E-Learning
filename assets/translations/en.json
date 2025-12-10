@@ -115,6 +115,7 @@
   "sign_in_to_gain_access": "Sign In To Gain Access To Your Courses",
   "by_default": "By Default",
   "no_courses_available": "No courses available",
+  "select_another_category": "Please select another category or try again later.",
   "error": "Error",
   "enrolls_page": "Enrolls Page",
   "last_search": "Last search",
@@ -210,5 +211,6 @@
   "wrong": "Wrong",
   "login_successful": "Login successful",
   "select_university": "Select University",
-  "loading_dots": "Loading..."
+  "loading_dots": "Loading...",
+  "of": "Of"
 }

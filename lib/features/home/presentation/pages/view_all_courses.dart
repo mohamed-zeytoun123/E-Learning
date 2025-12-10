@@ -19,7 +19,7 @@ class ViewAllCourses extends StatelessWidget {
     return BlocProvider<CourseCubit>(
       create: (context) => CourseCubit(repo: appLocator<CourceseRepository>())
         ..getCourses()
-        ..getFilterCategories(),
+        ..getCategories(),
       child: Scaffold(
         appBar: AppBar(
           title: Text("courses".tr()),
@@ -63,8 +63,8 @@ class ViewAllCourses extends StatelessWidget {
                     labels: labels,
                     onChipSelected: (value) {
                       if (value == 'all'.tr()) {
-                        // Show all courses
-                        context.read<CourseCubit>().getCourses();
+                        // Show all courses - clear filters
+                        context.read<CourseCubit>().clearFiltersAndGetCourses();
                       } else {
                         // Find category by name and filter
                         if (categories.isNotEmpty) {
@@ -72,7 +72,7 @@ class ViewAllCourses extends StatelessWidget {
                             (c) => c.name == value,
                             orElse: () => categories.first,
                           );
-                          context.read<CourseCubit>().getCourses(
+                          context.read<CourseCubit>().applyFiltersByIds(
                                 categoryId: category.id,
                               );
                         }

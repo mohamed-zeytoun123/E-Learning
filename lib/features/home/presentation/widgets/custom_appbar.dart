@@ -23,20 +23,12 @@ class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
           style: AppTextStyles.s18w600.copyWith(color: Colors.white),
           children: [
             TextSpan(
-              text: ' user name !',
+              text: ' ${'user_name'.tr()} !',
               style: AppTextStyles.s18w600.copyWith(color: Colors.white),
             ),
           ],
         ),
       ),
-      actions: [
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.notifications_none,
-              color: Colors.white,
-            ))
-      ],
     );
   }
 

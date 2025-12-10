@@ -114,20 +114,23 @@
 //     );
 //   }
 // }
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_padding.dart';
+import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/loading/app_loading.dart';
+import 'package:e_learning/core/widgets/chips_bar.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
+import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/filter_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/filtered_courses_list_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/filters_bottom_sheet_widget.dart';
-import 'package:e_learning/features/course/presentation/manager/course_cubit.dart';
-import 'package:e_learning/features/course/presentation/manager/course_state.dart';
-import 'package:e_learning/features/course/presentation/widgets/course_info_card_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/filter_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/filtered_courses_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 // class CustomCategoryTabBarWidget extends StatelessWidget {
 //   const CustomCategoryTabBarWidget({super.key});
@@ -467,7 +470,6 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
         }
 
         // ------------------ Loaded Successfully ------------------
-        final colleges = state.colleges ?? [];
         final courses = state.courses?.courses ?? [];
 
         return Column(
@@ -520,7 +522,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                     ),
                     child: Row(
                       children: List.generate(colleges.length + 1, (index) {
-                        final bool isSelected = index == selectedIndex;
+                        final bool isSelected = index == state.selectedIndex;
 
                         final String tabName =
                             index == 0 ? "All" : colleges[index - 1].name;
@@ -570,13 +572,14 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
 
             // ---------------- Tabs Content ----------------
             Expanded(
-              child: selectedIndex == 0
+              child: state.selectedIndex == 0
                   ? const FilterWidget()
                   : FilteredCoursesListWidget(
                       courses: courses
                           .where(
                             (c) =>
-                                c.college == (colleges[selectedIndex - 1].id),
+                                c.college ==
+                                (colleges[state.selectedIndex - 1].id),
                           )
                           .toList(),
                     ),

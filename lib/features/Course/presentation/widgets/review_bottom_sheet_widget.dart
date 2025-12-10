@@ -3,7 +3,7 @@
 // import 'package:e_learning/core/localization/manager/app_localization.dart';
 // import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 // import 'package:e_learning/core/widgets/input_forms/input_review_widget.dart';
-// import 'package:e_learning/features/course/presentation/widgets/rating_stars_widget.dart';
+// import 'package:e_learning/features/Course/presentation/widgets/rating_stars_widget.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:e_learning/core/colors/app_colors.dart';
@@ -100,7 +100,7 @@ import 'dart:developer';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/input_forms/input_review_widget.dart';
-import 'package:e_learning/features/course/presentation/widgets/rating_stars_widget.dart';
+import 'package:e_learning/features/Course/presentation/widgets/rating_stars_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
