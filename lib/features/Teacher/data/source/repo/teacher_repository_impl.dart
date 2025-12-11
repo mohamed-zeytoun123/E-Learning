@@ -71,5 +71,38 @@ class TeacherRepositoryImpl implements TeacherRepository {
   }
 
   //?-------------------------------------------------
+  //* Search Teachers (using search endpoint)
+
+  @override
+  Future<Either<Failure, TeacherResponseModel>> searchTeachersRepo({
+    required String query,
+    int? limit,
+    int? offset,
+  }) async {
+    if (await network.isConnected) {
+      final result = await remote.searchTeachersRemote(
+        query: query,
+        limit: limit,
+        offset: offset,
+      );
+
+      return result.fold(
+        (failure) {
+          print('❌ Repository: Search teachers failed - ${failure.message}');
+          return Left(failure);
+        },
+        (teacherResponse) {
+          print(
+              '📦 Repository: Received ${teacherResponse.results.length} teachers from search');
+          return Right(teacherResponse);
+        },
+      );
+    } else {
+      print('❌ Repository: No internet connection for search');
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //?-------------------------------------------------
 }
 

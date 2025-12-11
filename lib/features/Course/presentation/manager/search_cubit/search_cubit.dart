@@ -64,7 +64,7 @@ class SearchCubit extends Cubit<SearchState> {
         filters: state.filters,
         ordering: '-price',
         page: 1,
-        pageSize: 5,
+        pageSize: 20,
       );
     });
   }
@@ -118,10 +118,11 @@ class SearchCubit extends Cubit<SearchState> {
       pageSize: pageSize,
     );
     
-    final teacherResult = await teacherRepository.getTeachersRepo(
-      search: searchQuery.trim(),
-      page: page,
-      pageSize: pageSize,
+    // Use the new search endpoint for teachers
+    final teacherResult = await teacherRepository.searchTeachersRepo(
+      query: searchQuery.trim(),
+      limit: pageSize,
+      offset: 0, // Start from beginning for initial search
     );
 
     courseResult.fold(
@@ -206,6 +207,35 @@ class SearchCubit extends Cubit<SearchState> {
       return;
     }
 
+    // Extract pagination info
+    final coursesPagination = courseResult.fold(
+      (_) => (currentPage: 1, totalPages: 1, hasNext: false),
+      (result) => (
+        currentPage: page,
+        totalPages: 1, // CoursesResultModel doesn't have totalPages
+        hasNext: result.hasNextPage,
+      ),
+    );
+
+    final articlesPagination = articleResult.fold(
+      (_) => (currentPage: 1, totalPages: 1, hasNext: false),
+      (result) => (
+        currentPage: result.currentPage,
+        totalPages: result.totalPages,
+        hasNext: result.next != null,
+      ),
+    );
+
+    final teachersPagination = teacherResult.fold(
+      (_) => (currentPage: 1, totalPages: 1, hasNext: false, offset: 0),
+      (result) => (
+        currentPage: result.currentPage,
+        totalPages: result.totalPages,
+        hasNext: result.next != null,
+        offset: teachers.length, // Next offset is current count
+      ),
+    );
+
     emit(
       state.copyWith(
         status: ResponseStatusEnum.success,
@@ -213,6 +243,16 @@ class SearchCubit extends Cubit<SearchState> {
         articles: articles,
         teachers: teachers,
         error: null,
+        coursesCurrentPage: coursesPagination.currentPage,
+        coursesTotalPages: coursesPagination.totalPages,
+        coursesHasNextPage: coursesPagination.hasNext,
+        articlesCurrentPage: articlesPagination.currentPage,
+        articlesTotalPages: articlesPagination.totalPages,
+        articlesHasNextPage: articlesPagination.hasNext,
+        teachersCurrentPage: teachersPagination.currentPage,
+        teachersTotalPages: teachersPagination.totalPages,
+        teachersHasNextPage: teachersPagination.hasNext,
+        teachersOffset: teachersPagination.offset,
       ),
     );
   }
@@ -397,5 +437,112 @@ class SearchCubit extends Cubit<SearchState> {
   //* Change Tab Index
   void changeTabIndex(int index) {
     emit(state.copyWith(selectedTabIndex: index));
+  }
+
+  //?-------------------------------------------------
+  //* Load More Courses
+  Future<void> loadMoreCourses() async {
+    if (!state.coursesHasNextPage ||
+        state.status == ResponseStatusEnum.loading ||
+        state.searchQuery == null ||
+        state.searchQuery!.trim().isEmpty) {
+      return;
+    }
+
+    final nextPage = state.coursesCurrentPage + 1;
+    final result = await courseRepository.getCoursesRepo(
+      search: state.searchQuery!.trim(),
+      filters: state.filters,
+      ordering: '-price',
+      page: nextPage,
+      pageSize: 20,
+    );
+
+    result.fold(
+      (failure) {
+        log('❌ SearchCubit: Failed to load more courses - ${failure.message}');
+      },
+      (coursesResult) {
+        final newCourses = coursesResult.courses ?? [];
+        final allCourses = [...state.courses, ...newCourses];
+        emit(
+          state.copyWith(
+            courses: allCourses,
+            coursesCurrentPage: nextPage,
+            coursesHasNextPage: coursesResult.hasNextPage,
+          ),
+        );
+      },
+    );
+  }
+
+  //?-------------------------------------------------
+  //* Load More Articles
+  Future<void> loadMoreArticles() async {
+    if (!state.articlesHasNextPage ||
+        state.status == ResponseStatusEnum.loading ||
+        state.searchQuery == null ||
+        state.searchQuery!.trim().isEmpty) {
+      return;
+    }
+
+    final nextPage = state.articlesCurrentPage + 1;
+    final result = await articleRepository.getArticlesRepo(
+      search: state.searchQuery!.trim(),
+      page: nextPage,
+      pageSize: 20,
+    );
+
+    result.fold(
+      (failure) {
+        log('❌ SearchCubit: Failed to load more articles - ${failure.message}');
+      },
+      (articleResponse) {
+        final allArticles = [...state.articles, ...articleResponse.results];
+        emit(
+          state.copyWith(
+            articles: allArticles,
+            articlesCurrentPage: articleResponse.currentPage,
+            articlesTotalPages: articleResponse.totalPages,
+            articlesHasNextPage: articleResponse.next != null,
+          ),
+        );
+      },
+    );
+  }
+
+  //?-------------------------------------------------
+  //* Load More Teachers
+  Future<void> loadMoreTeachers() async {
+    if (!state.teachersHasNextPage ||
+        state.status == ResponseStatusEnum.loading ||
+        state.searchQuery == null ||
+        state.searchQuery!.trim().isEmpty) {
+      return;
+    }
+
+    final result = await teacherRepository.searchTeachersRepo(
+      query: state.searchQuery!.trim(),
+      limit: 20,
+      offset: state.teachersOffset,
+    );
+
+    result.fold(
+      (failure) {
+        log('❌ SearchCubit: Failed to load more teachers - ${failure.message}');
+      },
+      (teacherResponse) {
+        final allTeachers = [...state.teachers, ...teacherResponse.results];
+        emit(
+          state.copyWith(
+            teachers: allTeachers,
+            teachersCurrentPage: teacherResponse.currentPage,
+            teachersTotalPages: teacherResponse.totalPages,
+            teachersHasNextPage: teacherResponse.next != null,
+            teachersOffset: allTeachers.length, // Update offset for next load
+          ),
+        );
+      },
+    );
   }
 }

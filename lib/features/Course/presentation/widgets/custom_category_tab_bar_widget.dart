@@ -475,96 +475,100 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
         return Column(
           children: [
             // ----------- Icon + Tabs Row -----------
-            Row(
-              children: [
-                // ---------------- Filter Icon ----------------
-                GestureDetector(
-                  onTap: () {
-                    final cubit = context.read<CourseCubit>();
-                    cubit.getCategories();
-                    cubit.getStudyYears();
+            Padding(
+              padding: EdgeInsets.only(top: 20.h, left: 16.w),
+              child: Row(
+                children: [
+                  // ---------------- Filter Icon ----------------
+                  GestureDetector(
+                    onTap: () {
+                      final cubit = context.read<CourseCubit>();
+                      cubit.getUniversities();
+                      cubit.getColleges();
+                      cubit.getStudyYears();
 
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      context: context,
-                      builder: (_) => BlocProvider.value(
-                        value: cubit,
-                        child: const FiltersBottomSheetWidget(),
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        context: context,
+                        builder: (_) => BlocProvider.value(
+                          value: cubit,
+                          child: const FiltersBottomSheetWidget(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 8.w),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
                       ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 8.w),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 16.w,
-                      vertical: 8.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AppColors.buttonTapNotSelected,
-                      borderRadius: BorderRadius.circular(20.r),
-                    ),
-                    child: Icon(
-                      Icons.tune,
-                      size: 20.sp,
-                      color: AppColors.iconBlue,
+                      decoration: BoxDecoration(
+                        color: AppColors.buttonTapNotSelected,
+                        borderRadius: BorderRadius.circular(20.r),
+                      ),
+                      child: Icon(
+                        Icons.tune,
+                        size: 20.sp,
+                        color: AppColors.iconBlue,
+                      ),
                     ),
                   ),
-                ),
 
-                // ---------------- Tabs ----------------
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 8.w,
-                      vertical: 6.h,
-                    ),
-                    child: Row(
-                      children: List.generate(colleges.length + 1, (index) {
-                        final bool isSelected = index == state.selectedIndex;
+                  // ---------------- Tabs ----------------
+                  Expanded(
+                    child: SingleChildScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 6.h,
+                      ),
+                      child: Row(
+                        children: List.generate(colleges.length + 1, (index) {
+                          final bool isSelected = index == state.selectedIndex;
 
-                        final String tabName =
-                            index == 0 ? "All" : colleges[index - 1].name;
+                          final String tabName =
+                              index == 0 ? "All" : colleges[index - 1].name;
 
-                        return GestureDetector(
-                          onTap: () {
-                            context.read<CourseCubit>().changeSelectedIndex(
-                                  index,
-                                );
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeInOut,
-                            margin: EdgeInsets.symmetric(horizontal: 8.w),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 16.w,
-                              vertical: 8.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? AppColors.buttonTapSelected
-                                  : AppColors.buttonTapNotSelected,
-                              borderRadius: BorderRadius.circular(20.r),
-                            ),
-                            child: Text(
-                              tabName,
-                              style: AppTextStyles.s14w400.copyWith(
+                          return GestureDetector(
+                            onTap: () {
+                              context.read<CourseCubit>().changeSelectedIndex(
+                                    index,
+                                  );
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 250),
+                              curve: Curves.easeInOut,
+                              margin: EdgeInsets.symmetric(horizontal: 8.w),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 16.w,
+                                vertical: 8.h,
+                              ),
+                              decoration: BoxDecoration(
                                 color: isSelected
-                                    ? AppColors.textWhite
-                                    : AppColors.textPrimary,
-                                fontWeight: isSelected
-                                    ? FontWeight.w600
-                                    : FontWeight.w400,
+                                    ? AppColors.buttonTapSelected
+                                    : AppColors.buttonTapNotSelected,
+                                borderRadius: BorderRadius.circular(20.r),
+                              ),
+                              child: Text(
+                                tabName,
+                                style: AppTextStyles.s14w400.copyWith(
+                                  color: isSelected
+                                      ? AppColors.textWhite
+                                      : AppColors.textPrimary,
+                                  fontWeight: isSelected
+                                      ? FontWeight.w600
+                                      : FontWeight.w400,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }),
+                          );
+                        }),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             SizedBox(height: 8.h),

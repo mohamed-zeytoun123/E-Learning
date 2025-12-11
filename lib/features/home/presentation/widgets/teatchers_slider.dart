@@ -12,9 +12,7 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class TeatchersSlider extends StatelessWidget {
-  const TeatchersSlider({super.key, this.maxItems});
-
-  final int? maxItems;
+  const TeatchersSlider({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,11 +26,8 @@ class TeatchersSlider extends StatelessWidget {
           );
         }
 
-        // Calculate display teachers with maxItems limit
+        // Get teachers
         final teachers = state.teachers ?? [];
-        final displayTeachers = maxItems != null && teachers.length > maxItems!
-            ? teachers.take(maxItems!).toList()
-            : teachers;
 
         return Skeletonizer(
           enabled: state.teachersStatus == ResponseStatusEnum.loading,
@@ -49,10 +44,10 @@ class TeatchersSlider extends StatelessWidget {
                     : ListView.separated(
                         separatorBuilder: (context, index) =>
                             SizedBox(width: 16.w),
-                        itemCount: displayTeachers.length,
+                        itemCount: teachers.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
-                          final teacher = displayTeachers[index];
+                          final teacher = teachers[index];
                           return FittedBox(
                             child: TeatcherCard(
                               teacher: teacher,

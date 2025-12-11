@@ -2,6 +2,8 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
+import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
+import 'package:e_learning/features/Course/data/models/paginated_enrollments_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
 import 'package:e_learning/features/auth/data/models/study_year_model/study_year_model.dart';
@@ -88,6 +90,11 @@ class CourseState {
   final ResponseStatusEnum channelsStatus;
   final String? channelsError;
 
+  //* Get My Courses (Enrollments)
+  final PaginatedEnrollmentsModel? myCourses;
+  final ResponseStatusEnum myCoursesStatus;
+  final String? myCoursesError;
+
   //?----------------------------------------------------------------
   CourseState({
     //* Get Chapters by Course
@@ -166,6 +173,11 @@ class CourseState {
     this.channels,
     this.channelsStatus = ResponseStatusEnum.initial,
     this.channelsError,
+
+    //* Get My Courses (Enrollments)
+    this.myCourses,
+    this.myCoursesStatus = ResponseStatusEnum.initial,
+    this.myCoursesError,
   });
 
   //?------------------------------------------------------------------
@@ -246,6 +258,11 @@ class CourseState {
     List<ChannelModel>? channels,
     ResponseStatusEnum? channelsStatus,
     String? channelsError,
+
+    //* Get My Courses (Enrollments)
+    PaginatedEnrollmentsModel? myCourses,
+    ResponseStatusEnum? myCoursesStatus,
+    String? myCoursesError,
   }) {
     return CourseState(
       //* Get Chapters by Course
@@ -326,6 +343,11 @@ class CourseState {
       channels: channels ?? this.channels,
       channelsStatus: channelsStatus ?? this.channelsStatus,
       channelsError: channelsError,
+
+      //* Get My Courses (Enrollments)
+      myCourses: myCourses ?? this.myCourses,
+      myCoursesStatus: myCoursesStatus ?? this.myCoursesStatus,
+      myCoursesError: myCoursesError,
     );
   }
 }

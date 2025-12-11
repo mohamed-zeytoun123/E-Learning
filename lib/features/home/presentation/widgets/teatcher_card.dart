@@ -9,15 +9,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class TeatcherCard extends StatelessWidget {
   final TeacherModel teacher;
   final VoidCallback? onTap;
+  final double? avatarSize;
 
   const TeatcherCard({
     super.key,
     required this.teacher,
     this.onTap,
+    this.avatarSize,
   });
 
   @override
   Widget build(BuildContext context) {
+    final size = avatarSize ?? 80.0;
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -28,16 +31,16 @@ class TeatcherCard extends StatelessWidget {
             child: teacher.avatar != null && teacher.avatar!.isNotEmpty
                 ? CustomCachedImageWidget(
                     appImage: teacher.avatar!,
-                    width: 80.w,
-                    height: 80.h,
-                    fit: BoxFit.cover,
+                    width: size.w,
+                    height: size.h,
+                    fit: BoxFit.fill,
                   )
                 : CircleAvatar(
-                    radius: 40.r,
+                    radius: (size / 2).r,
                     backgroundColor: AppColors.textGrey.withOpacity(0.2),
                     child: Icon(
                       Icons.person,
-                      size: 40.sp,
+                      size: (size / 2).sp,
                       color: AppColors.textGrey,
                     ),
                   ),

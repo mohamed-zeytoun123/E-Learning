@@ -4,6 +4,7 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
+import 'package:e_learning/features/Course/data/models/paginated_enrollments_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
@@ -164,12 +165,14 @@ class CourseCubit extends Cubit<CourseState> {
 
   //* Apply Filters with 3 optional parameters
   Future<void> applyFiltersByIds({
+    int? universityId,
     int? collegeId,
     int? studyYear,
     int? categoryId,
   }) async {
     try {
       final filters = CourseFiltersModel(
+        universityId: universityId,
         collegeId: collegeId,
         studyYear: studyYear,
         categoryId: categoryId,
@@ -734,6 +737,43 @@ class CourseCubit extends Cubit<CourseState> {
           state.copyWith(
             channelsStatus: ResponseStatusEnum.success,
             channels: newChannels,
+          ),
+        );
+      },
+    );
+  }
+
+  //?-------------------------------------------------
+  //* Get My Courses (Enrollments)
+  Future<void> getMyCourses({int? page, int? pageSize}) async {
+    emit(
+      state.copyWith(
+        myCoursesStatus: ResponseStatusEnum.loading,
+        myCoursesError: null,
+      ),
+    );
+
+    final result = await repo.getMyCoursesRepo(
+      page: page ?? 1,
+      pageSize: pageSize ?? 1,
+    );
+
+    result.fold(
+      (failure) {
+        log('getMyCourses failed: ${failure.message}');
+        emit(
+          state.copyWith(
+            myCoursesStatus: ResponseStatusEnum.failure,
+            myCoursesError: failure.message,
+          ),
+        );
+      },
+      (enrollments) {
+        log('getMyCourses success: ${enrollments.results.length} enrollments');
+        emit(
+          state.copyWith(
+            myCoursesStatus: ResponseStatusEnum.success,
+            myCourses: enrollments,
           ),
         );
       },

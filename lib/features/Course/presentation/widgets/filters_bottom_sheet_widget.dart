@@ -152,7 +152,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FiltersBottomSheetWidget extends StatefulWidget {
-  const FiltersBottomSheetWidget({super.key});
+  final void Function(CourseFiltersModel?)? onFiltersApplied;
+  
+  const FiltersBottomSheetWidget({
+    super.key,
+    this.onFiltersApplied,
+  });
 
   @override
   State<FiltersBottomSheetWidget> createState() =>
@@ -160,22 +165,42 @@ class FiltersBottomSheetWidget extends StatefulWidget {
 }
 
 class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
+  int? tempUniversity;
   int? tempCollege;
-  int? tempCategory;
   int? tempYear;
   bool _hasApplied = false;
 
   @override
   void initState() {
     super.initState();
-    final cubit = context.read<CourseCubit>();
-    final state = cubit.state;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final cubit = context.read<CourseCubit>();
+        final state = cubit.state;
 
-    final cachedFilters =
-        state.coursefilters ?? appLocator<HiveService>().getCourseFiltersHive();
-    tempCollege = cachedFilters?.collegeId;
-    tempCategory = cachedFilters?.categoryId;
-    tempYear = cachedFilters?.studyYear;
+        // Load universities if not already loaded or loading
+        if ((state.universities == null || state.universities!.isEmpty) &&
+            state.universitiesState != ResponseStatusEnum.loading) {
+          cubit.getUniversities();
+        }
+        // Load colleges if not already loaded or loading
+        if ((state.colleges == null || state.colleges!.isEmpty) &&
+            state.collegesStatus != ResponseStatusEnum.loading) {
+          cubit.getColleges();
+        }
+        // Load study years if not already loaded or loading
+        if ((state.studyYears == null || state.studyYears!.isEmpty) &&
+            state.studyYearsStatus != ResponseStatusEnum.loading) {
+          cubit.getStudyYears();
+        }
+
+        final cachedFilters =
+            state.coursefilters ?? appLocator<HiveService>().getCourseFiltersHive();
+        tempUniversity = cachedFilters?.universityId;
+        tempCollege = cachedFilters?.collegeId;
+        tempYear = cachedFilters?.studyYear;
+      }
+    });
   }
 
   @override
@@ -184,18 +209,21 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
       listenWhen: (previous, current) =>
           previous.coursesStatus != current.coursesStatus ||
           previous.collegesStatus != current.collegesStatus ||
-          previous.categoriesStatus != current.categoriesStatus ||
+          previous.universitiesState != current.universitiesState ||
           previous.studyYearsStatus != current.studyYearsStatus,
       listener: (context, state) {
         if (_hasApplied) {
           if (state.coursesStatus == ResponseStatusEnum.success) {
-            appLocator<HiveService>().saveCourseFiltersHive(
-              CourseFiltersModel(
-                collegeId: tempCollege,
-                categoryId: tempCategory,
-                studyYear: tempYear,
-              ),
+            final filters = CourseFiltersModel(
+              universityId: tempUniversity,
+              collegeId: tempCollege,
+              studyYear: tempYear,
             );
+            appLocator<HiveService>().saveCourseFiltersHive(filters);
+            // Call the callback if provided
+            if (widget.onFiltersApplied != null) {
+              widget.onFiltersApplied!(filters);
+            }
             if (Navigator.of(context).canPop()) Navigator.of(context).pop();
           } else if (state.coursesStatus == ResponseStatusEnum.failure) {
             // عرض رسالة خطأ فقط
@@ -214,31 +242,38 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
       },
       buildWhen: (previous, current) =>
           previous.colleges != current.colleges ||
-          previous.categories != current.categories ||
+          previous.universities != current.universities ||
           previous.studyYears != current.studyYears ||
           previous.collegesStatus != current.collegesStatus ||
-          previous.categoriesStatus != current.categoriesStatus ||
+          previous.universitiesState != current.universitiesState ||
           previous.studyYearsStatus != current.studyYearsStatus,
       builder: (context, state) {
-        final isLoading = (state.collegesStatus != ResponseStatusEnum.success &&
-                state.collegesStatus != ResponseStatusEnum.failure) ||
-            (state.categoriesStatus != ResponseStatusEnum.success &&
-                state.categoriesStatus != ResponseStatusEnum.failure) ||
-            (state.studyYearsStatus != ResponseStatusEnum.success &&
-                state.studyYearsStatus != ResponseStatusEnum.failure);
+        // Check if any are still loading or initial
+        final isLoading = state.collegesStatus == ResponseStatusEnum.loading ||
+            state.collegesStatus == ResponseStatusEnum.initial ||
+            state.universitiesState == ResponseStatusEnum.loading ||
+            state.universitiesState == ResponseStatusEnum.initial ||
+            state.studyYearsStatus == ResponseStatusEnum.loading ||
+            state.studyYearsStatus == ResponseStatusEnum.initial;
 
-        final hasError = state.collegesStatus == ResponseStatusEnum.failure ||
-            state.categoriesStatus == ResponseStatusEnum.failure ||
-            state.studyYearsStatus == ResponseStatusEnum.failure;
+        // Only show error if we've actually tried to load (not initial) and got a failure
+        final hasError = !isLoading &&
+            (state.collegesStatus == ResponseStatusEnum.failure ||
+                state.universitiesState == ResponseStatusEnum.failure ||
+                state.studyYearsStatus == ResponseStatusEnum.failure);
 
+        // Show loading if any are still loading or initial
         if (isLoading) {
           return _buildLoadingUI();
         }
 
+        // Show error only if we're not loading and have a failure
         if (hasError) {
           return _buildErrorUI(state);
         }
 
+        // Show filters UI if we have at least one successful load
+        // (even if some lists are empty, that's okay)
         return _buildFiltersUI(state);
       },
     );
@@ -262,11 +297,27 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
   }
 
   Widget _buildErrorUI(CourseState state) {
-    final errorMessages = [
-      if (state.collegesError != null) state.collegesError,
-      if (state.categoriesError != null) state.categoriesError,
-      if (state.studyYearsError != null) state.studyYearsError,
-    ].join('\n');
+    final errorMessages = <String>[];
+    if (state.collegesError != null && 
+        state.collegesError!.isNotEmpty &&
+        !state.collegesError!.toLowerCase().contains('no data')) {
+      errorMessages.add(state.collegesError!);
+    }
+    if (state.universitiesError != null && 
+        state.universitiesError!.isNotEmpty &&
+        !state.universitiesError!.toLowerCase().contains('no data')) {
+      errorMessages.add(state.universitiesError!);
+    }
+    if (state.studyYearsError != null && 
+        state.studyYearsError!.isNotEmpty &&
+        !state.studyYearsError!.toLowerCase().contains('no data')) {
+      errorMessages.add(state.studyYearsError!);
+    }
+
+    // If all errors are "no data" or empty, show filters UI with empty lists instead
+    if (errorMessages.isEmpty) {
+      return _buildFiltersUI(state);
+    }
 
     return Container(
       height: 200.h,
@@ -285,7 +336,7 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
             Icon(Icons.error, size: 50.sp, color: AppColors.textError),
             SizedBox(height: 12.h),
             Text(
-              errorMessages.isNotEmpty ? errorMessages : 'Something went wrong',
+              errorMessages.join('\n'),
               textAlign: TextAlign.center,
               style: AppTextStyles.s16w500.copyWith(color: AppColors.textError),
             ),
@@ -299,8 +350,8 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
               borderColor: AppColors.borderPrimary,
               onTap: () {
                 final cubit = context.read<CourseCubit>();
+                cubit.getUniversities();
                 cubit.getColleges();
-                cubit.getCategories();
                 cubit.getStudyYears();
               },
             ),
@@ -312,8 +363,8 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
 
   Widget _buildFiltersUI(CourseState state) {
     final courseCubit = context.read<CourseCubit>();
+    final universities = state.universities ?? [];
     final colleges = state.colleges ?? [];
-    final categories = state.categories ?? [];
     final studyYears = state.studyYears ?? [];
 
     return Container(
@@ -349,6 +400,14 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FilterGroupWidget(
+                    title: "University",
+                    items: universities
+                        .map((u) => FilterItem(id: u.id, name: u.name))
+                        .toList(),
+                    selectedId: tempUniversity,
+                    onSelect: (value) => setState(() => tempUniversity = value),
+                  ),
+                  FilterGroupWidget(
                     title: "College",
                     items: colleges
                         .map((c) => FilterItem(id: c.id, name: c.name))
@@ -357,17 +416,9 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                     onSelect: (value) => setState(() => tempCollege = value),
                   ),
                   FilterGroupWidget(
-                    title: "Categories",
-                    items: categories
-                        .map((c) => FilterItem(id: c.id, name: c.name))
-                        .toList(),
-                    selectedId: tempCategory,
-                    onSelect: (value) => setState(() => tempCategory = value),
-                  ),
-                  FilterGroupWidget(
                     title: "Study Year",
                     items: studyYears
-                        .map((c) => FilterItem(id: c.id, name: c.name))
+                        .map((y) => FilterItem(id: y.id, name: y.name))
                         .toList(),
                     selectedId: tempYear,
                     onSelect: (value) => setState(() => tempYear = value),
@@ -391,6 +442,17 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                     buttonColor: AppColors.buttonWhite,
                     borderColor: AppColors.borderPrimary,
                     onTap: () {
+                      final courseCubit = context.read<CourseCubit>();
+                      // Clear all filters
+                      courseCubit.applyFiltersByIds(
+                        universityId: null,
+                        collegeId: null,
+                        studyYear: null,
+                      );
+                      // Call the callback with null to clear filters in SearchCubit if used from search
+                      if (widget.onFiltersApplied != null) {
+                        widget.onFiltersApplied!(null);
+                      }
                       if (Navigator.of(context).canPop()) {
                         Navigator.of(context).pop();
                       }
@@ -408,8 +470,8 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
                     onTap: () {
                       _hasApplied = true;
                       courseCubit.applyFiltersByIds(
+                        universityId: tempUniversity,
                         collegeId: tempCollege,
-                        categoryId: tempCategory,
                         studyYear: tempYear,
                       );
                       if (Navigator.of(context).canPop()) {

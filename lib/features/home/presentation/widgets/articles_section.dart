@@ -16,10 +16,11 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ArticlesSection extends StatelessWidget {
-  const ArticlesSection({super.key, this.itemsForShow});
-  final int? itemsForShow;
+  const ArticlesSection({super.key});
 
   String _formatDate(DateTime date) {
+    // Convert to local time to ensure correct date display
+    final localDate = date.toLocal();
     final months = [
       'Jan',
       'Feb',
@@ -34,7 +35,7 @@ class ArticlesSection extends StatelessWidget {
       'Nov',
       'Dec'
     ];
-    return '${date.day.toString().padLeft(2, '0')} ${months[date.month - 1]}, ${date.year}';
+    return '${localDate.day.toString().padLeft(2, '0')} ${months[localDate.month - 1]}, ${localDate.year}';
   }
 
   @override
@@ -52,16 +53,13 @@ class ArticlesSection extends StatelessWidget {
         }
 
         // Handle loading or empty state
-        final articles = state.articles;
-        final displayArticles = itemsForShow != null && articles != null
-            ? articles.take(itemsForShow!).toList()
-            : articles ?? [];
+        final articles = state.articles ?? [];
 
-        if (displayArticles.isEmpty &&
+        if (articles.isEmpty &&
             state.articlesStatus == ResponseStatusEnum.loading) {
           return SliverList.separated(
             separatorBuilder: (context, index) => SizedBox(height: 12.h),
-            itemCount: itemsForShow ?? 5,
+            itemCount: 5,
             itemBuilder: (context, index) {
               return Skeletonizer(
                 enabled: true,
@@ -73,7 +71,7 @@ class ArticlesSection extends StatelessWidget {
                       Assets.resourceImagesPngHomeeBg,
                       width: 80.w,
                       height: 80.h,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.fill,
                     ),
                   ),
                   title: Column(
@@ -117,7 +115,7 @@ class ArticlesSection extends StatelessWidget {
           );
         }
 
-        if (displayArticles.isEmpty) {
+        if (articles.isEmpty) {
           return SliverToBoxAdapter(
             child: Padding(
               padding: AppPadding.appPadding,
@@ -131,77 +129,127 @@ class ArticlesSection extends StatelessWidget {
           );
         }
 
-        return SliverList.separated(
-          separatorBuilder: (context, index) => SizedBox(height: 12.h),
-          itemCount: displayArticles.length,
-          itemBuilder: (context, index) {
-            final article = displayArticles[index];
-            return InkWell(
-              onTap: () {
-                context.push(
-                  RouteNames.aticleDetails,
-                  extra: {'articleId': article.id},
+        // Check if loading more (has articles but status is loading)
+        final isLoadingMore =
+            state.articlesStatus == ResponseStatusEnum.loading &&
+                articles.isNotEmpty;
+
+        return SliverMainAxisGroup(
+          slivers: [
+            // SizedBox at the top
+            SliverToBoxAdapter(
+              child: SizedBox(height: 20.h),
+            ),
+            // Articles list
+            SliverList.separated(
+              separatorBuilder: (context, index) => SizedBox(height: 12.h),
+              itemCount: articles.length + (isLoadingMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                // Show loading indicator at the bottom when loading more
+                if (index >= articles.length) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppPadding.appPadding.horizontal,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(16.h),
+                      child: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  );
+                }
+                final article = articles[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppPadding.appPadding.horizontal,
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      context.push(
+                        RouteNames.aticleDetails,
+                        extra: {'articleId': article.id},
+                      );
+                    },
+                    child: ListTile(
+                      contentPadding: EdgeInsets.zero,
+                      titleAlignment: ListTileTitleAlignment.top,
+                      leading: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.r),
+                        child:
+                            article.image != null && article.image!.isNotEmpty
+                                ? CustomCachedImageWidget(
+                                    appImage: article.image!,
+                                    width: 80.w,
+                                    height: 80.h,
+                                    fit: BoxFit.fill,
+                                  )
+                                : Image.asset(
+                                    Assets.resourceImagesPngHomeeBg,
+                                    width: 80.w,
+                                    height: 80.h,
+                                    fit: BoxFit.cover,
+                                  ),
+                      ),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            article.title,
+                            style: AppTextStyles.s16w500,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          SizedBox(height: 8.h),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  color: AppColors.backgroundLittelOrange,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.access_time,
+                                      color: AppColors.stars,
+                                      size: 16.sp,
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      article.readingTime,
+                                      style: AppTextStyles.s12w400
+                                          .copyWith(color: AppColors.stars),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                _formatDate(
+                                    article.publishedAt ?? article.createdAt),
+                                style: AppTextStyles.s12w400
+                                    .copyWith(color: AppColors.textGrey),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
                 );
               },
-              child: ListTile(
-                titleAlignment: ListTileTitleAlignment.top,
-                leading: ClipRRect(
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: article.image != null && article.image!.isNotEmpty
-                      ? CustomCachedImageWidget(
-                          appImage: article.image!,
-                          width: 80.w,
-                          height: 80.h,
-                          fit: BoxFit.cover,
-                        )
-                      : Image.asset(
-                          Assets.resourceImagesPngHomeeBg,
-                          width: 80.w,
-                          height: 80.h,
-                          fit: BoxFit.cover,
-                        ),
-                ),
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      article.title,
-                      style: AppTextStyles.s16w500,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 8.h),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.access_time,
-                              color: AppColors.stars,
-                              size: 16.sp,
-                            ),
-                            SizedBox(width: 4.w),
-                            Text(
-                              article.readingTime,
-                              style: AppTextStyles.s12w400
-                                  .copyWith(color: AppColors.stars),
-                            )
-                          ],
-                        ),
-                        Text(
-                          _formatDate(article.createdAt),
-                          style: AppTextStyles.s12w400
-                              .copyWith(color: AppColors.textGrey),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+            ),
+            // Padding at the bottom
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 16.h),
               ),
-            );
-          },
+            ),
+          ],
         );
       },
     );

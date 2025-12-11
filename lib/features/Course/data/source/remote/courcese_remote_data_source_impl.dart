@@ -10,6 +10,7 @@ import 'package:e_learning/features/Course/data/models/Pag_courses/paginated_cou
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
+import 'package:e_learning/features/Course/data/models/paginated_enrollments_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/paginated_ratings_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
@@ -338,9 +339,22 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
       if (response.statusCode == 200) {
         final data = response.body;
 
-        if (data is List) {
+        // Handle paginated response (with results array)
+        if (data is Map<String, dynamic>) {
+          if (data.containsKey('results') && data['results'] is List) {
+            final results = data['results'] as List;
+            for (var item in results) {
+              if (item is Map<String, dynamic>) {
+                universities.add(UniversityModel.fromMap(item));
+              }
+            }
+          }
+        } else if (data is List) {
+          // Handle direct list response
           for (var item in data) {
-            universities.add(UniversityModel.fromMap(item));
+            if (item is Map<String, dynamic>) {
+              universities.add(UniversityModel.fromMap(item));
+            }
           }
         }
 
@@ -354,6 +368,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         );
       }
     } catch (exception) {
+      log(exception.toString());
       return Left(Failure.handleError(exception as DioException));
     }
   }
@@ -458,6 +473,52 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         return Left(
           Failure(
             message: response.body['message']?.toString() ?? 'Unknown error',
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------
+  //* Get My Courses (Enrollments)
+  @override
+  Future<Either<Failure, PaginatedEnrollmentsModel>> getMyCoursesRemote({
+    int? page,
+    int? pageSize,
+  }) async {
+    try {
+      final Map<String, dynamic> queryParameters = {
+        if (page != null) 'page': page.toString(),
+        if (pageSize != null) 'page_size': pageSize.toString(),
+      };
+
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.getMyCourses(queryParameters: queryParameters),
+      );
+
+      final ApiResponse response = await api.get(request);
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+        if (data is Map<String, dynamic>) {
+          final paginatedEnrollments = PaginatedEnrollmentsModel.fromMap(data);
+          return Right(paginatedEnrollments);
+        } else {
+          return Left(Failure(message: 'Invalid data format from server'));
+        }
+      } else {
+        String errorMessage = 'Unknown error';
+        if (response.body is Map<String, dynamic>) {
+          errorMessage =
+              response.body['message']?.toString() ?? 'Unknown error';
+        }
+        return Left(
+          Failure(
+            message: errorMessage,
             statusCode: response.statusCode,
           ),
         );

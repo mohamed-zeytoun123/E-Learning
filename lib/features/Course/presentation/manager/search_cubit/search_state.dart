@@ -22,6 +22,18 @@ class SearchState {
       queryToSet; // Query to set in the search input (from history tap)
   final int selectedTabIndex; // 0: Courses, 1: Articles, 2: Teachers
 
+  // Pagination info
+  final int coursesCurrentPage;
+  final int coursesTotalPages;
+  final bool coursesHasNextPage;
+  final int articlesCurrentPage;
+  final int articlesTotalPages;
+  final bool articlesHasNextPage;
+  final int teachersCurrentPage;
+  final int teachersTotalPages;
+  final bool teachersHasNextPage;
+  final int teachersOffset; // For teachers search API
+
   SearchState({
     this.error,
     this.status = ResponseStatusEnum.initial,
@@ -38,6 +50,16 @@ class SearchState {
     this.showHistory = true, // Default to showing history
     this.queryToSet,
     this.selectedTabIndex = 0, // Default to Courses tab
+    this.coursesCurrentPage = 1,
+    this.coursesTotalPages = 1,
+    this.coursesHasNextPage = false,
+    this.articlesCurrentPage = 1,
+    this.articlesTotalPages = 1,
+    this.articlesHasNextPage = false,
+    this.teachersCurrentPage = 1,
+    this.teachersTotalPages = 1,
+    this.teachersHasNextPage = false,
+    this.teachersOffset = 0,
   });
 
   SearchState copyWith({
@@ -56,6 +78,16 @@ class SearchState {
     bool? showHistory,
     String? queryToSet,
     int? selectedTabIndex,
+    int? coursesCurrentPage,
+    int? coursesTotalPages,
+    bool? coursesHasNextPage,
+    int? articlesCurrentPage,
+    int? articlesTotalPages,
+    bool? articlesHasNextPage,
+    int? teachersCurrentPage,
+    int? teachersTotalPages,
+    bool? teachersHasNextPage,
+    int? teachersOffset,
   }) {
     return SearchState(
       error: error ?? this.error,
@@ -73,6 +105,16 @@ class SearchState {
       showHistory: showHistory ?? this.showHistory,
       queryToSet: queryToSet ?? this.queryToSet,
       selectedTabIndex: selectedTabIndex ?? this.selectedTabIndex,
+      coursesCurrentPage: coursesCurrentPage ?? this.coursesCurrentPage,
+      coursesTotalPages: coursesTotalPages ?? this.coursesTotalPages,
+      coursesHasNextPage: coursesHasNextPage ?? this.coursesHasNextPage,
+      articlesCurrentPage: articlesCurrentPage ?? this.articlesCurrentPage,
+      articlesTotalPages: articlesTotalPages ?? this.articlesTotalPages,
+      articlesHasNextPage: articlesHasNextPage ?? this.articlesHasNextPage,
+      teachersCurrentPage: teachersCurrentPage ?? this.teachersCurrentPage,
+      teachersTotalPages: teachersTotalPages ?? this.teachersTotalPages,
+      teachersHasNextPage: teachersHasNextPage ?? this.teachersHasNextPage,
+      teachersOffset: teachersOffset ?? this.teachersOffset,
     );
   }
 }

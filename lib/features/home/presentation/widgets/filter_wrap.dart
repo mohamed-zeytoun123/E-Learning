@@ -28,6 +28,7 @@ class _FilterWrapState extends State<FilterWrap> {
     return Wrap(
       spacing: widget.spacing, // Horizontal spacing between chips
       runSpacing: widget.runSpacing, // Vertical spacing between lines
+      alignment: WrapAlignment.center,
       children: List.generate(widget.labels.length, (index) {
         bool isSelected = selectedIndex == index;
         return ChoiceChip(
@@ -41,10 +42,12 @@ class _FilterWrapState extends State<FilterWrap> {
           showCheckmark: false,
           backgroundColor: AppColors.overLay,
           selectedColor: AppColors.overLay,
-          label: Text(
-            widget.labels[index],
-            style: AppTextStyles.s14w500.copyWith(
-              color: AppColors.primaryTextColor,
+          label: Center(
+            child: Text(
+              widget.labels[index],
+              style: AppTextStyles.s14w500.copyWith(
+                color: AppColors.primaryTextColor,
+              ),
             ),
           ),
           selected: isSelected,

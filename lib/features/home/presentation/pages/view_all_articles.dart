@@ -18,16 +18,52 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-class ViewAllArticles extends StatelessWidget {
+class ViewAllArticles extends StatefulWidget {
   const ViewAllArticles({super.key});
+
+  @override
+  State<ViewAllArticles> createState() => _ViewAllArticlesState();
+}
+
+class _ViewAllArticlesState extends State<ViewAllArticles> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (!mounted) return;
+    
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent * 0.85) {
+      final cubit = context.read<ArticleCubit>();
+      final state = cubit.state;
+
+      // Only load more if there's a next page and not already loading
+      if (state.hasNextPage &&
+          state.articlesStatus != ResponseStatusEnum.loading) {
+        cubit.loadMoreArticles();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) =>
-              ArticleCubit(repo: appLocator<ArticleRepository>())..getArticles(),
+          create: (context) => ArticleCubit(repo: appLocator<ArticleRepository>())
+            ..getArticles(page: 1, pageSize: 10),
         ),
         BlocProvider(
           create: (context) => CourseCubit(
@@ -78,13 +114,17 @@ class ViewAllArticles extends StatelessWidget {
                     onChipSelected: (value) {
                       final articleCubit = context.read<ArticleCubit>();
                       if (value == "all".tr()) {
-                        articleCubit.getArticles();
+                        articleCubit.getArticles(page: 1, pageSize: 10);
                       } else {
                         final category = categories.firstWhere(
                           (c) => c.name == value,
                           orElse: () => categories.first,
                         );
-                        articleCubit.getArticles(categoryId: category.id);
+                        articleCubit.getArticles(
+                          page: 1,
+                          pageSize: 10,
+                          categoryId: category.id,
+                        );
                       }
                     },
                     withFilter: true,
@@ -122,6 +162,7 @@ class ViewAllArticles extends StatelessWidget {
                   }
 
                   return CustomScrollView(
+                    controller: _scrollController,
                     slivers: [
                       const ArticlesSection(),
                     ],

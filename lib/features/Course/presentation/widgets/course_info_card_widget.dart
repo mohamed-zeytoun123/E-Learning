@@ -200,8 +200,8 @@ class CourseInfoCardWidget extends StatelessWidget {
                       : CustomCachedImageWidget(
                           appImage: imageUrl!,
                           width: double.infinity,
-                          height: 180.5,
-                          fit: BoxFit.cover,
+                          height: 150.5,
+                          fit: BoxFit.fill,
                           placeholder: Container(
                             color: Colors.grey.shade300,
                             child: Center(child: AppLoading.circular()),
@@ -254,7 +254,7 @@ class CourseInfoCardWidget extends StatelessWidget {
                           width: 55.w,
                           height: 25.h,
                           decoration: BoxDecoration(
-                            color: AppColors.formSomeWhite,
+                            color: AppColors.backgroundLittelOrange,
                             borderRadius: BorderRadius.circular(12.r),
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 6.w),

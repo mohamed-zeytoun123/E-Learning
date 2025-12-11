@@ -137,6 +137,18 @@ class AppUrls {
   //?------------------- Enrollment -------------------
   //* Enroll in a Course
   static final String enrollCourse = "$baseURl/enrollments/enroll/";
+  
+  //* Get My Courses (Enrollments)
+  static String getMyCourses({Map<String, dynamic>? queryParameters}) {
+    String url = "$baseURl/enrollments/my-courses/";
+    if (queryParameters != null && queryParameters.isNotEmpty) {
+      final queryString = queryParameters.entries
+          .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+          .join("&");
+      url = "$url?$queryString";
+    }
+    return url;
+  }
 
   //?------------------- Video -------------------
   //* Get Secure Video Streaming URL
@@ -171,6 +183,18 @@ class AppUrls {
 
   //* Get Teachers
   static final String getTeachers = "$_baseURl/teachers/";
+
+  //* Search Teachers
+  static String searchTeachers({Map<String, dynamic>? queryParameters}) {
+    String url = "$baseURl/teachers/search/";
+    if (queryParameters != null && queryParameters.isNotEmpty) {
+      final queryString = queryParameters.entries
+          .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+          .join("&");
+      url = "$url?$queryString";
+    }
+    return url;
+  }
 
   //* Get Articles
   static final String getArticles = "$_baseURl/articles/";

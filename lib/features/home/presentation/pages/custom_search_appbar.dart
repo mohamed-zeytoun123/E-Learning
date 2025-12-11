@@ -1,11 +1,16 @@
+import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
+import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_state.dart';
-import 'package:e_learning/features/home/presentation/widgets/filtered_bottom_sheet.dart';
+import 'package:e_learning/features/Course/presentation/widgets/filters_bottom_sheet_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 
 class CustomSearchAppbar extends StatefulWidget implements PreferredSizeWidget {
   final SearchCubit searchCubit;
@@ -87,7 +92,19 @@ class _CustomSearchAppbarState extends State<CustomSearchAppbar> {
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
               child: SearchBar(
                 controller: _searchController,
-                leading: Icon(Icons.search, color: AppColors.primaryColor),
+                constraints: BoxConstraints(
+                  minHeight: 44.h,
+                  maxHeight: 44.h,
+                ),
+                shape: WidgetStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                ),
+                leading: SvgPicture.asset(
+                  Assets.resourceImagesVectorsSearch1,
+                  color: AppColors.primary,
+                ),
                 hintText: 'search_for_courses'.tr(),
                 onChanged: (query) {
                   widget.searchCubit.onSearchChanged(query);
@@ -103,9 +120,39 @@ class _CustomSearchAppbarState extends State<CustomSearchAppbar> {
                   IconButton(
                     icon: Icon(Icons.tune, color: AppColors.primaryColor),
                     onPressed: () {
-                      showFilterBottomSheet(
-                        context,
-                        searchCubit: widget.searchCubit,
+                      // Create a CourseCubit for the filter bottom sheet
+                      final courseCubit = CourseCubit(
+                        repo: appLocator<CourceseRepository>(),
+                      )
+                        ..getUniversities()
+                        ..getColleges()
+                        ..getStudyYears();
+                      
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (_) => BlocProvider<CourseCubit>.value(
+                          value: courseCubit,
+                          child: FiltersBottomSheetWidget(
+                            onFiltersApplied: (filters) {
+                              // Update SearchCubit with the applied filters
+                              widget.searchCubit.updateFilters(filters);
+                              
+                              // Re-search if there's an active query
+                              final searchQuery = widget.searchCubit.state.searchQuery;
+                              if (searchQuery != null && searchQuery.trim().isNotEmpty) {
+                                widget.searchCubit.searchAll(
+                                  searchQuery: searchQuery,
+                                  filters: filters,
+                                  ordering: '-price',
+                                  page: 1,
+                                  pageSize: 5,
+                                );
+                              }
+                            },
+                          ),
+                        ),
                       );
                     },
                   ),

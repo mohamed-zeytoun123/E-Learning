@@ -12,6 +12,13 @@ abstract class TeacherRepository {
     String? search,
   });
 
+  //* Search Teachers (using search endpoint)
+  Future<Either<Failure, TeacherResponseModel>> searchTeachersRepo({
+    required String query,
+    int? limit,
+    int? offset,
+  });
+
   //?-------------------------------------------------
 }
 

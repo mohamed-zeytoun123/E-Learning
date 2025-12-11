@@ -16,13 +16,18 @@ class HomeContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final courseCubit = CourseCubit(repo: appLocator<CourceseRepository>())
+      ..getCategories()
+      ..clearFiltersAndGetCourses();
+
+    // Always try to fetch enrollments - API will handle auth
+    // If no token, it will fail gracefully and we'll show normal card
+    courseCubit.getMyCourses(page: 1, pageSize: 1);
+
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) =>
-              CourseCubit(repo: appLocator<CourceseRepository>())
-                ..getCategories()
-                ..clearFiltersAndGetCourses(),
+        BlocProvider.value(
+          value: courseCubit,
         ),
         BlocProvider(
           create: (context) =>

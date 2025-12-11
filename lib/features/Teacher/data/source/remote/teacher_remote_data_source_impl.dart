@@ -77,4 +77,66 @@ class TeacherRemoteDataSourceImpl implements TeacherRemoteDataSource {
   }
 
   //?----------------------------------------------------
+  //* Search Teachers (using search endpoint)
+
+  @override
+  Future<Either<Failure, TeacherResponseModel>> searchTeachersRemote({
+    required String query,
+    int? limit,
+    int? offset,
+  }) async {
+    try {
+      final Map<String, dynamic> queryParameters = {
+        'q': query,
+        if (limit != null) 'limit': limit.toString(),
+        if (offset != null) 'offset': offset.toString(),
+      };
+
+      final ApiRequest request = ApiRequest(
+        url: AppUrls.searchTeachers(),
+        queryParameters: queryParameters,
+      );
+
+      log('🌐 Search Teachers URL: ${AppUrls.searchTeachers()}');
+      log('🌐 Query Parameters: $queryParameters');
+
+      final ApiResponse response = await api.get(request);
+
+      log('📡 Search Teachers API Response Status: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        final data = response.body;
+
+        if (data is Map<String, dynamic>) {
+          final teacherResponse = TeacherResponseModel.fromMap(data);
+          log('✅ Successfully parsed ${teacherResponse.results.length} teachers from search');
+          return Right(teacherResponse);
+        } else {
+          return Left(
+            Failure(
+              message: 'Unexpected response format',
+              statusCode: response.statusCode,
+            ),
+          );
+        }
+      } else {
+        String errorMessage = 'Unknown error';
+        if (response.body is Map<String, dynamic>) {
+          errorMessage =
+              response.body['message']?.toString() ?? 'Unknown error';
+        }
+        return Left(
+          Failure(
+            message: errorMessage,
+            statusCode: response.statusCode,
+          ),
+        );
+      }
+    } catch (exception) {
+      log(exception.toString());
+      return Left(Failure.handleError(exception as DioException));
+    }
+  }
+
+  //?----------------------------------------------------
 }

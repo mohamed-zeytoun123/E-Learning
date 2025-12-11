@@ -45,11 +45,17 @@ class TeatcherPage extends StatelessWidget {
         ),
         title: Text("teachers".tr()),
       ),
-      body: Padding(
-        padding: AppPadding.appPadding.copyWith(top: 56),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
+      body: CustomScrollView(
+        slivers: [
+          // SizedBox at the top
+          SliverToBoxAdapter(
+            child: SizedBox(height: 56.h),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppPadding.appPadding.horizontal,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -62,7 +68,7 @@ class TeatcherPage extends StatelessWidget {
                             appImage: teacherData.avatar!,
                             width: 80.w,
                             height: 80.h,
-                            fit: BoxFit.cover,
+                            fit: BoxFit.fill,
                           )
                         : CircleAvatar(
                             radius: 40.r,
@@ -154,23 +160,33 @@ class TeatcherPage extends StatelessWidget {
                 ],
               ),
             ),
-            // Courses List
-            if (courses.isEmpty)
-              SliverFillRemaining(
-                hasScrollBody: false,
+          ),
+          // Courses List
+          if (courses.isEmpty)
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppPadding.appPadding.horizontal,
+                ),
                 child: Center(
                   child: Text(
                     'no_courses_available'.tr(),
                     style: TextStyle(fontSize: 14.sp),
                   ),
                 ),
-              )
-            else
-              SliverList.separated(
-                itemCount: courses.length,
-                itemBuilder: (context, index) {
-                  final course = courses[index];
-                  return CourseInfoCardWidget(
+              ),
+            )
+          else
+            SliverList.separated(
+              itemCount: courses.length,
+              itemBuilder: (context, index) {
+                final course = courses[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppPadding.appPadding.horizontal,
+                  ),
+                  child: CourseInfoCardWidget(
                     imageUrl: course.image ?? '',
                     title: course.title,
                     subtitle: course.collegeName,
@@ -189,12 +205,18 @@ class TeatcherPage extends StatelessWidget {
                         },
                       );
                     },
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(height: 20.h),
-              ),
-          ],
-        ),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) => SizedBox(height: 20.h),
+            ),
+          // Padding at the bottom
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 16.h),
+            ),
+          ),
+        ],
       ),
     );
   }

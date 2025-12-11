@@ -16,9 +16,10 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CourseSlider extends StatelessWidget {
-  const CourseSlider({super.key, this.maxItems});
+  const CourseSlider({super.key});
 
-  final int? maxItems;
+  // Card height from CourseInfoCardWidget
+  static double get _cardHeight => 297.5.h;
 
   @override
   Widget build(BuildContext context) {
@@ -27,23 +28,19 @@ class CourseSlider extends StatelessWidget {
         // Handle error state
         if (state.coursesStatus == ResponseStatusEnum.failure) {
           return SizedBox(
-            height: 310.h,
+            height: _cardHeight,
             child: const CustomErrorWidget(),
           );
         }
 
-        // Calculate display courses with maxItems limit
+        // Get courses
         final CoursesResultModel? coursesResult = state.courses;
         final List<CourseModel> courses = coursesResult?.courses ?? [];
-        final List<CourseModel> displayCourses =
-            maxItems != null && courses.length > maxItems!
-                ? courses.take(maxItems!).toList()
-                : courses;
 
         return Skeletonizer(
           enabled: state.coursesStatus == ResponseStatusEnum.loading,
           child: SizedBox(
-            height: 310.h,
+            height: _cardHeight,
             child: courses.isEmpty
                 ? Center(
                     child: Column(
@@ -73,34 +70,37 @@ class CourseSlider extends StatelessWidget {
                       ],
                     ),
                   )
-                : ListView.separated(
-                    separatorBuilder: (context, index) => SizedBox(width: 16.w),
-                    itemCount: displayCourses.length,
+                : ListView.builder(
+                    padding: EdgeInsets.only(bottom: 5),
+                    itemCount: courses.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
-                      final course = displayCourses[index];
+                      final course = courses[index];
                       final courseCubit = context.read<CourseCubit>();
-                      return CourseInfoCardWidget(
-                        imageUrl: course.image ?? '',
-                        title: course.title,
-                        subtitle: course.collegeName,
-                        rating: (course.averageRating ?? 0).toDouble(),
-                        price: course.price,
-                        isFavorite: course.isFavorite,
-                        onTap: () {
-                          context.push(
-                            RouteNames.courceInf,
-                            extra: {
-                              'courseId': course.id,
-                              'courseCubit': courseCubit,
-                            },
-                          );
-                        },
-                        onSave: () {
-                          courseCubit.toggleFavorite(
-                            courseId: '${course.id}',
-                          );
-                        },
+                      return Padding(
+                        padding: EdgeInsetsDirectional.only(end: 16.w),
+                        child: CourseInfoCardWidget(
+                          imageUrl: course.image ?? '',
+                          title: course.title,
+                          subtitle: course.collegeName,
+                          rating: (course.averageRating ?? 0).toDouble(),
+                          price: course.price,
+                          isFavorite: course.isFavorite,
+                          onTap: () {
+                            context.push(
+                              RouteNames.courceInf,
+                              extra: {
+                                'courseId': course.id,
+                                'courseCubit': courseCubit,
+                              },
+                            );
+                          },
+                          onSave: () {
+                            courseCubit.toggleFavorite(
+                              courseId: '${course.id}',
+                            );
+                          },
+                        ),
                       );
                     },
                   ),

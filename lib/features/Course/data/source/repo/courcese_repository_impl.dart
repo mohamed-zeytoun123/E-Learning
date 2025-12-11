@@ -11,6 +11,7 @@ import 'package:e_learning/features/Course/data/models/Pag_courses/courses_resul
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
+import 'package:e_learning/features/Course/data/models/paginated_enrollments_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 
@@ -367,6 +368,32 @@ class CourceseRepositoryImpl implements CourceseRepository {
           (ratingModel) => Right(ratingModel),
         );
       } catch (e) {
+        return Left(Failure.handleError(e as DioException));
+      }
+    } else {
+      return Left(FailureNoConnection());
+    }
+  }
+
+  //? -----------------------------------------------------------------
+  //* Get My Courses (Enrollments)
+  @override
+  Future<Either<Failure, PaginatedEnrollmentsModel>> getMyCoursesRepo({
+    int? page,
+    int? pageSize,
+  }) async {
+    if (await network.isConnected) {
+      try {
+        final result = await remote.getMyCoursesRemote(
+          page: page,
+          pageSize: pageSize,
+        );
+        return result.fold(
+          (failure) => Left(failure),
+          (enrollments) => Right(enrollments),
+        );
+      } catch (e) {
+        log('getMyCoursesRepo Error: $e');
         return Left(Failure.handleError(e as DioException));
       }
     } else {

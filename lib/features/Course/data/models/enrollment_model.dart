@@ -15,7 +15,10 @@ class EnrollmentModel {
   final int progressPercentage;
   final bool isCompleted;
   final String? completedAt;
-  final String originalPrice;
+  final String? originalPrice;
+  final bool isFavorite;
+  final int totalVideos;
+  final int completedVideos;
 
   EnrollmentModel({
     required this.id,
@@ -34,7 +37,10 @@ class EnrollmentModel {
     required this.progressPercentage,
     required this.isCompleted,
     this.completedAt,
-    required this.originalPrice,
+    this.originalPrice,
+    this.isFavorite = false,
+    this.totalVideos = 0,
+    this.completedVideos = 0,
   });
 
   //----------------------------
@@ -42,8 +48,8 @@ class EnrollmentModel {
   factory EnrollmentModel.fromJson(Map<String, dynamic> json) {
     return EnrollmentModel(
       id: json['id'] as int,
-      student: json['student'] as int,
-      studentName: json['student_name'] as String,
+      student: json['student'] as int? ?? 0,
+      studentName: json['student_name'] as String? ?? '',
       course: json['course'] as int,
       courseTitle: json['course_title'] as String,
       courseImage: json['course_image'] as String?,
@@ -53,11 +59,14 @@ class EnrollmentModel {
       statusDisplay: json['status_display'] as String,
       paymentStatus: json['payment_status'] as String,
       paymentStatusDisplay: json['payment_status_display'] as String,
-      isPaid: json['is_paid'] as bool,
-      progressPercentage: json['progress_percentage'] as int,
-      isCompleted: json['is_completed'] as bool,
+      isPaid: json['is_paid'] as bool? ?? false,
+      progressPercentage: json['progress_percentage'] as int? ?? 0,
+      isCompleted: json['is_completed'] as bool? ?? false,
       completedAt: json['completed_at'] as String?,
-      originalPrice: json['original_price'] as String,
+      originalPrice: json['original_price'] as String?,
+      isFavorite: json['is_favorite'] as bool? ?? false,
+      totalVideos: json['total_videos'] as int? ?? 0,
+      completedVideos: json['completed_videos'] as int? ?? 0,
     );
   }
 
@@ -82,6 +91,9 @@ class EnrollmentModel {
       'is_completed': isCompleted,
       'completed_at': completedAt,
       'original_price': originalPrice,
+      'is_favorite': isFavorite,
+      'total_videos': totalVideos,
+      'completed_videos': completedVideos,
     };
   }
 }

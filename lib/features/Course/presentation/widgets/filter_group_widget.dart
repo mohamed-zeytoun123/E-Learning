@@ -152,28 +152,13 @@ class FilterGroupWidget extends StatelessWidget {
                           ]
                         : [],
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      AnimatedOpacity(
-                        opacity: selected ? 1 : 0,
-                        duration: const Duration(milliseconds: 200),
-                        child: Icon(
-                          Icons.check,
-                          size: 18.sp,
-                          color: AppColors.textWhite,
-                        ),
-                      ),
-                      if (selected) SizedBox(width: 6.w),
-                      Text(
-                        item.name,
-                        style: AppTextStyles.s14w500.copyWith(
-                          color: selected
-                              ? AppColors.textWhite
-                              : AppColors.textPrimary,
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    item.name,
+                    style: AppTextStyles.s14w500.copyWith(
+                      color: selected
+                          ? AppColors.textWhite
+                          : AppColors.textPrimary,
+                    ),
                   ),
                 ),
               );

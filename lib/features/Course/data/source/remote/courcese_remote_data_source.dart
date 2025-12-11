@@ -4,6 +4,7 @@ import 'package:e_learning/features/Course/data/models/Pag_courses/paginated_cou
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
+import 'package:e_learning/features/Course/data/models/paginated_enrollments_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/paginated_ratings_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
@@ -72,6 +73,12 @@ abstract class CourceseRemoteDataSource {
   //* Enroll Cource
   Future<Either<Failure, EnrollmentModel>> enrollCourseRemote({
     required int courseId,
+  });
+
+  //* Get My Courses (Enrollments)
+  Future<Either<Failure, PaginatedEnrollmentsModel>> getMyCoursesRemote({
+    int? page,
+    int? pageSize,
   });
 
   //* Get Channels

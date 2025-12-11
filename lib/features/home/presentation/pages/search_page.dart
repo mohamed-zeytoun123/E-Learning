@@ -13,6 +13,7 @@ import 'package:e_learning/features/home/presentation/pages/search_tab_bar_widge
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SearchPage extends StatelessWidget {
@@ -41,7 +42,50 @@ class SearchPage extends StatelessWidget {
                     !state.showHistory &&
                     state.searchQuery != null &&
                     state.searchQuery!.isNotEmpty) {
-                  return SearchTabBarWidget(searchCubit: searchCubit);
+                  return Padding(
+                    padding: EdgeInsets.only(top: 16.h),
+                    child: SearchTabBarWidget(searchCubit: searchCubit),
+                  );
+                }
+
+                // Show empty state with title and centered message
+                if (state.searchHistory.isEmpty) {
+                  return Padding(
+                    padding: AppPadding.appPadding,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(height: 36),
+                        Text(
+                          'recent_search'.tr(),
+                          style: AppTextStyles.s18w600.copyWith(
+                            color: AppColors.blackText,
+                          ),
+                        ),
+                        Expanded(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.search_off,
+                                  size: 64,
+                                  color: AppColors.textGrey,
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  'no_search_history'.tr(),
+                                  style: AppTextStyles.s16w400.copyWith(
+                                    color: AppColors.textGrey,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 }
 
                 // Show search history when not searching
@@ -59,71 +103,50 @@ class SearchPage extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 16),
-                        state.searchHistory.isEmpty
-                            ? Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(32),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(
-                                        Icons.search_off,
-                                        size: 64,
-                                        color: AppColors.textGrey,
-                                      ),
-                                      SizedBox(height: 16),
-                                      Text(
-                                        'no_search_history'.tr(),
-                                        style: AppTextStyles.s16w400.copyWith(
-                                          color: AppColors.textGrey,
-                                        ),
-                                      ),
-                                    ],
+                        ListView.separated(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final historyItem = state.searchHistory[index];
+                            return InkWell(
+                              onTap: () {
+                                searchCubit.setQueryInInput(historyItem);
+                                searchCubit.onSearchChanged(historyItem);
+                              },
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    height: 16.h,
+                                    Assets.resourceImagesVectorsSearchAd,
                                   ),
-                                ),
-                              )
-                            : ListView.separated(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  final historyItem =
-                                      state.searchHistory[index];
-                                  return InkWell(
-                                    onTap: () {
-                                      searchCubit.setQueryInInput(historyItem);
-                                      searchCubit.onSearchChanged(historyItem);
-                                    },
-                                    child: Row(
-                                      children: [
-                                        SvgPicture.asset(
-                                          Assets.resourceImagesVectorsSearchAd,
-                                        ),
-                                        SizedBox(width: 12),
-                                        Expanded(
-                                          child: Text(
-                                            historyItem,
-                                            style: AppTextStyles.s14w400,
-                                          ),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            searchCubit
-                                                .removeFromSearchHistory(index);
-                                          },
-                                          icon: Icon(
-                                            Icons.close,
-                                            color: AppColors.blackText,
-                                          ),
-                                        ),
-                                      ],
+                                  SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      historyItem,
+                                      style: AppTextStyles.s14w400,
                                     ),
-                                  );
-                                },
-                                separatorBuilder: (context, index) => Divider(
-                                  color: AppColors.dividerGrey,
-                                ),
-                                itemCount: state.searchHistory.length,
+                                  ),
+                                  SizedBox(width: 12),
+                                  GestureDetector(
+                                    onTap: () {
+                                      searchCubit
+                                          .removeFromSearchHistory(index);
+                                    },
+                                    child: Icon(
+                                      size: 16.h,
+                                      Icons.close,
+                                      color: AppColors.blackText,
+                                    ),
+                                  ),
+                                ],
                               ),
+                            );
+                          },
+                          separatorBuilder: (context, index) => Divider(
+                            color: AppColors.dividerGrey,
+                          ),
+                          itemCount: state.searchHistory.length,
+                        ),
                       ],
                     ),
                   ),

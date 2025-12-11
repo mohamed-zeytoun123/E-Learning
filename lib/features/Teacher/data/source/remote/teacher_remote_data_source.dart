@@ -12,6 +12,13 @@ abstract class TeacherRemoteDataSource {
     String? search,
   });
 
+  //* Search Teachers (using search endpoint)
+  Future<Either<Failure, TeacherResponseModel>> searchTeachersRemote({
+    required String query,
+    int? limit,
+    int? offset,
+  });
+
   //?----------------------------------------------------
 }
 

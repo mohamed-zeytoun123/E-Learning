@@ -19,7 +19,10 @@ class ViewAllCourses extends StatelessWidget {
     return BlocProvider<CourseCubit>(
       create: (context) => CourseCubit(repo: appLocator<CourceseRepository>())
         ..getCourses()
-        ..getCategories(),
+        ..getUniversities()
+        ..getColleges()
+        ..getCategories()
+        ..getStudyYears(),
       child: Scaffold(
         appBar: AppBar(
           title: Text("courses".tr()),

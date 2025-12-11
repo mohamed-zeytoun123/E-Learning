@@ -107,24 +107,6 @@ class CoursesPage extends StatelessWidget {
             backgroundColor: AppColors.backgroundPage,
             appBar: CustomAppBarCourseWidget(
               title: "Course’s Title",
-              showBack: true,
-              onSearch: () {
-                log("app search");
-
-                // cubit.getColleges();
-                // cubit.getUniversities();
-                // cubit.getCategories();
-                // cubit.getStudyYears();
-
-                // showModalBottomSheet(
-                //   isScrollControlled: true,
-                //   context: context,
-                //   builder: (_) => BlocProvider.value(
-                //     value: cubit,
-                //     child: const FiltersBottomSheetWidget(),
-                //   ),
-                // );
-              },
             ),
             body: CustomCategoryTabBarWidget(),
           );
