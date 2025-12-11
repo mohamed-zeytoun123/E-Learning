@@ -1,13 +1,13 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/forgot_password_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/form_log_in_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/login_button_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -51,10 +51,7 @@ class _LogInPageState extends State<LogInPage> {
                 HeaderAuthPagesWidget(),
                 SizedBox(height: 150.h),
                 Text(
-                  AppLocalizations.of(
-                        context,
-                      )?.translate("Log_in_to_your_account") ??
-                      "Log In To Your Account",
+                  "log_in_to_your_account".tr(),
                   style: AppTextStyles.s16w600.copyWith(
                     color: AppColors.textPrimary,
                   ),
@@ -90,10 +87,7 @@ class _LogInPageState extends State<LogInPage> {
                     log("Don’t have an account?");
                   },
                   child: Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("Dont_have_an_account") ??
-                        "Don’t have an account?",
+                    "dont_have_account".tr(),
                     style: AppTextStyles.s14w400.copyWith(
                       color: AppColors.textBlack,
                     ),
@@ -101,9 +95,7 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 SizedBox(height: 20.h),
                 CustomButtonWidget(
-                  title:
-                      AppLocalizations.of(context)?.translate("Sign_up") ??
-                      "Sign Up",
+                  title: "sign_up".tr(),
                   titleStyle: AppTextStyles.s16w500.copyWith(
                     fontFamily: AppTextStyles.fontGeist,
                     color: AppColors.titleBlack,

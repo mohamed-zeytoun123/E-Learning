@@ -1,6 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
@@ -71,11 +71,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   void _showErrorMessage(String message) {
     AppMessage.showFlushbar(
       context: context,
-      title: AppLocalizations.of(context)?.translate("wrrong") ?? "Wrrong",
+      title: "wrong".tr(),
       mainButtonOnPressed: () {
         context.pop();
       },
-      mainButtonText: AppLocalizations.of(context)?.translate("ok") ?? "Ok",
+      mainButtonText: "ok".tr(),
       iconData: Icons.error,
       backgroundColor: AppColors.messageError,
       message: message,
@@ -110,12 +110,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
           );
           switch (state.resetPasswordState) {
             case ResponseStatusEnum.success:
-              _showSuccessMessage(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("Password_reset_successfully") ??
-                    "Password reset successfully",
-              );
+              _showSuccessMessage("password_reset_successfully".tr());
               // Navigate to login page after successful reset using Future.microtask
               // to avoid state emission conflicts
               Future.microtask(() {
@@ -126,11 +121,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
               break;
             case ResponseStatusEnum.failure:
               _showErrorMessage(
-                state.resetPasswordError ??
-                    (AppLocalizations.of(
-                          context,
-                        )?.translate("Failed_to_reset_password") ??
-                        "Failed to reset password"),
+                state.resetPasswordError ?? "failed_to_reset_password".tr(),
               );
               break;
             case ResponseStatusEnum.loading:
@@ -153,10 +144,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   HeaderAuthPagesWidget(),
                   SizedBox(height: 150.h),
                   Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("Set_A_New_Password") ??
-                        "Set A New Password",
+                    "set_new_password".tr(),
                     style: AppTextStyles.s16w600,
                   ),
                   SizedBox(height: 48.h),

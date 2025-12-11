@@ -1,6 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,16 +14,13 @@ class OtpInstructionWidget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "${AppLocalizations.of(context)?.translate("We_Have_Sent_A_6-Digit_Code_To_The_Phone_Number") ?? "We Have Sent A 6-Digit Code To The Phone Number"} :\n$email ${AppLocalizations.of(context)?.translate("Via_SMS") ?? "Via SMS"}",
+          "${"sent_code_to_phone".tr()} :\n$email ${"via_sms".tr()}",
           style: AppTextStyles.s12w400,
           textAlign: TextAlign.center,
         ),
         SizedBox(height: 12.h),
         Text(
-          AppLocalizations.of(
-                context,
-              )?.translate("Please_Enter_The_Code_Down_Below") ??
-              "Please enter the code below to verify",
+          "enter_code_below".tr(),
           style: AppTextStyles.s12w400,
           textAlign: TextAlign.center,
         ),
@@ -52,8 +49,7 @@ class OtpResendWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            AppLocalizations.of(context)?.translate("Didnt_receive_the_code") ??
-                "Didn't receive the code?",
+            "didnt_receive_the_code".tr(),
             style: AppTextStyles.s12w400.copyWith(color: AppColors.textGrey),
           ),
           SizedBox(width: 8.w),
@@ -69,7 +65,7 @@ class OtpResendWidget extends StatelessWidget {
             GestureDetector(
               onTap: onResend,
               child: Text(
-                AppLocalizations.of(context)?.translate("Resend") ?? "Resend",
+                "resend".tr(),
                 style: AppTextStyles.s12w400.copyWith(
                   color: AppColors.buttonPrimary,
                   fontWeight: FontWeight.w600,

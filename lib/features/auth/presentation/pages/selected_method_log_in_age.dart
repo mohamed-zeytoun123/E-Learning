@@ -1,9 +1,9 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/widgets/app_logo/app_logo_widget.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -23,11 +23,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
             children: [
               AppLogoWidget(imagePath: ""),
               Text(
-                AppLocalizations.of(
-                      context,
-                    )?.translate("Welcome To ‘AppName’") ??
-                    "Welcome To ‘AppName’",
-
+                "welcome".tr(),
                 style: AppTextStyles.s16w600.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
                   color: AppColors.textBlack,
@@ -39,10 +35,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                   fontFamily: AppTextStyles.fontGeist,
                   color: AppColors.titlePrimary,
                 ),
-                title:
-                    AppLocalizations.of(context)?.translate("Sign_up") ??
-                    "Sign Up",
-
+                title: "sign_up".tr(),
                 buttonColor: AppColors.buttonPrimary,
                 borderColor: AppColors.borderPrimary,
                 onTap: () {
@@ -50,9 +43,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                 },
               ),
               CustomButtonWidget(
-                title:
-                    AppLocalizations.of(context)?.translate("Log_in") ??
-                    "Log In",
+                title: "log_in".tr(),
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
                   color: AppColors.textPrimary,
@@ -64,11 +55,7 @@ class SelectedMethodLogInPage extends StatelessWidget {
                 },
               ),
               CustomButtonWidget(
-                title:
-                    AppLocalizations.of(
-                      context,
-                    )?.translate("Continue_as_guest") ??
-                    "Continue As A Guest",
+                title: "continue_as_guest".tr(),
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
                   color: AppColors.textPrimary,

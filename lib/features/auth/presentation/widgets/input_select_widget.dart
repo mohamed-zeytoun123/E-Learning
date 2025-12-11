@@ -1,5 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -125,9 +125,7 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
                           sheetContext,
                         ).pop(); // ⚡ استخدم context الخاص بالبوتوم شيت
                       },
-                      title:
-                          AppLocalizations.of(context)?.translate("Done") ??
-                          "Done",
+                      title: "done".tr(),
                       titleStyle: AppTextStyles.s16w500.copyWith(
                         fontFamily: AppTextStyles.fontGeist,
                         color: AppColors.titlePrimary,

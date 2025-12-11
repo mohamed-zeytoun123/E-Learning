@@ -1,9 +1,9 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/input_forms/input_email_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/forget_password_button_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -43,10 +43,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 HeaderAuthPagesWidget(),
                 SizedBox(height: 150.h),
                 Text(
-                  AppLocalizations.of(
-                        context,
-                      )?.translate("Enter_Your_Phone_Number") ??
-                      "Enter Your Email Number",
+                  "enter_your_phone".tr(),
                   style: AppTextStyles.s16w600,
                 ),
                 SizedBox(height: 48.h),

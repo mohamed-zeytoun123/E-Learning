@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/app/manager/app_manager_state.dart';
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
@@ -17,12 +18,16 @@ void main() async {
   await appInitDependencies();
   await EasyLocalization.ensureInitialized();
   runApp(
-    EasyLocalization(
+    DevicePreview(
+      enabled: true, // Set to false to disable device preview
+      builder: (context) => EasyLocalization(
         supportedLocales: [Locale('en', ''), Locale('ar', '')],
         path:
             'assets/translations', // <-- change the path of the translation files
         fallbackLocale: Locale('en', ''),
-        child: MyApp()),
+        child: MyApp(),
+      ),
+    ),
   );
 }
 
@@ -43,7 +48,8 @@ class MyApp extends StatelessWidget {
               return MaterialApp.router(
                 title: 'e_learning'.tr(),
                 debugShowCheckedModeBanner: false,
-                locale: context.locale, // Use EasyLocalization's locale
+                locale: DevicePreview.locale(context) ?? context.locale, // Use DevicePreview locale or EasyLocalization's locale
+                builder: DevicePreview.appBuilder, // Add DevicePreview builder
                 themeMode: state.themeMode,
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,

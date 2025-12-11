@@ -1,6 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
@@ -51,11 +51,7 @@ class _OtpPageState extends State<OtpPage> {
     if (otpCode == null || otpCode.length < 6) {
       AppMessage.showFlushbar(
         context: context,
-        message:
-            AppLocalizations.of(
-              context,
-            )?.translate("Please_enter_the_6-digit_code") ??
-            "Please enter the 6-digit code",
+        message: "please_enter_the_6_digit_code".tr(),
         backgroundColor: AppColors.textError,
       );
       return;
@@ -74,23 +70,14 @@ class _OtpPageState extends State<OtpPage> {
           case ResponseStatusEnum.success:
             AppMessage.showFlushbar(
               context: context,
-              message:
-                  AppLocalizations.of(
-                    context,
-                  )?.translate("OTP_sent_successfully") ??
-                  "OTP sent successfully",
+              message: "otp_sent_successfully".tr(),
               backgroundColor: Colors.green,
             );
             break;
           case ResponseStatusEnum.failure:
             AppMessage.showFlushbar(
               context: context,
-              message:
-                  state.resendOtpError ??
-                  (AppLocalizations.of(
-                        context,
-                      )?.translate("Failed_to_send_OTP") ??
-                      "Failed to send OTP"),
+              message: state.resendOtpError ?? "failed_to_send_otp".tr(),
               backgroundColor: AppColors.textError,
             );
             break;
@@ -104,11 +91,7 @@ class _OtpPageState extends State<OtpPage> {
           case ResponseStatusEnum.success:
             AppMessage.showFlushbar(
               context: context,
-              message:
-                  AppLocalizations.of(
-                    context,
-                  )?.translate("OTP_verified_successfully") ??
-                  "OTP verified successfully",
+              message: "otp_verified_successfully".tr(),
               backgroundColor: Colors.green,
             );
 
@@ -129,12 +112,7 @@ class _OtpPageState extends State<OtpPage> {
           case ResponseStatusEnum.failure:
             AppMessage.showFlushbar(
               context: context,
-              message:
-                  state.otpVerficationError ??
-                  (AppLocalizations.of(
-                        context,
-                      )?.translate("OTP_verification_failed") ??
-                      "OTP verification failed"),
+              message: state.otpVerficationError ?? "otp_verification_failed".tr(),
               backgroundColor: AppColors.textError,
             );
             break;
@@ -188,7 +166,7 @@ class _OtpPageState extends State<OtpPage> {
           return Center(child: AppLoading.circular());
         } else {
           return CustomButtonWidget(
-            title: "Next",
+            title: "next".tr(),
             titleStyle: AppTextStyles.s16w500.copyWith(
               fontFamily: AppTextStyles.fontGeist,
               color: AppColors.titlePrimary,
@@ -221,18 +199,14 @@ class _OtpPageState extends State<OtpPage> {
                 HeaderAuthPagesWidget(),
                 SizedBox(height: 5.h),
                 Text(
-                  AppLocalizations.of(
-                        context,
-                      )?.translate("Lets_make_your_account") ??
-                      "Let's Make Your Account !",
+                  "lets_make_your_account".tr(),
                   style: AppTextStyles.s14w400.copyWith(
                     color: AppColors.textGrey,
                   ),
                 ),
                 SizedBox(height: 80.h),
                 Text(
-                  AppLocalizations.of(context)?.translate("Otp_Verfication") ??
-                      "OTP Verification",
+                  "otp_verification".tr(),
                   style: AppTextStyles.s16w600.copyWith(
                     color: AppColors.textGrey,
                   ),

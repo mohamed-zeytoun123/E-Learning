@@ -1,6 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
@@ -34,11 +34,7 @@ class SelectedInformationWidget extends StatelessWidget {
             } else if (state.getUniversitiesState ==
                 ResponseStatusEnum.failure) {
               return Text(
-                state.getUniversitiesError ??
-                    AppLocalizations.of(
-                      context,
-                    )?.translate("failed_to_load_universities") ??
-                    "Failed to load universities",
+                state.getUniversitiesError ?? "failed_to_load_universities".tr(),
                 style: TextStyle(color: AppColors.textError),
               );
             } else {
@@ -95,16 +91,8 @@ class SelectedInformationWidget extends StatelessWidget {
 
             if (!isUniversitySelected) {
               return DisabledInputSelectWidget(
-                hint:
-                    AppLocalizations.of(
-                      context,
-                    )?.translate("choose_university_first") ??
-                    "Choose university first",
-                onTapMessage:
-                    AppLocalizations.of(context)?.translate(
-                      "please_select_university_before_selecting_college",
-                    ) ??
-                    "Please select a university before selecting a college",
+                hint: "choose_university_first".tr(),
+                onTapMessage: "choose_university_first".tr(),
               );
             }
 
@@ -149,10 +137,7 @@ class SelectedInformationWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          AppLocalizations.of(
-                                context,
-                              )?.translate("no_colleges_for_university") ??
-                              "No colleges for this university",
+                          "no_colleges_for_university".tr(),
                           style: AppTextStyles.s14w400.copyWith(
                             color: AppColors.textGrey,
                           ),
@@ -171,11 +156,7 @@ class SelectedInformationWidget extends StatelessWidget {
                   );
                 } else {
                   return Text(
-                    state.getCollegesError ??
-                        AppLocalizations.of(
-                          context,
-                        )?.translate("failed_to_load_colleges") ??
-                        "Failed to load colleges",
+                    state.getCollegesError ?? "failed_to_load_colleges".tr(),
                     style: TextStyle(color: AppColors.textError),
                   );
                 }
@@ -214,10 +195,7 @@ class SelectedInformationWidget extends StatelessWidget {
                         ),
                         SizedBox(height: 8.h),
                         Text(
-                          AppLocalizations.of(
-                                context,
-                              )?.translate("no_colleges_for_university") ??
-                              "No colleges for this university",
+                          "no_colleges_for_university".tr(),
                           style: AppTextStyles.s14w400.copyWith(
                             color: AppColors.textGrey,
                           ),
@@ -288,11 +266,7 @@ class SelectedInformationWidget extends StatelessWidget {
 
             if (state.getStudyYearsState == ResponseStatusEnum.failure) {
               return Text(
-                state.studyYearsError ??
-                    AppLocalizations.of(
-                      context,
-                    )?.translate("failed_to_load_study_years") ??
-                    "Failed to load study years",
+                state.studyYearsError ?? "failed_to_load_study_years".tr(),
                 style: TextStyle(color: AppColors.textError),
               );
             }

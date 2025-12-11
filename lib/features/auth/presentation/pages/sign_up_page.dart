@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/sign_up_form_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -32,10 +32,7 @@ class SignUpPage extends StatelessWidget {
                 HeaderAuthPagesWidget(),
                 SizedBox(height: 60.h),
                 Text(
-                  AppLocalizations.of(
-                        context,
-                      )?.translate("Lets_make_your_account") ??
-                      "Let’s Make Your Account",
+                  "lets_make_your_account".tr(),
                   style: AppTextStyles.s16w600.copyWith(
                     color: AppColors.textBlack,
                   ),
@@ -45,13 +42,10 @@ class SignUpPage extends StatelessWidget {
                 SizedBox(height: 40.h),
                 InkWell(
                   onTap: () {
-                    log("Don’t have an account?");
+                    log("Don't have an account?");
                   },
                   child: Text(
-                    AppLocalizations.of(
-                          context,
-                        )?.translate("Already_have_an_account") ??
-                        "Already have an account?",
+                    "already_have_account".tr(),
                     style: AppTextStyles.s14w400.copyWith(
                       color: AppColors.textBlack,
                     ),
@@ -59,9 +53,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 SizedBox(height: 10.h),
                 CustomButtonWidget(
-                  title:
-                      AppLocalizations.of(context)?.translate("Log_in") ??
-                      "Log In",
+                  title: "log_in".tr(),
                   titleStyle: AppTextStyles.s16w500.copyWith(
                     fontFamily: AppTextStyles.fontGeist,
                     color: AppColors.titleblue,

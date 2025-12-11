@@ -3,13 +3,14 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/network/app_dio.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
+import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_cubit.dart';
 import 'package:e_learning/features/auth/presentation/manager/auth_state.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -41,13 +42,11 @@ class LoginButtonWidget extends StatelessWidget {
             state.loginError != null) {
           AppMessage.showFlushbar(
             context: context,
-            title:
-                AppLocalizations.of(context)?.translate("wrrong") ?? "Wrrong",
+            title: "wrong".tr(),
             mainButtonOnPressed: () {
               context.pop();
             },
-            mainButtonText:
-                AppLocalizations.of(context)?.translate("ok") ?? "Ok",
+            mainButtonText: "ok".tr(),
             iconData: Icons.error,
             backgroundColor: AppColors.messageError,
             message: state.loginError,
@@ -65,10 +64,14 @@ class LoginButtonWidget extends StatelessWidget {
             context: context,
             iconData: Icons.check,
             backgroundColor: AppColors.messageSuccess,
-            message:
-                AppLocalizations.of(context)?.translate("Login_successful") ??
-                "Login successful",
+            message: "login_successful".tr(),
           );
+          // Navigate to homepage after successful login
+          Future.microtask(() {
+            if (context.mounted) {
+              context.go(RouteNames.mainHomePage);
+            }
+          });
         }
       },
       buildWhen: (pre, cur) => pre.loginState != cur.loginState,
@@ -77,8 +80,7 @@ class LoginButtonWidget extends StatelessWidget {
           return AppLoading.circular();
         } else {
           return CustomButtonWidget(
-            title:
-                AppLocalizations.of(context)?.translate("Log_in") ?? "Log In",
+            title: "log_in".tr(),
             titleStyle: AppTextStyles.s16w500.copyWith(
               fontFamily: AppTextStyles.fontGeist,
               color: textColor ?? AppColors.titleBlack,
