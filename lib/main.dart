@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
               return MaterialApp.router(
                 title: 'e_learning'.tr(),
                 debugShowCheckedModeBanner: false,
-                locale: state.appLocale,
+                locale: context.locale, // Use EasyLocalization's locale
                 themeMode: state.themeMode,
                 theme: AppTheme.lightTheme,
                 darkTheme: AppTheme.darkTheme,

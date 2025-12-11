@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/enroll/presentation/widgets/review_box_widget.dart';
@@ -21,18 +21,17 @@ class YourReviewBottomSheetWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            AppLocalizations.of(context)?.translate("Your_Review") ??
-                "Your Review",
+            "your_review".tr(),
             style: AppTextStyles.s16w600,
           ),
           Padding(
             padding: EdgeInsets.only(left: 16.w, top: 20.h, bottom: 20.h),
-            child: ReviewBoxWidget(reviewText: reviewText ?? "No Reviews Yet"),
+            child: ReviewBoxWidget(reviewText: reviewText ?? "no_reviews_yet".tr()),
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
             child: CustomButtonWidget(
-              title: AppLocalizations.of(context)?.translate("Done") ?? "Done",
+              title: "done".tr(),
               titleStyle: AppTextStyles.s16w500.copyWith(
                 color: AppColors.textWhite,
               ),

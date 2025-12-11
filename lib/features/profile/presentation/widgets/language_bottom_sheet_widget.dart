@@ -60,13 +60,23 @@ class LanguageBottomSheetWidget extends StatelessWidget {
                     ),
                     buttonColor: Theme.of(context).colorScheme.primary,
                     borderColor: Theme.of(context).colorScheme.primary,
-                    onTap: () {
+                    onTap: () async {
+                      final newLocale = selectedLanguageNotifier.value ==
+                          AppLanguageEnum.arabic
+                          ? const Locale('ar')
+                          : const Locale('en');
+                      
+                      // Update AppManagerCubit
                       if (selectedLanguageNotifier.value ==
                           AppLanguageEnum.arabic) {
                         context.read<AppManagerCubit>().toArabic();
                       } else {
                         context.read<AppManagerCubit>().toEnglish();
                       }
+                      
+                      // Update EasyLocalization locale
+                      await context.setLocale(newLocale);
+                      
                       Navigator.pop(context);
                     },
                   ),

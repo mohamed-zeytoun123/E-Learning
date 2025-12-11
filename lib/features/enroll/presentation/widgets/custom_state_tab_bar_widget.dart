@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/features/enroll/data/models/enums/course_state_enum.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -14,8 +15,19 @@ class CustomStateTabBarWidget extends StatefulWidget {
 }
 
 class _CustomStateTabBarWidgetState extends State<CustomStateTabBarWidget> {
-  final List<String> tabs = CourseStateEnum.values
-      .map((e) => e.name.replaceFirst(e.name[0], e.name[0].toUpperCase()))
+  String _getTranslationKey(CourseStateEnum state) {
+    switch (state) {
+      case CourseStateEnum.active:
+        return 'active';
+      case CourseStateEnum.completed:
+        return 'completed';
+      case CourseStateEnum.suspended:
+        return 'suspended';
+    }
+  }
+
+  List<String> get tabs => CourseStateEnum.values
+      .map((e) => _getTranslationKey(e).tr()) // Use translation instead of enum name
       .toList();
   int selectedIndex = 0;
   @override

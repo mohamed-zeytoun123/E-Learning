@@ -88,6 +88,8 @@
   "files": "الملفات",
   "your_progress": "تقدمك",
   "completed": "مكتمل",
+  "active": "نشط",
+  "suspended": "معلق",
   "write_review": "اكتب مراجعة",
   "opinion_question": "ما رأيك؟",
   "write_review_prompt": "اكتب مراجعة وأخبرنا كيف تشعر تجاه هذه الدورة!",

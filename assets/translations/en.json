@@ -79,6 +79,8 @@
   "files": "Files",
   "your_progress": "Your Progress",
   "completed": "Completed",
+  "active": "Active",
+  "suspended": "Suspended",
   "write_review": "Write Review",
   "opinion_question": "What About Your Opinion ?",
   "write_review_prompt": "Write a Review And Let Us Know How Are You Feeling About This Course !",
