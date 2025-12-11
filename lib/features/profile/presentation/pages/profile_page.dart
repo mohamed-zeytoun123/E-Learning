@@ -21,7 +21,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: 'profile_page'.tr(), showBack: true),
+      appBar: CustomAppBarWidget(title: 'profile_page'.tr(), showBack: false),
       body: Padding(
         padding: EdgeInsets.only(
           top: 42.h,

@@ -35,7 +35,7 @@ class _EnrollPageState extends State<EnrollPage> {
         .toList();
 
     return Scaffold(
-      appBar: CustomAppBarWidget(title: 'enroll'.tr(), showBack: true),
+      appBar: CustomAppBarWidget(title: 'enroll'.tr(), showBack: false),
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 8.w),
         child: SingleChildScrollView(
