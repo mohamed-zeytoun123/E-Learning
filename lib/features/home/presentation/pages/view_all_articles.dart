@@ -11,7 +11,7 @@ import 'package:e_learning/features/Course/data/source/repo/courcese_repository.
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/home/presentation/widgets/articles_section.dart';
-import 'package:e_learning/features/home/presentation/widgets/filtered_bottom_sheet.dart';
+import 'package:e_learning/features/Course/presentation/widgets/filters_bottom_sheet_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,7 +43,7 @@ class _ViewAllArticlesState extends State<ViewAllArticles> {
 
   void _onScroll() {
     if (!mounted) return;
-    
+
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.85) {
       final cubit = context.read<ArticleCubit>();
@@ -62,16 +62,20 @@ class _ViewAllArticlesState extends State<ViewAllArticles> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ArticleCubit(repo: appLocator<ArticleRepository>())
-            ..getArticles(page: 1, pageSize: 10),
+          create: (context) =>
+              ArticleCubit(repo: appLocator<ArticleRepository>())
+                ..getArticles(page: 1, pageSize: 10),
         ),
         BlocProvider(
           create: (context) => CourseCubit(
             repo: appLocator<CourceseRepository>(),
             authRepo: appLocator<AuthRepository>(),
           )
+            ..getCourses()
+            ..getUniversities()
+            ..getColleges()
             ..getCategories()
-            ..getColleges(),
+            ..getStudyYears(),
         ),
       ],
       child: Scaffold(
@@ -86,15 +90,6 @@ class _ViewAllArticlesState extends State<ViewAllArticles> {
               color: Colors.white,
             ),
           ),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search,
-                color: Colors.white,
-              ),
-            )
-          ],
         ),
         body: Column(
           children: [
@@ -114,25 +109,46 @@ class _ViewAllArticlesState extends State<ViewAllArticles> {
                     onChipSelected: (value) {
                       final articleCubit = context.read<ArticleCubit>();
                       if (value == "all".tr()) {
-                        articleCubit.getArticles(page: 1, pageSize: 10);
+                        // Filter locally (no API call)
+                        articleCubit.filterArticlesLocallyByCategory(null);
                       } else {
                         final category = categories.firstWhere(
                           (c) => c.name == value,
                           orElse: () => categories.first,
                         );
-                        articleCubit.getArticles(
-                          page: 1,
-                          pageSize: 10,
-                          categoryId: category.id,
-                        );
+                        // Filter locally instead of making API call
+                        articleCubit
+                            .filterArticlesLocallyByCategory(category.id);
                       }
                     },
                     withFilter: true,
                     onFilterTap: () {
                       final courseCubit = context.read<CourseCubit>();
-                      showFilterBottomSheet(
-                        context,
-                        courseCubit: courseCubit,
+                      final articleCubit = context.read<ArticleCubit>();
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor: Colors.transparent,
+                        builder: (context) => BlocProvider<CourseCubit>.value(
+                          value: courseCubit,
+                          child: FiltersBottomSheetWidget(
+                            isForArticles: true,
+                            onArticleFilterApplied:
+                                (universityId, collegeId, studyYear) {
+                              // Reset scroll position when filters are applied
+                              if (_scrollController.hasClients) {
+                                _scrollController.jumpTo(0);
+                              }
+                              articleCubit.getArticles(
+                                page: 1,
+                                pageSize: 10,
+                                universityId: universityId,
+                                collegeId: collegeId,
+                                studyYear: studyYear,
+                              );
+                            },
+                          ),
+                        ),
                       );
                     },
                   );

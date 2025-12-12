@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -155,8 +156,8 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: isSelected
-                ? AppColors.borderPrimary
-                : AppColors.borderSecondary,
+                ? context.colors.textBlue
+                : context.colors.dividerGrey,
             width: 1.5,
           ),
         ),
@@ -164,7 +165,7 @@ class _InputSelectWidgetState extends State<InputSelectWidget> {
         child: Text(
           selectedValue ?? widget.hint,
           style: AppTextStyles.s14w400.copyWith(
-            color: isSelected ? AppColors.textBlack : AppColors.textGrey,
+            color: isSelected ? context.colors.textPrimary : AppColors.textGrey,
           ),
         ),
       ),

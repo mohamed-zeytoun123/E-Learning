@@ -114,13 +114,12 @@
 //     );
 //   }
 // }
-import 'package:easy_localization/easy_localization.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
-import 'package:e_learning/core/style/app_padding.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
-import 'package:e_learning/core/widgets/chips_bar.dart';
+import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/course_info_card_widget.dart';
@@ -381,50 +380,48 @@ import 'package:skeletonizer/skeletonizer.dart';
 // }
 
 class CustomCategoryTabBarWidget extends StatelessWidget {
-  const CustomCategoryTabBarWidget({super.key, this.withFilter = true});
-
-  final bool withFilter;
+  const CustomCategoryTabBarWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return BlocBuilder<CourseCubit, CourseState>(
+      buildWhen: (pre, curr) {
+        return pre.collegesStatus != curr.collegesStatus ||
+            pre.coursesStatus != curr.coursesStatus ||
+            pre.selectedIndex != curr.selectedIndex;
+      },
       builder: (context, state) {
-        final colleges = state.colleges ?? [];
-        final labels = colleges.map((college) => college.name).toList();
+        final selectedIndex = state.selectedIndex;
 
         // ------------------ Loading State ------------------
         if (state.collegesStatus == ResponseStatusEnum.loading ||
             state.coursesStatus == ResponseStatusEnum.loading) {
           return Column(
             children: [
-              Padding(
-                padding: AppPadding.appPadding.copyWith(end: 0),
-                child: Skeletonizer(
-                  enabled: true,
-                  child: ChipsBar(
-                    labels: List.generate(5, (index) => 'loading'.tr()),
-                    onChipSelected: (value) {},
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
+                child: Row(
+                  children: List.generate(
+                    5,
+                    (_) => AppLoading.skeleton(width: 80, height: 35),
                   ),
                 ),
               ),
               SizedBox(height: 8.h),
-              Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+              Divider(color: colors.dividerGrey, thickness: 1, height: 0.h),
               Expanded(
                 child: ListView.separated(
-                  padding: AppPadding.appPadding,
                   physics: const BouncingScrollPhysics(),
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return Skeletonizer(
-                      enabled: true,
-                      child: CourseInfoCardWidget(
-                        title: 'loading_course_title'.tr(),
-                        subtitle: 'loading_college_name'.tr(),
-                        rating: 0,
-                        price: '0',
-                      ),
-                    );
-                  },
+                  itemCount: 3,
+                  itemBuilder: (context, index) => const CourseInfoCardWidget(
+                    title: '',
+                    subtitle: '',
+                    rating: 0,
+                    price: '',
+                    isLoading: true,
+                  ),
                   separatorBuilder: (_, __) => SizedBox(height: 15.h),
                 ),
               ),
@@ -471,6 +468,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
 
         // ------------------ Loaded Successfully ------------------
         final courses = state.courses?.courses ?? [];
+        final colleges = state.colleges ?? [];
 
         return Column(
           children: [
@@ -555,7 +553,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                                 style: AppTextStyles.s14w400.copyWith(
                                   color: isSelected
                                       ? AppColors.textWhite
-                                      : AppColors.textPrimary,
+                                      : colors.textBlue,
                                   fontWeight: isSelected
                                       ? FontWeight.w600
                                       : FontWeight.w400,

@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/di/service_locator.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
@@ -17,8 +18,9 @@ void showFilterBottomSheet(
   SearchCubit? searchCubit,
   CourseCubit? courseCubit,
 }) {
+  final colors = context.colors;
   showModalBottomSheet(
-    backgroundColor: AppColors.background,
+    backgroundColor: colors.background,
     context: context,
     showDragHandle: true,
     isScrollControlled: true,

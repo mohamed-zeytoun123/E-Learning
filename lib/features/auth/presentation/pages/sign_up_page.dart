@@ -1,12 +1,15 @@
 import 'dart:developer';
+import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/header_auth_pages_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/sign_up_form_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,8 +18,21 @@ class SignUpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
-      backgroundColor: AppColors.backgroundPage,
+      appBar: AppBar(
+        backgroundColor: colors.background,
+        leading: IconButton(
+          onPressed: () {
+            BlocProvider.of<AppManagerCubit>(context).toggleTheme();
+          },
+          icon: Icon(
+            Icons.dark_mode,
+            color: colors.iconBlack,
+          ),
+        ),
+      ),
+      backgroundColor: colors.background,
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -34,7 +50,7 @@ class SignUpPage extends StatelessWidget {
                 Text(
                   "lets_make_your_account".tr(),
                   style: AppTextStyles.s16w600.copyWith(
-                    color: AppColors.textBlack,
+                    color: context.colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 30.h),
@@ -47,7 +63,7 @@ class SignUpPage extends StatelessWidget {
                   child: Text(
                     "already_have_account".tr(),
                     style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textBlack,
+                      color: colors.textPrimary,
                     ),
                   ),
                 ),
@@ -56,10 +72,10 @@ class SignUpPage extends StatelessWidget {
                   title: "log_in".tr(),
                   titleStyle: AppTextStyles.s16w500.copyWith(
                     fontFamily: AppTextStyles.fontGeist,
-                    color: AppColors.titleblue,
+                    color: colors.textPrimary,
                   ),
-                  buttonColor: AppColors.buttonWhite,
-                  borderColor: AppColors.borderPrimary,
+                  buttonColor: Colors.transparent,
+                  borderColor: colors.textBlue,
                   onTap: () {
                     context.go(RouteNames.logIn);
                   },

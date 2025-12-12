@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/features/enroll/data/models/enums/course_state_enum.dart';
@@ -24,12 +25,14 @@ class EnrollInfoCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return SizedBox(
       width: 361.w,
       height: height.h,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colors.background,
+          border: Border.all(color: colors.borderCard),
           borderRadius: BorderRadius.circular(20.r),
           boxShadow: [
             BoxShadow(
@@ -69,7 +72,7 @@ class EnrollInfoCardWidget extends StatelessWidget {
                     width: 144.w,
                     child: Text(
                       courseTitle,
-                      style: AppTextStyles.s16w500,
+                      style: AppTextStyles.s16w500.copyWith(color: colors.textPrimary),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -79,7 +82,7 @@ class EnrollInfoCardWidget extends StatelessWidget {
                 ],
               ),
               SizedBox(height: 12.h),
-              Divider(color: AppColors.dividerGrey),
+              Divider(color: colors.dividerGrey),
 
               // Spacer(),
               SizedBox(height: 12.h),

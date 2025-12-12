@@ -1,4 +1,3 @@
-import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +46,7 @@ class CustomSettingsItemWidget extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.h),
-          child: Divider(color: AppColors.dividerGrey),
+          child: Divider(color: context.colors.dividerGrey, thickness: 1),
         ),
       ],
     );

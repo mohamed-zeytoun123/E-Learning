@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class ChipsBar extends StatefulWidget {
@@ -36,7 +37,7 @@ class _ChipsBarState extends State<ChipsBar> {
               child: IconButton(
                 icon: Icon(
                   Icons.tune,
-                  color: AppColors.primaryTextColor,
+                  color: context.colors.textBlue,
                 ),
                 onPressed: widget.onFilterTap,
               ),
@@ -51,7 +52,7 @@ class _ChipsBarState extends State<ChipsBar> {
                 side: const BorderSide(color: Colors.transparent),
                 showCheckmark: false,
                 backgroundColor: Color(0xffECF6FE),
-                selectedColor: AppColors.primaryColor,
+                selectedColor: AppColors.primary,
                 label: Text(
                   widget.labels[index],
                   style: AppTextStyles.s14w500.copyWith(
@@ -75,6 +76,6 @@ class _ChipsBarState extends State<ChipsBar> {
   }
 
   Color getChipTextColor(int index, int? selectedIndex) {
-    return selectedIndex == index ? Colors.white : AppColors.primaryTextColor;
+    return selectedIndex == index ? Colors.white : context.colors.textBlue;
   }
 }

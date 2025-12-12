@@ -476,6 +476,22 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
+  @override
+  Future<Either<Failure, bool>> logOutRemote(String refreshToken) async {
+    try {
+      var response = await api.post(
+        ApiRequest(url: AppUrls.logOut, body: {"refresh": refreshToken}),
+      );
+      if (response.statusCode == 200 && response.body != null) {
+        log('📤 logout is success ');
+        return Right(true);
+      }
+      return Left(FailureServer());
+    } catch (error) {
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
   //? -----------------------------------------------------------------
   //* getStudyYears
   @override

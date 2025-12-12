@@ -26,15 +26,16 @@ class AppTheme {
         //* Primary Colors
         background: AppColors.backgroundPage,
         backgroundDark: AppColors.backgroundDarkPage,
-
+        backgroundOrange: AppColors.formSomeWhite,
         //* Text Colors
-        textPrimary: AppColors.textPrimary,
+        textPrimary: AppColors.textBlack,
         textBlack: AppColors.textBlack,
         textGrey: AppColors.textGrey,
         textError: AppColors.textError,
         textWhite: AppColors.textWhite,
         textRed: AppColors.textRed,
-
+        textSilver: AppColors.textSilver,
+        textBlue: AppColors.borderPrimary,
         //* Button Colors
         buttonPrimary: AppColors.buttonPrimary,
         buttonSecondary: AppColors.buttonSecondary,
@@ -54,6 +55,7 @@ class AppTheme {
         borderPrimary: AppColors.borderPrimary,
         borderSecondary: AppColors.borderSecondary,
         borderBrand: AppColors.borderBrand,
+        borderCard: Colors.transparent,
 
         //* Loading Colors
         loadingPrimary: AppColors.loadingPrimary,
@@ -66,18 +68,18 @@ class AppTheme {
         messageInfo: AppColors.messageInfo,
 
         //* App Bar Colors
-        appBarBlack: AppColors.appBarBlack,
-        appBarWhite: AppColors.appBarWhite,
+        appBarBlack: AppColors.appBarlightTop,
+        appBarWhite: AppColors.appBarlightbottom,
 
         //* Icon Colors
-        iconWhite: AppColors.iconWhite,
+        iconWhite: AppColors.textBlack,
         iconGrey: AppColors.iconGrey,
         iconBlack: AppColors.iconBlue,
         iconError: AppColors.iconError,
         iconRed: AppColors.iconRed,
 
         //*  Form Colors
-        formWhite: AppColors.formSomeWhite,
+        formWhite: AppColors.appBarlightbottom,
 
         //* Divider Colors
         dividerGrey: AppColors.dividerGrey,
@@ -102,21 +104,22 @@ class AppTheme {
       ),
       foregroundColor: AppColors.textBlack,
     ),
-
     extensions: [
       AppColorsExtension(
         //* Primary Colors
         background: AppColors.backgroundDarkPage,
         backgroundDark: AppColors.backgroundDarkPage,
+        backgroundOrange: AppColors.retingback,
 
         //* Text Colors
         textPrimary: AppColors.textWhite,
         textBlack: AppColors.textBlack,
-        textGrey: AppColors.textGrey,
+        textGrey: AppColors.lightGrey,
         textError: AppColors.textError,
         textWhite: AppColors.textWhite,
         textRed: AppColors.textRed,
-
+        textSilver: AppColors.textSilver,
+        textBlue: AppColors.borderPrimary,
         //* Button Colors
         buttonPrimary: Colors.white,
         buttonSecondary: AppColors.buttonSecondary,
@@ -125,7 +128,7 @@ class AppTheme {
 
         //? Tab Bar
         buttonTapSelected: AppColors.buttonTapSelected,
-        buttonTapNotSelected: AppColors.buttonTapNotSelected,
+        buttonTapNotSelected: AppColors.buttontapped,
 
         //* Title Button Colors
         titlePrimary: Colors.black,
@@ -136,6 +139,7 @@ class AppTheme {
         borderPrimary: AppColors.borderPrimary,
         borderSecondary: AppColors.borderSecondary,
         borderBrand: AppColors.borderSecondary,
+        borderCard: AppColors.borderPrimaryDark,
         //* Loading Colors
         loadingPrimary: AppColors.loadingPrimary,
         loadingBackground: AppColors.loadingBackground,
@@ -147,8 +151,8 @@ class AppTheme {
         messageInfo: AppColors.messageInfo,
 
         //* App Bar Colors
-        appBarBlack: AppColors.appBarBlack,
-        appBarWhite: AppColors.appBarWhite,
+        appBarBlack: AppColors.appBarbarktop,
+        appBarWhite: AppColors.appBarbarkbottom,
 
         //* Icon Colors\
         iconWhite: AppColors.iconWhite,
@@ -158,10 +162,12 @@ class AppTheme {
         iconRed: AppColors.iconRed,
 
         //*  Form Colors
-        formWhite: AppColors.formSomeWhite,
+        formWhite: AppColors.textBlack,
 
         //* Divider Colors
-        dividerGrey: AppColors.dividerGrey,
+        dividerGrey: AppColors.borderPrimaryDark,
+
+        //* text Colors
       ),
     ],
   );

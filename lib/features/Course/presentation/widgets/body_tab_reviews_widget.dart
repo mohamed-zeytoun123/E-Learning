@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
@@ -86,6 +87,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 15.h),
       child: Column(
@@ -261,7 +263,7 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                   topLeft: Radius.circular(24.r),
                   topRight: Radius.circular(24.r),
                 ),
-                color: AppColors.backgroundPage,
+                color: colors.buttonTapNotSelected,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black12,
@@ -276,14 +278,14 @@ class _BodyTabReviewsWidgetState extends State<BodyTabReviewsWidget> {
                   Text(
                     "What About Your Opinion ?",
                     style: AppTextStyles.s16w600.copyWith(
-                      color: AppColors.textBlack,
+                      color: colors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 5.h),
                   Text(
                     "Write a Review And Let Us Know How Are You Feeling About This Course !",
                     style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textGrey,
+                      color: colors.textGrey,
                     ),
                   ),
                   SizedBox(height: 10.h),

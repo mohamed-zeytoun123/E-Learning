@@ -67,6 +67,7 @@
 // }
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -102,7 +103,7 @@ class VideoProgressWidget extends StatelessWidget {
             lineHeight: hieghtProgress.h,
             percent: fraction.clamp(0, 1), // هون لازم fraction
             backgroundColor: AppColors.formSomeWhite,
-            progressColor: AppColors.formProgress,
+            progressColor: context.colors.textBlue,
             barRadius: Radius.circular(999.r),
             animation: true,
             animationDuration: 700,

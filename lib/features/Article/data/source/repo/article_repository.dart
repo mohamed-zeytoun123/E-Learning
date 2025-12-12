@@ -12,6 +12,9 @@ abstract class ArticleRepository {
     int? pageSize,
     String? search,
     int? categoryId,
+    int? universityId,
+    int? collegeId,
+    int? studyYear,
   });
 
   //* Get Article Details by ID

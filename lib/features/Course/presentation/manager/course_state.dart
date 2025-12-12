@@ -2,7 +2,6 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
 import 'package:e_learning/features/Course/data/models/enroll/channel_model.dart';
-import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
 import 'package:e_learning/features/Course/data/models/paginated_enrollments_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/auth/data/models/college_model/college_model.dart';
@@ -43,6 +42,7 @@ class CourseState {
 
   //* Get Courses
   final CoursesResultModel? courses;
+  final CoursesResultModel? allCourses; // Store all courses for local filtering
   final ResponseStatusEnum coursesStatus;
   final String? coursesError;
   final String? coursesMoreError;
@@ -106,6 +106,7 @@ class CourseState {
 
     //* Get Courses
     this.courses,
+    this.allCourses,
     this.coursesStatus = ResponseStatusEnum.initial,
     this.loadCoursesMoreStatus = ResponseStatusEnum.initial,
     this.coursesError,
@@ -191,6 +192,7 @@ class CourseState {
 
     //* Get Courses
     CoursesResultModel? courses,
+    CoursesResultModel? allCourses,
     ResponseStatusEnum? coursesStatus,
     ResponseStatusEnum? loadCoursesMoreStatus,
     String? coursesError,
@@ -223,7 +225,6 @@ class CourseState {
     List<CategorieModel>? categories,
     ResponseStatusEnum? categoriesStatus,
     String? categoriesError,
-    int? selectedCategoryId,
 
     //* Toggle Is Favorite
     String? isFavoriteError,
@@ -304,6 +305,7 @@ class CourseState {
 
       //* Get Courses
       courses: courses ?? this.courses,
+      allCourses: allCourses ?? this.allCourses,
       coursesStatus: coursesStatus ?? this.coursesStatus,
       loadCoursesMoreStatus:
           loadCoursesMoreStatus ?? this.loadCoursesMoreStatus,

@@ -1,22 +1,22 @@
-import 'package:e_learning/core/app/manager/app_manager_cubit.dart';
-import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/model/enums/app_language_enum.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/profile/presentation/widgets/custom_radio_widget.dart';
 import 'package:e_learning/features/profile/presentation/widgets/modal_sheet_custom_container_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LanguageBottomSheetWidget extends StatelessWidget {
   const LanguageBottomSheetWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext ctx) {
+    // Get current locale from EasyLocalization (actual current locale)
+    final currentLocale = ctx.locale;
     final selectedLanguageNotifier = ValueNotifier<AppLanguageEnum>(
-      context.read<AppManagerCubit>().state.appLocale.languageCode == 'ar'
+      currentLocale.languageCode == 'ar'
           ? AppLanguageEnum.arabic
           : AppLanguageEnum.english,
     );
@@ -56,27 +56,20 @@ class LanguageBottomSheetWidget extends StatelessWidget {
                   CustomButtonWidget(
                     title: "apply".tr(),
                     titleStyle: AppTextStyles.s16w500.copyWith(
-                      color: AppColors.textWhite,
+                      color: context.colors.textWhite,
                     ),
-                    buttonColor: Theme.of(context).colorScheme.primary,
-                    borderColor: Theme.of(context).colorScheme.primary,
-                    onTap: () async {
+                    buttonColor: context.colors.textBlue,
+                    borderColor: context.colors.textBlue,
+                    onTap: () {
                       final newLocale = selectedLanguageNotifier.value ==
-                          AppLanguageEnum.arabic
+                              AppLanguageEnum.arabic
                           ? const Locale('ar')
                           : const Locale('en');
-                      
-                      // Update AppManagerCubit
-                      if (selectedLanguageNotifier.value ==
-                          AppLanguageEnum.arabic) {
-                        context.read<AppManagerCubit>().toArabic();
-                      } else {
-                        context.read<AppManagerCubit>().toEnglish();
-                      }
-                      
-                      // Update EasyLocalization locale
-                      await context.setLocale(newLocale);
-                      
+
+                      // Update locale - EasyLocalization handles saving automatically (saveLocale: true)
+                      ctx.setLocale(newLocale);
+
+                      // Pop after locale is set
                       Navigator.pop(context);
                     },
                   ),

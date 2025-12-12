@@ -62,7 +62,9 @@ class SelectedMethodLogInPage extends StatelessWidget {
                 ),
                 buttonColor: AppColors.buttonWhite,
                 borderColor: AppColors.borderPrimary,
-                onTap: () {},
+                onTap: () {
+                  GoRouter.of(context).go(RouteNames.profile);
+                },
               ),
             ],
           ),

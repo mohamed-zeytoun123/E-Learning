@@ -241,5 +241,12 @@
   "no_colleges_for_university": "لا توجد كليات لهذه الجامعة",
   "failed_to_load_universities": "فشل تحميل الجامعات",
   "failed_to_load_colleges": "فشل تحميل الكليات",
-  "failed_to_load_study_years": "فشل تحميل سنوات الدراسة"
+  "failed_to_load_study_years": "فشل تحميل سنوات الدراسة",
+  "edit_profile": "تعديل الملف الشخصي",
+  "edit": "تعديل",
+  "email": "البريد الإلكتروني",
+  "error_loading_user_data": "خطأ في تحميل بيانات المستخدم",
+  "confirm_logout": "تأكيد تسجيل الخروج",
+  "are_you_sure_logout": "هل أنت متأكد أنك تريد تسجيل الخروج من حسابك؟",
+  "failed_to_apply_filters": "فشل تطبيق المرشحات. يرجى المحاولة مرة أخرى."
 }

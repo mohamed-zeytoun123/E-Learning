@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/Course/presentation/widgets/rating_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/show_image_teacher_widget.dart';
 import 'package:flutter/material.dart';
@@ -49,6 +50,7 @@ class CourceReviewCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return GestureDetector(
       onTap: () => _showFullReviewDialog(context),
       child: Container(
@@ -57,50 +59,45 @@ class CourceReviewCardWidget extends StatelessWidget {
           color: AppColors.backgroundPage,
           borderRadius: BorderRadius.circular(12.r),
         ),
-        child: Column(
+        child: Row(
+          spacing: 10.w,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              spacing: 10.w,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ShowImageTeacherWidget(teacherImageUrl: teacherImageUrl),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            ShowImageTeacherWidget(teacherImageUrl: teacherImageUrl),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    username,
+                    style: AppTextStyles.s16w600.copyWith(
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
+                  Text(
+                    reviewText,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.s14w400.copyWith(
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      RatingWidget(rating: rating),
                       Text(
-                        username,
-                        style: AppTextStyles.s16w600.copyWith(
-                          color: AppColors.textBlack,
+                        timeAgo,
+                        style: AppTextStyles.s12w400.copyWith(
+                          color: colors.textGrey,
                         ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        reviewText,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.s14w400.copyWith(
-                          color: AppColors.textBlack,
-                        ),
-                      ),
-                      SizedBox(height: 6.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          RatingWidget(rating: rating),
-                          Text(
-                            timeAgo,
-                            style: AppTextStyles.s12w400.copyWith(
-                              color: AppColors.textGrey,
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ],
         ),

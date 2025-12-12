@@ -76,8 +76,8 @@ class AuthCubit extends Cubit<AuthState> {
       ),
     );
 
-    final Either<Failure, List<UniversityModel>> result = await repository
-        .getUniversitiesRepo();
+    final Either<Failure, List<UniversityModel>> result =
+        await repository.getUniversitiesRepo();
 
     result.fold(
       (failure) => emit(
@@ -131,8 +131,7 @@ class AuthCubit extends Cubit<AuthState> {
     String? email,
     String? password,
   }) {
-    final currentParams =
-        state.signUpRequestParams ??
+    final currentParams = state.signUpRequestParams ??
         SignUpRequestParams(
           fullName: '',
           universityId: null,
@@ -166,24 +165,24 @@ class AuthCubit extends Cubit<AuthState> {
     return repository
         .otpVerficationRepo(email: phone, code: code, purpose: purpose)
         .then((result) {
-          result.fold(
-            (failure) => emit(
-              state.copyWith(
-                otpVerficationState: ResponseStatusEnum.failure,
-                otpVerficationError: failure.message,
-              ),
+      result.fold(
+        (failure) => emit(
+          state.copyWith(
+            otpVerficationState: ResponseStatusEnum.failure,
+            otpVerficationError: failure.message,
+          ),
+        ),
+        (otpResponse) {
+          emit(
+            state.copyWith(
+              otpVerficationState: ResponseStatusEnum.success,
+              otpVerficationError: null,
+              resetToken: otpResponse.resetToken,
             ),
-            (otpResponse) {
-              emit(
-                state.copyWith(
-                  otpVerficationState: ResponseStatusEnum.success,
-                  otpVerficationError: null,
-                  resetToken: otpResponse.resetToken,
-                ),
-              );
-            },
           );
-        });
+        },
+      );
+    });
   }
 
   //? ------------------------ OTP Timer Management ----------------------------
@@ -323,6 +322,25 @@ class AuthCubit extends Cubit<AuthState> {
           studyYears: studyYearsList,
         ),
       ),
+    );
+  }
+
+  // ------------------------------logOut-------------------------------
+  void logout(String refreshToken) async {
+    emit(state.copyWith(logoutStatus: ResponseStatusEnum.loading));
+    var result = await repository.logOutRepo(refreshToken);
+    result.fold(
+      (error) {
+        emit(
+          state.copyWith(
+            logoutStatus: ResponseStatusEnum.failure,
+            errorlogout: error.message,
+          ),
+        );
+      },
+      (data) {
+        emit(state.copyWith(logoutStatus: ResponseStatusEnum.success));
+      },
     );
   }
 

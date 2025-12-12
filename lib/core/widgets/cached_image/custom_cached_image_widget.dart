@@ -1,4 +1,5 @@
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -79,7 +80,7 @@ class CustomCachedImageWidget extends StatelessWidget {
           Container(
             height: height == double.infinity ? double.infinity : height.h,
             width: width == double.infinity ? double.infinity : width.w,
-            color: Colors.grey.shade300,
+            color: context.colors.textGrey,
             child: Center(child: AppLoading.circular()),
           ),
       errorWidget: (context, url, error) =>
@@ -87,7 +88,7 @@ class CustomCachedImageWidget extends StatelessWidget {
           Container(
             height: height == double.infinity ? double.infinity : height.h,
             width: width == double.infinity ? double.infinity : width.w,
-            color: Colors.grey.shade300,
+            color: context.colors.textGrey.withOpacity(0.3),
             child: Center(
               child: Icon(
                 Icons.broken_image,

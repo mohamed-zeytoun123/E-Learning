@@ -51,6 +51,9 @@ import 'package:e_learning/features/Course/data/source/remote/courcese_remote_da
 import 'package:e_learning/features/Course/data/source/remote/courcese_remote_data_source_impl.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository_impl.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_data_source_impl.dart';
+import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -184,7 +187,7 @@ Future<void> appInitDependencies() async {
     () => AuthRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
-  //* Course Remote
+  //* Course Remote Data Source
   appLocator.registerLazySingleton<CourceseRemoteDataSource>(
     () => CourceseRemoteDataSourceImpl(api: appLocator<API>()),
   );
@@ -194,7 +197,7 @@ Future<void> appInitDependencies() async {
     () => TeacherRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
-  //* Article Remote
+  //* Article Remote Data Source
   appLocator.registerLazySingleton<ArticleRemoteDataSource>(
     () => ArticleRemoteDataSourceImpl(api: appLocator<API>()),
   );
@@ -207,6 +210,11 @@ Future<void> appInitDependencies() async {
   //* Chapter Remote
   appLocator.registerLazySingleton<ChapterRemoteDataSource>(
     () => ChapterRemoteDataSourceImpl(api: appLocator<API>()),
+  );
+
+  //* Profile Remote
+  appLocator.registerLazySingleton<ProfileRemouteDataSource>(
+    () => ProfileRemoteDataSourceImpl(api: appLocator<API>()),
   );
 
   //* Video Remote
@@ -267,6 +275,14 @@ Future<void> appInitDependencies() async {
     () => ChapterRepositoryImpl(
       remote: appLocator<ChapterRemoteDataSource>(),
       local: appLocator<ChapterLocalDataSource>(),
+      network: appLocator<NetworkInfoService>(),
+    ),
+  );
+
+  //* Profile Repository
+  appLocator.registerLazySingleton<ProfileRepository>(
+    () => ProfileRepository(
+      remote: appLocator<ProfileRemouteDataSource>(),
       network: appLocator<NetworkInfoService>(),
     ),
   );

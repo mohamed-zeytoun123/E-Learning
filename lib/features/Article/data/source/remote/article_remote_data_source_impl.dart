@@ -24,6 +24,9 @@ class ArticleRemoteDataSourceImpl implements ArticleRemoteDataSource {
     int? pageSize,
     String? search,
     int? categoryId,
+    int? universityId,
+    int? collegeId,
+    int? studyYear,
   }) async {
     try {
       final Map<String, dynamic> queryParameters = {
@@ -31,6 +34,9 @@ class ArticleRemoteDataSourceImpl implements ArticleRemoteDataSource {
         if (pageSize != null) 'page_size': pageSize.toString(),
         if (search != null && search.isNotEmpty) 'search': search,
         if (categoryId != null) 'category': categoryId.toString(),
+        if (universityId != null) 'university': universityId.toString(),
+        if (collegeId != null) 'college': collegeId.toString(),
+        if (studyYear != null) 'study_year': studyYear.toString(),
       };
 
       final ApiRequest request = ApiRequest(

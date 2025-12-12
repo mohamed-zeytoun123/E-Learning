@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,21 +13,21 @@ class TextFormFieldStyle {
   ]) {
     return InputDecoration(
       hintStyle:
-          style ?? AppTextStyles.s14w400.copyWith(color: AppColors.titleGrey),
+          style ?? AppTextStyles.s14w400.copyWith(color: context.colors.dividerGrey),
       hintText: AppLocalizations.of(context)?.translate(label) ?? "",
       contentPadding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 10.w),
       errorStyle: AppTextStyles.s12w400.copyWith(color: Colors.red),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: AppColors.borderBrand),
+        borderSide: BorderSide(color: context.colors.dividerGrey),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: AppColors.borderBrand),
+        borderSide: BorderSide(color: context.colors.dividerGrey),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: BorderSide(color: AppColors.textPrimary, width: 2.w),
+        borderSide: BorderSide(color:  context.colors.textBlue, width: 2.w),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),

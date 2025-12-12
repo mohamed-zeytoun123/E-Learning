@@ -33,6 +33,9 @@ class CourseModel extends HiveObject {
   @HiveField(9)
   final bool isFavorite;
 
+  @HiveField(10)
+  final int? category;
+
   CourseModel({
     required this.id,
     required this.title,
@@ -44,6 +47,7 @@ class CourseModel extends HiveObject {
     this.averageRating,
     required this.totalVideoDurationHours,
     required this.isFavorite,
+    this.category,
   });
 
   CourseModel copyWith({
@@ -57,6 +61,7 @@ class CourseModel extends HiveObject {
     double? averageRating,
     double? totalVideoDurationHours,
     bool? isFavorite,
+    int? category,
   }) {
     return CourseModel(
       id: id ?? this.id,
@@ -70,6 +75,7 @@ class CourseModel extends HiveObject {
       totalVideoDurationHours:
           totalVideoDurationHours ?? this.totalVideoDurationHours,
       isFavorite: isFavorite ?? this.isFavorite,
+      category: category ?? this.category,
     );
   }
 
@@ -88,6 +94,9 @@ class CourseModel extends HiveObject {
       totalVideoDurationHours:
           (map['total_video_duration_hours'] ?? 0.0).toDouble(),
       isFavorite: map['is_favorite'] ?? false,
+      category: map['category'] != null
+          ? int.tryParse(map['category'].toString())
+          : null,
     );
   }
 
@@ -103,6 +112,7 @@ class CourseModel extends HiveObject {
       'average_rating': averageRating,
       'total_video_duration_hours': totalVideoDurationHours,
       'is_favorite': isFavorite,
+      'category': category,
     };
   }
 }

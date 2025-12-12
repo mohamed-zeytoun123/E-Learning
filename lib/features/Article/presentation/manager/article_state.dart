@@ -6,6 +6,8 @@ class ArticleState {
 
   //* Get Articles
   final List<ArticleModel>? articles;
+  final List<ArticleModel>?
+      allArticles; // Store all articles for local filtering
   final ResponseStatusEnum articlesStatus;
   final String? articlesError;
 
@@ -26,10 +28,16 @@ class ArticleState {
   final bool hasNextPage;
   final bool hasPreviousPage;
 
+  //* Filters
+  final int? currentUniversityId;
+  final int? currentCollegeId;
+  final int? currentStudyYear;
+
   //?----------------------------------------------------------------
   ArticleState({
     //* Get Articles
     this.articles,
+    this.allArticles,
     this.articlesStatus = ResponseStatusEnum.initial,
     this.articlesError,
 
@@ -49,6 +57,11 @@ class ArticleState {
     this.count,
     this.hasNextPage = false,
     this.hasPreviousPage = false,
+
+    //* Filters
+    this.currentUniversityId,
+    this.currentCollegeId,
+    this.currentStudyYear,
   });
 
   //?------------------------------------------------------------------
@@ -56,6 +69,7 @@ class ArticleState {
   ArticleState copyWith({
     //* Get Articles
     List<ArticleModel>? articles,
+    List<ArticleModel>? allArticles,
     ResponseStatusEnum? articlesStatus,
     String? articlesError,
 
@@ -75,10 +89,16 @@ class ArticleState {
     int? count,
     bool? hasNextPage,
     bool? hasPreviousPage,
+
+    //* Filters
+    int? currentUniversityId,
+    int? currentCollegeId,
+    int? currentStudyYear,
   }) {
     return ArticleState(
       //* Get Articles
       articles: articles ?? this.articles,
+      allArticles: allArticles ?? this.allArticles,
       articlesStatus: articlesStatus ?? this.articlesStatus,
       articlesError: articlesError ?? this.articlesError,
 
@@ -99,6 +119,11 @@ class ArticleState {
       count: count ?? this.count,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
+
+      //* Filters
+      currentUniversityId: currentUniversityId ?? this.currentUniversityId,
+      currentCollegeId: currentCollegeId ?? this.currentCollegeId,
+      currentStudyYear: currentStudyYear ?? this.currentStudyYear,
     );
   }
 

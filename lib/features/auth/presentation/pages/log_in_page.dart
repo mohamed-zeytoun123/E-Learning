@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/router/route_names.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/forgot_password_widget.dart';
 import 'package:e_learning/features/auth/presentation/widgets/form_log_in_widget.dart';
@@ -20,6 +21,7 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
+  
   final TextEditingController phoneController = TextEditingController();
 
   final TextEditingController passwordController = TextEditingController();
@@ -34,6 +36,7 @@ class _LogInPageState extends State<LogInPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -53,7 +56,7 @@ class _LogInPageState extends State<LogInPage> {
                 Text(
                   "log_in_to_your_account".tr(),
                   style: AppTextStyles.s16w600.copyWith(
-                    color: AppColors.textPrimary,
+                    color: colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 20.h),
@@ -74,8 +77,8 @@ class _LogInPageState extends State<LogInPage> {
                 ),
                 SizedBox(height: 20.h),
                 LoginButtonWidget(
-                  borderColor: AppColors.buttonPrimary,
-                  buttonColor: AppColors.buttonPrimary,
+                  borderColor: colors.textBlue,
+                  buttonColor: colors.textBlue,
                   textColor: AppColors.titlePrimary,
                   formKey: _formKey,
                   phoneController: phoneController,
@@ -85,11 +88,12 @@ class _LogInPageState extends State<LogInPage> {
                 InkWell(
                   onTap: () {
                     log("Don’t have an account?");
+                    
                   },
                   child: Text(
                     "dont_have_account".tr(),
                     style: AppTextStyles.s14w400.copyWith(
-                      color: AppColors.textBlack,
+                      color: colors.textPrimary,
                     ),
                   ),
                 ),
@@ -98,12 +102,13 @@ class _LogInPageState extends State<LogInPage> {
                   title: "sign_up".tr(),
                   titleStyle: AppTextStyles.s16w500.copyWith(
                     fontFamily: AppTextStyles.fontGeist,
-                    color: AppColors.titleBlack,
+                    color: colors.textPrimary
                   ),
-                  buttonColor: AppColors.buttonWhite,
-                  borderColor: AppColors.borderPrimary,
+                  buttonColor: Colors.transparent,
+                  borderColor: colors.textBlue,
                   onTap: () {
-                    context.go(RouteNames.signUp);
+                  context.go(RouteNames.signUp);
+                      // context.go(RouteNames.profile);
                   },
                 ),
               ],
@@ -114,3 +119,5 @@ class _LogInPageState extends State<LogInPage> {
     );
   }
 }
+
+

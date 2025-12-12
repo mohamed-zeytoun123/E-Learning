@@ -55,6 +55,10 @@ class AuthState {
   final ResponseStatusEnum resetPasswordState;
   final String? resetPasswordError;
 
+  //* logout
+  final String? errorlogout;
+  final ResponseStatusEnum logoutStatus;
+
   //?--------------------------------------------------------------
 
   AuthState({
@@ -79,6 +83,8 @@ class AuthState {
     this.forgotPasswordError,
     this.resetPasswordState = ResponseStatusEnum.initial,
     this.resetPasswordError,
+    this.errorlogout,
+     this.logoutStatus =ResponseStatusEnum.initial,
     this.otpTimerSeconds = 60,
     this.canResendOtp = false,
     this.currentOtpCode,
@@ -115,6 +121,8 @@ class AuthState {
     int? otpTimerSeconds,
     bool? canResendOtp,
     String? currentOtpCode,
+       String? errorlogout,
+  ResponseStatusEnum? logoutStatus,
   }) {
     return AuthState(
       getStudyYearsState: getStudyYearsState ?? this.getStudyYearsState,
@@ -144,6 +152,8 @@ class AuthState {
       otpTimerSeconds: otpTimerSeconds ?? this.otpTimerSeconds,
       canResendOtp: canResendOtp ?? this.canResendOtp,
       currentOtpCode: currentOtpCode ?? this.currentOtpCode,
+      errorlogout : errorlogout,
+      logoutStatus : logoutStatus ?? this.logoutStatus
     );
   }
 }

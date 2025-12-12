@@ -86,11 +86,13 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
   }) async {
     try {
       log(
-        'Applying filters Remote : college=${filters?.collegeId}, studyYear=${filters?.studyYear}, category=${filters?.categoryId}, page=$page, page_size=$pageSize',
+        'Applying filters Remote : university=${filters?.universityId}, college=${filters?.collegeId}, studyYear=${filters?.studyYear}, category=${filters?.categoryId}, page=$page, page_size=$pageSize',
       );
 
       //* تجهيز query parameters حسب القيم المرسلة
       final Map<String, dynamic> queryParameters = {
+        if (filters?.universityId != null)
+          'university': filters!.universityId.toString(),
         if (filters?.collegeId != null)
           'college': filters!.collegeId.toString(),
         if (filters?.studyYear != null)
@@ -107,14 +109,7 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
         url: AppUrls.getCourses(queryParameters: queryParameters),
       );
 
-      log('🌐 Request URL: ${AppUrls.getCourses}');
-      log('🌐 Query Parameters: $queryParameters');
-
       final ApiResponse response = await api.get(request);
-
-      log('📡 Courses API Response Status: ${response.statusCode}');
-      log('📡 Response body type: ${response.body.runtimeType}');
-      log('📡 Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final data = response.body;
@@ -126,14 +121,9 @@ class CourceseRemoteDataSourceImpl implements CourceseRemoteDataSource {
           return Left(Failure(message: 'Invalid data format from server'));
         }
       } else {
-        String errorMessage = 'Unknown error';
-        if (response.body is Map<String, dynamic>) {
-          errorMessage =
-              response.body['message']?.toString() ?? 'Unknown error';
-        }
         return Left(
           Failure(
-            message: errorMessage,
+            message: response.body['message']?.toString() ?? 'Unknown error',
             statusCode: response.statusCode,
           ),
         );

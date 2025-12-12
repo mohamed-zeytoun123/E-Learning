@@ -35,7 +35,6 @@ class AppUrls {
   //* Refresh Token
   static final String refreashToken = "$baseURl/auth/refresh";
 
-  //?------------------- Universities & Colleges -------------------
   //* Get University
   static final String getUniversities =
       "$baseURl/universities/?page=1&page_size=10000";
@@ -137,7 +136,7 @@ class AppUrls {
   //?------------------- Enrollment -------------------
   //* Enroll in a Course
   static final String enrollCourse = "$baseURl/enrollments/enroll/";
-  
+
   //* Get My Courses (Enrollments)
   static String getMyCourses({Map<String, dynamic>? queryParameters}) {
     String url = "$baseURl/enrollments/my-courses/";
@@ -211,5 +210,11 @@ class AppUrls {
   static String relatedArticles(int articleId) =>
       "$_baseURl/articles/$articleId/related/";
 
+  //*profile Url
+  static final String privacyPolicy = "$_baseURl/privacy-policy/";
+  static final String aboutUs = "$_baseURl/about-us/";
+  static final String termsConditions = "$_baseURl/terms-conditions/";
+  static final String profileUserInfo = "$_baseURl/profile/";
+  static final String saveCourses = "$_baseURl/my-favorites/";
   //?---------------------------------------------------------------
 }

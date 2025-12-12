@@ -1,0 +1,164 @@
+import 'dart:developer';
+
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:e_learning/core/Error/failure.dart';
+import 'package:e_learning/core/network/api_general.dart';
+import 'package:e_learning/core/network/api_request.dart';
+import 'package:e_learning/core/network/app_url.dart';
+import 'package:e_learning/features/profile/data/model/data_college_model.dart';
+import 'package:e_learning/features/profile/data/model/data_course_saved_model.dart';
+import 'package:e_learning/features/profile/data/model/data_univarcity_response_model.dart';
+import 'package:e_learning/features/profile/data/model/data_year_response_model.dart';
+import 'package:e_learning/features/profile/data/model/response_data_privacy_policy_model.dart';
+import 'package:e_learning/features/profile/data/model/user_data_info_model.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
+
+class ProfileRemoteDataSourceImpl implements ProfileRemouteDataSource {
+  final API api;
+
+  ProfileRemoteDataSourceImpl({required this.api});
+
+  //* fetch privacy policy remote data
+  @override
+  Future<Either<Failure, ResponseInfoAppModel>> getPrivacyPolicyinfo() async {
+    // TODO: implement getPrivacyPolicyinfo
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.privacyPolicy));
+      // print(response.bo)
+      final data = ResponseInfoAppModel.fromMap(response.body);
+      print('✅ privacy policy status code ${response.statusCode}');
+      return right(data);
+    } catch (error) {
+      log("error 🔥🔥🔥🔥🔥 :::$error");
+      return Left(Failure.handleError(error));
+    }
+
+    // throw UnimplementedError();
+  }
+
+  //*--------------------------     fetch About Us remote data     --------------------------------
+  @override
+  Future<Either<Failure, ResponseInfoAppModel>> getAboutUpInfo() async {
+    // TODO: implement getAboutUpInfo
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.aboutUs));
+      var data = ResponseInfoAppModel.fromMap(response.body);
+      log(' ✅  about us Status Code : ${response.statusCode}');
+      return right(data);
+    } catch (error) {
+      return left(Failure.handleError(error as DioException));
+    }
+
+    // throw UnimplementedError();
+  }
+
+  @override
+  Future<Either<Failure, ResponseInfoAppModel>> getTermsCondition() async {
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.termsConditions));
+      var data = ResponseInfoAppModel.fromMap(response.body);
+      return right(data);
+    } catch (error) {
+      log("error 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserDataInfoModel>> getDataUser() async {
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.profileUserInfo));
+      var dataResponse = UserDataInfoModel.fromMap(response.body);
+      return right(dataResponse);
+    } catch (error) {
+      log("error fetch data user 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error));
+    }
+  }
+
+  // -------------------------- fetch data save Courses---------------
+  @override
+  Future<Either<Failure, DataResponseSaveCoursesPagination>>
+      getDataCoursesSaved(int page) async {
+    try {
+      var response = await api.get(
+        ApiRequest(url: '${AppUrls.saveCourses}?page=$page&page_size=3'),
+      );
+      // var data =       DataCourseSaved.fromMap(response.body);
+      // var data = (response.body as List).map((item) {
+      //   return DataResponseSaveCoursesPagination.fromMap(item);
+      // }).toList();
+      var data = DataResponseSaveCoursesPagination.fromMap(response.body);
+      log("👌✅ success fetch data course saved 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log("error fetch data Course saved 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserDataInfoModel>> editDataProfileStudent(
+      String phone,
+      String name,
+      int universityId,
+      int collegeId,
+      int studyYearId) async {
+    try {
+      var response =
+          await api.patch(ApiRequest(url: AppUrls.profileUserInfo, body: {
+        'full_name': name,
+        'phone': phone,
+        'university_id': universityId,
+        'college_id': collegeId,
+        'study_year_id': studyYearId,
+      }));
+      var data = UserDataInfoModel.fromMap(response.body);
+      log("👌✅ success Editing data profile 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log(" error Editing data profile 🔥🔥🔥");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
+  Future<Either<Failure, DataResonseunivarsity>> getDataUnivarcity() async {
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.getUniversities));
+      var data = DataResonseunivarsity.fromMap(response.body);
+      log("👌✅ success fetch data univarcity 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log("error fetch data univarcity 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
+  Future<Either<Failure, DataResonseCollege>> getCollegeData(
+      int idUnivarcity) async {
+    try {
+      var response = await api.get(
+          ApiRequest(url: '${AppUrls.getColleges}?university=$idUnivarcity'));
+      var data = DataResonseCollege.fromMap(response.body);
+      log("👌✅ success fetch data college 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log("error fetch data college 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+
+  @override
+  Future<Either<Failure, DataResonseYearStudent>> getYearDataStudent() async {
+    try {
+      var response = await api.get(ApiRequest(url: AppUrls.getStudyYears));
+      var data = DataResonseYearStudent.fromMap(response.body);
+      log("👌✅ success fetch data year student 🔥🔥🔥");
+      return right(data);
+    } catch (error) {
+      log("error fetch data year student 🔥🔥🔥🔥🔥 :::$error");
+      return left(Failure.handleError(error as DioException));
+    }
+  }
+}

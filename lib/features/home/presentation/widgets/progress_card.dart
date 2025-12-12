@@ -2,6 +2,7 @@ import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/cached_image/custom_cached_image_widget.dart';
 import 'package:e_learning/features/Course/data/models/enrollment_model.dart';
@@ -25,9 +26,10 @@ class ProgressCard extends StatelessWidget {
     final progress = enrollment!.progressPercentage / 100.0;
     final totalVideos = enrollment!.totalVideos;
     final completedVideos = enrollment!.completedVideos;
+    final colors = context.colors;
 
     return Card(
-      color: Colors.white,
+      color: colors.background,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Column(
@@ -57,8 +59,8 @@ class ProgressCard extends StatelessWidget {
                 children: [
                   Text(
                     '${'continueLearning'.tr()}!',
-                    style: AppTextStyles.s14w400
-                        .copyWith(color: AppColors.textGrey),
+                    style:
+                        AppTextStyles.s14w400.copyWith(color: colors.textGrey),
                   ),
                   Text(
                     enrollment!.courseTitle,
@@ -76,8 +78,8 @@ class ProgressCard extends StatelessWidget {
               lineHeight: 12.h,
               barRadius: Radius.circular(16),
               percent: progress.clamp(0.0, 1.0),
-              progressColor: AppColors.primaryColor,
-              backgroundColor: AppColors.appBarWhite,
+              progressColor: colors.textBlue,
+              backgroundColor: AppColors.dividerGrey,
               animation: true,
               animationDuration: 800,
             ),
@@ -85,7 +87,8 @@ class ProgressCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${completedVideos} ${'of'.tr()} ${totalVideos} ${'videos'.tr()}"),
+                Text(
+                    "${completedVideos} ${'of'.tr()} ${totalVideos} ${'videos'.tr()}"),
                 Text("${enrollment!.progressPercentage}% ${'completed'.tr()}"),
               ],
             ),
@@ -109,7 +112,9 @@ class ProgressCard extends StatelessWidget {
         ),
       ),
       shape: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(color: context.colors.borderCard),
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/services/network/network_info_service.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/features/Video/data/model/video_stream_model.dart';
 import 'package:e_learning/features/Video/presentation/pages/video_playing_cached_page.dart';
@@ -32,9 +33,15 @@ import 'package:e_learning/features/home/presentation/pages/view_all_articles.da
 import 'package:e_learning/features/home/presentation/pages/view_all_teachers.dart';
 import 'package:e_learning/features/home/presentation/pages/view_all_courses.dart';
 import 'package:e_learning/features/enroll/presentation/pages/enroll_page.dart';
+import 'package:e_learning/features/profile/data/source/remote/profile_remote_dat_source.dart';
+import 'package:e_learning/features/profile/data/source/repo/profile_repository.dart';
+import 'package:e_learning/features/profile/presentation/manager/profile_cubit.dart';
+import 'package:e_learning/features/profile/presentation/pages/about_us.dart';
 import 'package:e_learning/features/profile/presentation/pages/downloads_page.dart';
+import 'package:e_learning/features/profile/presentation/pages/privacy_policy.dart';
 import 'package:e_learning/features/profile/presentation/pages/profile_page.dart';
 import 'package:e_learning/features/profile/presentation/pages/saved_courses_page.dart';
+import 'package:e_learning/features/profile/presentation/pages/term_and_condition_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_learning/features/Course/presentation/pages/courses_page.dart';
@@ -43,7 +50,7 @@ import 'package:flutter/material.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
-    initialLocation: RouteNames.logIn,
+    initialLocation: RouteNames.mainHomePage,
     routes: [
       GoRoute(
         path: RouteNames.selectedMethodLogin,
@@ -288,11 +295,23 @@ class AppRouter {
       //? --------------------------- Profile Pages --------------------------
       GoRoute(
         path: RouteNames.profile,
-        builder: (context, state) => const ProfilePage(),
+        builder: (context, state) => BlocProvider(
+          create: (context) => ProfileCubit(
+            ProfileRepository(
+              remote: appLocator<ProfileRemouteDataSource>(),
+              network: appLocator<NetworkInfoService>(),
+            )..getPrivacyPolicyRepo(),
+          ),
+          child: const ProfilePage(),
+        ),
       ),
       GoRoute(
         path: RouteNames.savedCourses,
-        builder: (context, state) => const SavedCoursesPage(),
+        builder: (context, state) {
+           final profileCubit = state.extra as ProfileCubit;
+         return BlocProvider.value(value: profileCubit,
+            child: const SavedCoursesPage());
+        },
       ),
       GoRoute(
         path: RouteNames.downloads,
@@ -317,6 +336,39 @@ class AppRouter {
       GoRoute(
         path: RouteNames.enroll,
         builder: (context, state) => const EnrollPage(),
+      ),
+
+      //?------------------------------------------------------------------
+      GoRoute(
+        path: RouteNames.aboutUs,
+        builder: (context, state) {
+          final profileCubit = state.extra as ProfileCubit;
+          return BlocProvider.value(
+            value: profileCubit,
+            child: const AboutUsPage(),
+          );
+        },
+      ),
+      //?------------------------------------------------------------------
+      GoRoute(
+        path: RouteNames.privacy,
+        builder: (context, state) {
+          final profileCubit = state.extra as ProfileCubit;
+          return BlocProvider.value(
+            value: profileCubit,
+            child: const PrivacyPolicy(),
+          );
+        },
+      ),
+      GoRoute(
+        path: RouteNames.term,
+        builder: (context, state) {
+          final profileCubit = state.extra as ProfileCubit;
+          return BlocProvider.value(
+            value: profileCubit,
+            child: const TermsAndConditionsPage(),
+          );
+        },
       ),
     ],
   );

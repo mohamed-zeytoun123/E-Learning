@@ -23,7 +23,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         SvgPicture.asset(
           asset,
           colorFilter: ColorFilter.mode(
-            isActive ? Colors.black : AppColors.titleGrey,
+            isActive ? AppColors.primary : AppColors.titleGrey,
             BlendMode.srcIn,
           ),
         ),
@@ -84,7 +84,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           showUnselectedLabels: true,
           elevation: 0,
           currentIndex: currentIndex,
-          selectedItemColor: Colors.black,
+          selectedItemColor: AppColors.primary,
           selectedFontSize: 12.sp,
           unselectedFontSize: 12.sp,
           onTap: onTap,

@@ -98,6 +98,7 @@
 // }
 import 'dart:developer';
 import 'package:e_learning/core/localization/manager/app_localization.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/input_forms/input_review_widget.dart';
 import 'package:e_learning/features/Course/presentation/widgets/rating_stars_widget.dart';
@@ -127,11 +128,12 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colors =context.colors;
     return Container(
       height: 346.h,
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhiteWidget,
+        color: colors.background ,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.r),
           topRight: Radius.circular(24.r),
@@ -146,7 +148,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
               width: 80.w,
               height: 8.h,
               decoration: BoxDecoration(
-                color: AppColors.formSomeWhite,
+                color: colors.textGrey,
                 borderRadius: BorderRadius.circular(4.r),
               ),
             ),
@@ -158,7 +160,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
             child: Text(
               AppLocalizations.of(context)?.translate("Rate_Your_Experience") ??
                   "Rate Your Experience!",
-              style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+              style: AppTextStyles.s16w600.copyWith(color: colors.textPrimary),
             ),
           ),
           SizedBox(height: 5.h),
@@ -179,7 +181,7 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
           Text(
             AppLocalizations.of(context)?.translate("Write_Your_Review") ??
                 "Write Your Review",
-            style: AppTextStyles.s16w600.copyWith(color: AppColors.textBlack),
+            style: AppTextStyles.s16w600.copyWith(color: colors.textPrimary),
           ),
           SizedBox(height: 10.h),
 
@@ -209,8 +211,8 @@ class _ReviewBottomSheetWidgetState extends State<ReviewBottomSheetWidget> {
               titleStyle: AppTextStyles.s16w500.copyWith(
                 color: AppColors.titlePrimary,
               ),
-              buttonColor: AppColors.buttonPrimary,
-              borderColor: AppColors.borderPrimary,
+              buttonColor: colors.textBlue,
+              borderColor: colors.textBlue,
             ),
           ),
         ],

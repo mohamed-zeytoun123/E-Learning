@@ -27,6 +27,9 @@ class ArticleRepositoryImpl implements ArticleRepository {
     int? pageSize,
     String? search,
     int? categoryId,
+    int? universityId,
+    int? collegeId,
+    int? studyYear,
   }) async {
     if (await network.isConnected) {
       final result = await remote.getArticlesRemote(
@@ -34,6 +37,9 @@ class ArticleRepositoryImpl implements ArticleRepository {
         pageSize: pageSize,
         search: search,
         categoryId: categoryId,
+        universityId: universityId,
+        collegeId: collegeId,
+        studyYear: studyYear,
       );
 
       return result.fold(

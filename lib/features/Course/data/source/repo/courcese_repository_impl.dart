@@ -140,7 +140,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
       }
     } catch (e) {
       log('getCoursesRepo Error: $e');
-      return Left(Failure.handleError(e as DioException));
+      return Left(Failure.handleError(e));
     }
   }
 
@@ -220,7 +220,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
       }
     } catch (e) {
       log('getChaptersRepo Error: $e');
-      return Left(Failure.handleError(e as DioException));
+      return Left(Failure.handleError(e));
     }
   }
 
@@ -262,7 +262,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
       }
     } catch (e) {
       log('getRatingsRepo Error: $e');
-      return Left(Failure.handleError(e as DioException));
+      return Left(Failure.handleError(e));
     }
   }
 
@@ -368,7 +368,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
           (ratingModel) => Right(ratingModel),
         );
       } catch (e) {
-        return Left(Failure.handleError(e as DioException));
+        return Left(Failure.handleError(e));
       }
     } else {
       return Left(FailureNoConnection());
@@ -394,7 +394,7 @@ class CourceseRepositoryImpl implements CourceseRepository {
         );
       } catch (e) {
         log('getMyCoursesRepo Error: $e');
-        return Left(Failure.handleError(e as DioException));
+        return Left(Failure.handleError(e));
       }
     } else {
       return Left(FailureNoConnection());

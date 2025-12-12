@@ -12,14 +12,15 @@ class ProfileGuestHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return SizedBox(
       height: 198.h,
       width: 362.w,
       child: Card(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: colors.background,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
-          side: BorderSide(color: context.colors.borderBrand),
+          side: BorderSide(color: context.colors.borderCard),
         ),
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h, horizontal: 12.w),
@@ -37,10 +38,10 @@ class ProfileGuestHeader extends StatelessWidget {
                 title: 'log_in'.tr(),
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: context.colors.titlePrimary,
+                  color: context.colors.titleBlack,
                 ),
-                buttonColor: Theme.of(context).colorScheme.primary,
-                borderColor: context.colors.borderBrand,
+                buttonColor: Colors.transparent,
+                borderColor: context.colors.textBlue,
                 onTap: () {
                   GoRouter.of(context).go(RouteNames.logIn);
                 },
@@ -49,11 +50,11 @@ class ProfileGuestHeader extends StatelessWidget {
               CustomButtonWidget(
                 titleStyle: AppTextStyles.s16w500.copyWith(
                   fontFamily: AppTextStyles.fontGeist,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: colors.textWhite,
                 ),
                 title: 'sign_up'.tr(),
-                buttonColor: context.colors.buttonWhite,
-                borderColor: Theme.of(context).colorScheme.primary,
+                buttonColor: context.colors.textBlue,
+                borderColor: Colors.transparent,
                 onTap: () {
                   GoRouter.of(context).go(RouteNames.signUp);
                 },

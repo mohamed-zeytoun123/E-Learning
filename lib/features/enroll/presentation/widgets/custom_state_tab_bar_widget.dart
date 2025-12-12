@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/enroll/data/models/enums/course_state_enum.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +33,7 @@ class _CustomStateTabBarWidgetState extends State<CustomStateTabBarWidget> {
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
@@ -53,16 +55,15 @@ class _CustomStateTabBarWidgetState extends State<CustomStateTabBarWidget> {
               margin: EdgeInsets.symmetric(horizontal: 6.w),
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
               decoration: BoxDecoration(
-                color: isSelected
-                    ? Theme.of(context).colorScheme.primary
-                    : Color(0xffF5F5F5),
+                color: isSelected ? colors.textBlue : colors.buttonTapNotSelected,
+                // Color(0xffF5F5F5),
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: Text(
                 tabs[index],
                 textAlign: TextAlign.center,
                 style: AppTextStyles.s14w400.copyWith(
-                  color: isSelected ? AppColors.textWhite : AppColors.textBlack,
+                  color: isSelected ? AppColors.textWhite : colors.textPrimary,
                 ),
               ),
             ),

@@ -6,6 +6,7 @@ import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/model/enums/chapter_state_enum.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
@@ -114,6 +115,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return BlocSelector<AppManagerCubit, AppManagerState, AppStateEnum>(
       selector: (state) => state.appState,
       builder: (context, appState) {
@@ -201,14 +203,14 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                               Icon(
                                 Icons.menu_book_outlined,
                                 size: 100.r,
-                                color: AppColors.iconOrange,
+                                color: AppColors.iconRed,
                               ),
                               SizedBox(height: 20.h),
                               Text(
                                 "No Chapters",
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.s20w600.copyWith(
-                                  color: AppColors.textBlack,
+                                  color: colors.textPrimary,
                                 ),
                               ),
                               SizedBox(height: 10.h),
@@ -216,7 +218,7 @@ class _BodyTabChapterWidgetState extends State<BodyTabChapterWidget> {
                                 "This course currently has no chapters available.",
                                 textAlign: TextAlign.center,
                                 style: AppTextStyles.s16w400.copyWith(
-                                  color: AppColors.textGrey,
+                                  color: colors.textGrey,
                                 ),
                               ),
                               SizedBox(height: 30.h),

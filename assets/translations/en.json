@@ -240,5 +240,12 @@
   "no_colleges_for_university": "No colleges for this university",
   "failed_to_load_universities": "Failed to load universities",
   "failed_to_load_colleges": "Failed to load colleges",
-  "failed_to_load_study_years": "Failed to load study years"
+  "failed_to_load_study_years": "Failed to load study years",
+  "edit_profile": "Edit Profile",
+  "edit": "Edit",
+  "email": "Email",
+  "error_loading_user_data": "Error loading user data",
+  "confirm_logout": "Confirm Logout",
+  "are_you_sure_logout": "Are you sure you want to log out from your account?",
+  "failed_to_apply_filters": "Failed to apply filters. Please try again."
 }

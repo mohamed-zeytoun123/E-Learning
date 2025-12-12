@@ -4,7 +4,6 @@ import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/course_model/course_model.dart';
 import 'package:e_learning/features/Course/data/models/Pag_courses/courses_result/courses_result_model.dart';
 import 'package:e_learning/features/Course/data/models/course_filters_model/course_filters_model.dart';
-import 'package:e_learning/features/Course/data/models/paginated_enrollments_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/rating_model.dart';
 import 'package:e_learning/features/Course/data/models/rating_result/ratings_result_model.dart';
 import 'package:e_learning/features/chapter/data/models/pag_chapter_model/chapter_model.dart';
@@ -146,11 +145,19 @@ class CourseCubit extends Cubit<CourseState> {
                 hasNextPage: newCourses.hasNextPage,
               );
 
+        // Store all courses when fetching without category filter (for local filtering)
+        final shouldStoreAllCourses =
+            filters?.categoryId == null && reset && page == 1;
+        final allCoursesToStore =
+            shouldStoreAllCourses ? updatedCourses : state.allCourses;
+
         emit(
           state.copyWith(
             coursesStatus: ResponseStatusEnum.success,
             loadCoursesMoreStatus: ResponseStatusEnum.success,
             courses: updatedCourses,
+            allCourses:
+                allCoursesToStore, // Store all courses for local filtering
             hasMoreCourses: newCourses.hasNextPage,
             currentPage: page,
             coursesError: null,
@@ -201,6 +208,45 @@ class CourseCubit extends Cubit<CourseState> {
       );
     } catch (e) {
       log('Error in clearFiltersAndGetCourses: $e');
+    }
+  }
+
+  //?-------------------------------------------------
+  //* Filter Courses Locally by Category (for home page)
+  //* This filters already-fetched courses locally without making a new API call
+  void filterCoursesLocallyByCategory(int? categoryId) {
+    try {
+      // Get all courses (stored when fetching without category filter)
+      final allCoursesList =
+          state.allCourses?.courses ?? state.courses?.courses ?? [];
+
+      if (categoryId == null) {
+        // Show all courses - restore original courses
+        if (state.allCourses != null) {
+          emit(state.copyWith(
+            coursefilters: null,
+            courses: state.allCourses,
+          ));
+        } else {
+          emit(state.copyWith(
+            coursefilters: null,
+          ));
+        }
+        return;
+      }
+
+      // Filter courses locally by category
+      final filteredCourses = allCoursesList.where((course) {
+        return course.category == categoryId;
+      }).toList();
+
+      emit(state.copyWith(
+        coursefilters: CourseFiltersModel(categoryId: categoryId),
+        courses: state.courses?.copyWith(courses: filteredCourses) ??
+            CoursesResultModel(courses: filteredCourses),
+      ));
+    } catch (e) {
+      log('Error in filterCoursesLocallyByCategory: $e');
     }
   }
 

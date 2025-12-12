@@ -1,6 +1,7 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_padding.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/chips_bar.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
@@ -28,6 +29,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Scaffold(
       backgroundColor: AppColors.background,
       body: BlocBuilder<CourseCubit, CourseState>(
@@ -114,18 +116,18 @@ class HomePage extends StatelessWidget {
                           onChipSelected: (value) {
                             final courseCubit = context.read<CourseCubit>();
                             if (value == 'all'.tr()) {
-                              // Show all courses - clear filters
-                              courseCubit.clearFiltersAndGetCourses();
+                              // Show all courses - filter locally (no API call)
+                              courseCubit.filterCoursesLocallyByCategory(null);
                             } else {
-                              // Find category by name and filter
+                              // Find category by name and filter locally
                               if (categories.isNotEmpty) {
                                 final category = categories.firstWhere(
                                   (c) => c.name == value,
                                   orElse: () => categories.first,
                                 );
-                                courseCubit.applyFiltersByIds(
-                                  categoryId: category.id,
-                                );
+                                // Filter locally instead of making API call
+                                courseCubit.filterCoursesLocallyByCategory(
+                                    category.id);
                               }
                             }
                           },

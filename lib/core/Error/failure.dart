@@ -8,9 +8,19 @@ class Failure {
   //?----------------------------------------------------------------------------
 
   //* handele Error
-  factory Failure.handleError(Exception exception) {
+  factory Failure.handleError(dynamic exception) {
     if (exception is! DioException) {
-      return Failure(statusCode: -1, message: 'An unexpected error occurred');
+      // If it's not a DioException, try to extract a meaningful message
+      if (exception is Exception || exception is Error) {
+        return Failure(
+          statusCode: -1,
+          message: exception.toString(),
+        );
+      }
+      return Failure(
+        statusCode: -1,
+        message: 'An unexpected error occurred: ${exception.toString()}',
+      );
     }
 
     final status = exception.response?.statusCode ?? -1;

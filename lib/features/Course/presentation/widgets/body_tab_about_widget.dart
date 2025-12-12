@@ -3,6 +3,7 @@ import 'package:e_learning/core/app/manager/app_manager_state.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/model/enums/app_state_enum.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/error/error_state_widget.dart';
@@ -36,6 +37,7 @@ class BodyTabAboutWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return BlocBuilder<CourseCubit, CourseState>(
       buildWhen: (previous, current) =>
           previous.courseDetailsStatus != current.courseDetailsStatus,
@@ -114,7 +116,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                     Text(
                       "Instructor",
                       style: AppTextStyles.s16w600.copyWith(
-                        color: AppColors.textBlack,
+                        color: colors.textPrimary,
                       ),
                     ),
                     TeacherRowWidget(
@@ -122,27 +124,27 @@ class BodyTabAboutWidget extends StatelessWidget {
                       teacherImageUrl: details.teacherAvatar ?? "",
                     ),
                     Divider(
-                      color: AppColors.dividerGrey,
+                      color: colors.dividerGrey,
                       thickness: 1,
                       height: 0.h,
                     ),
                     Text(
                       "About The Course",
                       style: AppTextStyles.s18w600.copyWith(
-                        color: AppColors.textBlack,
+                        color: colors.textPrimary,
                       ),
                     ),
                     Text(
                       details.title,
                       style: AppTextStyles.s18w600.copyWith(
-                        color: AppColors.textBlack,
+                        color: colors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 8.h),
                     Text(
                       details.description,
                       style: AppTextStyles.s16w400.copyWith(
-                        color: AppColors.textBlack,
+                        color: colors.textPrimary,
                       ),
                     ),
                     SizedBox(height: 16.h),
@@ -152,7 +154,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                         Text(
                           "Paid Price",
                           style: AppTextStyles.s16w600.copyWith(
-                            color: AppColors.textBlack,
+                            color: colors.textPrimary,
                           ),
                         ),
                         PriceTextWidget(price: details.price),
@@ -161,7 +163,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.h),
                       child: Divider(
-                        color: AppColors.dividerGrey,
+                        color: colors.dividerGrey,
                         thickness: 1,
                         height: 0.h,
                       ),
@@ -169,7 +171,7 @@ class BodyTabAboutWidget extends StatelessWidget {
                     Text(
                       "Content",
                       style: AppTextStyles.s18w600.copyWith(
-                        color: AppColors.textBlack,
+                        color: colors.textPrimary,
                       ),
                     ),
                     Row(
