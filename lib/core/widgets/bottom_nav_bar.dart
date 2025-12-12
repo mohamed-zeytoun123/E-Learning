@@ -1,5 +1,6 @@
 import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -75,16 +76,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.only(top: 12.h, bottom: 12.h),
         decoration: BoxDecoration(
-          color: AppColors.backgroundPage,
+          color: context.colors.background,
         ),
         child: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
-          unselectedItemColor: AppColors.titleGrey,
+          unselectedItemColor: context.colors.textGrey,
           backgroundColor: Colors.transparent,
           showUnselectedLabels: true,
           elevation: 0,
           currentIndex: currentIndex,
-          selectedItemColor: AppColors.primary,
+          selectedItemColor: context.colors.textBlue,
           selectedFontSize: 12.sp,
           unselectedFontSize: 12.sp,
           onTap: onTap,

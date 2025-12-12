@@ -1,5 +1,6 @@
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,8 +12,8 @@ class TopHomeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 6,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
+      color: context.colors.background,
+      shape: RoundedRectangleBorder(side: BorderSide(color: context.colors.borderCard),
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Padding(
@@ -24,12 +25,12 @@ class TopHomeSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('start_learning'.tr(), style: AppTextStyles.s14w500),
+            Text('start_learning'.tr(), style: AppTextStyles.s14w500.copyWith(color: context.colors.textPrimary)),
             SizedBox(height: 16.h),
             Text(
               'browse_courses'.tr(),
               style: AppTextStyles.s18w600
-                  .copyWith(color: AppColors.primaryTextColor),
+                  .copyWith(color: context.colors.textBlue),
             ),
           ],
         ),

@@ -139,6 +139,7 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/services/storage/hivi/hive_service.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/message/app_message.dart';
@@ -146,6 +147,7 @@ import 'package:e_learning/features/Course/data/models/course_filters_model/cour
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_state.dart';
 import 'package:e_learning/features/Course/presentation/widgets/filter_group_widget.dart';
+import 'package:e_learning/features/profile/data/model/data_college_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -154,8 +156,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class FiltersBottomSheetWidget extends StatefulWidget {
   final void Function(CourseFiltersModel?)? onFiltersApplied;
   final bool isForArticles;
-  final void Function(int? universityId, int? collegeId, int? studyYear)? onArticleFilterApplied;
-  
+  final void Function(int? universityId, int? collegeId, int? studyYear)?
+      onArticleFilterApplied;
+
   const FiltersBottomSheetWidget({
     super.key,
     this.onFiltersApplied,
@@ -164,7 +167,7 @@ class FiltersBottomSheetWidget extends StatefulWidget {
   });
 
   @override
-  State<FiltersBottomSheetWidget> createState() =>
+  State<FiltersBottomSheetWidget> createState() => //😒😒😒😒
       _FiltersBottomSheetWidgetState();
 }
 
@@ -217,8 +220,8 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
             cubit.getStudyYears();
           }
 
-          final cachedFilters =
-              state.coursefilters ?? appLocator<HiveService>().getCourseFiltersHive();
+          final cachedFilters = state.coursefilters ??
+              appLocator<HiveService>().getCourseFiltersHive();
           tempUniversity = cachedFilters?.universityId;
           tempCollege = cachedFilters?.collegeId;
           tempYear = cachedFilters?.studyYear;
@@ -231,11 +234,11 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
   Widget build(BuildContext context) {
     return BlocConsumer<CourseCubit, CourseState>(
       listenWhen: (previous, current) =>
-          !widget.isForArticles && (
-          previous.coursesStatus != current.coursesStatus ||
-          previous.collegesStatus != current.collegesStatus ||
-          previous.universitiesState != current.universitiesState ||
-          previous.studyYearsStatus != current.studyYearsStatus),
+          !widget.isForArticles &&
+          (previous.coursesStatus != current.coursesStatus ||
+              previous.collegesStatus != current.collegesStatus ||
+              previous.universitiesState != current.universitiesState ||
+              previous.studyYearsStatus != current.studyYearsStatus),
       listener: (context, state) {
         if (_hasApplied && !widget.isForArticles) {
           if (state.coursesStatus == ResponseStatusEnum.success) {
@@ -309,7 +312,7 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
       height: 200.h,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.textWhite,
+        color: context.colors.background,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(32),
           topRight: Radius.circular(32),
@@ -323,17 +326,17 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
 
   Widget _buildErrorUI(CourseState state) {
     final errorMessages = <String>[];
-    if (state.collegesError != null && 
+    if (state.collegesError != null &&
         state.collegesError!.isNotEmpty &&
         !state.collegesError!.toLowerCase().contains('no data')) {
       errorMessages.add(state.collegesError!);
     }
-    if (state.universitiesError != null && 
+    if (state.universitiesError != null &&
         state.universitiesError!.isNotEmpty &&
         !state.universitiesError!.toLowerCase().contains('no data')) {
       errorMessages.add(state.universitiesError!);
     }
-    if (state.studyYearsError != null && 
+    if (state.studyYearsError != null &&
         state.studyYearsError!.isNotEmpty &&
         !state.studyYearsError!.toLowerCase().contains('no data')) {
       errorMessages.add(state.studyYearsError!);
@@ -348,7 +351,7 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
       height: 200.h,
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
-        color: AppColors.textWhite,
+        color: context.colors.background,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(32),
           topRight: Radius.circular(32),
@@ -392,13 +395,13 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
     final colleges = state.colleges ?? [];
     final studyYears = state.studyYears ?? [];
     final categories = state.categories ?? [];
-
+    final colors = context.colors;
     // Filters UI (same for both courses and articles)
     return Container(
       height: 565.h,
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: AppColors.textWhite,
+        color: colors.background,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(32),
           topRight: Radius.circular(32),
@@ -410,14 +413,14 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
             width: 80.w,
             height: 8.h,
             decoration: BoxDecoration(
-              color: AppColors.dividerWhite,
+              color: context.colors.dividerGrey,
               borderRadius: BorderRadius.circular(8.r),
             ),
           ),
           SizedBox(height: 16.h),
           Text(
             "filters".tr(),
-            style: AppTextStyles.s18w600.copyWith(color: AppColors.textPrimary),
+            style: AppTextStyles.s18w600.copyWith(color: colors.textBlue),
           ),
           SizedBox(height: 16.h),
           Expanded(
@@ -460,74 +463,74 @@ class _FiltersBottomSheetWidgetState extends State<FiltersBottomSheetWidget> {
               spacing: 15.w,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                  Expanded(
-                    child: CustomButtonWidget(
-                      title: "cancel".tr(),
-                      titleStyle: AppTextStyles.s16w500.copyWith(
-                        color: AppColors.textPrimary,
-                      ),
-                      buttonColor: AppColors.buttonWhite,
-                      borderColor: AppColors.borderPrimary,
-                      onTap: () {
-                        if (widget.isForArticles) {
-                          // For articles, call the callback with nulls
-                          if (widget.onArticleFilterApplied != null) {
-                            widget.onArticleFilterApplied!(null, null, null);
-                          }
-                        } else {
-                          // For courses, clear filters
-                          final courseCubit = context.read<CourseCubit>();
-                          courseCubit.applyFiltersByIds(
-                            universityId: null,
-                            collegeId: null,
-                            studyYear: null,
+                Expanded(
+                  child: CustomButtonWidget(
+                    title: "cancel".tr(),
+                    titleStyle: AppTextStyles.s16w500.copyWith(
+                      color: colors.textBlue,
+                    ),
+                    buttonColor: Colors.transparent,
+                    borderColor: colors.textBlue,
+                    onTap: () {
+                      if (widget.isForArticles) {
+                        // For articles, call the callback with nulls
+                        if (widget.onArticleFilterApplied != null) {
+                          widget.onArticleFilterApplied!(null, null, null);
+                        }
+                      } else {
+                        // For courses, clear filters
+                        final courseCubit = context.read<CourseCubit>();
+                        courseCubit.applyFiltersByIds(
+                          universityId: null,
+                          collegeId: null,
+                          studyYear: null,
+                        );
+                        if (widget.onFiltersApplied != null) {
+                          widget.onFiltersApplied!(null);
+                        }
+                      }
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: CustomButtonWidget(
+                    title: "apply".tr(),
+                    titleStyle: AppTextStyles.s16w500.copyWith(
+                      color: AppColors.textWhite,
+                    ),
+                    buttonColor: colors.textBlue,
+                    borderColor: colors.textBlue,
+                    onTap: () {
+                      if (widget.isForArticles) {
+                        // For articles, call the callback with selected filters
+                        if (widget.onArticleFilterApplied != null) {
+                          widget.onArticleFilterApplied!(
+                            tempUniversity,
+                            tempCollege,
+                            tempYear,
                           );
-                          if (widget.onFiltersApplied != null) {
-                            widget.onFiltersApplied!(null);
-                          }
                         }
                         if (Navigator.of(context).canPop()) {
                           Navigator.of(context).pop();
                         }
-                      },
-                    ),
-                  ),
-                  Expanded(
-                    child: CustomButtonWidget(
-                      title: "apply".tr(),
-                      titleStyle: AppTextStyles.s16w500.copyWith(
-                        color: AppColors.textWhite,
-                      ),
-                      buttonColor: AppColors.buttonPrimary,
-                      borderColor: AppColors.borderPrimary,
-                      onTap: () {
-                        if (widget.isForArticles) {
-                          // For articles, call the callback with selected filters
-                          if (widget.onArticleFilterApplied != null) {
-                            widget.onArticleFilterApplied!(
-                              tempUniversity,
-                              tempCollege,
-                              tempYear,
-                            );
-                          }
-                          if (Navigator.of(context).canPop()) {
-                            Navigator.of(context).pop();
-                          }
-                        } else {
-                          // For courses, apply filters
-                          _hasApplied = true;
-                          courseCubit.applyFiltersByIds(
-                            universityId: tempUniversity,
-                            collegeId: tempCollege,
-                            studyYear: tempYear,
-                          );
-                          if (Navigator.of(context).canPop()) {
-                            Navigator.of(context).pop();
-                          }
+                      } else {
+                        // For courses, apply filters
+                        _hasApplied = true;
+                        courseCubit.applyFiltersByIds(
+                          universityId: tempUniversity,
+                          collegeId: tempCollege,
+                          studyYear: tempYear,
+                        );
+                        if (Navigator.of(context).canPop()) {
+                          Navigator.of(context).pop();
                         }
-                      },
-                    ),
+                      }
+                    },
                   ),
+                ),
               ],
             ),
           ),

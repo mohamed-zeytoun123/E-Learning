@@ -1,6 +1,7 @@
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
 import 'package:e_learning/core/router/route_names.dart';
 import 'package:e_learning/core/style/app_padding.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/custom_error_widget.dart';
 import 'package:e_learning/features/Teacher/data/models/teacher_model/teacher_model.dart';
@@ -58,15 +59,15 @@ class _ViewAllTeachersState extends State<ViewAllTeachers> {
       create: (context) => TeacherCubit(repo: appLocator<TeacherRepository>())
         ..getTeachers(page: 1, pageSize: 10),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("teachers".tr()),
+        appBar: AppBar(backgroundColor: context.colors.background,
+          title: Text("teachers".tr(),style: TextStyle(color: context.colors.textPrimary),),
           leading: IconButton(
             onPressed: () {
               context.pop();
             },
-            icon: const Icon(
+            icon:  Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: context.colors.textPrimary,
             ),
           ),
         ),

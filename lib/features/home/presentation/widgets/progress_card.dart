@@ -65,7 +65,7 @@ class ProgressCard extends StatelessWidget {
                   Text(
                     enrollment!.courseTitle,
                     style: AppTextStyles.s16w400
-                        .copyWith(color: AppColors.primaryTextColor),
+                        .copyWith(color: colors.textBlue),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -79,7 +79,7 @@ class ProgressCard extends StatelessWidget {
               barRadius: Radius.circular(16),
               percent: progress.clamp(0.0, 1.0),
               progressColor: colors.textBlue,
-              backgroundColor: AppColors.dividerGrey,
+              backgroundColor: colors.dividerGrey,
               animation: true,
               animationDuration: 800,
             ),
@@ -96,8 +96,8 @@ class ProgressCard extends StatelessWidget {
             CustomButtonWidget(
               title: 'see_all'.tr(),
               titleStyle: AppTextStyles.s16w400
-                  .copyWith(color: AppColors.primaryTextColor),
-              buttonColor: Color(0xffECF6FE),
+                  .copyWith(color: colors.textBlue),
+              buttonColor:colors.buttonTapNotSelected,
               borderColor: Colors.transparent,
               onTap: () {
                 context.push(

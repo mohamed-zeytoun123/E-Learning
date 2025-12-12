@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: colors.background,
       body: BlocBuilder<CourseCubit, CourseState>(
         builder: (context, state) {
           // Determine if progress card should be shown
@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
                 expandedHeight: expandedHeight,
                 floating: false,
                 pinned: false,
-                backgroundColor: AppColors.background,
+                backgroundColor:colors.background,
                 automaticallyImplyLeading: false,
                 clipBehavior: Clip.none,
                 flexibleSpace: ClipRect(

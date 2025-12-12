@@ -91,6 +91,8 @@
 //     );
 //   }
 // }
+import 'package:e_learning/core/themes/theme_extensions.dart';
+import 'package:e_learning/features/profile/data/model/data_college_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
@@ -112,6 +114,7 @@ class FilterGroupWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     return Padding(
       padding: EdgeInsets.only(bottom: 20.h),
       child: Column(
@@ -119,7 +122,7 @@ class FilterGroupWidget extends StatelessWidget {
         children: [
           Text(
             title,
-            style: AppTextStyles.s16w600.copyWith(color: AppColors.textPrimary),
+            style: AppTextStyles.s16w600.copyWith(color: colors.textBlue),
           ),
           SizedBox(height: 10.h),
           Wrap(
@@ -139,8 +142,8 @@ class FilterGroupWidget extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: selected
-                        ? AppColors.buttonTapSelected
-                        : AppColors.buttonTapNotSelected,
+                        ? colors.textBlue
+                        : colors.buttonTapNotSelected,
                     borderRadius: BorderRadius.circular(20.r),
                     boxShadow: selected
                         ? [
@@ -157,7 +160,7 @@ class FilterGroupWidget extends StatelessWidget {
                     style: AppTextStyles.s14w500.copyWith(
                       color: selected
                           ? AppColors.textWhite
-                          : AppColors.textPrimary,
+                          : colors.textBlue,
                     ),
                   ),
                 ),

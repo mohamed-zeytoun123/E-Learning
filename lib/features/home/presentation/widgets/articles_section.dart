@@ -197,7 +197,7 @@ class ArticlesSection extends StatelessWidget {
                         children: [
                           Text(
                             article.title,
-                            style: AppTextStyles.s16w500,
+                            style: AppTextStyles.s16w500.copyWith(color: context.colors.textPrimary),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -209,7 +209,7 @@ class ArticlesSection extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                     vertical: 5, horizontal: 12),
                                 decoration: BoxDecoration(
-                                  color: AppColors.backgroundLittelOrange,
+                                  color: context.colors.backgroundOrange,
                                   borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Row(
@@ -233,7 +233,7 @@ class ArticlesSection extends StatelessWidget {
                                 _formatDate(
                                     article.publishedAt ?? article.createdAt),
                                 style: AppTextStyles.s12w400
-                                    .copyWith(color: AppColors.textGrey),
+                                    .copyWith(color: context.colors.textGrey),
                               )
                             ],
                           )

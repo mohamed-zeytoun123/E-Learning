@@ -116,7 +116,6 @@ class SelectedInformationWidget extends StatelessWidget {
                       universityName = "Unknown University";
                     }
                   }
-
                   return Container(
                     width: double.infinity,
                     padding: EdgeInsets.symmetric(

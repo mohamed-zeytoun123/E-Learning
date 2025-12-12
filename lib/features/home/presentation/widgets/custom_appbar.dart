@@ -21,11 +21,11 @@ class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text.rich(
         TextSpan(
           text: 'welcome'.tr(),
-          style: AppTextStyles.s18w600.copyWith(color: colors.background),
+          style: AppTextStyles.s18w600.copyWith(color: colors.textPrimary),
           children: [
             TextSpan(
               text: ' ${'user_name'.tr()} !',
-              style: AppTextStyles.s18w600.copyWith(color: Colors.white),
+              style: AppTextStyles.s18w600.copyWith(color: colors.textPrimary),
             ),
           ],
         ),

@@ -51,7 +51,7 @@ class CourseAccessContentWidget extends StatelessWidget {
               videoCount: videoCount,
             );
           } else {
-            return CourseInfoSummaryWidget(
+            return CourseInfoSummaryWidget(//😒😒😒😒
               videoCount: videoCount,
               hoursCount: hoursCount,
               price: price,

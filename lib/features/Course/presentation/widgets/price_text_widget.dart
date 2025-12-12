@@ -31,6 +31,7 @@
 //     );
 //   }
 // }
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,14 +50,14 @@ class PriceTextWidget extends StatelessWidget {
         Text(
           price,
           style: AppTextStyles.s16w400.copyWith(
-            color: Theme.of(context).colorScheme.primary,
+            color: context.colors.textBlue,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           "S.P",
           style: AppTextStyles.s16w400.copyWith(
-            color: Theme.of(context).colorScheme.primary,
+            color: context.colors.textBlue,
             fontWeight: FontWeight.bold,
           ),
         ),

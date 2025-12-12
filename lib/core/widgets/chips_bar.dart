@@ -51,8 +51,8 @@ class _ChipsBarState extends State<ChipsBar> {
                     borderRadius: BorderRadius.circular(16)),
                 side: const BorderSide(color: Colors.transparent),
                 showCheckmark: false,
-                backgroundColor: Color(0xffECF6FE),
-                selectedColor: AppColors.primary,
+                backgroundColor: context.colors.buttonTapNotSelected,
+                selectedColor: context.colors.textBlue,
                 label: Text(
                   widget.labels[index],
                   style: AppTextStyles.s14w500.copyWith(

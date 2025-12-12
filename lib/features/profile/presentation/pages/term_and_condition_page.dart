@@ -32,7 +32,7 @@ class _TermsAndConditionsPageState extends State<TermsAndConditionsPage> {
       backgroundColor: context.colors.background,
       appBar: CustomAppBarWidget(title: 'Term & Conditions', showBack: true),
       body: Container(
-        padding: EdgeInsets.only(top: 24),
+        padding: EdgeInsets.only(top: 0),
         decoration: BoxDecoration(
           color: context.colors.appBarWhite,
           // gradient: LinearGradient(colors: [context.colors.appBarWhite])

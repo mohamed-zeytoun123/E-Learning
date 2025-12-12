@@ -1,6 +1,7 @@
 import 'package:e_learning/constant/assets.dart';
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/initial/app_init_dependencies.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Course/presentation/manager/course_cubit.dart';
 import 'package:e_learning/features/Course/presentation/manager/search_cubit/search_cubit.dart';
@@ -79,8 +80,8 @@ class _CustomSearchAppbarState extends State<CustomSearchAppbar> {
           }
         }
 
-        return AppBar(
-          shape: RoundedRectangleBorder(
+        return AppBar(backgroundColor: context.colors.textBlue,
+          shape: RoundedRectangleBorder(side: BorderSide(color: context.colors.borderCard),
             borderRadius: BorderRadius.vertical(
               bottom: Radius.circular(16.r),
             ),
@@ -103,7 +104,7 @@ class _CustomSearchAppbarState extends State<CustomSearchAppbar> {
                 ),
                 leading: SvgPicture.asset(
                   Assets.resourceImagesVectorsSearch1,
-                  color: AppColors.primary,
+                  color: context.colors.textBlue,
                 ),
                 hintText: 'search_for_courses'.tr(),
                 onChanged: (query) {
@@ -118,7 +119,7 @@ class _CustomSearchAppbarState extends State<CustomSearchAppbar> {
                 trailing: [
                   // Filter button only
                   IconButton(
-                    icon: Icon(Icons.tune, color: AppColors.primaryColor),
+                    icon: Icon(Icons.tune, color: context.colors.textBlue),
                     onPressed: () {
                       // Create a CourseCubit for the filter bottom sheet
                       final courseCubit = CourseCubit(

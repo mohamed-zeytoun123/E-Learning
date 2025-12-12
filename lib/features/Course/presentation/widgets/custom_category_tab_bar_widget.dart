@@ -501,13 +501,13 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                         vertical: 8.h,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.buttonTapNotSelected,
+                        color: colors.buttonTapNotSelected,
                         borderRadius: BorderRadius.circular(20.r),
                       ),
                       child: Icon(
                         Icons.tune,
                         size: 20.sp,
-                        color: AppColors.iconBlue,
+                        color: colors.textBlue,
                       ),
                     ),
                   ),
@@ -544,8 +544,8 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
                               ),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? AppColors.buttonTapSelected
-                                    : AppColors.buttonTapNotSelected,
+                                    ? colors.textBlue
+                                    : colors.buttonTapNotSelected,
                                 borderRadius: BorderRadius.circular(20.r),
                               ),
                               child: Text(
@@ -570,7 +570,7 @@ class CustomCategoryTabBarWidget extends StatelessWidget {
             ),
 
             SizedBox(height: 8.h),
-            Divider(color: AppColors.dividerGrey, thickness: 1, height: 0.h),
+            Divider(color: colors.dividerGrey, thickness: 1, height: 0.h),
 
             // ---------------- Tabs Content ----------------
             Expanded(

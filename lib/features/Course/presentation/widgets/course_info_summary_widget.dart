@@ -68,6 +68,7 @@
 // }
 import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/core/utils/state_forms/response_status_enum.dart';
 import 'package:e_learning/core/widgets/buttons/custom_button_widget.dart';
 import 'package:e_learning/core/widgets/loading/app_loading.dart';
@@ -116,7 +117,7 @@ class _CourseInfoSummaryWidgetState extends State<CourseInfoSummaryWidget> {
         Padding(
           padding: EdgeInsets.symmetric(vertical: 5.h),
           child: Divider(
-            color: AppColors.dividerGrey,
+            color: context.colors.dividerGrey,
             thickness: 1,
             height: 10.h,
           ),

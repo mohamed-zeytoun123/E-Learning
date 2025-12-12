@@ -3,6 +3,7 @@ import 'package:e_learning/core/colors/app_colors.dart';
 import 'package:e_learning/core/style/app_padding.dart';
 import 'package:e_learning/core/style/app_text_styles.dart';
 import 'package:e_learning/core/di/service_locator.dart';
+import 'package:e_learning/core/themes/theme_extensions.dart';
 import 'package:e_learning/features/Course/data/source/repo/courcese_repository.dart';
 import 'package:e_learning/features/Article/data/source/repo/article_repository.dart';
 import 'package:e_learning/features/Teacher/data/source/repo/teacher_repository.dart';
@@ -59,7 +60,7 @@ class SearchPage extends StatelessWidget {
                         Text(
                           'recent_search'.tr(),
                           style: AppTextStyles.s18w600.copyWith(
-                            color: AppColors.blackText,
+                            color: context.colors.textPrimary,
                           ),
                         ),
                         Expanded(
@@ -70,13 +71,13 @@ class SearchPage extends StatelessWidget {
                                 Icon(
                                   Icons.search_off,
                                   size: 64,
-                                  color: AppColors.textGrey,
+                                  color: context.colors.textGrey,
                                 ),
                                 SizedBox(height: 16),
                                 Text(
                                   'no_search_history'.tr(),
                                   style: AppTextStyles.s16w400.copyWith(
-                                    color: AppColors.textGrey,
+                                    color: context.colors.textGrey,
                                   ),
                                 ),
                               ],

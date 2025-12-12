@@ -126,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 onTap: () {
                   showModalBottomSheet(
                     context: context,
-                    backgroundColor: colors.background,
+                    backgroundColor: colors.buttonTapNotSelected,
                     isScrollControlled: true,
                     builder: (context) => SingleChildScrollView(
                       padding: EdgeInsets.only(
